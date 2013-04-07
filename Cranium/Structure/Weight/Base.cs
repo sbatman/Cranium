@@ -10,6 +10,8 @@ namespace Structure.Weight
 {
 	public class Base
 	{
+		public enum ConnectionDirection { Reverse, Forward };		
+		
 		public Base ()
 		{
 		}

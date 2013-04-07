@@ -8,7 +8,7 @@ using System;
 
 namespace Structure.ActivationFunction
 {
-	public class Base
+	public abstract class Base
 	{
 		/// <summary>
 		/// Returns the input after running through the activation function.

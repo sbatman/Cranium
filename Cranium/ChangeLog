@@ -1,7 +1,12 @@
 2013-04-07  Steven Batchelor-Manning  <steven@nerfgames.co.uk>
 
-	* Base.cs: 
+	* Structure/Node/Base.cs: 
+		Substantial ammounts of core logic for the node class
+	* Structure/Weight/Base.cs: 
+		Added a connection direction enum
+	* Structure/ActivationFunction/Base.cs: 
 		Added commnets to Activation Base Class
+		Changed the class to be abstract to refelct the includion of abstract methods
 
 2013-04-07  Steven batchelor-Manning  <steven@nerfgames.co.uk>
 
