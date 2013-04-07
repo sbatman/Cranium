@@ -39,6 +39,7 @@
     <Compile Include="Structure\Node\Base.cs" />
     <Compile Include="Structure\Weight\Base.cs" />
     <Compile Include="Structure\Network.cs" />
+    <Compile Include="Structure\ActivationFunction\Base.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -59,5 +60,6 @@
     <Folder Include="Structure\Layer\" />
     <Folder Include="Structure\Node\" />
     <Folder Include="Structure\Weight\" />
+    <Folder Include="Structure\ActivationFunction\" />
   </ItemGroup>
 </Project>
