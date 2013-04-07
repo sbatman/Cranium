@@ -1,0 +1,17 @@
+2013-04-07  Steven batchelor-Manning  <steven@nerfgames.co.uk>
+
+	* Tanh.cs:
+	* Base.cs:
+	* Linear.cs:
+	* BinarySigmoid.cs: 
+
+2013-04-07  Steven Batchelor-Manning  <steven@nerfgames.co.uk>
+
+	* Structure/ActivationFunction/Tanh.cs: 
+		Added new TanH Activation Function
+	* Structure/ActivationFunction/Linear.cs: 
+		Added new Linear Activation Function
+	* Structure/ActivationFunction/Base.cs: 
+		Small Change to the Activation Function Base Class
+	* Structure/ActivationFunction/BinarySigmoid.cs: 
+		Added New Binary Sigmoid Activation Function.

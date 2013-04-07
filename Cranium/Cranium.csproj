@@ -40,6 +40,9 @@
     <Compile Include="Structure\Weight\Base.cs" />
     <Compile Include="Structure\Network.cs" />
     <Compile Include="Structure\ActivationFunction\Base.cs" />
+    <Compile Include="Structure\ActivationFunction\BinarySigmoid.cs" />
+    <Compile Include="Structure\ActivationFunction\Linear.cs" />
+    <Compile Include="Structure\ActivationFunction\Tanh.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -48,9 +51,7 @@
         <Policies>
           <DotNetNamingPolicy DirectoryNamespaceAssociation="Hierarchical" ResourceNamePolicy="FileFormatDefault" />
           <StandardHeader Text="///////////////////////&#xA;&#xA;Cranium - A neural network framework for C#&#xA;https://github.com/sbatman/Cranium.git&#xA;&#xA;//////////////////////" IncludeInNewFiles="True" />
-          <ChangeLogPolicy UpdateMode="ProjectRoot" inheritsSet="Mono">
-            <MessageStyle LineAlign="0" />
-          </ChangeLogPolicy>
+          <ChangeLogPolicy UpdateMode="ProjectRoot" VcsIntegration="RequireEntry" inheritsSet="Mono" />
         </Policies>
       </Properties>
     </MonoDevelop>

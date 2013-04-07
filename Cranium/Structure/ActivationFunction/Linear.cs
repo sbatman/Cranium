@@ -8,10 +8,16 @@ using System;
 
 namespace Structure.ActivationFunction
 {
-	public class Base
+	public class Linear : Base
 	{
-		public abstract Double Compute(Double input);
-		public abstract Double ComputeDerivative(Double input);
+		public override double Compute (double input)
+		{
+			return input;
+		}
+		public override double ComputeDerivative (double input)
+		{
+			return 1;
+		}
 	}
 }
 
