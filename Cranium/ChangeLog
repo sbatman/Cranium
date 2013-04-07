@@ -1,4 +1,4 @@
-2013-04-07  Steven Batchelor-Manning  <steven@nerfgames.co.uk>
+2013-04-07  Steven Batchelor-Manning  <steven@nerfgames.co.uk> 
 
 	* Structure/Node/Base.cs: 
 		Substantial ammounts of core logic for the node class
