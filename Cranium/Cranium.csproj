@@ -35,6 +35,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Structure\Layer\Base.cs" />
+    <Compile Include="Structure\Node\Base.cs" />
+    <Compile Include="Structure\Weight\Base.cs" />
+    <Compile Include="Structure\Network.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -50,4 +54,10 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
+  <ItemGroup>
+    <Folder Include="Structure\" />
+    <Folder Include="Structure\Layer\" />
+    <Folder Include="Structure\Node\" />
+    <Folder Include="Structure\Weight\" />
+  </ItemGroup>
 </Project>
