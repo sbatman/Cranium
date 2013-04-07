@@ -2,11 +2,15 @@
 
 	* Structure/Node/Base.cs: 
 		Substantial ammounts of core logic for the node class
+		Added Idisposable interface for handeling class disposal
 	* Structure/Weight/Base.cs: 
 		Added a connection direction enum
+		Added Idisposable interface for handeling class disposal
+		Fleshed out core logic
 	* Structure/ActivationFunction/Base.cs: 
 		Added commnets to Activation Base Class
 		Changed the class to be abstract to refelct the includion of abstract methods
+		Added Dispose function for override
 
 2013-04-07  Steven batchelor-Manning  <steven@nerfgames.co.uk>
 

@@ -22,6 +22,10 @@ namespace Structure.ActivationFunction
 			if(Double.IsNaN(D) || Double.IsInfinity(D)) throw(new Exception("Activation Function Error"));
 			return D;
 		}
+		public override void Dispose ()
+		{
+			
+		}
 	}
 }
 

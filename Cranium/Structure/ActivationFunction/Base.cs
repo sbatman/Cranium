@@ -8,7 +8,7 @@ using System;
 
 namespace Structure.ActivationFunction
 {
-	public abstract class Base
+	public abstract class Base :IDisposable
 	{
 		/// <summary>
 		/// Returns the input after running through the activation function.
@@ -27,6 +27,10 @@ namespace Structure.ActivationFunction
 		/// Input.
 		/// </param>
 		public abstract Double ComputeDerivative(Double input);
+
+		#region IDisposable implementation
+		public abstract void IDisposable.Dispose ();
+		#endregion
 	}
 }
 

@@ -18,6 +18,10 @@ namespace Structure.ActivationFunction
 		{
 			return 1;
 		}
+		public override void Dispose ()
+		{
+			
+		}
 	}
 }
 

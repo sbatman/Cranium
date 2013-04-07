@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Structure.Node
 {
-	public class Base
+	public class Base : IDisposable
 	{
 		protected Double _Value;
 		protected Layer.Base _ParentLayer;
@@ -73,6 +73,19 @@ namespace Structure.Node
 					break;
 			}
 		}
+
+		#region IDisposable implementation
+		void IDisposable.Dispose ()
+		{
+			_ParentLayer = null;
+			_FowardWeights.Clear ();
+			_FowardWeights = null;
+			_ReverseWeights.Clear ();
+			_ReverseWeights = null;
+			_ActivationFunction.Dispose ();
+			_ActivationFunction = null;
+		}
+		#endregion
 	}
 }
 
