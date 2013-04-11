@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Structure.Layer
 {
-	public class Base
+	public class Base : IDisposable
 	{
 		protected List<Node.Base> _Nodes;
 		protected List<Layer.Base> _ForwardConnectedLayers;
@@ -82,6 +82,34 @@ namespace Structure.Layer
 		{
 			return _ReverseConnectedLayers;
 		}
+		
+		//uses the current forward and reverse layers to populate the node connections
+		public virtual void PopulateNodeConnections()
+		{
+			//TODO : logic
+		}
+		
+		/// <summary>
+		/// Removes all connections on this layers nodes (useful if deleting or modifiying the layer
+		/// </summary>
+		public virtual void PurgeNodeConnections()
+		{
+			foreach(Node.Base n in _Nodes)n.DestroyAllConnections();
+		}
+
+		#region IDisposable implementation
+		public void Dispose ()
+		{
+			PurgeNodeConnections();
+			_ReverseConnectedLayers.Clear();
+			_ReverseConnectedLayers=null;
+			_ForwardConnectedLayers.Clear();
+			_ForwardConnectedLayers=null;
+			foreach(Node.Base n in _Nodes)n.IDisposable.Dispose();
+			_Nodes.Clear();
+			_Nodes=null;
+		}
+		#endregion
 	}
 }
 

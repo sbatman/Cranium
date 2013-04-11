@@ -11,6 +11,8 @@ namespace Structure
 	public class Network
 	{
 		protected List<Layer.Base> _CurrentLayers;
+		protected List<Layer.Base> _DetectedTopLayers;
+		protected List<Layer.Base> _DetectedBottomLayers;
 		
 		public Network ()
 		{			
@@ -50,7 +52,11 @@ namespace Structure
 		/// </summary>
 		protected virtual void StructureUpdate()
 		{
-			
+			foreach(Layer.Base l in _CurrentLayers)
+			{
+				if(l.GetForwardConnectedLayers().Count==0)_DetectedTopLayers.Add(l);
+				if(l.GetReverseConnectedLayers().Count==0)_DetectedBottomLayers.Add(l);				
+			}
 		}
 	}
 }

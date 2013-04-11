@@ -114,9 +114,19 @@ namespace Structure.Node
 				break;
 			}
 		}
+		
+		public virtual void DestroyAllConnections()
+		{
+			foreach(Weight.Base w in _T_FowardWeights)w.IDisposable.Dispose();	
+			_FowardWeights.Clear();
+			_T_FowardWeights = null;
+			foreach(Weight.Base w in _T_ReverseWeights)w.IDisposable.Dispose();
+			_ReverseWeights.Clear();
+			_T_ReverseWeights = null;
+		}
 
 		#region IDisposable implementation
-		void IDisposable.Dispose ()
+		public void IDisposable.Dispose ()
 		{
 			_ParentLayer = null;
 			_FowardWeights.Clear ();

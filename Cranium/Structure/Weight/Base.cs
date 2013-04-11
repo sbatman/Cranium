@@ -75,7 +75,7 @@ namespace Structure.Weight
 		}
 
 		#region IDisposable implementation
-		void IDisposable.Dispose ()
+		public void IDisposable.Dispose ()
 		{
 			_NodeA = null;
 			_NodeB = null;
