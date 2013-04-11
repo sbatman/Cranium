@@ -8,6 +8,10 @@ using System;
 
 namespace Structure.ActivationFunction
 {
+	/// <summary>
+	/// This activation function scales the input into the range of -1 to 1 which is very important for the majority
+	/// or neural network structures that wish to learn signal data.
+	/// </summary>
 	public class Tanh : Base
 	{
 		public override double Compute (double input)

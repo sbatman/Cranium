@@ -8,6 +8,10 @@ using System;
 
 namespace Structure.ActivationFunction
 {
+	/// <summary>
+	/// This activation function returns exactly what it is fed, this is extreamly useful fordata being 
+	/// fed in that has already been cooked external of the network
+	/// </summary>
 	public class Linear : Base
 	{
 		public override double Compute (double input)
