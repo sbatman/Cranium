@@ -105,7 +105,7 @@ namespace Structure.Layer
 			_ReverseConnectedLayers=null;
 			_ForwardConnectedLayers.Clear();
 			_ForwardConnectedLayers=null;
-			foreach(Node.Base n in _Nodes)n.IDisposable.Dispose();
+			foreach(Node.Base n in _Nodes)n.Dispose();
 			_Nodes.Clear();
 			_Nodes=null;
 		}

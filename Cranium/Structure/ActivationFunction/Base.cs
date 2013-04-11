@@ -29,7 +29,7 @@ namespace Structure.ActivationFunction
 		public abstract Double ComputeDerivative(Double input);
 
 		#region IDisposable implementation
-		public abstract void IDisposable.Dispose ();
+		public abstract void Dispose ();
 		#endregion
 	}
 }

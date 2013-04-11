@@ -16,8 +16,8 @@ namespace Structure.Weight
 			Forward
 		};
 		
-		protected Nodes.Base _NodeA;
-		protected Nodes.Base _NodeB;
+		protected Node.Base _NodeA;
+		protected Node.Base _NodeB;
 		protected Double _Weight;
 		protected Double _InitialValue;
 		protected Double _PendingWeightChange;
@@ -123,7 +123,7 @@ namespace Structure.Weight
 		}
 
 		#region IDisposable implementation
-		public void IDisposable.Dispose ()
+		public void Dispose ()
 		{
 			_NodeA = null;
 			_NodeB = null;

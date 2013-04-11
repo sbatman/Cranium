@@ -117,16 +117,16 @@ namespace Structure.Node
 		
 		public virtual void DestroyAllConnections()
 		{
-			foreach(Weight.Base w in _T_FowardWeights)w.IDisposable.Dispose();	
+			foreach(Weight.Base w in _T_FowardWeights)w.Dispose();	
 			_FowardWeights.Clear();
 			_T_FowardWeights = null;
-			foreach(Weight.Base w in _T_ReverseWeights)w.IDisposable.Dispose();
+			foreach(Weight.Base w in _T_ReverseWeights)w.Dispose();
 			_ReverseWeights.Clear();
 			_T_ReverseWeights = null;
 		}
 
 		#region IDisposable implementation
-		public void IDisposable.Dispose ()
+		public void Dispose ()
 		{
 			_ParentLayer = null;
 			_FowardWeights.Clear ();

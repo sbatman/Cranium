@@ -5,6 +5,7 @@
 // 
 // //////////////////////
 using System;
+using System.Collections.Generic;
 
 namespace Structure
 {
@@ -29,7 +30,7 @@ namespace Structure
 		{
 			if (_CurrentLayers.Contains (newLayer))
 				return;
-			_CurrentLayers.add (newLayer);	
+			_CurrentLayers.Add(newLayer);	
 			StructureUpdate();
 		}
 		
@@ -57,6 +58,21 @@ namespace Structure
 				if(l.GetForwardConnectedLayers().Count==0)_DetectedTopLayers.Add(l);
 				if(l.GetReverseConnectedLayers().Count==0)_DetectedBottomLayers.Add(l);				
 			}
+		}
+		
+		public virtual List<Layer.Base> GetCurrentLayers()
+		{
+			return _CurrentLayers;
+		}
+		
+		public virtual List<Layer.Base> GetDetectedTopLayers()
+		{
+			return _DetectedTopLayers;
+		}
+		
+		public virtual List<Layer.Base> GetDetectedBottomLayers()
+		{
+			return _DetectedBottomLayers;
 		}
 	}
 }
