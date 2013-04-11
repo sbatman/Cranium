@@ -23,7 +23,7 @@ namespace Structure.Layer
 		/// </param>
 		public virtual void SetNodes (List<Node.Base> nodes)
 		{
-			_Nodes.Clear();
+			_Nodes.Clear ();
 			_Nodes = null;
 			_Nodes = nodes;	
 		}
@@ -34,7 +34,7 @@ namespace Structure.Layer
 		/// <returns>
 		/// The nodes.
 		/// </returns>
-		public virtual List<Node.Base> GetNodes()
+		public virtual List<Node.Base> GetNodes ()
 		{
 			return _Nodes;	
 		}

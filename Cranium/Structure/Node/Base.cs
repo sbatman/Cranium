@@ -104,14 +104,14 @@ namespace Structure.Node
 		{
 			Weight.Base theNewWeight;
 			switch (connectionDirectionToNode) {
-				case Weight.Base.ConnectionDirection.Forward:
-				_T_FowardWeights=null;
+			case Weight.Base.ConnectionDirection.Forward:
+				_T_FowardWeights = null;
 				//TODO : LOGIC
-					break;
-				case Weight.Base.ConnectionDirection.Reverse:
-				_T_ReverseWeights=null;
+				break;
+			case Weight.Base.ConnectionDirection.Reverse:
+				_T_ReverseWeights = null;
 				//TODO : LOGIC
-					break;
+				break;
 			}
 		}
 
