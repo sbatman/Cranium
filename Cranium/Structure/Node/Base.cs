@@ -26,7 +26,10 @@ namespace Structure.Node
 			_ParentLayer = layer;
 			_ActivationFunction = activationFunction;
 		}
-
+		
+		/// <summary>
+		/// Causes the node to calucate its new value as a sum of the weights by values of reverse connected nodes and then passes this value by the Activation function assigned
+		/// </summary>
 		public virtual void CalculateValue ()
 		{
 			if (_T_FowardWeights == null || _T_ReverseWeights == null)
@@ -35,25 +38,48 @@ namespace Structure.Node
 			//Calculate new value
 			_Value = _ActivationFunction.Compute (_Value);
 		}
-
+		
+		/// <summary>
+		/// Returns the last calucated value of the node
+		/// </summary>
+		/// <returns>
+		/// The value.
+		/// </returns>
 		public virtual Double GetValue ()
 		{
 			return _Value;	
 		}
-
+		
+		/// <summary>
+		/// Bakes down the forward and reverse list of weights for optimisation sake. This is performed autmaticaly before any node functions that requires the weights
+		/// </summary>
 		public virtual void BakeLists ()
 		{
 			_T_FowardWeights = _FowardWeights.ToArray ();
 			_T_ReverseWeights = _ReverseWeights.ToArray ();
 		}
-
+		
+		
+		/// <summary>
+		/// Returns the currently assigned forward weights
+		/// </summary>
+		/// <returns>
+		/// The foward weights.
+		/// </returns>
 		public virtual Weight.Base[] GetFowardWeights ()
 		{
 			if (_T_FowardWeights == null || _T_ReverseWeights == null)
 				BakeLists ();
 			return _T_FowardWeights;
 		}
-
+		
+		
+		/// <summary>
+		/// Returns the currently assigned list of reverse weights
+		/// </summary>
+		/// <returns>
+		/// The reverse weights.
+		/// </returns>
 		public virtual Weight.Base[] GetReverseWeights ()
 		{
 			if (_T_FowardWeights == null || _T_ReverseWeights == null)
@@ -61,15 +87,30 @@ namespace Structure.Node
 			return _T_ReverseWeights;	
 		}
 
+		
+		/// <summary>
+		/// Connects a second node to this one, building the correct weight and adding it to the list of weights that are updated when required
+		/// </summary>
+		/// <param name='nodeToConnect'>
+		/// Node to connect.
+		/// </param>
+		/// <param name='connectionDirectionToNode'>
+		/// Connection direction to node.
+		/// </param>
+		/// <param name='startingWeight'>
+		/// Starting weight.
+		/// </param>
 		public virtual void ConnectToNode (Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, float startingWeight)
 		{
 			Weight.Base theNewWeight;
 			switch (connectionDirectionToNode) {
 				case Weight.Base.ConnectionDirection.Forward:
-				
+				_T_FowardWeights=null;
+				//TODO : LOGIC
 					break;
 				case Weight.Base.ConnectionDirection.Reverse:
-				
+				_T_ReverseWeights=null;
+				//TODO : LOGIC
 					break;
 			}
 		}
