@@ -106,22 +106,28 @@ namespace Structure.Node
 			switch (connectionDirectionToNode) {
 			case Weight.Base.ConnectionDirection.Forward:
 				_T_FowardWeights = null;
-				//TODO : LOGIC
+				theNewWeight = new Structure.Weight.Base (this, nodeToConnect, startingWeight);
+				_FowardWeights.Add (theNewWeight);
+				nodeToConnect._ReverseWeights.Add (theNewWeight);
 				break;
 			case Weight.Base.ConnectionDirection.Reverse:
 				_T_ReverseWeights = null;
-				//TODO : LOGIC
+				theNewWeight = new Structure.Weight.Base (nodeToConnect, this, startingWeight);
+				_ReverseWeights.Add (theNewWeight);
+				nodeToConnect._FowardWeights.Add (theNewWeight);
 				break;
 			}
 		}
 		
-		public virtual void DestroyAllConnections()
+		public virtual void DestroyAllConnections ()
 		{
-			foreach(Weight.Base w in _T_FowardWeights)w.Dispose();	
-			_FowardWeights.Clear();
+			foreach (Weight.Base w in _T_FowardWeights)
+				w.Dispose ();	
+			_FowardWeights.Clear ();
 			_T_FowardWeights = null;
-			foreach(Weight.Base w in _T_ReverseWeights)w.Dispose();
-			_ReverseWeights.Clear();
+			foreach (Weight.Base w in _T_ReverseWeights)
+				w.Dispose ();
+			_ReverseWeights.Clear ();
 			_T_ReverseWeights = null;
 		}
 
