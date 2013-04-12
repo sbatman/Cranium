@@ -84,30 +84,39 @@ namespace Structure.Layer
 		}
 		
 		//uses the current forward and reverse layers to populate the node connections
-		public virtual void PopulateNodeConnections()
+		public virtual void PopulateNodeConnections ()
 		{
-			//TODO : logic
+			PurgeNodeConnections ();
+			foreach (Layer.Base l in _ForwardConnectedLayers) {
+				foreach (Node.Base n in _Nodes) {
+					foreach(Node.Base fn in l.GetNodes()){
+						n.ConnectToNode(fn,Weight.Base.ConnectionDirection.Forward,0);
+					}
+				}
+			}
 		}
 		
 		/// <summary>
 		/// Removes all connections on this layers nodes (useful if deleting or modifiying the layer
 		/// </summary>
-		public virtual void PurgeNodeConnections()
+		public virtual void PurgeNodeConnections ()
 		{
-			foreach(Node.Base n in _Nodes)n.DestroyAllConnections();
+			foreach (Node.Base n in _Nodes)
+				n.DestroyAllConnections ();
 		}
 
 		#region IDisposable implementation
 		public void Dispose ()
 		{
-			PurgeNodeConnections();
-			_ReverseConnectedLayers.Clear();
-			_ReverseConnectedLayers=null;
-			_ForwardConnectedLayers.Clear();
-			_ForwardConnectedLayers=null;
-			foreach(Node.Base n in _Nodes)n.Dispose();
-			_Nodes.Clear();
-			_Nodes=null;
+			PurgeNodeConnections ();
+			_ReverseConnectedLayers.Clear ();
+			_ReverseConnectedLayers = null;
+			_ForwardConnectedLayers.Clear ();
+			_ForwardConnectedLayers = null;
+			foreach (Node.Base n in _Nodes)
+				n.Dispose ();
+			_Nodes.Clear ();
+			_Nodes = null;
 		}
 		#endregion
 	}
