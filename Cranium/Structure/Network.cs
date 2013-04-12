@@ -60,19 +60,37 @@ namespace Structure
 			}
 		}
 		
+		/// <summary>
+		/// Returns a read only list of the layers in the network structure
+		/// </summary>
+		/// <returns>
+		/// The current layers.
+		/// </returns>
 		public virtual List<Layer.Base> GetCurrentLayers()
 		{
-			return _CurrentLayers;
+			return _CurrentLayers.AsReadOnly();
 		}
 		
+		/// <summary>
+		/// returns a read only list of the detected top layers in the network.
+		/// </summary>
+		/// <returns>
+		/// The detected top layers.
+		/// </returns>
 		public virtual List<Layer.Base> GetDetectedTopLayers()
 		{
-			return _DetectedTopLayers;
+			return _DetectedTopLayers.AsReadOnly();
 		}
 		
+		/// <summary>
+		/// Returns a read only list of the detected bottom layers in the network
+		/// </summary>
+		/// <returns>
+		/// The detected bottom layers.
+		/// </returns>
 		public virtual List<Layer.Base> GetDetectedBottomLayers()
 		{
-			return _DetectedBottomLayers;
+			return _DetectedBottomLayers.AsReadOnly();
 		}
 	}
 }
