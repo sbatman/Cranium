@@ -35,7 +35,8 @@ namespace Structure.Node
 			if (_T_FowardWeights == null || _T_ReverseWeights == null)
 				BakeLists ();
 			_Value = 0;
-			//Calculate new value
+			foreach (Weight.Base W in _T_ReverseWeights)
+				Value += W.GetNodeA () * W.GetWeight ();			
 			_Value = _ActivationFunction.Compute (_Value);
 		}
 		

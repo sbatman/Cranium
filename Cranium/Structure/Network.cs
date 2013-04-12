@@ -30,8 +30,8 @@ namespace Structure
 		{
 			if (_CurrentLayers.Contains (newLayer))
 				return;
-			_CurrentLayers.Add(newLayer);	
-			StructureUpdate();
+			_CurrentLayers.Add (newLayer);	
+			StructureUpdate ();
 		}
 		
 		/// <summary>
@@ -45,19 +45,30 @@ namespace Structure
 			if (!_CurrentLayers.Contains (layer))
 				return;
 			_CurrentLayers.Remove (layer);
-			StructureUpdate();
+			StructureUpdate ();
 		}
 		
 		/// <summary>
 		/// Called when a change is detected to this level of the nerual netowrks structure
 		/// </summary>
-		protected virtual void StructureUpdate()
+		protected virtual void StructureUpdate ()
 		{
-			foreach(Layer.Base l in _CurrentLayers)
-			{
-				if(l.GetForwardConnectedLayers().Count==0)_DetectedTopLayers.Add(l);
-				if(l.GetReverseConnectedLayers().Count==0)_DetectedBottomLayers.Add(l);				
+			foreach (Layer.Base l in _CurrentLayers) {
+				if (l.GetForwardConnectedLayers ().Count == 0)
+					_DetectedTopLayers.Add (l);
+				if (l.GetReverseConnectedLayers ().Count == 0)
+					_DetectedBottomLayers.Add (l);
 			}
+		}
+		
+		/// <summary>
+		/// Populates the current layers of the neural network with connections for the nodes
+		/// This is required to build the weightings between nodes within the network.
+		/// </summary>
+		protected virtual void BuildNodeConnections()
+		{
+			foreach (Layer.Base l in _CurrentLayers){			
+				l.PopulateNodeConnections ();			
 		}
 		
 		/// <summary>
@@ -66,9 +77,9 @@ namespace Structure
 		/// <returns>
 		/// The current layers.
 		/// </returns>
-		public virtual List<Layer.Base> GetCurrentLayers()
+		public virtual List<Layer.Base> GetCurrentLayers ()
 		{
-			return _CurrentLayers.AsReadOnly();
+			return _CurrentLayers.AsReadOnly ();
 		}
 		
 		/// <summary>
@@ -77,9 +88,9 @@ namespace Structure
 		/// <returns>
 		/// The detected top layers.
 		/// </returns>
-		public virtual List<Layer.Base> GetDetectedTopLayers()
+		public virtual List<Layer.Base> GetDetectedTopLayers ()
 		{
-			return _DetectedTopLayers.AsReadOnly();
+			return _DetectedTopLayers.AsReadOnly ();
 		}
 		
 		/// <summary>
@@ -88,9 +99,9 @@ namespace Structure
 		/// <returns>
 		/// The detected bottom layers.
 		/// </returns>
-		public virtual List<Layer.Base> GetDetectedBottomLayers()
+		public virtual List<Layer.Base> GetDetectedBottomLayers ()
 		{
-			return _DetectedBottomLayers.AsReadOnly();
+			return _DetectedBottomLayers.AsReadOnly ();
 		}
 	}
 }
