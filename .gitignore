@@ -12,6 +12,8 @@ TestResults
 *.suo
 *.user
 *.sln.docstates
+*.userprefs
+*.pidb
 
 # Build results
 [Dd]ebug/
