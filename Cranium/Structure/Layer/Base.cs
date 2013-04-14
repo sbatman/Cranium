@@ -48,7 +48,7 @@ namespace Cranium.Structure.Layer
 		public virtual void ConnectFowardLayer (Layer.Base layer)
 		{
 			_ForwardConnectedLayers.Add (layer);
-			_ReverseConnectedLayers.layer.Add (this);
+			layer._ReverseConnectedLayers.Add (this);
 		}
 		
 		/// <summary>
@@ -71,7 +71,7 @@ namespace Cranium.Structure.Layer
 		public virtual void ConnectReverseLayer (Layer.Base layer)
 		{
 			_ReverseConnectedLayers.Add (layer);
-			_ForwardConnectedLayers.layer.Add (this);
+			layer._ForwardConnectedLayers.Add (this);
 		}
 		
 		/// <summary>
