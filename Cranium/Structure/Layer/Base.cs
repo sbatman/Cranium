@@ -107,14 +107,15 @@ namespace Cranium.Structure.Layer
 				n.DestroyAllConnections ();
 		}
 		
+		/// <summary>
+		/// Triggers a calculate value call on all nodes withint he layer and then recursively calls this function on all foward connected layers.
+		/// </summary>
 		public virtual void ForwardPass ()
 		{
-			foreach (Node.Base n in _Nodes) {
-				n.CalculateValue ();	
-			}	
-			foreach (Layer.Base l in _ForwardConnectedLayers) {
-				l.ForwardPass ();	
-			}
+			foreach (Node.Base n in _Nodes) 
+				n.CalculateValue ();				
+			foreach (Layer.Base l in _ForwardConnectedLayers) 
+				l.ForwardPass ();				
 		}
 
 		#region IDisposable implementation

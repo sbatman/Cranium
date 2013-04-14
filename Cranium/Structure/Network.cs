@@ -105,6 +105,12 @@ namespace Cranium.Structure
 			return _DetectedBottomLayers.AsReadOnly ();
 		}
 		
+		/// <summary>
+		/// Randomises the weights for all nodes within the network.
+		/// </summary>
+		/// <param name='varianceFromZero'>
+		/// Variance from zero.
+		/// </param>
 		public virtual void RandomiseWeights (double varianceFromZero)
 		{
 			Random rnd = new Random ();
@@ -117,6 +123,9 @@ namespace Cranium.Structure
 			}
 		}
 		
+		/// <summary>
+		/// Performs a recursive foward pass across the network causing the update of all values of all nodes that have reverse weights.
+		/// </summary>
 		public virtual void FowardPass ()
 		{
 			foreach (Layer.Base l in  _DetectedBottomLayers) {

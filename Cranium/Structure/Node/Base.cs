@@ -121,22 +121,39 @@ namespace Cranium.Structure.Node
 			}
 		}
 		
+		/// <summary>
+		/// Sets the value of the node.
+		/// </summary>
+		/// <param name='newValue'>
+		/// New value.
+		/// </param>
 		public virtual void SetValue (Double newValue)
 		{
 			_Value = newValue;	
 		}
 		
+		/// <summary>
+		/// Destroies all the foward and reverse weights connected tot his node.
+		/// </summary>
 		public virtual void DestroyAllConnections ()
 		{
 			if(_T_FowardWeights!=null){
 			foreach (Weight.Base w in _T_FowardWeights)
-				w.Dispose ();	
+				{
+				w.Dispose ();
+					w.GetNodeB()._T_ReverseWeights =null;
+					w.GetNodeB()._ReverseWeights.Remove(w);
+				}
 			_FowardWeights.Clear ();
 			_T_FowardWeights = null;
 			}
 			if(_T_ReverseWeights!=null){
 			foreach (Weight.Base w in _T_ReverseWeights)
+				{
 				w.Dispose ();
+						w.GetNodeB()._T_FowardWeights =null;
+					w.GetNodeB()._FowardWeights.Remove(w);
+				}
 			_ReverseWeights.Clear ();
 			_T_ReverseWeights = null;
 			}
