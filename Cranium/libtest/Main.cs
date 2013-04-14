@@ -6,11 +6,14 @@ namespace Cranium.libtest
 	class MainClass
 	{
 		Network TestNetworkStructure;
+		Int32[] InputData;
+		Int32[] OutputData;
 
 		public static void Main (string[] args)
 		{
 			TestNetworkStructure = new Network ();
 			BuildStructure();
+			PrepData();
 		}
 
 		public static void BuildStructure ()
@@ -43,7 +46,29 @@ namespace Cranium.libtest
 			foreach (Cranium.Structure.Layer.Base layer in TestNetworkStructure.GetCurrentLayers())
 				layer.PopulateNodeConnections ();
 			
-						
+									
+		}
+		
+		public static void PrepData()
+		{
+			InputData = new Int32[8];
+			OutputData = new Int32[4];
+			
+			InputData[0] = 0;
+			InputData[1] = 0;
+			OutputData[0] = 0;
+			
+			InputData[2] = 1;
+			InputData[3] = 0;
+			OutputData[1] = 1;
+			
+			InputData[4] = 0;
+			InputData[5] = 1;
+			OutputData[2] = 1;
+			
+			InputData[6] = 1;
+			InputData[7] = 1;
+			OutputData[3] = 0;
 		}
 	}
 }
