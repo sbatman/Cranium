@@ -48,6 +48,7 @@ namespace Cranium.Structure.Layer
 		public virtual void ConnectFowardLayer (Layer.Base layer)
 		{
 			_ForwardConnectedLayers.Add (layer);
+			_ReverseConnectedLayers.layer.Add (this);
 		}
 		
 		/// <summary>
@@ -70,6 +71,7 @@ namespace Cranium.Structure.Layer
 		public virtual void ConnectReverseLayer (Layer.Base layer)
 		{
 			_ReverseConnectedLayers.Add (layer);
+			_ForwardConnectedLayers.layer.Add (this);
 		}
 		
 		/// <summary>
@@ -89,8 +91,8 @@ namespace Cranium.Structure.Layer
 			PurgeNodeConnections ();
 			foreach (Layer.Base l in _ForwardConnectedLayers) {
 				foreach (Node.Base n in _Nodes) {
-					foreach(Node.Base fn in l.GetNodes()){
-						n.ConnectToNode(fn,Weight.Base.ConnectionDirection.Forward,0);
+					foreach (Node.Base fn in l.GetNodes()) {
+						n.ConnectToNode (fn, Weight.Base.ConnectionDirection.Forward, 0);
 					}
 				}
 			}

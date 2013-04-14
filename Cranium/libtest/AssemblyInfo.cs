@@ -4,12 +4,12 @@ using System.Runtime.CompilerServices;
 // Information about this assembly is defined by the following attributes. 
 // Change them to the values specific to your project.
 
-[assembly: AssemblyTitle("libtest")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("Cranium Lib Test")]
+[assembly: AssemblyDescription("A Lightweight Neural Network Framework for C#")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("InsaneDev.co.uk")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("steven")]
+[assembly: AssemblyCopyright("InsaneDev.co.uk")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
