@@ -11,9 +11,9 @@ namespace Cranium.Structure.Layer
 {
 	public class Base : IDisposable
 	{
-		protected List<Node.Base> _Nodes;
-		protected List<Layer.Base> _ForwardConnectedLayers;
-		protected List<Layer.Base> _ReverseConnectedLayers;
+		protected List<Node.Base> _Nodes = new List<Node.Base>();
+		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base>();
+		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base>();
 		
 		/// <summary>
 		/// Sets the nodes that are present in this layer, the previous list of nodes is purged.
@@ -48,6 +48,7 @@ namespace Cranium.Structure.Layer
 		public virtual void ConnectFowardLayer (Layer.Base layer)
 		{
 			_ForwardConnectedLayers.Add (layer);
+			layer._ReverseConnectedLayers.Add (this);
 		}
 		
 		/// <summary>
@@ -70,6 +71,7 @@ namespace Cranium.Structure.Layer
 		public virtual void ConnectReverseLayer (Layer.Base layer)
 		{
 			_ReverseConnectedLayers.Add (layer);
+			layer._ForwardConnectedLayers.Add (this);
 		}
 		
 		/// <summary>
@@ -89,8 +91,8 @@ namespace Cranium.Structure.Layer
 			PurgeNodeConnections ();
 			foreach (Layer.Base l in _ForwardConnectedLayers) {
 				foreach (Node.Base n in _Nodes) {
-					foreach(Node.Base fn in l.GetNodes()){
-						n.ConnectToNode(fn,Weight.Base.ConnectionDirection.Forward,0);
+					foreach (Node.Base fn in l.GetNodes()) {
+						n.ConnectToNode (fn, Weight.Base.ConnectionDirection.Forward, 0);
 					}
 				}
 			}
@@ -103,6 +105,16 @@ namespace Cranium.Structure.Layer
 		{
 			foreach (Node.Base n in _Nodes)
 				n.DestroyAllConnections ();
+		}
+		
+		public virtual void ForwardPass ()
+		{
+			foreach (Node.Base n in _Nodes) {
+				n.CalculateValue ();	
+			}	
+			foreach (Layer.Base l in _ForwardConnectedLayers) {
+				l.ForwardPass ();	
+			}
 		}
 
 		#region IDisposable implementation

@@ -13,8 +13,8 @@ namespace Cranium.Structure.Node
 	{
 		protected Double _Value;
 		protected Layer.Base _ParentLayer;
-		protected List<Weight.Base> _FowardWeights;
-		protected List<Weight.Base> _ReverseWeights;
+		protected List<Weight.Base> _FowardWeights = new List<Weight.Base>();
+		protected List<Weight.Base> _ReverseWeights = new List<Weight.Base>();
 		protected ActivationFunction.Base _ActivationFunction;
 		
 		//Baked or Temp fields
@@ -34,9 +34,10 @@ namespace Cranium.Structure.Node
 		{
 			if (_T_FowardWeights == null || _T_ReverseWeights == null)
 				BakeLists ();
+			if(_T_ReverseWeights.Length==0) return;
 			_Value = 0;
 			foreach (Weight.Base W in _T_ReverseWeights)
-				_Value += W.GetNodeA ().GetValue() * W.GetWeight ();			
+				_Value += W.GetNodeA ().GetValue () * W.GetWeight ();			
 			_Value = _ActivationFunction.Compute (_Value);
 		}
 		
@@ -120,19 +121,28 @@ namespace Cranium.Structure.Node
 			}
 		}
 		
+		public virtual void SetValue (Double newValue)
+		{
+			_Value = newValue;	
+		}
+		
 		public virtual void DestroyAllConnections ()
 		{
+			if(_T_FowardWeights!=null){
 			foreach (Weight.Base w in _T_FowardWeights)
 				w.Dispose ();	
 			_FowardWeights.Clear ();
 			_T_FowardWeights = null;
+			}
+			if(_T_ReverseWeights!=null){
 			foreach (Weight.Base w in _T_ReverseWeights)
 				w.Dispose ();
 			_ReverseWeights.Clear ();
 			_T_ReverseWeights = null;
+			}
 		}
-
-		#region IDisposable implementation
+		
+			#region IDisposable implementation
 		public void Dispose ()
 		{
 			_ParentLayer = null;

@@ -12,9 +12,9 @@ namespace Cranium.Structure
 {
 	public class Network
 	{
-		protected List<Layer.Base> _CurrentLayers;
-		protected List<Layer.Base> _DetectedTopLayers;
-		protected List<Layer.Base> _DetectedBottomLayers;
+		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base>();
+		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base>();
+		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base>();
 		
 		public Network ()
 		{			
@@ -66,7 +66,7 @@ namespace Cranium.Structure
 		/// Populates the current layers of the neural network with connections for the nodes
 		/// This is required to build the weightings between nodes within the network.
 		/// </summary>
-		protected virtual void BuildNodeConnections()
+		protected virtual void BuildNodeConnections ()
 		{
 			foreach (Layer.Base l in _CurrentLayers)		
 				l.PopulateNodeConnections ();			
@@ -103,6 +103,25 @@ namespace Cranium.Structure
 		public virtual ReadOnlyCollection<Layer.Base> GetDetectedBottomLayers ()
 		{
 			return _DetectedBottomLayers.AsReadOnly ();
+		}
+		
+		public virtual void RandomiseWeights (double varianceFromZero)
+		{
+			Random rnd = new Random ();
+			foreach (Layer.Base l in _CurrentLayers) {
+				foreach (Node.Base n in l.GetNodes()) {
+					foreach (Weight.Base w in n.GetFowardWeights()) {
+						w.SetWeight (((rnd.NextDouble () * 2) - 1) * varianceFromZero);
+					}
+				}
+			}
+		}
+		
+		public virtual void FowardPass ()
+		{
+			foreach (Layer.Base l in  _DetectedBottomLayers) {
+				l.ForwardPass ();
+			}
 		}
 	}
 }
