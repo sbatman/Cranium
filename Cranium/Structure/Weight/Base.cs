@@ -6,7 +6,7 @@
 // //////////////////////
 using System;
 
-namespace Structure.Weight
+namespace Cranium.Structure.Weight
 {
 	public class Base : IDisposable
 	{

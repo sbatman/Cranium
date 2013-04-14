@@ -6,7 +6,7 @@
 // //////////////////////
 using System;
 
-namespace Structure.ActivationFunction
+namespace Cranium.Structure.ActivationFunction
 {
 	public abstract class Base :IDisposable
 	{

@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Structure.Layer
+namespace Cranium.Structure.Layer
 {
 	public class Base : IDisposable
 	{

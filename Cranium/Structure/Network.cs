@@ -8,7 +8,7 @@ using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 
-namespace Structure
+namespace Cranium.Structure
 {
 	public class Network
 	{

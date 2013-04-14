@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Structure.Node
+namespace Cranium.Structure.Node
 {
 	public class Base : IDisposable
 	{
