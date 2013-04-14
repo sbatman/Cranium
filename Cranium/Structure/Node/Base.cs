@@ -36,7 +36,7 @@ namespace Cranium.Structure.Node
 				BakeLists ();
 			_Value = 0;
 			foreach (Weight.Base W in _T_ReverseWeights)
-				_Value += W.GetNodeA ().GetValue() * W.GetWeight ();			
+				_Value += W.GetNodeA ().GetValue () * W.GetWeight ();			
 			_Value = _ActivationFunction.Compute (_Value);
 		}
 		
@@ -118,6 +118,11 @@ namespace Cranium.Structure.Node
 				nodeToConnect._FowardWeights.Add (theNewWeight);
 				break;
 			}
+		}
+		
+		public virtual void SetValue (Double newValue)
+		{
+			_Value = newValue;	
 		}
 		
 		public virtual void DestroyAllConnections ()

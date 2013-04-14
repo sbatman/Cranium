@@ -6,6 +6,9 @@ namespace Cranium.libtest
 	class MainClass
 	{
 		Network TestNetworkStructure;
+		Cranium.Structure.Layer.Base InputLayer;
+		Cranium.Structure.Layer.Base OutputLayer;
+		
 		Int32[] InputData;
 		Int32[] OutputData;
 
@@ -14,11 +17,16 @@ namespace Cranium.libtest
 			TestNetworkStructure = new Network ();
 			BuildStructure();
 			PrepData();
+			
+			for(int x=0;x<4;x++)
+			{
+				PresentData(x);
+			}
 		}
 
 		public static void BuildStructure ()
 		{
-			Cranium.Structure.Layer.Base InputLayer = new Cranium.Structure.Layer.Base ();
+			InputLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> InputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<2; i++)
 				InputLayerNodes.Add (new Cranium.Structure.Node.Base (InputLayer, new Cranium.Structure.ActivationFunction.Linear ()));
@@ -30,7 +38,7 @@ namespace Cranium.libtest
 				HiddenLayerNodes.Add (new Cranium.Structure.Node.Base (HiddenLayer, new Cranium.Structure.ActivationFunction.BinarySigmoid ()));
 			HiddenLayer.SetNodes (HiddenLayerNodes);
 			
-			Cranium.Structure.Layer.Base OutputLayer = new Cranium.Structure.Layer.Base ();
+			OutputLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<1; i++)
 				OuputLayerNodes.Add (new Cranium.Structure.Node.Base (OutputLayer, new Cranium.Structure.ActivationFunction.Linear ()));
@@ -69,6 +77,12 @@ namespace Cranium.libtest
 			InputData[6] = 1;
 			InputData[7] = 1;
 			OutputData[3] = 0;
+		}
+		
+		public static void PresentData(int row)
+		{
+			InputLayer.GetNodes[0].SetValue(InputData[(row*2)]);
+			InputLayer.GetNodes[1].SetValue(InputData[(row*2)+1]);
 		}
 	}
 }
