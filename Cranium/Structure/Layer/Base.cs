@@ -11,9 +11,9 @@ namespace Cranium.Structure.Layer
 {
 	public class Base : IDisposable
 	{
-		protected List<Node.Base> _Nodes;
-		protected List<Layer.Base> _ForwardConnectedLayers;
-		protected List<Layer.Base> _ReverseConnectedLayers;
+		protected List<Node.Base> _Nodes = new List<Node.Base>();
+		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base>();
+		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base>();
 		
 		/// <summary>
 		/// Sets the nodes that are present in this layer, the previous list of nodes is purged.

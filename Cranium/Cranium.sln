@@ -21,6 +21,6 @@ Global
 		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Cranium.csproj
+		StartupItem = libtest\LibTest.csproj
 	EndGlobalSection
 EndGlobal

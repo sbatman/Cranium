@@ -12,9 +12,9 @@ namespace Cranium.Structure
 {
 	public class Network
 	{
-		protected List<Layer.Base> _CurrentLayers;
-		protected List<Layer.Base> _DetectedTopLayers;
-		protected List<Layer.Base> _DetectedBottomLayers;
+		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base>();
+		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base>();
+		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base>();
 		
 		public Network ()
 		{			
