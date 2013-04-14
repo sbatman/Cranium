@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Structure.Node
+namespace Cranium.Structure.Node
 {
 	public class Base : IDisposable
 	{
@@ -36,7 +36,7 @@ namespace Structure.Node
 				BakeLists ();
 			_Value = 0;
 			foreach (Weight.Base W in _T_ReverseWeights)
-				Value += W.GetNodeA () * W.GetWeight ();			
+				_Value += W.GetNodeA ().GetValue() * W.GetWeight ();			
 			_Value = _ActivationFunction.Compute (_Value);
 		}
 		

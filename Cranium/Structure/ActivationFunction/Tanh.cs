@@ -6,7 +6,7 @@
 // //////////////////////
 using System;
 
-namespace Structure.ActivationFunction
+namespace Cranium.Structure.ActivationFunction
 {
 	/// <summary>
 	/// This activation function scales the input into the range of -1 to 1 which is very important for the majority

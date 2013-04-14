@@ -5,9 +5,10 @@
 // 
 // //////////////////////
 using System;
+using System.Collections.ObjectModel;
 using System.Collections.Generic;
 
-namespace Structure
+namespace Cranium.Structure
 {
 	public class Network
 	{
@@ -67,7 +68,7 @@ namespace Structure
 		/// </summary>
 		protected virtual void BuildNodeConnections()
 		{
-			foreach (Layer.Base l in _CurrentLayers){			
+			foreach (Layer.Base l in _CurrentLayers)		
 				l.PopulateNodeConnections ();			
 		}
 		
@@ -77,7 +78,7 @@ namespace Structure
 		/// <returns>
 		/// The current layers.
 		/// </returns>
-		public virtual List<Layer.Base> GetCurrentLayers ()
+		public virtual ReadOnlyCollection<Layer.Base> GetCurrentLayers ()
 		{
 			return _CurrentLayers.AsReadOnly ();
 		}
@@ -88,7 +89,7 @@ namespace Structure
 		/// <returns>
 		/// The detected top layers.
 		/// </returns>
-		public virtual List<Layer.Base> GetDetectedTopLayers ()
+		public virtual ReadOnlyCollection<Layer.Base> GetDetectedTopLayers ()
 		{
 			return _DetectedTopLayers.AsReadOnly ();
 		}
@@ -99,7 +100,7 @@ namespace Structure
 		/// <returns>
 		/// The detected bottom layers.
 		/// </returns>
-		public virtual List<Layer.Base> GetDetectedBottomLayers ()
+		public virtual ReadOnlyCollection<Layer.Base> GetDetectedBottomLayers ()
 		{
 			return _DetectedBottomLayers.AsReadOnly ();
 		}

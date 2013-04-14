@@ -6,7 +6,7 @@
 // //////////////////////
 using System;
 
-namespace Structure.ActivationFunction
+namespace Cranium.Structure.ActivationFunction
 {
 	/// <summary>
 	/// This activation function returns exactly what it is fed, this is extreamly useful fordata being 
