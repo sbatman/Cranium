@@ -16,6 +16,7 @@ namespace Cranium.libtest
 		{
 			TestNetworkStructure = new Network ();
 			BuildStructure();
+			TestNetworkStructure.RandomiseWeights(0.2d);
 			PrepData();
 			
 			for(int x=0;x<4;x++)

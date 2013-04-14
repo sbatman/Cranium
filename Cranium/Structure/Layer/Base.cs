@@ -106,6 +106,16 @@ namespace Cranium.Structure.Layer
 			foreach (Node.Base n in _Nodes)
 				n.DestroyAllConnections ();
 		}
+		
+		public virtual void ForwardPass ()
+		{
+			foreach (Node.Base n in _Nodes) {
+				n.CalculateValue ();	
+			}	
+			foreach (Layer.Base l in _ForwardConnectedLayers) {
+				l.ForwardPass ();	
+			}
+		}
 
 		#region IDisposable implementation
 		public void Dispose ()

@@ -136,8 +136,8 @@ namespace Cranium.Structure.Node
 			_ReverseWeights.Clear ();
 			_T_ReverseWeights = null;
 		}
-
-		#region IDisposable implementation
+		
+			#region IDisposable implementation
 		public void Dispose ()
 		{
 			_ParentLayer = null;

@@ -108,15 +108,19 @@ namespace Cranium.Structure
 		public virtual void RandomiseWeights (double varianceFromZero)
 		{
 			Random rnd = new Random ();
-			foreach (Layer.Base l in _CurrentLayers)
-			{
-				foreach (Node.Base n in l.GetNodes())
-				{
-					foreach (Weight.Base w in n.GetFowardWeights())
-					{
+			foreach (Layer.Base l in _CurrentLayers) {
+				foreach (Node.Base n in l.GetNodes()) {
+					foreach (Weight.Base w in n.GetFowardWeights()) {
 						w.SetWeight (((rnd.NextDouble () * 2) - 1) * varianceFromZero);
 					}
 				}
+			}
+		}
+		
+		public virtual void FowardPass ()
+		{
+			foreach (Layer.Base l in  _DetectedBottomLayers) {
+				l.ForwardPass ();
 			}
 		}
 	}
