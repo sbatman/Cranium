@@ -18,10 +18,12 @@ namespace Cranium.Structure.ActivationFunction
 		{
 			return input;
 		}
+
 		public override double ComputeDerivative (double input)
 		{
 			return 1;
 		}
+
 		public override void Dispose ()
 		{
 			

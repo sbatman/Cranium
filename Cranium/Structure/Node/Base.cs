@@ -12,10 +12,11 @@ namespace Cranium.Structure.Node
 	public class Base : IDisposable
 	{
 		protected Double _Value;
+		protected Double _Error;
 		protected Layer.Base _ParentLayer;
 		protected int _ParentLayerPosition;
-		protected List<Weight.Base> _FowardWeights = new List<Weight.Base>();
-		protected List<Weight.Base> _ReverseWeights = new List<Weight.Base>();
+		protected List<Weight.Base> _FowardWeights = new List<Weight.Base> ();
+		protected List<Weight.Base> _ReverseWeights = new List<Weight.Base> ();
 		protected ActivationFunction.Base _ActivationFunction;
 		
 		//Baked or Temp fields
@@ -35,7 +36,8 @@ namespace Cranium.Structure.Node
 		{
 			if (_T_FowardWeights == null || _T_ReverseWeights == null)
 				BakeLists ();
-			if(_T_ReverseWeights.Length==0) return;
+			if (_T_ReverseWeights.Length == 0)
+				return;
 			_Value = 0;
 			foreach (Weight.Base W in _T_ReverseWeights)
 				_Value += W.GetNodeA ().GetValue () * W.GetWeight ();			
@@ -76,16 +78,15 @@ namespace Cranium.Structure.Node
 			return _T_FowardWeights;
 		}
 		
-		public virtual void SetPositionInParentLayer(int _position)
+		public virtual void SetPositionInParentLayer (int _position)
 		{
 			_ParentLayerPosition = _position;	
 		}
 		
-		public virtual void CalculateError()
+		public virtual void CalculateError ()
 		{
-		//logichere	
-		}
-		
+			
+		}		
 		
 		/// <summary>
 		/// Returns the currently assigned list of reverse weights
@@ -148,25 +149,23 @@ namespace Cranium.Structure.Node
 		/// </summary>
 		public virtual void DestroyAllConnections ()
 		{
-			if(_T_FowardWeights!=null){
-			foreach (Weight.Base w in _T_FowardWeights)
-				{
-				w.Dispose ();
-					w.GetNodeB()._T_ReverseWeights =null;
-					w.GetNodeB()._ReverseWeights.Remove(w);
+			if (_T_FowardWeights != null) {
+				foreach (Weight.Base w in _T_FowardWeights) {
+					w.Dispose ();
+					w.GetNodeB ()._T_ReverseWeights = null;
+					w.GetNodeB ()._ReverseWeights.Remove (w);
 				}
-			_FowardWeights.Clear ();
-			_T_FowardWeights = null;
+				_FowardWeights.Clear ();
+				_T_FowardWeights = null;
 			}
-			if(_T_ReverseWeights!=null){
-			foreach (Weight.Base w in _T_ReverseWeights)
-				{
-				w.Dispose ();
-						w.GetNodeB()._T_FowardWeights =null;
-					w.GetNodeB()._FowardWeights.Remove(w);
+			if (_T_ReverseWeights != null) {
+				foreach (Weight.Base w in _T_ReverseWeights) {
+					w.Dispose ();
+					w.GetNodeB ()._T_FowardWeights = null;
+					w.GetNodeB ()._FowardWeights.Remove (w);
 				}
-			_ReverseWeights.Clear ();
-			_T_ReverseWeights = null;
+				_ReverseWeights.Clear ();
+				_T_ReverseWeights = null;
 			}
 		}
 		

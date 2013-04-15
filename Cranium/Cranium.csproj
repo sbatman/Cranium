@@ -43,6 +43,7 @@
     <Compile Include="Structure\ActivationFunction\BinarySigmoid.cs" />
     <Compile Include="Structure\ActivationFunction\Linear.cs" />
     <Compile Include="Structure\ActivationFunction\Tanh.cs" />
+    <Compile Include="Structure\Node\Output.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

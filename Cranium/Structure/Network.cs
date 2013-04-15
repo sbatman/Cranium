@@ -131,12 +131,14 @@ namespace Cranium.Structure
 		/// </summary>
 		public virtual void FowardPass ()
 		{
-			foreach (Layer.Base l in  _DetectedBottomLayers)	l.ForwardPass ();			
+			foreach (Layer.Base l in  _DetectedBottomLayers)
+				l.ForwardPass ();			
 		}
 	
-	    public virtual void ReversePass()
+		public virtual void ReversePass ()
 		{
-			foreach(Layer.Base l in _DetectedTopLayers)l.ReversePass();
+			foreach (Layer.Base l in _DetectedTopLayers)
+				l.ReversePass ();
 		}
 	}
 }
