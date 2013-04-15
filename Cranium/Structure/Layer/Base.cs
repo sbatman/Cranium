@@ -6,14 +6,15 @@
 // //////////////////////
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Cranium.Structure.Layer
 {
 	public class Base : IDisposable
 	{
-		protected List<Node.Base> _Nodes = new List<Node.Base>();
-		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base>();
-		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base>();
+		protected List<Node.Base> _Nodes = new List<Node.Base> ();
+		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base> ();
+		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base> ();
 		
 		/// <summary>
 		/// Sets the nodes that are present in this layer, the previous list of nodes is purged.
@@ -26,6 +27,9 @@ namespace Cranium.Structure.Layer
 			_Nodes.Clear ();
 			_Nodes = null;
 			_Nodes = nodes;	
+			for (int x=0; x<_Nodes.Count; x++) {
+				_Nodes [x].SetPositionInParentLayer (x);	
+			}
 		}
 		
 		/// <summary>
@@ -34,9 +38,14 @@ namespace Cranium.Structure.Layer
 		/// <returns>
 		/// The nodes.
 		/// </returns>
-		public virtual List<Node.Base> GetNodes ()
+		public virtual ReadOnlyCollection<Node.Base> GetNodes ()
 		{
-			return _Nodes;	
+			return _Nodes.AsReadOnly ();	
+		}
+		
+		public virtual int GetNodeCount ()
+		{
+			return _Nodes.Count;	
 		}
 
 		/// <summary>

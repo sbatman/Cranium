@@ -13,6 +13,7 @@ namespace Cranium.Structure.Node
 	{
 		protected Double _Value;
 		protected Layer.Base _ParentLayer;
+		protected int _ParentLayerPosition;
 		protected List<Weight.Base> _FowardWeights = new List<Weight.Base>();
 		protected List<Weight.Base> _ReverseWeights = new List<Weight.Base>();
 		protected ActivationFunction.Base _ActivationFunction;
@@ -73,6 +74,11 @@ namespace Cranium.Structure.Node
 			if (_T_FowardWeights == null || _T_ReverseWeights == null)
 				BakeLists ();
 			return _T_FowardWeights;
+		}
+		
+		public virtual void SetPositionInParentLayer(int _position)
+		{
+			_ParentLayerPosition = _position;	
 		}
 		
 		
