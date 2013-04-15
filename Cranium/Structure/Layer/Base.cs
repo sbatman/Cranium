@@ -15,6 +15,7 @@ namespace Cranium.Structure.Layer
 		protected List<Node.Base> _Nodes = new List<Node.Base> ();
 		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base> ();
+		protected int _LayerID;
 		
 		/// <summary>
 		/// Sets the nodes that are present in this layer, the previous list of nodes is purged.
@@ -43,6 +44,12 @@ namespace Cranium.Structure.Layer
 			return _Nodes.AsReadOnly ();	
 		}
 		
+		/// <summary>
+		/// Returns the number of nodes present in the layer.
+		/// </summary>
+		/// <returns>
+		/// The node count.
+		/// </returns>
 		public virtual int GetNodeCount ()
 		{
 			return _Nodes.Count;	
@@ -125,6 +132,16 @@ namespace Cranium.Structure.Layer
 				n.CalculateValue ();				
 			foreach (Layer.Base l in _ForwardConnectedLayers) 
 				l.ForwardPass ();				
+		}
+		
+		public int GetID ()
+		{
+			return _LayerID;	
+		}
+		
+		public void SetID (int id)
+		{
+			_LayerID = id;
 		}
 
 		#region IDisposable implementation

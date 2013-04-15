@@ -12,9 +12,9 @@ namespace Cranium.Structure
 {
 	public class Network
 	{
-		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base>();
-		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base>();
-		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base>();
+		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ();
+		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ();
+		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base> ();
 		
 		public Network ()
 		{			
@@ -54,11 +54,14 @@ namespace Cranium.Structure
 		/// </summary>
 		protected virtual void StructureUpdate ()
 		{
+			int id = 0;
 			foreach (Layer.Base l in _CurrentLayers) {
 				if (l.GetForwardConnectedLayers ().Count == 0)
 					_DetectedTopLayers.Add (l);
 				if (l.GetReverseConnectedLayers ().Count == 0)
 					_DetectedBottomLayers.Add (l);
+				l.SetID (id);
+				id++;
 			}
 		}
 		
