@@ -133,6 +133,13 @@ namespace Cranium.Structure.Layer
 			foreach (Layer.Base l in _ForwardConnectedLayers) 
 				l.ForwardPass ();				
 		}
+		public virtual void ReversePass()
+		{
+			foreach (Node.Base n in _Nodes) 
+				n.CalculateError();				
+			foreach (Layer.Base l in _ForwardConnectedLayers) 
+				l.ReversePass ();		
+		}
 		
 		public int GetID ()
 		{

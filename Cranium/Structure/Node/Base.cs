@@ -81,6 +81,11 @@ namespace Cranium.Structure.Node
 			_ParentLayerPosition = _position;	
 		}
 		
+		public virtual void CalculateError()
+		{
+		//logichere	
+		}
+		
 		
 		/// <summary>
 		/// Returns the currently assigned list of reverse weights

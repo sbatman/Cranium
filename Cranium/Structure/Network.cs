@@ -96,7 +96,7 @@ namespace Cranium.Structure
 		{
 			return _DetectedTopLayers.AsReadOnly ();
 		}
-		
+			
 		/// <summary>
 		/// Returns a read only list of the detected bottom layers in the network
 		/// </summary>
@@ -131,9 +131,12 @@ namespace Cranium.Structure
 		/// </summary>
 		public virtual void FowardPass ()
 		{
-			foreach (Layer.Base l in  _DetectedBottomLayers) {
-				l.ForwardPass ();
-			}
+			foreach (Layer.Base l in  _DetectedBottomLayers)	l.ForwardPass ();			
+		}
+	
+	    public virtual void ReversePass()
+		{
+			foreach(Layer.Base l in _DetectedTopLayers)l.ReversePass();
 		}
 	}
 }

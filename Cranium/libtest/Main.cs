@@ -19,7 +19,8 @@ namespace Cranium.libtest
 			TestNetworkStructure.RandomiseWeights (0.2d);
 			PrepData ();
 			
-			for (int x=0; x<4; x++) {
+			for (int x=0; x<4; x++)
+			{
 				PresentData (x);
 				ForwardPass ();
 				Console.WriteLine (InputData [(x * 2)] + "-" + InputData [(x * 2) + 1] + "  -  " + OutputLayer.GetNodes () [0].GetValue ());
@@ -91,6 +92,11 @@ namespace Cranium.libtest
 		public static void ForwardPass ()
 		{
 			TestNetworkStructure.FowardPass ();	
+		}
+		
+		public static void ReversePass(int row,double momentum)
+		{
+			OutputLayer.GetNodes()[0].SetValue(OutputData[row]);
 		}
 	}
 }
