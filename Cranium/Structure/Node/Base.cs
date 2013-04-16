@@ -85,17 +85,25 @@ namespace Cranium.Structure.Node
 		
 		public virtual void CalculateError ()
 		{
-			float tempError=0;
-			foreach(Weight.Base w in _T_FowardWeights)
-			{
-				tempError += w.GetWeight()*w.GetNodeB().GetError();
+			double tempError = 0;
+			foreach (Weight.Base w in _T_FowardWeights) {
+				tempError += w.GetWeight () * w.GetNodeB ().GetError ();
 			}
-			_Error = _Value * _ActivationFunction.ComputeDerivative(_Value) * tempError;
+			_Error = _Value * _ActivationFunction.ComputeDerivative (_Value) * tempError;
 		}
 		
-		public virtual void AdjustWeights()
+		public virtual void AdjustWeights (double learningRate)
 		{
-		//more logic	
+			foreach (Weight.Base w in _FowardWeights) {
+				w.AddWeightChange ((_Error * learningRate));
+			}
+		}
+		
+		public virtual void UpdateWeights ()
+		{
+			foreach (Weight.Base w in _FowardWeights) {
+				w.ApplyPendingWeightChanges ();	
+			}
 		}
 		
 		public virtual double GetError ()

@@ -18,11 +18,16 @@ namespace Cranium.libtest
 			BuildStructure ();
 			TestNetworkStructure.RandomiseWeights (0.2d);
 			PrepData ();
-			
+			while(true){
+					Console.SetCursorPosition(0,0);
 			for (int x=0; x<4; x++) {
+					
 				PresentData (x);
 				ForwardPass ();
+				ReversePass(x,0);
+				
 				Console.WriteLine (InputData [(x * 2)] + "-" + InputData [(x * 2) + 1] + "  -  " + OutputLayer.GetNodes () [0].GetValue ());
+			}
 			}
 			Console.ReadKey ();
 		}
@@ -44,7 +49,7 @@ namespace Cranium.libtest
 			OutputLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<1; i++)
-				OuputLayerNodes.Add (new Cranium.Structure.Node.Base (OutputLayer, new Cranium.Structure.ActivationFunction.Linear ()));
+				OuputLayerNodes.Add (new Cranium.Structure.Node.Output (OutputLayer, new Cranium.Structure.ActivationFunction.Linear ()));
 			OutputLayer.SetNodes (OuputLayerNodes);
 			
 			InputLayer.ConnectFowardLayer (HiddenLayer);
@@ -95,7 +100,9 @@ namespace Cranium.libtest
 		
 		public static void ReversePass (int row, double momentum)
 		{
-			OutputLayer.GetNodes () [0].SetValue (OutputData [row]);
+			Structure.Node.Output outputNode =(Structure.Node.Output )(OutputLayer.GetNodes () [0] );
+			outputNode.SetTargetValue (OutputData [row]);
+			OutputLayer.ReversePass();
 		}
 	}
 }

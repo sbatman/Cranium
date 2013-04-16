@@ -137,9 +137,14 @@ namespace Cranium.Structure.Layer
 		public virtual void ReversePass ()
 		{
 			foreach (Node.Base n in _Nodes) 
-				n.CalculateError ();				
+				n.CalculateError ();			
+			foreach (Node.Base n in _Nodes) 
+				n.AdjustWeights (0.01f);	
+			foreach (Node.Base n in _Nodes) 
+				n.UpdateWeights ();		
 			foreach (Layer.Base l in _ForwardConnectedLayers) 
 				l.ReversePass ();		
+			
 		}
 		
 		public int GetID ()
