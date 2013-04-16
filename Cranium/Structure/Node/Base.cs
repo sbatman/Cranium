@@ -85,8 +85,23 @@ namespace Cranium.Structure.Node
 		
 		public virtual void CalculateError ()
 		{
-			
-		}		
+			float tempError=0;
+			foreach(Weight.Base w in _T_FowardWeights)
+			{
+				tempError += w.GetWeight()*w.GetNodeB().GetError();
+			}
+			_Error = _Value * _ActivationFunction.ComputeDerivative(_Value) * tempError;
+		}
+		
+		public virtual void AdjustWeights()
+		{
+		//more logic	
+		}
+		
+		public virtual double GetError ()
+		{
+			return _Error;	
+		}
 		
 		/// <summary>
 		/// Returns the currently assigned list of reverse weights
