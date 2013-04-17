@@ -6,14 +6,16 @@
 // //////////////////////
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Cranium.Structure.Layer
 {
 	public class Base : IDisposable
 	{
-		protected List<Node.Base> _Nodes = new List<Node.Base>();
-		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base>();
-		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base>();
+		protected List<Node.Base> _Nodes = new List<Node.Base> ();
+		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base> ();
+		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base> ();
+		protected int _LayerID;
 		
 		/// <summary>
 		/// Sets the nodes that are present in this layer, the previous list of nodes is purged.
@@ -26,6 +28,9 @@ namespace Cranium.Structure.Layer
 			_Nodes.Clear ();
 			_Nodes = null;
 			_Nodes = nodes;	
+			for (int x=0; x<_Nodes.Count; x++) {
+				_Nodes [x].SetPositionInParentLayer (x);	
+			}
 		}
 		
 		/// <summary>
@@ -34,9 +39,20 @@ namespace Cranium.Structure.Layer
 		/// <returns>
 		/// The nodes.
 		/// </returns>
-		public virtual List<Node.Base> GetNodes ()
+		public virtual ReadOnlyCollection<Node.Base> GetNodes ()
 		{
-			return _Nodes;	
+			return _Nodes.AsReadOnly ();	
+		}
+		
+		/// <summary>
+		/// Returns the number of nodes present in the layer.
+		/// </summary>
+		/// <returns>
+		/// The node count.
+		/// </returns>
+		public virtual int GetNodeCount ()
+		{
+			return _Nodes.Count;	
 		}
 
 		/// <summary>
@@ -107,14 +123,38 @@ namespace Cranium.Structure.Layer
 				n.DestroyAllConnections ();
 		}
 		
+		/// <summary>
+		/// Triggers a calculate value call on all nodes withint he layer and then recursively calls this function on all foward connected layers.
+		/// </summary>
 		public virtual void ForwardPass ()
 		{
-			foreach (Node.Base n in _Nodes) {
-				n.CalculateValue ();	
-			}	
-			foreach (Layer.Base l in _ForwardConnectedLayers) {
-				l.ForwardPass ();	
-			}
+			foreach (Node.Base n in _Nodes) 
+				n.CalculateValue ();				
+			foreach (Layer.Base l in _ForwardConnectedLayers) 
+				l.ForwardPass ();				
+		}
+
+		public virtual void ReversePass ()
+		{
+			foreach (Node.Base n in _Nodes) 
+				n.CalculateError ();			
+			foreach (Node.Base n in _Nodes) 
+				n.AdjustWeights (0.003);	
+			foreach (Node.Base n in _Nodes) 
+				n.UpdateWeights ();		
+			foreach (Layer.Base l in _ReverseConnectedLayers) 
+				l.ReversePass ();		
+			
+		}
+		
+		public int GetID ()
+		{
+			return _LayerID;	
+		}
+		
+		public void SetID (int id)
+		{
+			_LayerID = id;
 		}
 
 		#region IDisposable implementation

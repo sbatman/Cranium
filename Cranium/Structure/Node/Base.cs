@@ -11,10 +11,12 @@ namespace Cranium.Structure.Node
 {
 	public class Base : IDisposable
 	{
-		protected Double _Value;
+		protected Double _Value = 0;
+		protected Double _Error = 0;
 		protected Layer.Base _ParentLayer;
-		protected List<Weight.Base> _FowardWeights = new List<Weight.Base>();
-		protected List<Weight.Base> _ReverseWeights = new List<Weight.Base>();
+		protected int _ParentLayerPosition;
+		protected List<Weight.Base> _FowardWeights = new List<Weight.Base> ();
+		protected List<Weight.Base> _ReverseWeights = new List<Weight.Base> ();
 		protected ActivationFunction.Base _ActivationFunction;
 		
 		//Baked or Temp fields
@@ -34,11 +36,17 @@ namespace Cranium.Structure.Node
 		{
 			if (_T_FowardWeights == null || _T_ReverseWeights == null)
 				BakeLists ();
-			if(_T_ReverseWeights.Length==0) return;
+			if (_T_ReverseWeights.Length == 0)
+				return;
 			_Value = 0;
+			
 			foreach (Weight.Base W in _T_ReverseWeights)
-				_Value += W.GetNodeA ().GetValue () * W.GetWeight ();			
+				_Value += W.GetNodeA ().GetValue () * W.GetWeight ();	
+			if (Double.IsNaN (_Value) || Double.IsInfinity (_Value))
+				throw(new Exception ("Activation Function Error"));
 			_Value = _ActivationFunction.Compute (_Value);
+			if (Double.IsNaN (_Value) || Double.IsInfinity (_Value))
+				throw(new Exception ("Activation Function Error"));
 		}
 		
 		/// <summary>
@@ -75,6 +83,43 @@ namespace Cranium.Structure.Node
 			return _T_FowardWeights;
 		}
 		
+		public virtual void SetPositionInParentLayer (int _position)
+		{
+			_ParentLayerPosition = _position;	
+		}
+		
+		public virtual void CalculateError ()
+		{
+			Double tempError = 0;
+			foreach (Weight.Base w in _T_FowardWeights) {
+				tempError += w.GetWeight () * w.GetNodeB ().GetError () ;
+			}
+			_Error = _ActivationFunction.ComputeDerivative(_Value)*tempError;
+				
+
+			if(Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw(new Exception("Weight Error"));
+		}
+		
+		public virtual void AdjustWeights (Double learningRate)
+		{
+			foreach (Weight.Base w in _FowardWeights) {		
+				w.AddWeightChange (_Value *w.GetNodeB().GetError()* learningRate);
+			}
+		}
+		
+		public virtual void UpdateWeights ()
+		{
+			foreach (Weight.Base w in _FowardWeights) {
+				w.ApplyPendingWeightChanges ();	
+			}
+		}
+		
+		public virtual Double GetError ()
+		{
+			if(Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw(new Exception("Weight Error"));
+			return _Error;	
+			
+		}
 		
 		/// <summary>
 		/// Returns the currently assigned list of reverse weights
@@ -121,24 +166,39 @@ namespace Cranium.Structure.Node
 			}
 		}
 		
+		/// <summary>
+		/// Sets the value of the node.
+		/// </summary>
+		/// <param name='newValue'>
+		/// New value.
+		/// </param>
 		public virtual void SetValue (Double newValue)
 		{
 			_Value = newValue;	
 		}
 		
+		/// <summary>
+		/// Destroies all the foward and reverse weights connected tot his node.
+		/// </summary>
 		public virtual void DestroyAllConnections ()
 		{
-			if(_T_FowardWeights!=null){
-			foreach (Weight.Base w in _T_FowardWeights)
-				w.Dispose ();	
-			_FowardWeights.Clear ();
-			_T_FowardWeights = null;
+			if (_T_FowardWeights != null) {
+				foreach (Weight.Base w in _T_FowardWeights) {
+					w.Dispose ();
+					w.GetNodeB ()._T_ReverseWeights = null;
+					w.GetNodeB ()._ReverseWeights.Remove (w);
+				}
+				_FowardWeights.Clear ();
+				_T_FowardWeights = null;
 			}
-			if(_T_ReverseWeights!=null){
-			foreach (Weight.Base w in _T_ReverseWeights)
-				w.Dispose ();
-			_ReverseWeights.Clear ();
-			_T_ReverseWeights = null;
+			if (_T_ReverseWeights != null) {
+				foreach (Weight.Base w in _T_ReverseWeights) {
+					w.Dispose ();
+					w.GetNodeB ()._T_FowardWeights = null;
+					w.GetNodeB ()._FowardWeights.Remove (w);
+				}
+				_ReverseWeights.Clear ();
+				_T_ReverseWeights = null;
 			}
 		}
 		

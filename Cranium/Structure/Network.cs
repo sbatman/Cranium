@@ -12,9 +12,9 @@ namespace Cranium.Structure
 {
 	public class Network
 	{
-		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base>();
-		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base>();
-		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base>();
+		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ();
+		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ();
+		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base> ();
 		
 		public Network ()
 		{			
@@ -54,11 +54,14 @@ namespace Cranium.Structure
 		/// </summary>
 		protected virtual void StructureUpdate ()
 		{
+			int id = 0;
 			foreach (Layer.Base l in _CurrentLayers) {
 				if (l.GetForwardConnectedLayers ().Count == 0)
 					_DetectedTopLayers.Add (l);
 				if (l.GetReverseConnectedLayers ().Count == 0)
 					_DetectedBottomLayers.Add (l);
+				l.SetID (id);
+				id++;
 			}
 		}
 		
@@ -93,7 +96,7 @@ namespace Cranium.Structure
 		{
 			return _DetectedTopLayers.AsReadOnly ();
 		}
-		
+			
 		/// <summary>
 		/// Returns a read only list of the detected bottom layers in the network
 		/// </summary>
@@ -105,7 +108,13 @@ namespace Cranium.Structure
 			return _DetectedBottomLayers.AsReadOnly ();
 		}
 		
-		public virtual void RandomiseWeights (double varianceFromZero)
+		/// <summary>
+		/// Randomises the weights for all nodes within the network.
+		/// </summary>
+		/// <param name='varianceFromZero'>
+		/// Variance from zero.
+		/// </param>
+		public virtual void RandomiseWeights (Double varianceFromZero)
 		{
 			Random rnd = new Random ();
 			foreach (Layer.Base l in _CurrentLayers) {
@@ -117,11 +126,19 @@ namespace Cranium.Structure
 			}
 		}
 		
+		/// <summary>
+		/// Performs a recursive foward pass across the network causing the update of all values of all nodes that have reverse weights.
+		/// </summary>
 		public virtual void FowardPass ()
 		{
-			foreach (Layer.Base l in  _DetectedBottomLayers) {
-				l.ForwardPass ();
-			}
+			foreach (Layer.Base l in  _DetectedBottomLayers)
+				l.ForwardPass ();			
+		}
+	
+		public virtual void ReversePass ()
+		{
+			foreach (Layer.Base l in _DetectedTopLayers)
+				l.ReversePass ();
 		}
 	}
 }
