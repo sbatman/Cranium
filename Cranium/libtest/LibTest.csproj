@@ -7,9 +7,10 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{509EEFCA-0006-4685-B217-A255BA989BD5}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>libtest</RootNamespace>
+    <RootNamespace>Cranium.Libtest</RootNamespace>
     <AssemblyName>libtest</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <Description>A library of test for the Crainium Library</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>

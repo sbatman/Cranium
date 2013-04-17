@@ -52,7 +52,6 @@
       <Properties>
         <Policies>
           <DotNetNamingPolicy DirectoryNamespaceAssociation="Hierarchical" ResourceNamePolicy="FileFormatDefault" />
-          <StandardHeader Text="///////////////////////&#xA;&#xA;Cranium - A neural network framework for C#&#xA;https://github.com/sbatman/Cranium.git&#xA;&#xA;//////////////////////" IncludeInNewFiles="True" />
           <ChangeLogPolicy UpdateMode="Nearest" inheritsSet="Mono" />
         </Policies>
       </Properties>
