@@ -8,7 +8,7 @@ namespace Cranium.libtest
 	{
 		public static void Main (string[] args)
 		{
-			XOR2Test.Run ();
+			XOR3Test.Run ();
 		}
 	}
 }
