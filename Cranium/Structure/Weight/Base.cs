@@ -114,7 +114,7 @@ namespace Cranium.Structure.Weight
 		/// </summary>
 		public virtual void ApplyPendingWeightChanges ()
 		{
-			_PastWeightChange = (_PendingWeightChange / _PendingWeightChangeCount) ;
+			_PastWeightChange = (_PendingWeightChange / _PendingWeightChangeCount);
 			_Weight += _PastWeightChange;	
 									
 

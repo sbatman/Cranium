@@ -92,18 +92,19 @@ namespace Cranium.Structure.Node
 		{
 			Double tempError = 0;
 			foreach (Weight.Base w in _T_FowardWeights) {
-				tempError += w.GetWeight () * w.GetNodeB ().GetError () ;
+				tempError += w.GetWeight () * w.GetNodeB ().GetError ();
 			}
-			_Error = _ActivationFunction.ComputeDerivative(_Value)*tempError;
+			_Error = _ActivationFunction.ComputeDerivative (_Value) * tempError;
 				
 
-			if(Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw(new Exception("Weight Error"));
+			if (Double.IsNaN (_Error) || Double.IsInfinity (_Error))
+				throw(new Exception ("Weight Error"));
 		}
 		
 		public virtual void AdjustWeights (Double learningRate)
 		{
 			foreach (Weight.Base w in _FowardWeights) {		
-				w.AddWeightChange (_Value *w.GetNodeB().GetError()* learningRate);
+				w.AddWeightChange (_Value * w.GetNodeB ().GetError () * learningRate);
 			}
 		}
 		
@@ -116,7 +117,8 @@ namespace Cranium.Structure.Node
 		
 		public virtual Double GetError ()
 		{
-			if(Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw(new Exception("Weight Error"));
+			if (Double.IsNaN (_Error) || Double.IsInfinity (_Error))
+				throw(new Exception ("Weight Error"));
 			return _Error;	
 			
 		}

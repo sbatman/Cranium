@@ -26,9 +26,8 @@ namespace Cranium.libtest
 			while (true) {
 				epoch++;
 				time++;
-				if (time % 100 == 0)
-				{
-					Console.Clear();
+				if (time % 100 == 0) {
+					Console.Clear ();
 					Console.SetCursorPosition (0, 0);
 				}
 		
@@ -170,8 +169,8 @@ namespace Cranium.libtest
 		
 		public static void ReversePass (int row, Double momentum)
 		{
-			for(int x=0;x<3;x++){
-			((Structure.Node.Output)OutputLayer.GetNodes () [x]).SetTargetValue (OutputData [(row*3)+x]);
+			for (int x=0; x<3; x++) {
+				((Structure.Node.Output)OutputLayer.GetNodes () [x]).SetTargetValue (OutputData [(row * 3) + x]);
 			}
 			OutputLayer.ReversePass ();
 		}
