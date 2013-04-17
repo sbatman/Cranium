@@ -139,7 +139,7 @@ namespace Cranium.Structure.Layer
 			foreach (Node.Base n in _Nodes) 
 				n.CalculateError ();			
 			foreach (Node.Base n in _Nodes) 
-				n.AdjustWeights (0.7);	
+				n.AdjustWeights (0.003);	
 			foreach (Node.Base n in _Nodes) 
 				n.UpdateWeights ();		
 			foreach (Layer.Base l in _ReverseConnectedLayers) 

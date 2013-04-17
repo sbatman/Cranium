@@ -102,8 +102,7 @@ namespace Cranium.Structure.Node
 		
 		public virtual void AdjustWeights (Double learningRate)
 		{
-			foreach (Weight.Base w in _FowardWeights) {
-		
+			foreach (Weight.Base w in _FowardWeights) {		
 				w.AddWeightChange (_Value *w.GetNodeB().GetError()* learningRate);
 			}
 		}
