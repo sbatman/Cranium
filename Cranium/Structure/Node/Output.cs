@@ -12,7 +12,7 @@ namespace Cranium.Structure.Node
 {
 	public class Output : Base
 	{
-		protected double _TargetValue;
+		protected Double _TargetValue;
 		
 		public Output (Cranium.Structure.Layer.Base parentLayer,Cranium.Structure.ActivationFunction.Base activationFunction):base(parentLayer,activationFunction)
 		{
@@ -21,9 +21,10 @@ namespace Cranium.Structure.Node
 		
 		public override void CalculateError ()
 		{
-			_Error =  _Value - _TargetValue;
+			_Error =((1-_Value)*(1+_Value))*(_TargetValue -_Value) ;
+
 		}	
-		public virtual void SetTargetValue(double targetValue)
+		public virtual void SetTargetValue(Double targetValue)
 		{
 			_TargetValue=targetValue;
 		}

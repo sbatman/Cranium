@@ -114,7 +114,7 @@ namespace Cranium.Structure
 		/// <param name='varianceFromZero'>
 		/// Variance from zero.
 		/// </param>
-		public virtual void RandomiseWeights (double varianceFromZero)
+		public virtual void RandomiseWeights (Double varianceFromZero)
 		{
 			Random rnd = new Random ();
 			foreach (Layer.Base l in _CurrentLayers) {

@@ -11,8 +11,8 @@ namespace Cranium.Structure.Node
 {
 	public class Base : IDisposable
 	{
-		protected Double _Value;
-		protected Double _Error;
+		protected Double _Value = 0;
+		protected Double _Error = 0;
 		protected Layer.Base _ParentLayer;
 		protected int _ParentLayerPosition;
 		protected List<Weight.Base> _FowardWeights = new List<Weight.Base> ();
@@ -39,9 +39,14 @@ namespace Cranium.Structure.Node
 			if (_T_ReverseWeights.Length == 0)
 				return;
 			_Value = 0;
+			
 			foreach (Weight.Base W in _T_ReverseWeights)
-				_Value += W.GetNodeA ().GetValue () * W.GetWeight ();			
+				_Value += W.GetNodeA ().GetValue () * W.GetWeight ();	
+			if (Double.IsNaN (_Value) || Double.IsInfinity (_Value))
+				throw(new Exception ("Activation Function Error"));
 			_Value = _ActivationFunction.Compute (_Value);
+			if (Double.IsNaN (_Value) || Double.IsInfinity (_Value))
+				throw(new Exception ("Activation Function Error"));
 		}
 		
 		/// <summary>
@@ -85,17 +90,21 @@ namespace Cranium.Structure.Node
 		
 		public virtual void CalculateError ()
 		{
-			double tempError = 0;
+			Double tempError = 0;
 			foreach (Weight.Base w in _T_FowardWeights) {
-				tempError += w.GetWeight () * w.GetNodeB ().GetError ();
+				tempError += w.GetWeight () * w.GetNodeB ().GetError () ;
 			}
-			_Error = _Value * _ActivationFunction.ComputeDerivative (_Value) * tempError;
+			_Error = _ActivationFunction.ComputeDerivative(_Value)*tempError;
+				
+
+			if(Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw(new Exception("Weight Error"));
 		}
 		
-		public virtual void AdjustWeights (double learningRate)
+		public virtual void AdjustWeights (Double learningRate)
 		{
 			foreach (Weight.Base w in _FowardWeights) {
-				w.AddWeightChange ((_Error * learningRate));
+		
+				w.AddWeightChange (_Value *w.GetNodeB().GetError()* learningRate);
 			}
 		}
 		
@@ -106,9 +115,11 @@ namespace Cranium.Structure.Node
 			}
 		}
 		
-		public virtual double GetError ()
+		public virtual Double GetError ()
 		{
+			if(Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw(new Exception("Weight Error"));
 			return _Error;	
+			
 		}
 		
 		/// <summary>
