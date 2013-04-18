@@ -46,13 +46,15 @@
     <Compile Include="Structure\Node\Output.cs" />
     <Compile Include="Structure\Node\Bias.cs" />
     <Compile Include="Structure\ActivationFunction\Step.cs" />
+    <Compile Include="Structure\Layer\Recurrent-Context.cs" />
+    <Compile Include="Structure\Node\Recurrent-Context.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
     <MonoDevelop>
       <Properties>
         <Policies>
-          <DotNetNamingPolicy DirectoryNamespaceAssociation="Hierarchical" ResourceNamePolicy="FileFormatDefault" />
+          <DotNetNamingPolicy DirectoryNamespaceAssociation="PrefixedHierarchical" ResourceNamePolicy="FileFormatDefault" />
           <ChangeLogPolicy UpdateMode="Nearest" inheritsSet="Mono" />
         </Policies>
       </Properties>
