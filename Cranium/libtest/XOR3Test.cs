@@ -1,3 +1,14 @@
+// // ///////////////////////
+// // 
+// // Cranium - A neural network framework for C#
+// // https://github.com/sbatman/Cranium.git
+// // 
+// // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
+// // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
+// // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
+// //
+// // //////////////////////
+
 using System;
 using Cranium.Structure;
 using System.Collections.Generic;
@@ -19,16 +30,15 @@ namespace Cranium.libtest
 		{			
 			TestNetworkStructure = new Network ();
 			BuildStructureXOR ();
-			TestNetworkStructure.RandomiseWeights (0.5d);
+			TestNetworkStructure.RandomiseWeights (0.1d);
 			PrepData ();
 			int epoch = 0;
 			int time = 0;
 			while (true) {
 				epoch++;
 				time++;
-				if (time % 100 == 0)
-				{
-					Console.Clear();
+				if (time % 100 == 0) {
+					Console.Clear ();
 					Console.SetCursorPosition (0, 0);
 				}
 		
@@ -40,7 +50,7 @@ namespace Cranium.libtest
 
 					
 					if (time % 100 == 0)
-						Console.WriteLine (InputLayer.GetNodes () [0].GetValue () + "-" + InputLayer.GetNodes () [1].GetValue () + "-" + InputLayer.GetNodes () [2].GetValue () + "  -  " + Math.Round (OutputLayer.GetNodes () [0].GetValue (), 3) + "  -  " + Math.Round (OutputLayer.GetNodes () [1].GetValue (), 3) + "  -  " + Math.Round (OutputLayer.GetNodes () [2].GetValue (), 3));
+						Console.WriteLine (InputLayer.GetNodes () [0].GetValue () + "-" + InputLayer.GetNodes () [1].GetValue () + "-" + InputLayer.GetNodes () [2].GetValue () + "  -  " + Math.Round (OutputLayer.GetNodes () [0].GetValue (), 2) + "  -  " + Math.Round (OutputLayer.GetNodes () [1].GetValue (), 2) + "  -  " + Math.Round (OutputLayer.GetNodes () [2].GetValue (), 2));
 				}
 			}
 			Console.ReadKey ();
@@ -64,7 +74,7 @@ namespace Cranium.libtest
 			
 			HiddenLayer2 = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> HiddenLayerNodes2 = new List<Cranium.Structure.Node.Base> ();
-			for (int i=0; i<3; i++)
+			for (int i=0; i<4; i++)
 				HiddenLayerNodes2.Add (new Cranium.Structure.Node.Base (HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh ()));
 			//HiddenLayerNodes.Add (new Cranium.Structure.Node.Bias (HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh ()));
 			HiddenLayer2.SetNodes (HiddenLayerNodes2);
@@ -170,10 +180,10 @@ namespace Cranium.libtest
 		
 		public static void ReversePass (int row, Double momentum)
 		{
-			for(int x=0;x<3;x++){
-			((Structure.Node.Output)OutputLayer.GetNodes () [x]).SetTargetValue (OutputData [(row*3)+x]);
+			for (int x=0; x<3; x++) {
+				((Structure.Node.Output)OutputLayer.GetNodes () [x]).SetTargetValue (OutputData [(row * 3) + x]);
 			}
-			OutputLayer.ReversePass ();
+			OutputLayer.ReversePass (0.01);
 		}
 	}
 }

@@ -1,15 +1,24 @@
-// ///////////////////////
-// 
-// Cranium - A neural network framework for C#
-// https://github.com/sbatman/Cranium.git
-// 
-// //////////////////////
+// // ///////////////////////
+// // 
+// // Cranium - A neural network framework for C#
+// // https://github.com/sbatman/Cranium.git
+// // 
+// // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
+// // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
+// // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
+// //
+// // //////////////////////
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Cranium.Structure.Layer
 {
+	/// <summary></summary>
+	/// This is the base Layer structure of the Neural Network, It is used to house collections of nodes and provide the linking structure of these nodes with other groups of nodes.
+	/// The layer class also provides some of the basic functionality for back and foward propogation. This class can be overriden to add additional functionality to a layer.
+	/// </summary>
 	public class Base : IDisposable
 	{
 		protected List<Node.Base> _Nodes = new List<Node.Base> ();
@@ -134,16 +143,16 @@ namespace Cranium.Structure.Layer
 				l.ForwardPass ();				
 		}
 
-		public virtual void ReversePass ()
+		public virtual void ReversePass (double learningRate)
 		{
 			foreach (Node.Base n in _Nodes) 
 				n.CalculateError ();			
 			foreach (Node.Base n in _Nodes) 
-				n.AdjustWeights (0.003);	
+				n.AdjustWeights (learningRate);	
 			foreach (Node.Base n in _Nodes) 
 				n.UpdateWeights ();		
 			foreach (Layer.Base l in _ReverseConnectedLayers) 
-				l.ReversePass ();		
+				l.ReversePass (learningRate);		
 			
 		}
 		

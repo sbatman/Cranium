@@ -8,27 +8,30 @@
 // // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // //
 // // //////////////////////
-
 using System;
 
 namespace Cranium.Structure.ActivationFunction
 {
-	public class BinarySigmoid :Base
+	/// <summary>
+	/// This activation function will return 1 when >= threshold else 0, its not recomended you use this in a backprop netowrk
+	/// </summary>
+	public class Step : Base
 	{
+		protected double _ActivationPoint;
+		
+		public Step (double activationPoint)
+		{
+			_ActivationPoint = activationPoint;	
+		}
+
 		public override Double Compute (Double input)
 		{
-			Double D = (Double)1d / (1d + Math.Exp (0d - (Double)input));
-			if (Double.IsNaN (D) || Double.IsInfinity (D))
-				throw(new Exception ("Activation Function Error"));
-			return D;
+			return input >= _ActivationPoint ? 1 : 0;
 		}
 
 		public override Double ComputeDerivative (Double input)
 		{
-			Double D = (Double)(Compute (input) * (1d - Compute (input)));
-			if (Double.IsNaN (D) || Double.IsInfinity (D))
-				throw(new Exception ("Activation Function Error"));
-			return D;
+			return 1;
 		}
 
 		public override void Dispose ()

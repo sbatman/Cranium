@@ -1,14 +1,23 @@
-// ///////////////////////
-// 
-// Cranium - A neural network framework for C#
-// https://github.com/sbatman/Cranium.git
-// 
-// //////////////////////
+// // ///////////////////////
+// // 
+// // Cranium - A neural network framework for C#
+// // https://github.com/sbatman/Cranium.git
+// // 
+// // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
+// // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
+// // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
+// //
+// // //////////////////////
+
 using System;
 using System.Collections.Generic;
 
 namespace Cranium.Structure.Node
 {
+	/// <summary>
+	/// The base node class is a core part of the Neural Netowrk framework and represents a neuron that is placed within layers in the network.
+	/// This class can be derived to add additional functionality to a node such as adding recurive memory.
+	/// </summary>
 	public class Base : IDisposable
 	{
 		protected Double _Value = 0;
@@ -92,18 +101,19 @@ namespace Cranium.Structure.Node
 		{
 			Double tempError = 0;
 			foreach (Weight.Base w in _T_FowardWeights) {
-				tempError += w.GetWeight () * w.GetNodeB ().GetError () ;
+				tempError += w.GetWeight () * w.GetNodeB ().GetError ();
 			}
-			_Error = _ActivationFunction.ComputeDerivative(_Value)*tempError;
+			_Error = _ActivationFunction.ComputeDerivative (_Value) * tempError;
 				
 
-			if(Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw(new Exception("Weight Error"));
+			if (Double.IsNaN (_Error) || Double.IsInfinity (_Error))
+				throw(new Exception ("Weight Error"));
 		}
 		
 		public virtual void AdjustWeights (Double learningRate)
 		{
 			foreach (Weight.Base w in _FowardWeights) {		
-				w.AddWeightChange (_Value *w.GetNodeB().GetError()* learningRate);
+				w.AddWeightChange (_Value * w.GetNodeB ().GetError () * learningRate);
 			}
 		}
 		
@@ -116,7 +126,8 @@ namespace Cranium.Structure.Node
 		
 		public virtual Double GetError ()
 		{
-			if(Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw(new Exception("Weight Error"));
+			if (Double.IsNaN (_Error) || Double.IsInfinity (_Error))
+				throw(new Exception ("Weight Error"));
 			return _Error;	
 			
 		}
