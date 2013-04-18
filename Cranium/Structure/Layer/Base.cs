@@ -143,16 +143,16 @@ namespace Cranium.Structure.Layer
 				l.ForwardPass ();				
 		}
 
-		public virtual void ReversePass ()
+		public virtual void ReversePass (double learningRate)
 		{
 			foreach (Node.Base n in _Nodes) 
 				n.CalculateError ();			
 			foreach (Node.Base n in _Nodes) 
-				n.AdjustWeights (0.003);	
+				n.AdjustWeights (learningRate);	
 			foreach (Node.Base n in _Nodes) 
 				n.UpdateWeights ();		
 			foreach (Layer.Base l in _ReverseConnectedLayers) 
-				l.ReversePass ();		
+				l.ReversePass (learningRate);		
 			
 		}
 		

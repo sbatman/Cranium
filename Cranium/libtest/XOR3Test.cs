@@ -30,7 +30,7 @@ namespace Cranium.libtest
 		{			
 			TestNetworkStructure = new Network ();
 			BuildStructureXOR ();
-			TestNetworkStructure.RandomiseWeights (0.5d);
+			TestNetworkStructure.RandomiseWeights (0.01d);
 			PrepData ();
 			int epoch = 0;
 			int time = 0;
@@ -74,7 +74,7 @@ namespace Cranium.libtest
 			
 			HiddenLayer2 = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> HiddenLayerNodes2 = new List<Cranium.Structure.Node.Base> ();
-			for (int i=0; i<3; i++)
+			for (int i=0; i<4; i++)
 				HiddenLayerNodes2.Add (new Cranium.Structure.Node.Base (HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh ()));
 			//HiddenLayerNodes.Add (new Cranium.Structure.Node.Bias (HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh ()));
 			HiddenLayer2.SetNodes (HiddenLayerNodes2);
@@ -183,7 +183,7 @@ namespace Cranium.libtest
 			for (int x=0; x<3; x++) {
 				((Structure.Node.Output)OutputLayer.GetNodes () [x]).SetTargetValue (OutputData [(row * 3) + x]);
 			}
-			OutputLayer.ReversePass ();
+			OutputLayer.ReversePass (0.01);
 		}
 	}
 }

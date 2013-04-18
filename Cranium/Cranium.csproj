@@ -45,6 +45,7 @@
     <Compile Include="Structure\ActivationFunction\Tanh.cs" />
     <Compile Include="Structure\Node\Output.cs" />
     <Compile Include="Structure\Node\Bias.cs" />
+    <Compile Include="Structure\ActivationFunction\Step.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
