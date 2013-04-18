@@ -8,28 +8,37 @@
 // // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // //
 // // //////////////////////
-
 using System;
 using Cranium.Structure.Node;
 
 namespace Cranium.Structure.Node
 {
+	/// <summary>
+	/// A Bias node retains its value at all times and is useful in some neural network structures.
+	/// </summary>
 	public class Bias : Base
 	{
+		protected double _BiasValue = 1;
+		
 		public Bias (Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer,activationFunction)
 		{
 		}
 		
 		public override Double GetValue ()
 		{
-			return 1;
+			return _BiasValue;
 		}
 
 		public override double GetError ()
 		{
 			return 0;
 		}
-
+		
+		public override void SetValue (double newValue)
+		{
+			_BiasValue = newValue;
+		}
+		
 		public override void ConnectToNode (Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, float startingWeight)
 		{
 			if (connectionDirectionToNode == Weight.Base.ConnectionDirection.Reverse)

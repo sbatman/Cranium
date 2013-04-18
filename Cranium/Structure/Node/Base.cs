@@ -14,6 +14,10 @@ using System.Collections.Generic;
 
 namespace Cranium.Structure.Node
 {
+	/// <summary>
+	/// The base node class is a core part of the Neural Netowrk framework and represents a neuron that is placed within layers in the network.
+	/// This class can be derived to add additional functionality to a node such as adding recurive memory.
+	/// </summary>
 	public class Base : IDisposable
 	{
 		protected Double _Value = 0;

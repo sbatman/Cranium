@@ -19,7 +19,7 @@ namespace Cranium.libtest
 	{
 		public static void Main (string[] args)
 		{
-			RandomNumberTest.Run ();
+			XOR3Test.Run ();
 		}
 	}
 }

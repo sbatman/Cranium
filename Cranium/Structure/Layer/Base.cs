@@ -15,6 +15,10 @@ using System.Collections.ObjectModel;
 
 namespace Cranium.Structure.Layer
 {
+	/// <summary></summary>
+	/// This is the base Layer structure of the Neural Network, It is used to house collections of nodes and provide the linking structure of these nodes with other groups of nodes.
+	/// The layer class also provides some of the basic functionality for back and foward propogation. This class can be overriden to add additional functionality to a layer.
+	/// </summary>
 	public class Base : IDisposable
 	{
 		protected List<Node.Base> _Nodes = new List<Node.Base> ();

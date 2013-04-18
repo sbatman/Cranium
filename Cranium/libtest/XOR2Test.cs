@@ -43,8 +43,7 @@ namespace Cranium.libtest
 					
 					PresentData (x);
 					ForwardPass ();
-					ReversePass (x, 0);				
-
+					ReversePass (x, 0);
 					
 					if (time % 10 == 0)
 						Console.WriteLine (InputLayer.GetNodes () [0].GetValue () + "-" + InputLayer.GetNodes () [1].GetValue () + "  -  " + Math.Round (OutputLayer.GetNodes () [0].GetValue (), 3));
