@@ -19,12 +19,19 @@ namespace Cranium.Structure.Node
 
 		public Recurrent_Context (Node.Base sourceNode, double rateOfUpdate, Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer,activationFunction)
 		{
+			_Value=0.5f;
 			_SourceNode = sourceNode;
 			_RateOfUpdate = rateOfUpdate;
 		}
 		public override void CalculateValue ()
 		{
+			return;
+		}
+		public virtual void Update()
+		{
+		//Console.Write(_Value+ "->");
 			_Value = (_Value*(1-_RateOfUpdate))+(_SourceNode.GetValue() * _RateOfUpdate);
+		//	Console.WriteLine(_Value);
 		}
 	}
 }

@@ -32,10 +32,10 @@ namespace Cranium.Structure.Layer
 
 		public virtual void BuildNodeBank ()
 		{
-			double Step = 1 / _LevelOfContext;
+			double Step = 1d / _LevelOfContext;
 			for (int x=0; x<_LevelOfContext; x++) {
 				foreach (Node.Base n in _SourceNodes) {
-					_Nodes.Add(new Node.Recurrent_Context(n,Step*x,this,new ActivationFunction.Tanh()));
+					_Nodes.Add (new Node.Recurrent_Context (n, Step * x, this, new ActivationFunction.Tanh ()));
 				}
 			}
 		}
@@ -43,6 +43,12 @@ namespace Cranium.Structure.Layer
 		public virtual void AddSourceNodes (List<Node.Base> nodes)
 		{
 			_SourceNodes.AddRange (nodes);
+		}
+		
+		public virtual void Update ()
+		{
+			foreach (Node.Recurrent_Context n in _Nodes)
+				n.Update ();	
 		}
 	}
 }
