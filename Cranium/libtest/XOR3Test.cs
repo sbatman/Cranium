@@ -30,7 +30,7 @@ namespace Cranium.libtest
 		{			
 			TestNetworkStructure = new Network ();
 			BuildStructureXOR ();
-			TestNetworkStructure.RandomiseWeights (0.01d);
+			TestNetworkStructure.RandomiseWeights (0.1d);
 			PrepData ();
 			int epoch = 0;
 			int time = 0;
@@ -50,7 +50,7 @@ namespace Cranium.libtest
 
 					
 					if (time % 100 == 0)
-						Console.WriteLine (InputLayer.GetNodes () [0].GetValue () + "-" + InputLayer.GetNodes () [1].GetValue () + "-" + InputLayer.GetNodes () [2].GetValue () + "  -  " + Math.Round (OutputLayer.GetNodes () [0].GetValue (), 3) + "  -  " + Math.Round (OutputLayer.GetNodes () [1].GetValue (), 3) + "  -  " + Math.Round (OutputLayer.GetNodes () [2].GetValue (), 3));
+						Console.WriteLine (InputLayer.GetNodes () [0].GetValue () + "-" + InputLayer.GetNodes () [1].GetValue () + "-" + InputLayer.GetNodes () [2].GetValue () + "  -  " + Math.Round (OutputLayer.GetNodes () [0].GetValue (), 2) + "  -  " + Math.Round (OutputLayer.GetNodes () [1].GetValue (), 2) + "  -  " + Math.Round (OutputLayer.GetNodes () [2].GetValue (), 2));
 				}
 			}
 			Console.ReadKey ();
