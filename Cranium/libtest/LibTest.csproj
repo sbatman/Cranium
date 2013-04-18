@@ -39,6 +39,7 @@
     <Compile Include="XOR2Test.cs" />
     <Compile Include="XOR3Test.cs" />
     <Compile Include="RNNTest.cs" />
+    <Compile Include="RNNTest2.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
