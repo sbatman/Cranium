@@ -35,22 +35,22 @@ namespace Cranium.libtest
 			while (true) {
 				epoch++;
 				time++;
-				//	if (time % 10 == 0)
-				Console.SetCursorPosition (0, 0);
+				if (time % 100 == 0) {
+					Console.Clear ();
+					Console.WriteLine ("RNNTest");
+				}
 		
 				for (int x=0; x<4; x++) {
 					foreach (Cranium.Structure.Node.Base n in ContextLayer.GetNodes())					
-						n.SetValue (0);	
-					
+						n.SetValue (0);						
 					for (int i=0; i<2; i++) {
 						InputLayer.GetNodes () [0].SetValue (InputData [(x * 2) + i]);						
 						ForwardPass ();
 						ContextLayer.Update ();
 					}
-					ReversePass (x, 0);
-					
-					//			if (time % 10 == 0)
-					Console.WriteLine (InputData [x * 2] + "-" + InputData [(x * 2) + 1] + "  -  " + Math.Round (OutputLayer.GetNodes () [0].GetValue (), 3));
+					ReversePass (x, 0);					
+					if (time % 100 == 0)
+						Console.WriteLine (InputData [x * 2] + "-" + InputData [(x * 2) + 1] + "  -  " + Math.Round (OutputLayer.GetNodes () [0].GetValue (), 3));
 				}
 			}
 			Console.ReadKey ();
@@ -71,7 +71,6 @@ namespace Cranium.libtest
 			HiddenLayer.SetNodes (HiddenLayerNodes);	
 			
 			ContextLayer = new Cranium.Structure.Layer.Recurrent_Context (4);
-
 			
 			OutputLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();
@@ -92,9 +91,7 @@ namespace Cranium.libtest
 			TestNetworkStructure.AddLayer (OutputLayer);
 			
 			foreach (Cranium.Structure.Layer.Base layer in TestNetworkStructure.GetCurrentLayers())
-				layer.PopulateNodeConnections ();
-			
-									
+				layer.PopulateNodeConnections ();									
 		}
 		
 		public static void PrepData ()
@@ -102,21 +99,24 @@ namespace Cranium.libtest
 			InputData = new Int32[8];
 			OutputData = new Int32[4];
 			
-			InputData [0] = 0;
-			InputData [1] = 0;
-			OutputData [0] = 0;
+			int i=0;
+			int o=0;
 			
-			InputData [2] = 1;
-			InputData [3] = 0;
-			OutputData [1] = 1;
+			InputData [i++] = 0;
+			InputData [i++] = 0;
+			OutputData [o++] = 0;
 			
-			InputData [4] = 0;
-			InputData [5] = 1;
-			OutputData [2] = 1;
+			InputData [i++] = 1;
+			InputData [i++] = 0;
+			OutputData [o++] = 1;
 			
-			InputData [6] = 1;
-			InputData [7] = 1;
-			OutputData [3] = 0;
+			InputData [i++] = 0;
+			InputData [i++] = 1;
+			OutputData [o++] = 1;
+			
+			InputData [i++] = 1;
+			InputData [i++] = 1;
+			OutputData [o++] = 0;
 		}
 	
 		public static void ForwardPass ()
@@ -128,7 +128,7 @@ namespace Cranium.libtest
 		{
 			Structure.Node.Output outputNode = (Structure.Node.Output)(OutputLayer.GetNodes () [0]);
 			outputNode.SetTargetValue (OutputData [row]);
-			OutputLayer.ReversePass (0.006);
+			OutputLayer.ReversePass (0.006, 0.7);
 		}
 	}
 }

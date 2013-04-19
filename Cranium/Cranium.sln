@@ -26,5 +26,6 @@ Global
 		$0.StandardHeader = $1
 		$1.Text = @// ///////////////////////\n// \n// Cranium - A neural network framework for C#\n// https://github.com/sbatman/Cranium.git\n// \n// This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.\n// More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/\n// If you wish to discuss the licencing terms please contact Steven Batchelor-Manning\n//\n// //////////////////////
 		$1.IncludeInNewFiles = True
+		version = 0.3
 	EndGlobalSection
 EndGlobal

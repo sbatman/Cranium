@@ -117,9 +117,10 @@ namespace Cranium.Structure.Node
 			}
 		}
 		
-		public virtual void UpdateWeights ()
+		public virtual void UpdateWeights (double momentum)
 		{
 			foreach (Weight.Base w in _FowardWeights) {
+				w.SetWeight(w.GetWeight()+(w.GetPastWeightChange()*momentum));
 				w.ApplyPendingWeightChanges ();	
 			}
 		}

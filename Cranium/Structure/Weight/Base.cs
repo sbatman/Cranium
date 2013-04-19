@@ -120,8 +120,7 @@ namespace Cranium.Structure.Weight
 		public virtual void ApplyPendingWeightChanges ()
 		{
 			_PastWeightChange = (_PendingWeightChange / _PendingWeightChangeCount);
-			_Weight += _PastWeightChange;	
-									
+			_Weight += _PastWeightChange;									
 
 			if (Double.IsNaN (_Weight) || Double.IsInfinity (_Weight))
 				throw(new Exception ("Weight Error"));

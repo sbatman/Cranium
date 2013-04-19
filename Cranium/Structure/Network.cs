@@ -140,10 +140,10 @@ namespace Cranium.Structure
 				l.ForwardPass ();			
 		}
 	
-		public virtual void ReversePass (double learningRate)
+		public virtual void ReversePass (double learningRate, double momentum)
 		{
 			foreach (Layer.Base l in _DetectedTopLayers)
-				l.ReversePass (learningRate);
+				l.ReversePass (learningRate,momentum);
 		}
 	}
 }
