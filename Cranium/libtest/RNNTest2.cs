@@ -36,8 +36,10 @@ namespace Cranium.libtest
 			while (true) {
 				epoch++;
 				time++;
-					if (time % 50 == 0) Console.Clear();
-				Console.SetCursorPosition (0, 0);
+				if (time % 100 == 0) {
+					Console.Clear ();
+					Console.WriteLine ("RNNTest2");
+				}
 		
 				for (int x=0; x<8; x++) {
 					foreach (Cranium.Structure.Node.Base n in ContextLayer.GetNodes())					
@@ -50,8 +52,8 @@ namespace Cranium.libtest
 					}
 					ReversePass (x, 0);
 					
-					//			if (time % 10 == 0)
-					Console.WriteLine (InputData [x * 3] + "-" + InputData [(x * 3) + 1] + "-" + InputData [(x * 3) + 2] + "  -  " + Math.Round (OutputLayer.GetNodes () [0].GetValue (), 6));
+					if (time % 100 == 0)
+						Console.WriteLine (InputData [x * 3] + "-" + InputData [(x * 3) + 1] + "-" + InputData [(x * 3) + 2] + "  -  " + Math.Round (OutputLayer.GetNodes () [0].GetValue (), 6));
 				}
 			}
 			Console.ReadKey ();
@@ -163,7 +165,7 @@ namespace Cranium.libtest
 		{
 			Structure.Node.Output outputNode = (Structure.Node.Output)(OutputLayer.GetNodes () [0]);
 			outputNode.SetTargetValue (OutputData [row]);
-			OutputLayer.ReversePass (0.01,0.7);
+			OutputLayer.ReversePass (0.01, 0.7);
 		}
 	}
 }

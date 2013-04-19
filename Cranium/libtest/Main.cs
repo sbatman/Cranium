@@ -8,7 +8,6 @@
 // // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // //
 // // //////////////////////
-
 using System;
 using System.Collections.Generic;
 using Cranium.Structure;
@@ -19,7 +18,23 @@ namespace Cranium.libtest
 	{
 		public static void Main (string[] args)
 		{
-			RNNTest2.Run ();
+			Console.WriteLine ("Which test would you like to run");
+			Console.WriteLine ("-------------------------------------------------");
+			Console.WriteLine ("1 -  XOR2Test");
+			Console.WriteLine ("2 -  XOR3Test");
+			Console.WriteLine ("3 -  RNNTest");
+			Console.WriteLine ("4 -  RNNTest2");
+			
+			ConsoleKey PressedKey = Console.ReadKey ().Key;
+			Console.Clear();
+			if (PressedKey == ConsoleKey.D1)			
+				XOR2Test.Run ();
+			if (PressedKey == ConsoleKey.D2)			
+				XOR3Test.Run ();
+			if (PressedKey == ConsoleKey.D3)			
+				RNNTest.Run ();
+			if (PressedKey == ConsoleKey.D4)			
+				RNNTest2.Run ();
 		}
 	}
 }

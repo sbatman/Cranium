@@ -39,7 +39,7 @@ namespace Cranium.libtest
 				time++;
 				if (time % 100 == 0) {
 					Console.Clear ();
-					Console.SetCursorPosition (0, 0);
+					Console.WriteLine("XOR3Test");
 				}
 		
 				for (int x=0; x<8; x++) {
@@ -183,7 +183,7 @@ namespace Cranium.libtest
 			for (int x=0; x<3; x++) {
 				((Structure.Node.Output)OutputLayer.GetNodes () [x]).SetTargetValue (OutputData [(row * 3) + x]);
 			}
-			OutputLayer.ReversePass (0.01,0.1);
+			OutputLayer.ReversePass (0.01,0.0);
 		}
 	}
 }

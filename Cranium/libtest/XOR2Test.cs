@@ -8,7 +8,6 @@
 // // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // //
 // // //////////////////////
-
 using System;
 using Cranium.Structure;
 using System.Collections.Generic;
@@ -36,8 +35,10 @@ namespace Cranium.libtest
 			while (true) {
 				epoch++;
 				time++;
-				if (time % 10 == 0)
-					Console.SetCursorPosition (0, 0);
+				if (time % 100 == 0) {
+					Console.Clear ();
+					Console.WriteLine("XOR2Test");
+				}
 		
 				for (int x=0; x<4; x++) {
 					
@@ -45,7 +46,7 @@ namespace Cranium.libtest
 					ForwardPass ();
 					ReversePass (x, 0);
 					
-					if (time % 10 == 0)
+					if (time % 100 == 0)
 						Console.WriteLine (InputLayer.GetNodes () [0].GetValue () + "-" + InputLayer.GetNodes () [1].GetValue () + "  -  " + Math.Round (OutputLayer.GetNodes () [0].GetValue (), 3));
 				}
 			}
@@ -133,7 +134,7 @@ namespace Cranium.libtest
 		{
 			Structure.Node.Output outputNode = (Structure.Node.Output)(OutputLayer.GetNodes () [0]);
 			outputNode.SetTargetValue (OutputData [row]);
-			OutputLayer.ReversePass (0.06,0.1);
+			OutputLayer.ReversePass (0.06, 0.1);
 		}
 	}
 }
