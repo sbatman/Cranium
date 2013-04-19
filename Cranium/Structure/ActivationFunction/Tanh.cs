@@ -21,18 +21,18 @@ namespace Cranium.Structure.ActivationFunction
 	{
 		public override Double Compute (Double input)
 		{
-			Double D = (Math.Exp (input * 2.0) - 1.0) / (Math.Exp (input * 2.0) + 1.0);
-			if (Double.IsNaN (D) || Double.IsInfinity (D))
+			Double d = (Math.Exp (input * 2.0) - 1.0) / (Math.Exp (input * 2.0) + 1.0);
+			if (Double.IsNaN (d) || Double.IsInfinity (d))
 				throw(new Exception ("Activation Function Error"));
-			return D;
+			return d;
 		}
 
 		public override Double ComputeDerivative (Double input)
 		{	
-			Double D = 1 - Math.Pow ((input), 2);
-			if (Double.IsNaN (D) || Double.IsInfinity (D))
+			Double d = 1 - Math.Pow ((input), 2);
+			if (Double.IsNaN (d) || Double.IsInfinity (d))
 				throw(new Exception ("Activation Function Error"));
-			return D;
+			return d;
 		}
 
 		public override void Dispose ()

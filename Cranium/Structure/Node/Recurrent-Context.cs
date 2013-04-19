@@ -16,6 +16,7 @@ namespace Cranium.Structure.Node
 	{
 		protected Node.Base _SourceNode;
 		protected double _RateOfUpdate;
+		protected double _StartValue  = 0.5f;
 
 		public Recurrent_Context (Node.Base sourceNode, double rateOfUpdate, Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer,activationFunction)
 		{
@@ -29,9 +30,11 @@ namespace Cranium.Structure.Node
 		}
 		public virtual void Update()
 		{
-		//Console.Write(_Value+ "->");
 			_Value = (_Value*(1-_RateOfUpdate))+(_SourceNode.GetValue() * _RateOfUpdate);
-		//	Console.WriteLine(_Value);
+		}
+		public virtual void SetStartValue(double startValue)
+		{
+			_StartValue=startValue;
 		}
 	}
 }

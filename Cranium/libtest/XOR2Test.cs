@@ -134,7 +134,7 @@ namespace Cranium.libtest
 		{
 			Structure.Node.Output outputNode = (Structure.Node.Output)(OutputLayer.GetNodes () [0]);
 			outputNode.SetTargetValue (OutputData [row]);
-			OutputLayer.ReversePass (0.06, 0.1);
+			OutputLayer.ReversePass (0.00006, 0.1);
 		}
 	}
 }
