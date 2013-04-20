@@ -11,13 +11,15 @@
 using System;
 using System.Collections.Generic;
 using Cranium.Structure;
+using Cranium.DataPreperation;
 
 namespace Cranium.LibTest
 {
 	class MainClass
 	{
 		public static void Main (string[] args)
-		{
+		{			
+			
 			Console.WriteLine ("Which test would you like to run");
 			Console.WriteLine ("-------------------------------------------------");
 			Console.WriteLine ("1 -  XOR2Test");

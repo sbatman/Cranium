@@ -50,6 +50,8 @@
     <Compile Include="Structure\Layer\Recurrent-Context.cs" />
     <Compile Include="Structure\Node\Recurrent-Context.cs" />
     <Compile Include="Activity\Training\Base.cs" />
+    <Compile Include="Activity\Training\SlidingWindow.cs" />
+    <Compile Include="DataPreperation\StandardDeviationVariance.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -70,5 +72,6 @@
     <Folder Include="Structure\ActivationFunction\" />
     <Folder Include="Activity\" />
     <Folder Include="Activity\Training\" />
+    <Folder Include="DataPreperation\" />
   </ItemGroup>
 </Project>

@@ -23,7 +23,7 @@ namespace Cranium.Activity.Training
 
 		public void Start ()
 		{
-			_LoopThread = new Thread (_Tick);
+			_LoopThread = new Thread (_UpdateLoop);
 			_LoopThread.Start ();
 		}
 		
@@ -44,7 +44,7 @@ namespace Cranium.Activity.Training
 
 		protected abstract bool _Tick ();
 
-		private void UpdateLoop ()
+		private void _UpdateLoop ()
 		{
 			_Running = true;
 			while (_Tick()&&!_Stopping)
