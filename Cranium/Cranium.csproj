@@ -49,6 +49,7 @@
     <Compile Include="Structure\ActivationFunction\Step.cs" />
     <Compile Include="Structure\Layer\Recurrent-Context.cs" />
     <Compile Include="Structure\Node\Recurrent-Context.cs" />
+    <Compile Include="Activity\Training\Base.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -67,5 +68,7 @@
     <Folder Include="Structure\Node\" />
     <Folder Include="Structure\Weight\" />
     <Folder Include="Structure\ActivationFunction\" />
+    <Folder Include="Activity\" />
+    <Folder Include="Activity\Training\" />
   </ItemGroup>
 </Project>
