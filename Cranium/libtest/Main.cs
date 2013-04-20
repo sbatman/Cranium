@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using Cranium.Structure;
 
-namespace Cranium.libtest
+namespace Cranium.LibTest
 {
 	class MainClass
 	{
@@ -26,7 +26,7 @@ namespace Cranium.libtest
 			Console.WriteLine ("4 -  RNNTest2");
 			
 			ConsoleKey PressedKey = Console.ReadKey ().Key;
-			Console.Clear();
+			Console.Clear ();
 			if (PressedKey == ConsoleKey.D1)			
 				XOR2Test.Run ();
 			if (PressedKey == ConsoleKey.D2)			

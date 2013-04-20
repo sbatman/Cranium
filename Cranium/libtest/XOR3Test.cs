@@ -13,7 +13,7 @@ using System;
 using Cranium.Structure;
 using System.Collections.Generic;
 
-namespace Cranium.libtest
+namespace Cranium.LibTest
 {
 	public class XOR3Test
 	{
