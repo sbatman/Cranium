@@ -8,7 +8,6 @@
 // // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // //
 // // //////////////////////
-
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
@@ -17,13 +16,13 @@ namespace Cranium.Structure
 {
 	public class Network
 	{
-		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ();
-		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ();
-		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base> ();
+		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ( );
+		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ( );
+		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base> ( );
 		
 		public Network ()
 		{			
-			_CurrentLayers = new List<Layer.Base> ();
+			_CurrentLayers = new List<Layer.Base> ( );
 		}
 		
 		/// <summary>
@@ -34,10 +33,10 @@ namespace Cranium.Structure
 		/// </param>
 		public void AddLayer (Layer.Base newLayer)
 		{
-			if (_CurrentLayers.Contains (newLayer))
+			if ( _CurrentLayers.Contains ( newLayer ) )
 				return;
-			_CurrentLayers.Add (newLayer);	
-			StructureUpdate ();
+			_CurrentLayers.Add ( newLayer );	
+			StructureUpdate ( );
 		}
 		
 		/// <summary>
@@ -48,10 +47,10 @@ namespace Cranium.Structure
 		/// </param>
 		public void RemoveLayer (Layer.Base layer)
 		{
-			if (!_CurrentLayers.Contains (layer))
+			if ( !_CurrentLayers.Contains ( layer ) )
 				return;
-			_CurrentLayers.Remove (layer);
-			StructureUpdate ();
+			_CurrentLayers.Remove ( layer );
+			StructureUpdate ( );
 		}
 		
 		/// <summary>
@@ -60,12 +59,13 @@ namespace Cranium.Structure
 		protected virtual void StructureUpdate ()
 		{
 			int id = 0;
-			foreach (Layer.Base l in _CurrentLayers) {
-				if (l.GetForwardConnectedLayers ().Count == 0)
-					_DetectedTopLayers.Add (l);
-				if (l.GetReverseConnectedLayers ().Count == 0)
-					_DetectedBottomLayers.Add (l);
-				l.SetID (id);
+			foreach (Layer.Base l in _CurrentLayers)
+			{
+				if ( l.GetForwardConnectedLayers ( ).Count == 0 )
+					_DetectedTopLayers.Add ( l );
+				if ( l.GetReverseConnectedLayers ( ).Count == 0 )
+					_DetectedBottomLayers.Add ( l );
+				l.SetID ( id );
 				id++;
 			}
 		}
@@ -77,7 +77,7 @@ namespace Cranium.Structure
 		protected virtual void BuildNodeConnections ()
 		{
 			foreach (Layer.Base l in _CurrentLayers)		
-				l.PopulateNodeConnections ();			
+				l.PopulateNodeConnections ( );			
 		}
 		
 		/// <summary>
@@ -88,7 +88,7 @@ namespace Cranium.Structure
 		/// </returns>
 		public virtual ReadOnlyCollection<Layer.Base> GetCurrentLayers ()
 		{
-			return _CurrentLayers.AsReadOnly ();
+			return _CurrentLayers.AsReadOnly ( );
 		}
 		
 		/// <summary>
@@ -99,7 +99,7 @@ namespace Cranium.Structure
 		/// </returns>
 		public virtual ReadOnlyCollection<Layer.Base> GetDetectedTopLayers ()
 		{
-			return _DetectedTopLayers.AsReadOnly ();
+			return _DetectedTopLayers.AsReadOnly ( );
 		}
 			
 		/// <summary>
@@ -110,7 +110,7 @@ namespace Cranium.Structure
 		/// </returns>
 		public virtual ReadOnlyCollection<Layer.Base> GetDetectedBottomLayers ()
 		{
-			return _DetectedBottomLayers.AsReadOnly ();
+			return _DetectedBottomLayers.AsReadOnly ( );
 		}
 		
 		/// <summary>
@@ -121,11 +121,14 @@ namespace Cranium.Structure
 		/// </param>
 		public virtual void RandomiseWeights (Double varianceFromZero)
 		{
-			Random rnd = new Random ();
-			foreach (Layer.Base l in _CurrentLayers) {
-				foreach (Node.Base n in l.GetNodes()) {
-					foreach (Weight.Base w in n.GetFowardWeights()) {
-						w.SetWeight (((rnd.NextDouble () * 2) - 1) * varianceFromZero);
+			Random rnd = new Random ( );
+			foreach (Layer.Base l in _CurrentLayers)
+			{
+				foreach (Node.Base n in l.GetNodes())
+				{
+					foreach (Weight.Base w in n.GetFowardWeights())
+					{
+						w.SetWeight ( ( ( rnd.NextDouble ( ) * 2 ) - 1 ) * varianceFromZero );
 					}
 				}
 			}
@@ -137,13 +140,13 @@ namespace Cranium.Structure
 		public virtual void FowardPass ()
 		{
 			foreach (Layer.Base l in  _DetectedBottomLayers)
-				l.ForwardPass ();			
+				l.ForwardPass ( );			
 		}
 	
 		public virtual void ReversePass (double learningRate, double momentum)
 		{
 			foreach (Layer.Base l in _DetectedTopLayers)
-				l.ReversePass (learningRate,momentum);
+				l.ReversePass ( learningRate, momentum );
 		}
 	}
 }

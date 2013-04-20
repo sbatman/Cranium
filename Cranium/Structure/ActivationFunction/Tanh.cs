@@ -8,7 +8,6 @@
 // // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // //
 // // //////////////////////
-
 using System;
 
 namespace Cranium.Structure.ActivationFunction
@@ -21,17 +20,17 @@ namespace Cranium.Structure.ActivationFunction
 	{
 		public override Double Compute (Double input)
 		{
-			Double d = (Math.Exp (input * 2.0) - 1.0) / (Math.Exp (input * 2.0) + 1.0);
-			if (Double.IsNaN (d) || Double.IsInfinity (d))
-				throw(new Exception ("Activation Function Error"));
+			Double d = ( Math.Exp ( input * 2.0 ) - 1.0 ) / ( Math.Exp ( input * 2.0 ) + 1.0 );
+			if ( Double.IsNaN ( d ) || Double.IsInfinity ( d ) )
+				throw( new Exception ( "Activation Function Error" ) );
 			return d;
 		}
 
 		public override Double ComputeDerivative (Double input)
 		{	
-			Double d = 1 - Math.Pow ((input), 2);
-			if (Double.IsNaN (d) || Double.IsInfinity (d))
-				throw(new Exception ("Activation Function Error"));
+			Double d = 1 - Math.Pow ( ( input ), 2 );
+			if ( Double.IsNaN ( d ) || Double.IsInfinity ( d ) )
+				throw( new Exception ( "Activation Function Error" ) );
 			return d;
 		}
 

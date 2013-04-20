@@ -8,7 +8,6 @@
 // // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // //
 // // //////////////////////
-
 using System;
 using Cranium.Structure.Node;
 using Cranium.Structure;
@@ -26,7 +25,7 @@ namespace Cranium.Structure.Node
 		
 		public override void CalculateError ()
 		{
-			_Error = ((1 - _Value) * (1 + _Value)) * (_TargetValue - _Value);
+			_Error = ( ( 1 - _Value ) * ( 1 + _Value ) ) * ( _TargetValue - _Value );
 
 		}
 

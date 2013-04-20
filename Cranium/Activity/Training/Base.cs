@@ -23,14 +23,14 @@ namespace Cranium.Activity.Training
 
 		public void Start ()
 		{
-			_LoopThread = new Thread (_UpdateLoop);
-			_LoopThread.Start ();
+			_LoopThread = new Thread ( _UpdateLoop );
+			_LoopThread.Start ( );
 		}
 		
 		public virtual void SetTargetNeteork (Structure.Network targetNetwork)
 		{
 			_TargetNetwork = targetNetwork;	
-		}		
+		}
 
 		public bool IsRunning ()
 		{
@@ -47,7 +47,7 @@ namespace Cranium.Activity.Training
 		private void _UpdateLoop ()
 		{
 			_Running = true;
-			while (_Tick()&&!_Stopping)
+			while ( _Tick()&&!_Stopping )
 				;
 			_Running = false;
 		}

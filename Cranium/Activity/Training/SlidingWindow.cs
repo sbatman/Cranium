@@ -17,7 +17,7 @@ namespace Cranium.Activity.Training
 		#region implemented abstract members of Cranium.Activity.Training.Base
 		protected override bool _Tick ()
 		{
-			throw new NotImplementedException ();
+			throw new NotImplementedException ( );
 		}
 		#endregion
 	

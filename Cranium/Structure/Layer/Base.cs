@@ -8,7 +8,6 @@
 // // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // //
 // // //////////////////////
-
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,9 +20,9 @@ namespace Cranium.Structure.Layer
 	/// </summary>
 	public class Base : IDisposable
 	{
-		protected List<Node.Base> _Nodes = new List<Node.Base> ();
-		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base> ();
-		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base> ();
+		protected List<Node.Base> _Nodes = new List<Node.Base> ( );
+		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base> ( );
+		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base> ( );
 		protected int _LayerID;
 		
 		/// <summary>
@@ -34,11 +33,12 @@ namespace Cranium.Structure.Layer
 		/// </param>
 		public virtual void SetNodes (List<Node.Base> nodes)
 		{
-			_Nodes.Clear ();
+			_Nodes.Clear ( );
 			_Nodes = null;
 			_Nodes = nodes;	
-			for (int x=0; x<_Nodes.Count; x++) {
-				_Nodes [x].SetPositionInParentLayer (x);	
+			for ( int x=0 ; x<_Nodes.Count ; x++ )
+			{
+				_Nodes [ x ].SetPositionInParentLayer ( x );	
 			}
 		}
 		
@@ -50,7 +50,7 @@ namespace Cranium.Structure.Layer
 		/// </returns>
 		public virtual ReadOnlyCollection<Node.Base> GetNodes ()
 		{
-			return _Nodes.AsReadOnly ();	
+			return _Nodes.AsReadOnly ( );	
 		}
 		
 		/// <summary>
@@ -72,8 +72,8 @@ namespace Cranium.Structure.Layer
 		/// </param>
 		public virtual void ConnectFowardLayer (Layer.Base layer)
 		{
-			_ForwardConnectedLayers.Add (layer);
-			layer._ReverseConnectedLayers.Add (this);
+			_ForwardConnectedLayers.Add ( layer );
+			layer._ReverseConnectedLayers.Add ( this );
 		}
 		
 		/// <summary>
@@ -95,8 +95,8 @@ namespace Cranium.Structure.Layer
 		/// </param>
 		public virtual void ConnectReverseLayer (Layer.Base layer)
 		{
-			_ReverseConnectedLayers.Add (layer);
-			layer._ForwardConnectedLayers.Add (this);
+			_ReverseConnectedLayers.Add ( layer );
+			layer._ForwardConnectedLayers.Add ( this );
 		}
 		
 		/// <summary>
@@ -113,11 +113,14 @@ namespace Cranium.Structure.Layer
 		//uses the current forward and reverse layers to populate the node connections
 		public virtual void PopulateNodeConnections ()
 		{
-			PurgeNodeConnections ();
-			foreach (Layer.Base l in _ForwardConnectedLayers) {
-				foreach (Node.Base n in _Nodes) {
-					foreach (Node.Base fn in l.GetNodes()) {
-						n.ConnectToNode (fn, Weight.Base.ConnectionDirection.Forward, 0);
+			PurgeNodeConnections ( );
+			foreach (Layer.Base l in _ForwardConnectedLayers)
+			{
+				foreach (Node.Base n in _Nodes)
+				{
+					foreach (Node.Base fn in l.GetNodes())
+					{
+						n.ConnectToNode ( fn, Weight.Base.ConnectionDirection.Forward, 0 );
 					}
 				}
 			}
@@ -129,7 +132,7 @@ namespace Cranium.Structure.Layer
 		public virtual void PurgeNodeConnections ()
 		{
 			foreach (Node.Base n in _Nodes)
-				n.DestroyAllConnections ();
+				n.DestroyAllConnections ( );
 		}
 		
 		/// <summary>
@@ -138,21 +141,21 @@ namespace Cranium.Structure.Layer
 		public virtual void ForwardPass ()
 		{
 			foreach (Node.Base n in _Nodes) 
-				n.CalculateValue ();				
+				n.CalculateValue ( );				
 			foreach (Layer.Base l in _ForwardConnectedLayers) 
-				l.ForwardPass ();				
+				l.ForwardPass ( );				
 		}
 
 		public virtual void ReversePass (double learningRate, double momentum)
 		{
 			foreach (Node.Base n in _Nodes) 
-				n.CalculateError ();			
+				n.CalculateError ( );			
 			foreach (Node.Base n in _Nodes) 
-				n.AdjustWeights (learningRate);	
+				n.AdjustWeights ( learningRate );	
 			foreach (Node.Base n in _Nodes) 
-				n.UpdateWeights (momentum);		
+				n.UpdateWeights ( momentum );		
 			foreach (Layer.Base l in _ReverseConnectedLayers) 
-				l.ReversePass (learningRate,momentum);		
+				l.ReversePass ( learningRate, momentum );		
 			
 		}
 		
@@ -169,14 +172,14 @@ namespace Cranium.Structure.Layer
 		#region IDisposable implementation
 		public void Dispose ()
 		{
-			PurgeNodeConnections ();
-			_ReverseConnectedLayers.Clear ();
+			PurgeNodeConnections ( );
+			_ReverseConnectedLayers.Clear ( );
 			_ReverseConnectedLayers = null;
-			_ForwardConnectedLayers.Clear ();
+			_ForwardConnectedLayers.Clear ( );
 			_ForwardConnectedLayers = null;
 			foreach (Node.Base n in _Nodes)
-				n.Dispose ();
-			_Nodes.Clear ();
+				n.Dispose ( );
+			_Nodes.Clear ( );
 			_Nodes = null;
 		}
 		#endregion
