@@ -42,7 +42,7 @@ namespace Cranium.Activity.Training
 		#region implemented abstract members of Cranium.Activity.Training.Base
 		protected override bool _Tick ()
 		{
-			
+			return true;
 		}
 	
 		protected override void Starting ()

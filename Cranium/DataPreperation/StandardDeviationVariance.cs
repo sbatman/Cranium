@@ -28,37 +28,81 @@ namespace Cranium.DataPreperation
 	/// </summary>
 	public static class StandardDeviationVariance
 	{
+		
+		/// <summary>
+		/// Loads the provided file and pulls the data into a table, this is then pre-processed and returned along with the average and the standard deviation.
+		/// The file must be in CSV format with each line representing one set of inputs (seperated by commas)
+		/// </summary>
+		/// <returns>
+		/// The dataset.
+		/// </returns>
+		/// <param name='fileName'>
+		/// File name.
+		/// </param>
 		public static Data_Preprocessed_StandardDeviationVariance ProduceDataset (string fileName)
 		{
-			StreamReader fileStream = File.OpenText ( fileName );
+			if ( fileName.Length == 0 || !File.Exists ( fileName ) )			  
+				throw( new Exception ( "Bad filename provided" ) );			
 			
-			List<string> Data = new List<string> ( );
-			while ( !fileStream.EndOfStream )	
-				Data.Add ( fileStream.ReadLine ( ) );	
-			int columnCount = Data [ 0 ].Split ( new char[]{(char)44} ).Length;			
-			double[,] WorkingDataSet = new double[columnCount, Data.Count];
-			for ( int i=0 ; i<Data.Count ; i++ )
+			try
 			{
-				string[] currentLine = Data [ i ].Split ( new char[]{(char)44} );
-				for ( int x=0 ; x<columnCount ; x++ )
+				StreamReader fileStream = File.OpenText ( fileName );
+			
+				List<string> Data = new List<string> ( );
+				while ( !fileStream.EndOfStream )	
+					Data.Add ( fileStream.ReadLine ( ) );	
+				int columnCount = Data [ 0 ].Split ( new char[]{(char)44} ).Length;			
+				double[,] WorkingDataSet = new double[columnCount, Data.Count];
+				for ( int i=0 ; i<Data.Count ; i++ )
 				{
-					WorkingDataSet [ x, i ] = Double.Parse ( currentLine [ x ] );
+					string[] currentLine = Data [ i ].Split ( new char[]{(char)44} );
+					for ( int x=0 ; x<columnCount ; x++ )
+					{
+						WorkingDataSet [ x, i ] = Double.Parse ( currentLine [ x ] );
+					}
 				}
+				fileStream.Close();
+				Data_Preprocessed_StandardDeviationVariance ReturnResult = new Data_Preprocessed_StandardDeviationVariance ( );
+				ReturnResult.DataSet = WorkingDataSet;
+				ProcessData ( ref ReturnResult );				
+				return ReturnResult;
 			}
-			Data_Preprocessed_StandardDeviationVariance ReturnResult = new Data_Preprocessed_StandardDeviationVariance ( );
-			ReturnResult.DataSet = WorkingDataSet;
-			ProcessData ( ref ReturnResult );
-			return ReturnResult;
+			catch ( Exception e )
+			{
+				throw( new Exception ( "Data pre-processing failed :" + e.Message ) );				
+			}
 		}
 
+		/// <summary>
+		/// Processes the provided dataset returning the preprocessed dataset, the average and standard deviation.
+		/// </summary>
+		/// <returns>
+		/// The dataset.
+		/// </returns>
+		/// <param name='inputData'>
+		/// Input data.
+		/// </param>
 		public static Data_Preprocessed_StandardDeviationVariance ProduceDataset (double[,] inputData)
 		{
-			Data_Preprocessed_StandardDeviationVariance ReturnResult = new Data_Preprocessed_StandardDeviationVariance ( );
-			ReturnResult.DataSet = inputData;
-			ProcessData ( ref ReturnResult );
-			return ReturnResult;
+			try
+			{
+				Data_Preprocessed_StandardDeviationVariance ReturnResult = new Data_Preprocessed_StandardDeviationVariance ( );
+				ReturnResult.DataSet = inputData;
+				ProcessData ( ref ReturnResult );
+				return ReturnResult;
+			}
+			catch ( Exception e )
+			{
+				throw( new Exception ( "Data pre-processing failed :" + e.Message ) );				
+			}
 		}
 		
+		/// <summary>
+		/// Does the actual pre-processing.
+		/// </summary>
+		/// <param name='inputData'>
+		/// Input data.
+		/// </param>
 		private  static void ProcessData (ref Data_Preprocessed_StandardDeviationVariance inputData)
 		{
 			int colCount = inputData.DataSet.GetLength ( 0 );

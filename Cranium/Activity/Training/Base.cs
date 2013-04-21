@@ -20,7 +20,7 @@ namespace Cranium.Activity.Training
 		private bool _Stopping = false;
 		private Thread _LoopThread;
 		protected Structure.Network _TargetNetwork;
-		protected doulbe[,] _WorkingDataset;
+		protected double[,] _WorkingDataset;
 
 		public void Start ()
 		{
