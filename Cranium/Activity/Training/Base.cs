@@ -20,6 +20,7 @@ namespace Cranium.Activity.Training
 		private bool _Stopping = false;
 		private Thread _LoopThread;
 		protected Structure.Network _TargetNetwork;
+		protected doulbe[,] _WorkingDataset;
 
 		public void Start ()
 		{
@@ -30,6 +31,11 @@ namespace Cranium.Activity.Training
 		public virtual void SetTargetNeteork (Structure.Network targetNetwork)
 		{
 			_TargetNetwork = targetNetwork;	
+		}
+
+		public virtual void SetWorkingDataset (double[,] workingDataset)
+		{
+			_WorkingDataset = workingDataset;	
 		}
 
 		public bool IsRunning ()
@@ -43,6 +49,14 @@ namespace Cranium.Activity.Training
 		}
 
 		protected abstract bool _Tick ();
+		/// <summary>
+		/// Called as this training instance starts
+		/// </summary>
+		protected abstract void Starting();
+		/// <summary>
+		/// Called if this instance is stopped externaly
+		/// </summary>
+		protected abstract void Stopping();
 
 		private void _UpdateLoop ()
 		{

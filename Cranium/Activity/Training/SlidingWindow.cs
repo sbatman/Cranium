@@ -14,13 +14,45 @@ namespace Cranium.Activity.Training
 {
 	public class SlidingWindow : Base
 	{
+		protected int _WindowWidth;
+		protected int _DistanceToForcastHorrison;
+		
+		/// <summary>
+		/// Sets the width of the sliding window for data fed to the network before it is trained.
+		/// </summary>
+		/// <param name='windowWidth'>
+		/// Window width.
+		/// </param>
+		public virtual void SetWindowWidth(int windowWidth)
+		{
+		_WindowWidth = windowWidth;	
+		}
+		
+		/// <summary>
+		/// Sets the number of intervals ahead to predict
+		/// </summary>
+		/// <param name='distance'>
+		/// Distance.
+		/// </param>
+		public virtual void SetDistanceToForcastHorrison(int distance)
+		{
+		_DistanceToForcastHorrison = distance;	
+		}
+		
 		#region implemented abstract members of Cranium.Activity.Training.Base
 		protected override bool _Tick ()
 		{
-			throw new NotImplementedException ( );
+			
+		}
+	
+		protected override void Starting ()
+		{
+		}
+
+		protected override void Stopping ()
+		{
 		}
 		#endregion
-	
 	}
 }
 

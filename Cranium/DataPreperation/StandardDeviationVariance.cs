@@ -51,9 +51,12 @@ namespace Cranium.DataPreperation
 			return ReturnResult;
 		}
 
-		public static double[,] ProduceDataset (double[,] inputData)
+		public static Data_Preprocessed_StandardDeviationVariance ProduceDataset (double[,] inputData)
 		{
-			return new double[1, 1];
+			Data_Preprocessed_StandardDeviationVariance ReturnResult = new Data_Preprocessed_StandardDeviationVariance ( );
+			ReturnResult.DataSet = inputData;
+			ProcessData ( ref ReturnResult );
+			return ReturnResult;
 		}
 		
 		private  static void ProcessData (ref Data_Preprocessed_StandardDeviationVariance inputData)
