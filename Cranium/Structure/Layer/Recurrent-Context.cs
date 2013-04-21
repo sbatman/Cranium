@@ -20,35 +20,37 @@ namespace Cranium.Structure.Layer
 		
 		public Recurrent_Context (int levelOfContext)
 		{
-			_SourceNodes = new List<Node.Base> ();
+			_SourceNodes = new List<Node.Base> ( );
 			_LevelOfContext = levelOfContext;
 		}
 
 		public override void PopulateNodeConnections ()
 		{
-			BuildNodeBank ();
-			base.PopulateNodeConnections ();
+			BuildNodeBank ( );
+			base.PopulateNodeConnections ( );
 		}
 
 		public virtual void BuildNodeBank ()
 		{
 			double step = 1d / _LevelOfContext;
-			for (int x=0; x<_LevelOfContext; x++) {
-				foreach (Node.Base n in _SourceNodes) {
-					_Nodes.Add (new Node.Recurrent_Context (n, step * x, this, new ActivationFunction.Tanh ()));
+			for ( int x=0 ; x<_LevelOfContext ; x++ )
+			{
+				foreach (Node.Base n in _SourceNodes)
+				{
+					_Nodes.Add ( new Node.Recurrent_Context ( n, step * x, this, new ActivationFunction.Tanh ( ) ) );
 				}
 			}
 		}
 
 		public virtual void AddSourceNodes (List<Node.Base> nodes)
 		{
-			_SourceNodes.AddRange (nodes);
+			_SourceNodes.AddRange ( nodes );
 		}
 		
 		public virtual void Update ()
 		{
 			foreach (Node.Recurrent_Context n in _Nodes)
-				n.Update ();	
+				n.Update ( );	
 		}
 	}
 }

@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{509EEFCA-0006-4685-B217-A255BA989BD5}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Cranium.Libtest</RootNamespace>
+    <RootNamespace>Cranium.LibTest</RootNamespace>
     <AssemblyName>libtest</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <Description>A library of test for the Crainium Library</Description>
@@ -41,6 +41,7 @@
     <Compile Include="XOR3Test.cs" />
     <Compile Include="RNNTest.cs" />
     <Compile Include="RNNTest2.cs" />
+    <Compile Include="MG_Recurrent_Test.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -48,5 +49,13 @@
       <Project>{9553B26D-5D2D-4013-82E1-4D7A24D526D8}</Project>
       <Name>Cranium</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TestData\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TestData\Mackey-Glass-Pure.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>

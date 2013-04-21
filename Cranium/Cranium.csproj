@@ -49,6 +49,9 @@
     <Compile Include="Structure\ActivationFunction\Step.cs" />
     <Compile Include="Structure\Layer\Recurrent-Context.cs" />
     <Compile Include="Structure\Node\Recurrent-Context.cs" />
+    <Compile Include="Activity\Training\Base.cs" />
+    <Compile Include="Activity\Training\SlidingWindow.cs" />
+    <Compile Include="DataPreperation\StandardDeviationVariance.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -57,6 +60,8 @@
         <Policies>
           <DotNetNamingPolicy DirectoryNamespaceAssociation="PrefixedHierarchical" ResourceNamePolicy="FileFormatDefault" />
           <ChangeLogPolicy UpdateMode="Nearest" inheritsSet="Mono" />
+          <TextStylePolicy inheritsSet="null" scope="text/x-csharp" />
+          <CSharpFormattingPolicy IndentSwitchBody="True" AlignEmbeddedUsingStatements="False" AlignEmbeddedIfStatements="False" AnonymousMethodBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" StatementBraceStyle="NextLine" ForBraceForcement="AddBraces" WhileBraceForcement="AddBraces" UsingBraceForcement="AddBraces" FixedBraceForcement="AddBraces" PlaceElseOnNewLine="True" PlaceElseIfOnNewLine="True" PlaceCatchOnNewLine="True" PlaceFinallyOnNewLine="True" PlaceWhileOnNewLine="True" BetweenEmptyMethodCallParentheses="True" WithinMethodCallParentheses="True" WithinParentheses="True" WithinIfParentheses="True" WithinWhileParentheses="True" WithinForParentheses="True" WithinCatchParentheses="True" WithinSwitchParentheses="True" WithinLockParentheses="True" WithinUsingParentheses="True" WithinNewParentheses="True" BetweenEmptyNewParentheses="True" SpacesWithinBrackets="True" SpacesBeforeForSemicolon="True" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
         </Policies>
       </Properties>
     </MonoDevelop>
@@ -67,5 +72,8 @@
     <Folder Include="Structure\Node\" />
     <Folder Include="Structure\Weight\" />
     <Folder Include="Structure\ActivationFunction\" />
+    <Folder Include="Activity\" />
+    <Folder Include="Activity\Training\" />
+    <Folder Include="DataPreperation\" />
   </ItemGroup>
 </Project>

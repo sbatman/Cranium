@@ -11,22 +11,25 @@
 using System;
 using System.Collections.Generic;
 using Cranium.Structure;
+using Cranium.DataPreperation;
 
-namespace Cranium.libtest
+namespace Cranium.LibTest
 {
 	class MainClass
 	{
 		public static void Main (string[] args)
-		{
+		{			
+			
 			Console.WriteLine ("Which test would you like to run");
 			Console.WriteLine ("-------------------------------------------------");
 			Console.WriteLine ("1 -  XOR2Test");
 			Console.WriteLine ("2 -  XOR3Test");
 			Console.WriteLine ("3 -  RNNTest");
 			Console.WriteLine ("4 -  RNNTest2");
+			Console.WriteLine ("5 -  MG Recurrent Test");
 			
 			ConsoleKey PressedKey = Console.ReadKey ().Key;
-			Console.Clear();
+			Console.Clear ();
 			if (PressedKey == ConsoleKey.D1)			
 				XOR2Test.Run ();
 			if (PressedKey == ConsoleKey.D2)			
@@ -35,6 +38,8 @@ namespace Cranium.libtest
 				RNNTest.Run ();
 			if (PressedKey == ConsoleKey.D4)			
 				RNNTest2.Run ();
+			if (PressedKey == ConsoleKey.D5)			
+				MG_Recurrent_Test.Run ();
 		}
 	}
 }

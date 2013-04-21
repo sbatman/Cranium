@@ -8,7 +8,6 @@
 // // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // //
 // // //////////////////////
-
 using System;
 
 namespace Cranium.Structure.ActivationFunction

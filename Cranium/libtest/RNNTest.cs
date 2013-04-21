@@ -12,7 +12,7 @@ using System;
 using Cranium.Structure;
 using System.Collections.Generic;
 
-namespace Cranium.libtest
+namespace Cranium.LibTest
 {
 	public class RNNTest
 	{
@@ -27,7 +27,7 @@ namespace Cranium.libtest
 		public static void Run ()
 		{			
 			TestNetworkStructure = new Network ();
-			BuildStructureXOR ();
+			BuildStructure ();
 			TestNetworkStructure.RandomiseWeights (0.001d);
 			PrepData ();
 			int epoch = 0;
@@ -56,7 +56,7 @@ namespace Cranium.libtest
 			Console.ReadKey ();
 		}
 
-		public static void BuildStructureXOR ()
+		public static void BuildStructure ()
 		{
 			InputLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> InputLayerNodes = new List<Cranium.Structure.Node.Base> ();
