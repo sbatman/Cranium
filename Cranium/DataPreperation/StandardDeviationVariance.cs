@@ -49,8 +49,10 @@ namespace Cranium.DataPreperation
 				StreamReader fileStream = File.OpenText ( fileName );
 			
 				List<string> Data = new List<string> ( );
-				while ( !fileStream.EndOfStream )	
-					Data.Add ( fileStream.ReadLine ( ) );	
+				while ( !fileStream.EndOfStream )
+				{
+					Data.Add ( fileStream.ReadLine ( ) );
+				}	
 				int columnCount = Data [ 0 ].Split ( new char[]{(char)44} ).Length;			
 				double[,] WorkingDataSet = new double[columnCount, Data.Count];
 				for ( int i=0 ; i<Data.Count ; i++ )
@@ -61,7 +63,7 @@ namespace Cranium.DataPreperation
 						WorkingDataSet [ x, i ] = Double.Parse ( currentLine [ x ] );
 					}
 				}
-				fileStream.Close();
+				fileStream.Close ( );
 				Data_Preprocessed_StandardDeviationVariance ReturnResult = new Data_Preprocessed_StandardDeviationVariance ( );
 				ReturnResult.DataSet = WorkingDataSet;
 				ProcessData ( ref ReturnResult );				
@@ -115,19 +117,25 @@ namespace Cranium.DataPreperation
 				
 				//Calculate the Average
 				double avg = 0;
-				for ( int y=0 ; y<rowCount ; y++ )				
-					avg += inputData.DataSet [ x, y ];				
+				for ( int y=0 ; y<rowCount ; y++ )
+				{
+					avg += inputData.DataSet [ x, y ];
+				}				
 				avg /= rowCount;
 				
 				//Calculate the StandardDeviation
 				Double stdv = 0;
-				for ( int y=0 ; y<rowCount ; y++ )				
+				for ( int y=0 ; y<rowCount ; y++ )
+				{
 					stdv += Math.Pow ( inputData.DataSet [ x, y ] - avg, 2 );
+				}
 				stdv = Math.Sqrt ( stdv / rowCount );
 				
 				//Processing The Data
-				for ( int y=0 ; y<rowCount ; y++ )	
+				for ( int y=0 ; y<rowCount ; y++ )
+				{
 					inputData.DataSet [ x, y ] = ( inputData.DataSet [ x, y ] - avg ) / stdv;
+				}
 				inputData.Average [ x ] = avg;
 				inputData.StandardDeviation [ x ] = stdv;
 			}		

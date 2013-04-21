@@ -33,31 +33,32 @@ namespace Cranium.LibTest
 			BuildStructure ();
 			_TestNetworkStructure.RandomiseWeights (0.01d);
 			//PrepData
-			double[,] dataSet = Cranium.DataPreperation.StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
+			double[,] dataSet = Cranium.DataPreperation.StandardDeviationVariance.ProduceDataset ("TestData/Mackey-Glass-Pure.csv").DataSet;
 			
 			//Prepare training activity
-			_SlidingWindowTest = new Cranium.Activity.Training.SlidingWindow();
-			_SlidingWindowTest.SetMomentum(0.7f);
-			_SlidingWindowTest.SetLearningRate(0.04f);
-			_SlidingWindowTest.SetTargetNetwork(_TestNetworkStructure);
-			_SlidingWindowTest.SetDatasetReservedLength(100);
-			_SlidingWindowTest.SetDistanceToForcastHorrison(3);
-			_SlidingWindowTest.SetWindowWidth(12);
-			_SlidingWindowTest.SetMaximumEpochs(1000);
-			_SlidingWindowTest.SetInputNodes(_InputLayerNodes);
-			_SlidingWindowTest.SetOutputNodes(_OuputLayerNodes);
-			_SlidingWindowTest.SetWorkingDataset(dataSet);
+			_SlidingWindowTest = new Cranium.Activity.Training.SlidingWindow ();
+			_SlidingWindowTest.SetMomentum (0.7f);
+			_SlidingWindowTest.SetLearningRate (0.004f);
+			_SlidingWindowTest.SetTargetNetwork (_TestNetworkStructure);
+			_SlidingWindowTest.SetDatasetReservedLength (100);
+			_SlidingWindowTest.SetDistanceToForcastHorrison (3);
+			_SlidingWindowTest.SetWindowWidth (12);
+			_SlidingWindowTest.SetMaximumEpochs (1000);
+			_SlidingWindowTest.SetInputNodes (_InputLayerNodes);
+			_SlidingWindowTest.SetOutputNodes (_OuputLayerNodes);
+			_SlidingWindowTest.SetWorkingDataset (dataSet);
 			
-			List<Structure.Layer.Recurrent_Context> contextLayers = new List<Structure.Layer.Recurrent_Context>();
-			contextLayers.Add(_ContextLayer);
-			_SlidingWindowTest.SetRecurrentConextLayers(contextLayers);
+			List<Structure.Layer.Recurrent_Context> contextLayers = new List<Structure.Layer.Recurrent_Context> ();
+			contextLayers.Add (_ContextLayer);
+			_SlidingWindowTest.SetRecurrentConextLayers (contextLayers);
 			
-			Console.WriteLine("Starting");
-			_SlidingWindowTest.Start();
-			Thread.Sleep(1000);
-			while(_SlidingWindowTest.IsRunning())Thread.Sleep(20);
+			Console.WriteLine ("Starting");
+			_SlidingWindowTest.Start ();
+			Thread.Sleep (1000);
+			while (_SlidingWindowTest.IsRunning())
+				Thread.Sleep (20);
 			
-			Console.WriteLine("Complete");
+			Console.WriteLine ("Complete");
 			
 			Console.ReadKey ();
 		}
@@ -65,14 +66,14 @@ namespace Cranium.LibTest
 		public static void BuildStructure ()
 		{
 			_InputLayer = new Cranium.Structure.Layer.Base ();
-			 _InputLayerNodes = new List<Cranium.Structure.Node.Base> ();
+			_InputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<1; i++)
 				_InputLayerNodes.Add (new Cranium.Structure.Node.Base (_InputLayer, new Cranium.Structure.ActivationFunction.Tanh ()));			
 			_InputLayer.SetNodes (_InputLayerNodes);		
 			
 			_HiddenLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> HiddenLayerNodes = new List<Cranium.Structure.Node.Base> ();
-			for (int i=0; i<6; i++)
+			for (int i=0; i<20; i++)
 				HiddenLayerNodes.Add (new Cranium.Structure.Node.Base (_HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh ()));			
 			_HiddenLayer.SetNodes (HiddenLayerNodes);	
 			
