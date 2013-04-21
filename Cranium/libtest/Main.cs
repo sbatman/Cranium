@@ -26,6 +26,7 @@ namespace Cranium.LibTest
 			Console.WriteLine ("2 -  XOR3Test");
 			Console.WriteLine ("3 -  RNNTest");
 			Console.WriteLine ("4 -  RNNTest2");
+			Console.WriteLine ("5 -  MG Recurrent Test");
 			
 			ConsoleKey PressedKey = Console.ReadKey ().Key;
 			Console.Clear ();
@@ -37,6 +38,8 @@ namespace Cranium.LibTest
 				RNNTest.Run ();
 			if (PressedKey == ConsoleKey.D4)			
 				RNNTest2.Run ();
+			if (PressedKey == ConsoleKey.D5)			
+				MG_Recurrent_Test.Run ();
 		}
 	}
 }

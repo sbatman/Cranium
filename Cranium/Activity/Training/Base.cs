@@ -26,7 +26,7 @@ namespace Cranium.Activity.Training
 
 		public void Start ()
 		{
-			_CurrentEpoch=0;
+			_CurrentEpoch = 0;
 			_LoopThread = new Thread ( _UpdateLoop );
 			_LoopThread.Start ( );
 		}
@@ -62,15 +62,19 @@ namespace Cranium.Activity.Training
 		/// </summary>
 		protected abstract void Starting ();
 		/// <summary>
-		/// Called if this instance is stopped externaly
+		/// Called if this instance is stopped/finished
 		/// </summary>
 		protected abstract void Stopping ();
 
 		private void _UpdateLoop ()
 		{
 			_Running = true;
+			Starting ( );
 			while ( _Tick()&&!_Stopping )
-				;
+			{
+				_CurrentEpoch++;
+			}
+			Stopping ( );
 			_Running = false;
 		}
 	}

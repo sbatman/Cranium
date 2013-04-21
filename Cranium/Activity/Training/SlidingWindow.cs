@@ -9,6 +9,7 @@
 // //
 // // //////////////////////
 using System;
+using System.IO;
 using System.Collections.Generic;
 
 namespace Cranium.Activity.Training
@@ -23,9 +24,11 @@ namespace Cranium.Activity.Training
 		protected double[,] ExpectedOutputs;
 		protected double _LearningRate;
 		protected double _Momentum;
+		protected double _LastPassAverageError;
 		protected List<Cranium.Structure.Node.Base> _InputNodes;
 		protected List<Cranium.Structure.Node.Base> _OutputNodes;
 		protected List<Cranium.Structure.Layer.Recurrent_Context> _Recurrentlayers;
+		protected StreamWriter _LogStream;
 		
 		/// <summary>
 		/// Sets the width of the sliding window for data fed to the network before it is trained.
@@ -81,8 +84,8 @@ namespace Cranium.Activity.Training
 				
 		public virtual void PrepareData ()
 		{
-			_SequenceCount = ( ( _WorkingDataset.GetLength ( 0 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
-			int inputCount = _WorkingDataset.GetLength ( 1 );
+			_SequenceCount = ( ( _WorkingDataset.GetLength ( 1 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
+			int inputCount = _WorkingDataset.GetLength ( 0 );
 			int outputCount = 1;
 			InputSequences = new double[_SequenceCount, _WindowWidth, inputCount];
 			ExpectedOutputs = new double[_SequenceCount, outputCount];
@@ -92,11 +95,11 @@ namespace Cranium.Activity.Training
 				{
 					for ( int k=0 ; k<inputCount ; k++ )
 					{
-						InputSequences [ i, j, k ] = _WorkingDataset [ i + j, k ];						
+						InputSequences [ i, j, k ] = _WorkingDataset [ k, i + j ];						
 					}
 					for ( int l=0 ; l<outputCount ; l++ )
 					{
-						ExpectedOutputs [ i, l ] = _WorkingDataset [ i + j + _DistanceToForcastHorrison, l ];
+						ExpectedOutputs [ i, l ] = _WorkingDataset [ l, i + j + _DistanceToForcastHorrison ];
 					}
 				}				
 			}
@@ -107,6 +110,7 @@ namespace Cranium.Activity.Training
 		{
 			if ( _CurrentEpoch >= _MaxEpochs )
 				return false; // reached the max epoch so we are done for now
+			double error = 0;
 			
 			for ( int s=0 ; s<_SequenceCount ; s++ )
 			{
@@ -115,24 +119,48 @@ namespace Cranium.Activity.Training
 					for ( int x=0 ; x<_InputNodes.Count ; x++ )
 					{
 						_InputNodes [ x ].SetValue ( InputSequences [ s, i, x ] );
-					}	
+					}					
 					_TargetNetwork.FowardPass ( );
 					foreach (Structure.Layer.Recurrent_Context layer in _Recurrentlayers)
 						layer.Update ( );
 				}
+				for ( int x=0 ; x<_OutputNodes.Count ; x++ )
+				{
+					( _OutputNodes [ x ] as Structure.Node.Output ).SetTargetValue ( ExpectedOutputs [ s, x ] );
+				}				
 				_TargetNetwork.ReversePass ( _LearningRate, _Momentum );
+				
+				//Reset the conext nodes
+				foreach (Structure.Layer.Recurrent_Context layer in _Recurrentlayers)
+					foreach (Structure.Node.Recurrent_Context node in layer.GetNodes())
+						node.SetValue ( 0 );
+				
+				//Calculate the current error				
+				double passError = 0;
+				for ( int x=0 ; x<_OutputNodes.Count ; x++ )
+				{
+					passError += ( _OutputNodes [ x ] as Structure.Node.Output ).GetError ( );
+				}				
+				passError /= _OutputNodes.Count;
+				error += passError*passError;
 			}
-			
+			_LastPassAverageError = error / _SequenceCount;
+			Console.WriteLine ( _LastPassAverageError );
+			_LogStream.WriteLine ( _LastPassAverageError );
+			_LogStream.Flush ( );
 			return true;
 		}
 	
 		protected override void Starting ()
 		{
-			PrepareData ( );			
+			PrepareData ( );		
+			_LastPassAverageError = 0;
+			_LogStream = File.CreateText ( "log.txt" );
 		}
 
 		protected override void Stopping ()
 		{
+			_LogStream.Close();
 		}
 		#endregion
 	}
