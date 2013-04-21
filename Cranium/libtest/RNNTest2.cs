@@ -28,7 +28,7 @@ namespace Cranium.LibTest
 		public static void Run ()
 		{			
 			TestNetworkStructure = new Network ();
-			BuildStructureXOR ();
+			BuildStructure ();
 			TestNetworkStructure.RandomiseWeights (0.1d);
 			PrepData ();
 			int epoch = 0;
@@ -59,7 +59,7 @@ namespace Cranium.LibTest
 			Console.ReadKey ();
 		}
 
-		public static void BuildStructureXOR ()
+		public static void BuildStructure ()
 		{
 			InputLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> InputLayerNodes = new List<Cranium.Structure.Node.Base> ();

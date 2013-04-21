@@ -21,14 +21,17 @@ namespace Cranium.Activity.Training
 		private Thread _LoopThread;
 		protected Structure.Network _TargetNetwork;
 		protected double[,] _WorkingDataset;
+		protected int _MaxEpochs;
+		protected int _CurrentEpoch;
 
 		public void Start ()
 		{
+			_CurrentEpoch=0;
 			_LoopThread = new Thread ( _UpdateLoop );
 			_LoopThread.Start ( );
 		}
 		
-		public virtual void SetTargetNeteork (Structure.Network targetNetwork)
+		public virtual void SetTargetNetwork (Structure.Network targetNetwork)
 		{
 			_TargetNetwork = targetNetwork;	
 		}
@@ -42,6 +45,11 @@ namespace Cranium.Activity.Training
 		{
 			return _Running;
 		}
+		
+		public virtual void SetMaximumEpochs (int epochs)
+		{
+			_MaxEpochs = epochs;
+		}
 
 		public void Stop ()
 		{
@@ -52,11 +60,11 @@ namespace Cranium.Activity.Training
 		/// <summary>
 		/// Called as this training instance starts
 		/// </summary>
-		protected abstract void Starting();
+		protected abstract void Starting ();
 		/// <summary>
 		/// Called if this instance is stopped externaly
 		/// </summary>
-		protected abstract void Stopping();
+		protected abstract void Stopping ();
 
 		private void _UpdateLoop ()
 		{

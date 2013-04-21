@@ -9,16 +9,23 @@
 // //
 // // //////////////////////
 using System;
+using System.Collections.Generic;
 
 namespace Cranium.Activity.Training
 {
 	public class SlidingWindow : Base
 	{
 		protected int _WindowWidth;
+		protected int _SequenceCount;
 		protected int _DistanceToForcastHorrison;
 		protected int _PortionOfDatasetReserved;
 		protected double[,,] InputSequences;
 		protected double[,] ExpectedOutputs;
+		protected double _LearningRate;
+		protected double _Momentum;
+		protected List<Cranium.Structure.Node.Base> _InputNodes;
+		protected List<Cranium.Structure.Node.Base> _OutputNodes;
+		protected List<Cranium.Structure.Layer.Recurrent_Context> _Recurrentlayers;
 		
 		/// <summary>
 		/// Sets the width of the sliding window for data fed to the network before it is trained.
@@ -47,14 +54,39 @@ namespace Cranium.Activity.Training
 			_PortionOfDatasetReserved = reservedPortion;
 		}
 		
+		public virtual void SetInputNodes (List<Structure.Node.Base> nodes)
+		{
+			_InputNodes = nodes;
+		}
+		
+		public virtual void SetOutputNodes (List<Structure.Node.Base> nodes)
+		{
+			_OutputNodes = nodes;	
+		}
+		
+		public virtual void SetRecurrentConextLayers (List<Structure.Layer.Recurrent_Context> layers)
+		{
+			_Recurrentlayers = layers;	
+		}
+		
+		public virtual void SetLearningRate (double rate)
+		{
+			_LearningRate = rate;	
+		}
+		
+		public virtual void SetMomentum (double momentum)
+		{
+			_Momentum = momentum;	
+		}
+				
 		public virtual void PrepareData ()
 		{
-			int sequencesToProduce = ( ( _WorkingDataset.GetLength ( 0 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
+			_SequenceCount = ( ( _WorkingDataset.GetLength ( 0 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
 			int inputCount = _WorkingDataset.GetLength ( 1 );
 			int outputCount = 1;
-			InputSequences = new double[sequencesToProduce, _WindowWidth, inputCount];
-			ExpectedOutputs = new double[sequencesToProduce,outputCount];
-			for ( int i=0 ; i<sequencesToProduce ; i++ )
+			InputSequences = new double[_SequenceCount, _WindowWidth, inputCount];
+			ExpectedOutputs = new double[_SequenceCount, outputCount];
+			for ( int i=0 ; i<_SequenceCount ; i++ )
 			{
 				for ( int j=0 ; j<_WindowWidth ; j++ )
 				{
@@ -64,7 +96,7 @@ namespace Cranium.Activity.Training
 					}
 					for ( int l=0 ; l<outputCount ; l++ )
 					{
-							ExpectedOutputs[i,l]= _WorkingDataset[i+j+_DistanceToForcastHorrison,l];
+						ExpectedOutputs [ i, l ] = _WorkingDataset [ i + j + _DistanceToForcastHorrison, l ];
 					}
 				}				
 			}
@@ -73,11 +105,30 @@ namespace Cranium.Activity.Training
 		#region implemented abstract members of Cranium.Activity.Training.Base
 		protected override bool _Tick ()
 		{
+			if ( _CurrentEpoch >= _MaxEpochs )
+				return false; // reached the max epoch so we are done for now
+			
+			for ( int s=0 ; s<_SequenceCount ; s++ )
+			{
+				for ( int i=0 ; i<_WindowWidth ; i++ )
+				{
+					for ( int x=0 ; x<_InputNodes.Count ; x++ )
+					{
+						_InputNodes [ x ].SetValue ( InputSequences [ s, i, x ] );
+					}	
+					_TargetNetwork.FowardPass ( );
+					foreach (Structure.Layer.Recurrent_Context layer in _Recurrentlayers)
+						layer.Update ( );
+				}
+				_TargetNetwork.ReversePass ( _LearningRate, _Momentum );
+			}
+			
 			return true;
 		}
 	
 		protected override void Starting ()
 		{
+			PrepareData ( );			
 		}
 
 		protected override void Stopping ()
