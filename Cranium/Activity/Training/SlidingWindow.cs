@@ -52,36 +52,75 @@ namespace Cranium.Activity.Training
 			_DistanceToForcastHorrison = distance;	
 		}
 		
+		/// <summary>
+		/// Sets the length of the dataset that is reserved from training.
+		/// </summary>
+		/// <param name='reservedPortion'>
+		/// Reserved portion.
+		/// </param>
 		public virtual void SetDatasetReservedLength (int reservedPortion)
 		{
 			_PortionOfDatasetReserved = reservedPortion;
 		}
 		
+		/// <summary>
+		/// Sets the input nodes.
+		/// </summary>
+		/// <param name='nodes'>
+		/// Nodes.
+		/// </param>
 		public virtual void SetInputNodes (List<Structure.Node.Base> nodes)
 		{
 			_InputNodes = nodes;
 		}
 		
+		/// <summary>
+		/// Sets the output nodes.
+		/// </summary>
+		/// <param name='nodes'>
+		/// Nodes.
+		/// </param>
 		public virtual void SetOutputNodes (List<Structure.Node.Base> nodes)
 		{
 			_OutputNodes = nodes;	
 		}
 		
+		/// <summary>
+		/// Sets the recurrent conext layers.
+		/// </summary>
+		/// <param name='layers'>
+		/// Layers.
+		/// </param>
 		public virtual void SetRecurrentConextLayers (List<Structure.Layer.Recurrent_Context> layers)
 		{
 			_Recurrentlayers = layers;	
 		}
 		
+		/// <summary>
+		/// Sets the learning rate.
+		/// </summary>
+		/// <param name='rate'>
+		/// Rate.
+		/// </param>
 		public virtual void SetLearningRate (double rate)
 		{
 			_LearningRate = rate;	
 		}
 		
+		/// <summary>
+		/// Sets the momentum.
+		/// </summary>
+		/// <param name='momentum'>
+		/// Momentum.
+		/// </param>
 		public virtual void SetMomentum (double momentum)
 		{
 			_Momentum = momentum;	
 		}
 				
+		/// <summary>
+		/// Prepares the data before training.
+		/// </summary>
 		public virtual void PrepareData ()
 		{
 			_SequenceCount = ( ( _WorkingDataset.GetLength ( 1 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
@@ -142,7 +181,7 @@ namespace Cranium.Activity.Training
 					passError += ( _OutputNodes [ x ] as Structure.Node.Output ).GetError ( );
 				}				
 				passError /= _OutputNodes.Count;
-				error += passError*passError;
+				error += passError * passError;
 			}
 			_LastPassAverageError = error / _SequenceCount;
 			Console.WriteLine ( _LastPassAverageError );
@@ -160,7 +199,7 @@ namespace Cranium.Activity.Training
 
 		protected override void Stopping ()
 		{
-			_LogStream.Close();
+			_LogStream.Close ( );
 		}
 		#endregion
 	}
