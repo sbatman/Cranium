@@ -12,13 +12,14 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace Cranium.DataPreperation
+namespace Cranium.Data.Preprocessing
 {
 	public struct Data_Preprocessed_StandardDeviationVariance
 	{
 		public double[,] DataSet;
 		public double[] Average;
 		public double[] StandardDeviation;
+		public double[] Scale;
 	}
 	
 	/// <summary>
@@ -39,32 +40,34 @@ namespace Cranium.DataPreperation
 		/// <param name='fileName'>
 		/// File name.
 		/// </param>
-		public static Data_Preprocessed_StandardDeviationVariance ProduceDataset (string fileName)
+		public static Data_Preprocessed_StandardDeviationVariance ProduceDataset ( string fileName )
 		{
-			if ( fileName.Length == 0 || !File.Exists ( fileName ) )			  
-				throw( new Exception ( "Bad filename provided" ) );			
+			if ( fileName.Length == 0 || !File.Exists ( fileName ) )
+			{
+				throw( new Exception ( "Bad filename provided" ) );
+			}			
 			
 			try
 			{
 				StreamReader fileStream = File.OpenText ( fileName );
 			
-				List<string> Data = new List<string> ( );
-				while ( !fileStream.EndOfStream )
+				List<string> Data = new List<string> ();
+				while (!fileStream.EndOfStream)
 				{
-					Data.Add ( fileStream.ReadLine ( ) );
+					Data.Add ( fileStream.ReadLine () );
 				}	
-				int columnCount = Data [ 0 ].Split ( new char[]{(char)44} ).Length;			
+				int columnCount = Data [0].Split ( new char[]{( char )44} ).Length;			
 				double[,] WorkingDataSet = new double[columnCount, Data.Count];
-				for ( int i=0 ; i<Data.Count ; i++ )
+				for (int i=0; i<Data.Count; i++)
 				{
-					string[] currentLine = Data [ i ].Split ( new char[]{(char)44} );
-					for ( int x=0 ; x<columnCount ; x++ )
+					string[] currentLine = Data [i].Split ( new char[]{( char )44} );
+					for (int x=0; x<columnCount; x++)
 					{
-						WorkingDataSet [ x, i ] = Double.Parse ( currentLine [ x ] );
+						WorkingDataSet [x, i] = Double.Parse ( currentLine [x] );
 					}
 				}
-				fileStream.Close ( );
-				Data_Preprocessed_StandardDeviationVariance ReturnResult = new Data_Preprocessed_StandardDeviationVariance ( );
+				fileStream.Close ();
+				Data_Preprocessed_StandardDeviationVariance ReturnResult = new Data_Preprocessed_StandardDeviationVariance ();
 				ReturnResult.DataSet = WorkingDataSet;
 				ProcessData ( ref ReturnResult );				
 				return ReturnResult;
@@ -84,11 +87,11 @@ namespace Cranium.DataPreperation
 		/// <param name='inputData'>
 		/// Input data.
 		/// </param>
-		public static Data_Preprocessed_StandardDeviationVariance ProduceDataset (double[,] inputData)
+		public static Data_Preprocessed_StandardDeviationVariance ProduceDataset ( double[,] inputData )
 		{
 			try
 			{
-				Data_Preprocessed_StandardDeviationVariance ReturnResult = new Data_Preprocessed_StandardDeviationVariance ( );
+				Data_Preprocessed_StandardDeviationVariance ReturnResult = new Data_Preprocessed_StandardDeviationVariance ();
 				ReturnResult.DataSet = inputData;
 				ProcessData ( ref ReturnResult );
 				return ReturnResult;
@@ -105,41 +108,69 @@ namespace Cranium.DataPreperation
 		/// <param name='inputData'>
 		/// Input data.
 		/// </param>
-		private  static void ProcessData (ref Data_Preprocessed_StandardDeviationVariance inputData)
+		private  static void ProcessData ( ref Data_Preprocessed_StandardDeviationVariance inputData )
 		{
 			int colCount = inputData.DataSet.GetLength ( 0 );
 			int rowCount = inputData.DataSet.GetLength ( 1 );
 			inputData.Average = new double[colCount];
 			inputData.StandardDeviation = new double[colCount];
+			inputData.Scale = new double[colCount];
 			
-			for ( int x=0 ; x<colCount ; x++ )
+			for (int x=0; x<colCount; x++)
 			{
 				
 				//Calculate the Average
 				double avg = 0;
-				for ( int y=0 ; y<rowCount ; y++ )
+				for (int y=0; y<rowCount; y++)
 				{
-					avg += inputData.DataSet [ x, y ];
+					avg += inputData.DataSet [x, y];
 				}				
 				avg /= rowCount;
 				
 				//Calculate the StandardDeviation
 				Double stdv = 0;
-				for ( int y=0 ; y<rowCount ; y++ )
+				for (int y=0; y<rowCount; y++)
 				{
-					stdv += Math.Pow ( inputData.DataSet [ x, y ] - avg, 2 );
+					stdv += Math.Pow ( inputData.DataSet [x, y] - avg, 2 );
 				}
 				stdv = Math.Sqrt ( stdv / rowCount );
 				
+				double Min = 0;
+				double Max = 0;
 				//Processing The Data
-				for ( int y=0 ; y<rowCount ; y++ )
+				for (int y=0; y<rowCount; y++)
 				{
-					inputData.DataSet [ x, y ] = ( inputData.DataSet [ x, y ] - avg ) / stdv;
+					inputData.DataSet [x, y] = ( inputData.DataSet [x, y] - avg ) / stdv;
+					if ( inputData.DataSet [x, y] < Min )
+					{
+						Min = inputData.DataSet [x, y];
+					}
+					if ( inputData.DataSet [x, y] > Max )
+					{
+						Max = inputData.DataSet [x, y];
+					}
 				}
-				inputData.Average [ x ] = avg;
-				inputData.StandardDeviation [ x ] = stdv;
-			}		
-			
+				inputData.Average [x] = avg;
+				inputData.StandardDeviation [x] = stdv;
+				
+				double scale = Max;
+				if ( 0 - Min > scale )
+				{
+					scale = -Min;
+				}
+				if ( 1 > scale )
+				{
+					scale = 1;
+				}
+				if ( scale != 1 )
+				{
+					for (int y=0; y<rowCount; y++)
+					{
+						inputData.DataSet [x, y] /= scale;
+					}
+					inputData.Scale [x] = scale;	
+				}
+			}			
 		}
 	}
 }

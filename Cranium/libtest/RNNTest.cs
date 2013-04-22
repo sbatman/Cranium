@@ -32,7 +32,7 @@ namespace Cranium.LibTest
 			PrepData ();
 			int epoch = 0;
 			int time = 0;
-			while (true) {
+			while (epoch<1000) {
 				epoch++;
 				time++;
 				if (time % 100 == 0) {

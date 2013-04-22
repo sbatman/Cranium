@@ -11,7 +11,7 @@
 using System;
 using System.Collections.Generic;
 using Cranium.Structure;
-using Cranium.DataPreperation;
+using Cranium.Data.Preprocessing;
 
 namespace Cranium.LibTest
 {

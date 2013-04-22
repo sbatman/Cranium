@@ -25,7 +25,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
-    <Optimize>false</Optimize>
+    <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -51,7 +51,9 @@
     <Compile Include="Structure\Node\Recurrent-Context.cs" />
     <Compile Include="Activity\Training\Base.cs" />
     <Compile Include="Activity\Training\SlidingWindow.cs" />
-    <Compile Include="DataPreperation\StandardDeviationVariance.cs" />
+    <Compile Include="Activity\Testing\SlidingWindow.cs" />
+    <Compile Include="Data\Preprocessing\StandardDeviationVariance.cs" />
+    <Compile Include="Data\Functions.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -60,8 +62,6 @@
         <Policies>
           <DotNetNamingPolicy DirectoryNamespaceAssociation="PrefixedHierarchical" ResourceNamePolicy="FileFormatDefault" />
           <ChangeLogPolicy UpdateMode="Nearest" inheritsSet="Mono" />
-          <TextStylePolicy inheritsSet="null" scope="text/x-csharp" />
-          <CSharpFormattingPolicy IndentSwitchBody="True" AlignEmbeddedUsingStatements="False" AlignEmbeddedIfStatements="False" AnonymousMethodBraceStyle="NextLine" PropertyGetBraceStyle="NextLine" StatementBraceStyle="NextLine" ForBraceForcement="AddBraces" WhileBraceForcement="AddBraces" UsingBraceForcement="AddBraces" FixedBraceForcement="AddBraces" PlaceElseOnNewLine="True" PlaceElseIfOnNewLine="True" PlaceCatchOnNewLine="True" PlaceFinallyOnNewLine="True" PlaceWhileOnNewLine="True" BetweenEmptyMethodCallParentheses="True" WithinMethodCallParentheses="True" WithinParentheses="True" WithinIfParentheses="True" WithinWhileParentheses="True" WithinForParentheses="True" WithinCatchParentheses="True" WithinSwitchParentheses="True" WithinLockParentheses="True" WithinUsingParentheses="True" WithinNewParentheses="True" BetweenEmptyNewParentheses="True" SpacesWithinBrackets="True" SpacesBeforeForSemicolon="True" inheritsSet="Mono" inheritsScope="text/x-csharp" scope="text/x-csharp" />
         </Policies>
       </Properties>
     </MonoDevelop>
@@ -74,6 +74,8 @@
     <Folder Include="Structure\ActivationFunction\" />
     <Folder Include="Activity\" />
     <Folder Include="Activity\Training\" />
-    <Folder Include="DataPreperation\" />
+    <Folder Include="Activity\Testing\" />
+    <Folder Include="Data\" />
+    <Folder Include="Data\Preprocessing\" />
   </ItemGroup>
 </Project>
