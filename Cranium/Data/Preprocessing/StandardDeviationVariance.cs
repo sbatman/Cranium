@@ -12,7 +12,7 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 
-namespace Cranium.DataPreperation
+namespace Cranium.Data.Preprocessing
 {
 	public struct Data_Preprocessed_StandardDeviationVariance
 	{

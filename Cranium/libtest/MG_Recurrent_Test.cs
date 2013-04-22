@@ -33,7 +33,7 @@ namespace Cranium.LibTest
 			BuildStructure ();
 			_TestNetworkStructure.RandomiseWeights (0.01d);
 			//PrepData
-			double[,] dataSet = Cranium.DataPreperation.StandardDeviationVariance.ProduceDataset ("TestData/Mackey-Glass-Pure.csv").DataSet;
+			double[,] dataSet = Cranium.Data.Preprocessing.StandardDeviationVariance.ProduceDataset ("TestData/Mackey-Glass-Pure.csv").DataSet;
 			
 			//Prepare training activity
 			_SlidingWindowTraining = new Cranium.Activity.Training.SlidingWindow ();
