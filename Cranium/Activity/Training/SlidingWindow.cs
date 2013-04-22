@@ -37,7 +37,7 @@ namespace Cranium.Activity.Training
 		/// <param name='windowWidth'>
 		/// Window width.
 		/// </param>
-		public virtual void SetWindowWidth (int windowWidth)
+		public virtual void SetWindowWidth ( int windowWidth )
 		{
 			_WindowWidth = windowWidth;	
 		}
@@ -48,7 +48,7 @@ namespace Cranium.Activity.Training
 		/// <param name='distance'>
 		/// Distance.
 		/// </param>
-		public virtual void SetDistanceToForcastHorrison (int distance)
+		public virtual void SetDistanceToForcastHorrison ( int distance )
 		{
 			_DistanceToForcastHorrison = distance;	
 		}
@@ -59,7 +59,7 @@ namespace Cranium.Activity.Training
 		/// <param name='reservedPortion'>
 		/// Reserved portion.
 		/// </param>
-		public virtual void SetDatasetReservedLength (int reservedPortion)
+		public virtual void SetDatasetReservedLength ( int reservedPortion )
 		{
 			_PortionOfDatasetReserved = reservedPortion;
 		}
@@ -70,7 +70,7 @@ namespace Cranium.Activity.Training
 		/// <param name='nodes'>
 		/// Nodes.
 		/// </param>
-		public virtual void SetInputNodes (List<Structure.Node.Base> nodes)
+		public virtual void SetInputNodes ( List<Structure.Node.Base> nodes )
 		{
 			_InputNodes = nodes;
 		}
@@ -81,7 +81,7 @@ namespace Cranium.Activity.Training
 		/// <param name='nodes'>
 		/// Nodes.
 		/// </param>
-		public virtual void SetOutputNodes (List<Structure.Node.Base> nodes)
+		public virtual void SetOutputNodes ( List<Structure.Node.Base> nodes )
 		{
 			_OutputNodes = nodes;	
 		}
@@ -92,7 +92,7 @@ namespace Cranium.Activity.Training
 		/// <param name='layers'>
 		/// Layers.
 		/// </param>
-		public virtual void SetRecurrentConextLayers (List<Structure.Layer.Recurrent_Context> layers)
+		public virtual void SetRecurrentConextLayers ( List<Structure.Layer.Recurrent_Context> layers )
 		{
 			_Recurrentlayers = layers;	
 		}
@@ -103,7 +103,7 @@ namespace Cranium.Activity.Training
 		/// <param name='rate'>
 		/// Rate.
 		/// </param>
-		public virtual void SetLearningRate (double rate)
+		public virtual void SetLearningRate ( double rate )
 		{
 			_LearningRate = rate;	
 		}
@@ -114,7 +114,7 @@ namespace Cranium.Activity.Training
 		/// <param name='momentum'>
 		/// Momentum.
 		/// </param>
-		public virtual void SetMomentum (double momentum)
+		public virtual void SetMomentum ( double momentum )
 		{
 			_Momentum = momentum;	
 		}
@@ -122,75 +122,77 @@ namespace Cranium.Activity.Training
 		/// <summary>
 		/// Prepares the data before training.
 		/// </summary>
-		public virtual void PrepareData ()
+		public virtual void PrepareData ( )
 		{
 			_SequenceCount = ( ( _WorkingDataset.GetLength ( 1 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
 			int inputCount = _WorkingDataset.GetLength ( 0 );
 			int outputCount = 1;
 			InputSequences = new double[_SequenceCount, _WindowWidth, inputCount];
 			ExpectedOutputs = new double[_SequenceCount, outputCount];
-			for ( int i=0 ; i<_SequenceCount ; i++ )
+			for (int i=0; i<_SequenceCount; i++)
 			{
-				for ( int j=0 ; j<_WindowWidth ; j++ )
+				for (int j=0; j<_WindowWidth; j++)
 				{
-					for ( int k=0 ; k<inputCount ; k++ )
+					for (int k=0; k<inputCount; k++)
 					{
-						InputSequences [ i, j, k ] = _WorkingDataset [ k, i + j ];						
+						InputSequences [i, j, k] = _WorkingDataset [k, i + j];						
 					}
-					for ( int l=0 ; l<outputCount ; l++ )
+					for (int l=0; l<outputCount; l++)
 					{
-						ExpectedOutputs [ i, l ] = _WorkingDataset [ l, i + j + _DistanceToForcastHorrison ];
+						ExpectedOutputs [i, l] = _WorkingDataset [l, i + j + _DistanceToForcastHorrison];
 					}
 				}				
 			}
 		}
 		
 		#region implemented abstract members of Cranium.Activity.Training.Base
-		protected override bool _Tick ()
+		protected override bool _Tick ( )
 		{
 			if ( _CurrentEpoch >= _MaxEpochs )
-				return false; // reached the max epoch so we are done for now
+			{
+				return false;
+			} // reached the max epoch so we are done for now
 			double error = 0;
 			
-			List<int> sequencyList = new List<int>(_SequenceCount);
+			List<int> sequencyList = new List<int> ( _SequenceCount );
 			
-			for ( int s=0 ; s<_SequenceCount ; s++ )
+			for (int s=0; s<_SequenceCount; s++)
 			{
-				sequencyList.Add(s);
+				sequencyList.Add ( s );
 			}
 			
-			while(sequencyList.Count>0)
+			while (sequencyList.Count>0)
 			{
 				//This needs to be booled so it can be turned off
-				int s = sequencyList[_RND.Next(0,sequencyList.Count)];
-				sequencyList.Remove(s);
+				int s = sequencyList [_RND.Next ( 0, sequencyList.Count )];
+				sequencyList.Remove ( s );
 				
-				for ( int i=0 ; i<_WindowWidth ; i++ )
+				for (int i=0; i<_WindowWidth; i++)
 				{
-					for ( int x=0 ; x<_InputNodes.Count ; x++ )
+					for (int x=0; x<_InputNodes.Count; x++)
 					{
-						_InputNodes [ x ].SetValue ( InputSequences [ s, i, x ] );
+						_InputNodes [x].SetValue ( InputSequences [s, i, x] );
 					}					
-					_TargetNetwork.FowardPass ( );
-					foreach (Structure.Layer.Recurrent_Context layer in _Recurrentlayers)
-						layer.Update ( );
+					_TargetNetwork.FowardPass ();
+					foreach ( Structure.Layer.Recurrent_Context layer in _Recurrentlayers )
+						layer.Update ();
 				}
-				for ( int x=0 ; x<_OutputNodes.Count ; x++ )
+				for (int x=0; x<_OutputNodes.Count; x++)
 				{
-					( _OutputNodes [ x ] as Structure.Node.Output ).SetTargetValue ( ExpectedOutputs [ s, x ] );
+					( _OutputNodes [x] as Structure.Node.Output ).SetTargetValue ( ExpectedOutputs [s, x] );
 				}				
 				_TargetNetwork.ReversePass ( _LearningRate, _Momentum );
 				
 				//Reset the conext nodes
-				foreach (Structure.Layer.Recurrent_Context layer in _Recurrentlayers)
-					foreach (Structure.Node.Recurrent_Context node in layer.GetNodes())
+				foreach ( Structure.Layer.Recurrent_Context layer in _Recurrentlayers )
+					foreach ( Structure.Node.Recurrent_Context node in layer.GetNodes() )
 						node.SetValue ( 0 );
 				
 				//Calculate the current error				
 				double passError = 0;
-				for ( int x=0 ; x<_OutputNodes.Count ; x++ )
+				for (int x=0; x<_OutputNodes.Count; x++)
 				{
-					passError += ( _OutputNodes [ x ] as Structure.Node.Output ).GetError ( );
+					passError += ( _OutputNodes [x] as Structure.Node.Output ).GetError ();
 				}				
 				passError /= _OutputNodes.Count;
 				error += passError * passError;
@@ -198,21 +200,21 @@ namespace Cranium.Activity.Training
 			_LastPassAverageError = error / _SequenceCount;
 			Console.WriteLine ( _LastPassAverageError );
 			_LogStream.WriteLine ( _LastPassAverageError );
-			_LogStream.Flush ( );
+			_LogStream.Flush ();
 			return true;
 		}
 	
-		protected override void Starting ()
+		protected override void Starting ( )
 		{
-			PrepareData ( );		
+			PrepareData ();		
 			_LastPassAverageError = 0;
 			_LogStream = File.CreateText ( "log.txt" );
-			_RND = new Random();
+			_RND = new Random ();
 		}
 
-		protected override void Stopping ()
+		protected override void Stopping ( )
 		{
-			_LogStream.Close ( );
+			_LogStream.Close ();
 		}
 		#endregion
 	}

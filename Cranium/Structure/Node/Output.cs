@@ -18,18 +18,18 @@ namespace Cranium.Structure.Node
 	{
 		protected Double _TargetValue;
 		
-		public Output (Cranium.Structure.Layer.Base parentLayer, Cranium.Structure.ActivationFunction.Base activationFunction):base(parentLayer,activationFunction)
+		public Output ( Cranium.Structure.Layer.Base parentLayer, Cranium.Structure.ActivationFunction.Base activationFunction ):base(parentLayer,activationFunction)
 		{
 			
 		}
 		
-		public override void CalculateError ()
+		public override void CalculateError ( )
 		{
 			_Error = ( ( 1 - _Value ) * ( 1 + _Value ) ) * ( _TargetValue - _Value );
 
 		}
 
-		public virtual void SetTargetValue (Double targetValue)
+		public virtual void SetTargetValue ( Double targetValue )
 		{
 			_TargetValue = targetValue;
 		}

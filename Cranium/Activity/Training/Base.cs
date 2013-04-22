@@ -27,11 +27,11 @@ namespace Cranium.Activity.Training
 		/// <summary>
 		/// Start this training activity (launched in a sperate thread).
 		/// </summary>
-		public void Start ()
+		public void Start ( )
 		{
 			_CurrentEpoch = 0;
 			_LoopThread = new Thread ( _UpdateLoop );
-			_LoopThread.Start ( );
+			_LoopThread.Start ();
 		}
 		
 		/// <summary>
@@ -40,7 +40,7 @@ namespace Cranium.Activity.Training
 		/// <param name='targetNetwork'>
 		/// Target network.
 		/// </param>
-		public virtual void SetTargetNetwork (Structure.Network targetNetwork)
+		public virtual void SetTargetNetwork ( Structure.Network targetNetwork )
 		{
 			_TargetNetwork = targetNetwork;	
 		}
@@ -51,7 +51,7 @@ namespace Cranium.Activity.Training
 		/// <param name='workingDataset'>
 		/// Working dataset.
 		/// </param>
-		public virtual void SetWorkingDataset (double[,] workingDataset)
+		public virtual void SetWorkingDataset ( double[,] workingDataset )
 		{
 			_WorkingDataset = workingDataset;	
 		}
@@ -62,7 +62,7 @@ namespace Cranium.Activity.Training
 		/// <returns>
 		/// <c>true</c> if this instance is running; otherwise, <c>false</c>.
 		/// </returns>
-		public bool IsRunning ()
+		public bool IsRunning ( )
 		{
 			return _Running;
 		}
@@ -73,7 +73,7 @@ namespace Cranium.Activity.Training
 		/// <param name='epochs'>
 		/// Epochs.
 		/// </param>
-		public virtual void SetMaximumEpochs (int epochs)
+		public virtual void SetMaximumEpochs ( int epochs )
 		{
 			_MaxEpochs = epochs;
 		}
@@ -81,7 +81,7 @@ namespace Cranium.Activity.Training
 		/// <summary>
 		/// Stop this training activity.
 		/// </summary>
-		public void Stop ()
+		public void Stop ( )
 		{
 			_Stopping = true;
 		}
@@ -92,28 +92,28 @@ namespace Cranium.Activity.Training
 		/// <returns>
 		/// The tick.
 		/// </returns>
-		protected abstract bool _Tick ();
+		protected abstract bool _Tick ( );
 		/// <summary>
 		/// Called as this training instance starts
 		/// </summary>
-		protected abstract void Starting ();
+		protected abstract void Starting ( );
 		/// <summary>
 		/// Called if this instance is stopped/finished
 		/// </summary>
-		protected abstract void Stopping ();
+		protected abstract void Stopping ( );
 
 		/// <summary>
 		/// Logic loop that is operated on another thread
 		/// </summary>
-		private void _UpdateLoop ()
+		private void _UpdateLoop ( )
 		{
 			_Running = true;
-			Starting ( );
-			while ( _Tick()&&!_Stopping )
+			Starting ();
+			while (_Tick()&&!_Stopping)
 			{
 				_CurrentEpoch++;
 			}
-			Stopping ( );
+			Stopping ();
 			_Running = false;
 		}
 	}

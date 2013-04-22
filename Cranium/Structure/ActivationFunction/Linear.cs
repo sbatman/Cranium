@@ -18,17 +18,17 @@ namespace Cranium.Structure.ActivationFunction
 	/// </summary>
 	public class Linear : Base
 	{
-		public override Double Compute (Double input)
+		public override Double Compute ( Double input )
 		{
 			return input;
 		}
 
-		public override Double ComputeDerivative (Double input)
+		public override Double ComputeDerivative ( Double input )
 		{
 			return 1;
 		}
 
-		public override void Dispose ()
+		public override void Dispose ( )
 		{
 			
 		}

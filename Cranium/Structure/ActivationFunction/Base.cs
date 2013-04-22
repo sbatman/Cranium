@@ -20,7 +20,7 @@ namespace Cranium.Structure.ActivationFunction
 		/// <param name='input'>
 		/// The value to pass to the activation function
 		/// </param>
-		public abstract Double Compute (Double input);
+		public abstract Double Compute ( Double input );
 		/// <summary>
 		/// Computes the derivative using the activation function.
 		/// </summary>
@@ -30,10 +30,10 @@ namespace Cranium.Structure.ActivationFunction
 		/// <param name='input'>
 		/// Input.
 		/// </param>
-		public abstract Double ComputeDerivative (Double input);
+		public abstract Double ComputeDerivative ( Double input );
 
 		#region IDisposable implementation
-		public abstract void Dispose ();
+		public abstract void Dispose ( );
 		#endregion
 	}
 }

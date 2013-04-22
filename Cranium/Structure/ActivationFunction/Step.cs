@@ -19,22 +19,22 @@ namespace Cranium.Structure.ActivationFunction
 	{
 		protected double _ActivationPoint;
 		
-		public Step (double activationPoint)
+		public Step ( double activationPoint )
 		{
 			_ActivationPoint = activationPoint;	
 		}
 
-		public override Double Compute (Double input)
+		public override Double Compute ( Double input )
 		{
 			return input >= _ActivationPoint ? 1 : 0;
 		}
 
-		public override Double ComputeDerivative (Double input)
+		public override Double ComputeDerivative ( Double input )
 		{
 			return 1;
 		}
 
-		public override void Dispose ()
+		public override void Dispose ( )
 		{
 			
 		}
