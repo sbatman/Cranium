@@ -15,7 +15,13 @@ namespace Cranium.Activity.Testing
 {
 	public class SlidingWindow
 	{
-		
+		public struct TestResults
+		{
+			public double[,] ExpectedOutputs;
+			public double[,] ActualOutputs;
+			public double[,] OutputErrors;
+			public double RMSE;
+		}
 		protected int _WindowWidth;
 		protected int _SequenceCount;
 		protected int _DistanceToForcastHorrison;
@@ -24,8 +30,7 @@ namespace Cranium.Activity.Testing
 		protected double[,,] InputSequences;
 		protected double[,] _ExpectedOutputs;
 		protected double[,] _ActualOutputs;
-		protected double _LearningRate;
-		protected double _Momentum;
+		protected double[,] _OutputErrors;
 		protected double _LastPassAverageError;
 		protected List<Cranium.Structure.Node.Base> _InputNodes;
 		protected List<Cranium.Structure.Node.Base> _OutputNodes;
@@ -46,7 +51,7 @@ namespace Cranium.Activity.Testing
 			_PortionOfDatasetReserved = reservedPortion;
 		}
 		
-		public virtual void SetWorkingDataSet (double[,] dataset)
+		public virtual void SetWorkingDataset (double[,] dataset)
 		{
 			_WorkingDataset = dataset;	
 		}
@@ -73,28 +78,11 @@ namespace Cranium.Activity.Testing
 			_OutputNodes = nodes;	
 		}
 		
-		/// <summary>
-		/// Sets the learning rate.
-		/// </summary>
-		/// <param name='rate'>
-		/// Rate.
-		/// </param>
-		public virtual void SetLearningRate (double rate)
+		public virtual void SetRecurrentConextLayers (List<Structure.Layer.Recurrent_Context> layers)
 		{
-			_LearningRate = rate;	
+			_Recurrentlayers = layers;	
 		}
 		
-		/// <summary>
-		/// Sets the momentum.
-		/// </summary>
-		/// <param name='momentum'>
-		/// Momentum.
-		/// </param>
-		public virtual void SetMomentum (double momentum)
-		{
-			_Momentum = momentum;	
-		}
-				
 		/// <summary>
 		/// Prepares the data before training.
 		/// </summary>
@@ -105,6 +93,8 @@ namespace Cranium.Activity.Testing
 			int outputCount = 1;
 			InputSequences = new double[_SequenceCount, _WindowWidth, inputCount];
 			_ExpectedOutputs = new double[_SequenceCount, outputCount];
+			_ActualOutputs = new double[_SequenceCount, outputCount];
+			_OutputErrors = new double[_SequenceCount, outputCount];
 			for ( int i=0 ; i<_SequenceCount ; i++ )
 			{
 				for ( int j=0 ; j<_WindowWidth ; j++ )
@@ -121,13 +111,16 @@ namespace Cranium.Activity.Testing
 			}
 		}
 		
-		public virtual void TestNetwork (Structure.Network network)
+		public virtual TestResults TestNetwork (Structure.Network network)
 		{
+			PrepareData ( );
 			//Ensure that the networks state is clean
 			foreach (Structure.Layer.Base layer in network.GetCurrentLayers())
 				foreach (Structure.Node.Base node in layer.GetNodes())
 					node.SetValue ( 0 );
 			
+			int errorCount = 0;
+			double RMSE = 0;
 			for ( int s=0 ; s<_SequenceCount ; s++ )
 			{
 				for ( int i=0 ; i<_WindowWidth ; i++ )
@@ -143,9 +136,18 @@ namespace Cranium.Activity.Testing
 				for ( int x=0 ; x<_OutputNodes.Count ; x++ )
 				{
 					_ActualOutputs [ s, x ] = _OutputNodes [ x ].GetValue ( );
+					_OutputErrors [ s, x ] = _ExpectedOutputs [ s, x ] - _ActualOutputs [ s, x ];
+					errorCount++;
+					RMSE += _OutputErrors [ s, x ] * _OutputErrors [ s, x ];
 				}				
 			}
-			
+			//All the sequewnces have been run through and the outputs and their erros collected
+			TestResults result = new TestResults ( );
+			result.ExpectedOutputs = _ExpectedOutputs;
+			result.ActualOutputs = _ActualOutputs;
+			result.OutputErrors = _OutputErrors;
+			result.RMSE = RMSE / (double)errorCount;
+			return result;
 		}
 	}
 }
