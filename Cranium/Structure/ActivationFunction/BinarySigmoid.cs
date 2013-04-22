@@ -14,23 +14,27 @@ namespace Cranium.Structure.ActivationFunction
 {
 	public class BinarySigmoid :Base
 	{
-		public override Double Compute (Double input)
+		public override Double Compute ( Double input )
 		{
-			Double d = (Double)1d / ( 1d + Math.Exp ( 0d - (Double)input ) );
+			Double d = ( Double )1d / ( 1d + Math.Exp ( 0d - ( Double )input ) );
 			if ( Double.IsNaN ( d ) || Double.IsInfinity ( d ) )
+			{
 				throw( new Exception ( "Activation Function Error" ) );
+			}
 			return d;
 		}
 
-		public override Double ComputeDerivative (Double input)
+		public override Double ComputeDerivative ( Double input )
 		{
-			Double d = (Double)( Compute ( input ) * ( 1d - Compute ( input ) ) );
+			Double d = ( Double )( Compute ( input ) * ( 1d - Compute ( input ) ) );
 			if ( Double.IsNaN ( d ) || Double.IsInfinity ( d ) )
+			{
 				throw( new Exception ( "Activation Function Error" ) );
+			}
 			return d;
 		}
 
-		public override void Dispose ()
+		public override void Dispose ( )
 		{
 			
 		}

@@ -20,29 +20,31 @@ namespace Cranium.Structure.Node
 	{
 		protected double _BiasValue = 1;
 		
-		public Bias (Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer,activationFunction)
+		public Bias ( Layer.Base parentLayer, ActivationFunction.Base activationFunction ) : base(parentLayer,activationFunction)
 		{
 		}
 		
-		public override Double GetValue ()
+		public override Double GetValue ( )
 		{
 			return _BiasValue;
 		}
 
-		public override double GetError ()
+		public override double GetError ( )
 		{
 			return 0;
 		}
 		
-		public override void SetValue (double newValue)
+		public override void SetValue ( double newValue )
 		{
 			_BiasValue = newValue;
 		}
 		
-		public override void ConnectToNode (Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, float startingWeight)
+		public override void ConnectToNode ( Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, float startingWeight )
 		{
 			if ( connectionDirectionToNode == Weight.Base.ConnectionDirection.Reverse )
+			{
 				return;
+			}
 			base.ConnectToNode ( nodeToConnect, connectionDirectionToNode, startingWeight );
 		}
 	}

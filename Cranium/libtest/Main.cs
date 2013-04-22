@@ -17,29 +17,39 @@ namespace Cranium.LibTest
 {
 	class MainClass
 	{
-		public static void Main (string[] args)
+		public static void Main ( string[] args )
 		{			
 			
-			Console.WriteLine ("Which test would you like to run");
-			Console.WriteLine ("-------------------------------------------------");
-			Console.WriteLine ("1 -  XOR2Test");
-			Console.WriteLine ("2 -  XOR3Test");
-			Console.WriteLine ("3 -  RNNTest");
-			Console.WriteLine ("4 -  RNNTest2");
-			Console.WriteLine ("5 -  MG Recurrent Test");
+			Console.WriteLine ( "Which test would you like to run" );
+			Console.WriteLine ( "-------------------------------------------------" );
+			Console.WriteLine ( "1 -  XOR2Test" );
+			Console.WriteLine ( "2 -  XOR3Test" );
+			Console.WriteLine ( "3 -  RNNTest" );
+			Console.WriteLine ( "4 -  RNNTest2" );
+			Console.WriteLine ( "5 -  MG Recurrent Test" );
 			
 			ConsoleKey PressedKey = Console.ReadKey ().Key;
 			Console.Clear ();
-			if (PressedKey == ConsoleKey.D1)			
+			if ( PressedKey == ConsoleKey.D1 )
+			{
 				XOR2Test.Run ();
-			if (PressedKey == ConsoleKey.D2)			
+			}
+			if ( PressedKey == ConsoleKey.D2 )
+			{
 				XOR3Test.Run ();
-			if (PressedKey == ConsoleKey.D3)			
+			}
+			if ( PressedKey == ConsoleKey.D3 )
+			{
 				RNNTest.Run ();
-			if (PressedKey == ConsoleKey.D4)			
+			}
+			if ( PressedKey == ConsoleKey.D4 )
+			{
 				RNNTest2.Run ();
-			if (PressedKey == ConsoleKey.D5)			
+			}
+			if ( PressedKey == ConsoleKey.D5 )
+			{
 				MG_Recurrent_Test.Run ();
+			}
 		}
 	}
 }

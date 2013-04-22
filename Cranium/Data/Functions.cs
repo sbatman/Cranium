@@ -42,7 +42,7 @@ namespace Cranium.Data
 						stream.Write ( data [x, y] );
 					}
 				}
-				stream.WriteLine("");
+				stream.WriteLine ( "" );
 			}
 			stream.Flush ();
 			stream.Close ();

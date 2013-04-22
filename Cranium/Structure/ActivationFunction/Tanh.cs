@@ -18,17 +18,17 @@ namespace Cranium.Structure.ActivationFunction
 	/// </summary>
 	public class Tanh : Base
 	{
-		public override Double Compute (Double input)
+		public override Double Compute ( Double input )
 		{
 			return ( Math.Exp ( input * 2.0 ) - 1.0 ) / ( Math.Exp ( input * 2.0 ) + 1.0 );
 		}
 
-		public override Double ComputeDerivative (Double input)
+		public override Double ComputeDerivative ( Double input )
 		{	
 			return  1 - Math.Pow ( ( input ), 2 );
 		}
 
-		public override void Dispose ()
+		public override void Dispose ( )
 		{
 			
 		}

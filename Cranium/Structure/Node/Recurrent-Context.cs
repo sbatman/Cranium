@@ -18,24 +18,24 @@ namespace Cranium.Structure.Node
 		protected double _RateOfUpdate;
 		protected double _StartValue = 0.5f;
 
-		public Recurrent_Context (Node.Base sourceNode, double rateOfUpdate, Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer,activationFunction)
+		public Recurrent_Context ( Node.Base sourceNode, double rateOfUpdate, Layer.Base parentLayer, ActivationFunction.Base activationFunction ) : base(parentLayer,activationFunction)
 		{
 			_Value = 0.5f;
 			_SourceNode = sourceNode;
 			_RateOfUpdate = rateOfUpdate;
 		}
 
-		public override void CalculateValue ()
+		public override void CalculateValue ( )
 		{
 			return;
 		}
 
-		public virtual void Update ()
+		public virtual void Update ( )
 		{
-			_Value = ( _Value * ( 1 - _RateOfUpdate ) ) + ( _SourceNode.GetValue ( ) * _RateOfUpdate );
+			_Value = ( _Value * ( 1 - _RateOfUpdate ) ) + ( _SourceNode.GetValue () * _RateOfUpdate );
 		}
 
-		public virtual void SetStartValue (double startValue)
+		public virtual void SetStartValue ( double startValue )
 		{
 			_StartValue = startValue;
 		}
