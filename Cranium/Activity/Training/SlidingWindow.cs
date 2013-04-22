@@ -16,6 +16,7 @@ namespace Cranium.Activity.Training
 {
 	public class SlidingWindow : Base
 	{
+		protected Random _RND;
 		protected int _WindowWidth;
 		protected int _SequenceCount;
 		protected int _DistanceToForcastHorrison;
@@ -151,8 +152,19 @@ namespace Cranium.Activity.Training
 				return false; // reached the max epoch so we are done for now
 			double error = 0;
 			
+			List<int> sequencyList = new List<int>(_SequenceCount);
+			
 			for ( int s=0 ; s<_SequenceCount ; s++ )
 			{
+				sequencyList.Add(s);
+			}
+			
+			while(sequencyList.Count>0)
+			{
+				//This needs to be booled so it can be turned off
+				int s = sequencyList[_RND.Next(0,sequencyList.Count)];
+				sequencyList.Remove(s);
+				
 				for ( int i=0 ; i<_WindowWidth ; i++ )
 				{
 					for ( int x=0 ; x<_InputNodes.Count ; x++ )
@@ -195,6 +207,7 @@ namespace Cranium.Activity.Training
 			PrepareData ( );		
 			_LastPassAverageError = 0;
 			_LogStream = File.CreateText ( "log.txt" );
+			_RND = new Random();
 		}
 
 		protected override void Stopping ()

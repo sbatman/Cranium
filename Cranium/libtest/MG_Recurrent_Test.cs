@@ -43,7 +43,7 @@ namespace Cranium.LibTest
 			_SlidingWindowTraining.SetDatasetReservedLength (100);
 			_SlidingWindowTraining.SetDistanceToForcastHorrison (3);
 			_SlidingWindowTraining.SetWindowWidth (12);
-			_SlidingWindowTraining.SetMaximumEpochs (300);
+			_SlidingWindowTraining.SetMaximumEpochs (900);
 			_SlidingWindowTraining.SetInputNodes (_InputLayerNodes);
 			_SlidingWindowTraining.SetOutputNodes (_OuputLayerNodes);
 			_SlidingWindowTraining.SetWorkingDataset (dataSet);
@@ -79,6 +79,8 @@ namespace Cranium.LibTest
 			Activity.Testing.SlidingWindow.TestResults Result = _SlidingWindowTesting.TestNetwork (_TestNetworkStructure);
 			
 			Console.WriteLine (Result.RMSE);
+			Data.UsefulFunctions.PrintArrayToFile(Result.ActualOutputs,"ActualOutputs.csv");
+			Data.UsefulFunctions.PrintArrayToFile(Result.ExpectedOutputs,"ExpectedOutputs.csv");
 			Console.WriteLine ("Complete Testing");
 			
 			Console.ReadKey ();
@@ -95,15 +97,16 @@ namespace Cranium.LibTest
 			_HiddenLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> HiddenLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<20; i++)
-				HiddenLayerNodes.Add (new Cranium.Structure.Node.Base (_HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh ()));			
+				HiddenLayerNodes.Add (new Cranium.Structure.Node.Base (_HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh ()));	
+			HiddenLayerNodes.Add (new Cranium.Structure.Node.Bias (_HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh ()));	
 			_HiddenLayer.SetNodes (HiddenLayerNodes);	
 			
-			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context (6);
+			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context (4);
 			
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			_OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<1; i++)
-				_OuputLayerNodes.Add (new Cranium.Structure.Node.Output (_OutputLayer, new Cranium.Structure.ActivationFunction.Tanh ()));
+				_OuputLayerNodes.Add (new Cranium.Structure.Node.Output (_OutputLayer, new Cranium.Structure.ActivationFunction.Linear ()));
 			_OutputLayer.SetNodes (_OuputLayerNodes);
 			
 			_ContextLayer.AddSourceNodes (_OuputLayerNodes);
