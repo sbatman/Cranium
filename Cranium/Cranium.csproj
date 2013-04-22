@@ -52,6 +52,7 @@
     <Compile Include="Activity\Training\Base.cs" />
     <Compile Include="Activity\Training\SlidingWindow.cs" />
     <Compile Include="DataPreperation\StandardDeviationVariance.cs" />
+    <Compile Include="Activity\Testing\SlidingWindow.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -75,5 +76,6 @@
     <Folder Include="Activity\" />
     <Folder Include="Activity\Training\" />
     <Folder Include="DataPreperation\" />
+    <Folder Include="Activity\Testing\" />
   </ItemGroup>
 </Project>
