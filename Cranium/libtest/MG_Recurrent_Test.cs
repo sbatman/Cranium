@@ -40,7 +40,7 @@ namespace Cranium.LibTest
 			_SlidingWindowTraining.SetMomentum ( 0.7f );
 			_SlidingWindowTraining.SetLearningRate ( 0.004f );
 			_SlidingWindowTraining.SetTargetNetwork ( _TestNetworkStructure );
-			_SlidingWindowTraining.SetDatasetReservedLength ( 100 );
+			_SlidingWindowTraining.SetDatasetReservedLength ( 0 );
 			_SlidingWindowTraining.SetDistanceToForcastHorrison ( 3 );
 			_SlidingWindowTraining.SetWindowWidth ( 12 );
 			_SlidingWindowTraining.SetMaximumEpochs ( 900 );
@@ -100,11 +100,10 @@ namespace Cranium.LibTest
 			
 			_HiddenLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> HiddenLayerNodes = new List<Cranium.Structure.Node.Base> ();
-			for (int i=0; i<20; i++)
+			for (int i=0; i<5; i++)
 			{
 				HiddenLayerNodes.Add ( new Cranium.Structure.Node.Base ( _HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh () ) );
 			}	
-			HiddenLayerNodes.Add ( new Cranium.Structure.Node.Bias ( _HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh () ) );	
 			_HiddenLayer.SetNodes ( HiddenLayerNodes );	
 			
 			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 4 );

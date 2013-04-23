@@ -54,6 +54,7 @@
     <Compile Include="Activity\Testing\SlidingWindow.cs" />
     <Compile Include="Data\Preprocessing\StandardDeviationVariance.cs" />
     <Compile Include="Data\Functions.cs" />
+    <Compile Include="Structure\Layer\Echo-Reservoir.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
