@@ -146,7 +146,7 @@ namespace Cranium.Structure.Layer
 				l.ForwardPass ();				
 		}
 
-		public virtual void ReversePass ( double learningRate, double momentum )
+		public virtual void ReversePass ( double learningRate, double momentum, bool recurseDownward = true )
 		{
 			foreach ( Node.Base n in _Nodes ) 
 				n.CalculateError ();			
@@ -154,8 +154,11 @@ namespace Cranium.Structure.Layer
 				n.AdjustWeights ( learningRate );	
 			foreach ( Node.Base n in _Nodes ) 
 				n.UpdateWeights ( momentum );		
-			foreach ( Layer.Base l in _ReverseConnectedLayers ) 
-				l.ReversePass ( learningRate, momentum );		
+			if ( recurseDownward )
+			{
+				foreach ( Layer.Base l in _ReverseConnectedLayers ) 
+					l.ReversePass ( learningRate, momentum );
+			}		
 			
 		}
 		
@@ -167,6 +170,10 @@ namespace Cranium.Structure.Layer
 		public void SetID ( int id )
 		{
 			_LayerID = id;
+		}
+		
+		public virtual void UpdateExtra ( )
+		{
 		}
 
 		#region IDisposable implementation

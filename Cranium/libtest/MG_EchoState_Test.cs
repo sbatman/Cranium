@@ -15,13 +15,11 @@ using System.Collections.Generic;
 
 namespace Cranium.LibTest
 {
-	public class MG_Recurrent_Test
+	public class MG_EchoState_Test
 	{
 		private static Cranium.Structure.Network _TestNetworkStructure;
 		private static Cranium.Activity.Training.SlidingWindow _SlidingWindowTraining;
-		private static Cranium.Structure.Layer.Base _InputLayer;
-		private static Cranium.Structure.Layer.Base _HiddenLayer;
-		private static Cranium.Structure.Layer.Recurrent_Context _ContextLayer;
+		private static Cranium.Structure.Layer.Base _InputLayer;		
 		private static Cranium.Structure.Layer.Base _OutputLayer;
 		private static List<Cranium.Structure.Node.Base> _InputLayerNodes;
 		private static List<Cranium.Structure.Node.Base> _OuputLayerNodes;
@@ -47,10 +45,7 @@ namespace Cranium.LibTest
 			_SlidingWindowTraining.SetInputNodes ( _InputLayerNodes );
 			_SlidingWindowTraining.SetOutputNodes ( _OuputLayerNodes );
 			_SlidingWindowTraining.SetWorkingDataset ( dataSet );
-			
-			List<Structure.Layer.Base> contextLayers = new List<Structure.Layer.Base> ();
-			contextLayers.Add ( _ContextLayer );
-			_SlidingWindowTraining.SetRecurrentConextLayers ( contextLayers );
+				_SlidingWindowTraining.SetRecurrentConextLayers ( new List<Structure.Layer.Base>() );
 						
 			////////////////////////////////////////////////
 			////////////////////////////////////////////////
@@ -74,7 +69,7 @@ namespace Cranium.LibTest
 			_SlidingWindowTesting.SetDatasetReservedLength ( 0 );
 			_SlidingWindowTesting.SetInputNodes ( _InputLayerNodes );
 			_SlidingWindowTesting.SetOutputNodes ( _OuputLayerNodes );
-			_SlidingWindowTesting.SetRecurrentConextLayers ( contextLayers );
+			_SlidingWindowTraining.SetRecurrentConextLayers ( new List<Structure.Layer.Base>() );
 			_SlidingWindowTesting.SetWorkingDataset ( dataSet );
 			_SlidingWindowTesting.SetWindowWidth ( 12 );
 			_SlidingWindowTesting.SetDistanceToForcastHorrison ( 3 );
@@ -98,34 +93,21 @@ namespace Cranium.LibTest
 			}			
 			_InputLayer.SetNodes ( _InputLayerNodes );		
 			
-			_HiddenLayer = new Cranium.Structure.Layer.Base ();
-			List<Cranium.Structure.Node.Base> HiddenLayerNodes = new List<Cranium.Structure.Node.Base> ();
-			for (int i=0; i<5; i++)
-			{
-				HiddenLayerNodes.Add ( new Cranium.Structure.Node.Base ( _HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh () ) );
-			}	
-			_HiddenLayer.SetNodes ( HiddenLayerNodes );	
-			
-			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 4 );
-			
+			Structure.Layer.Echo_Reservoir echoLayer = new Cranium.Structure.Layer.Echo_Reservoir (20,0.3f,1,2);
+				
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			_OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<1; i++)
 			{
 				_OuputLayerNodes.Add ( new Cranium.Structure.Node.Output ( _OutputLayer, new Cranium.Structure.ActivationFunction.Linear () ) );
 			}
-			_OutputLayer.SetNodes ( _OuputLayerNodes );
+			_OutputLayer.SetNodes ( _OuputLayerNodes );			
 			
-			_ContextLayer.AddSourceNodes ( _OuputLayerNodes );
-			_ContextLayer.AddSourceNodes ( HiddenLayerNodes );
-			
-			_InputLayer.ConnectFowardLayer ( _HiddenLayer );			
-			_HiddenLayer.ConnectFowardLayer ( _OutputLayer );
-			_ContextLayer.ConnectFowardLayer ( _HiddenLayer );
+			_InputLayer.ConnectFowardLayer ( echoLayer );			
+			echoLayer.ConnectFowardLayer ( _OutputLayer );			
 			
 			_TestNetworkStructure.AddLayer ( _InputLayer );			
-			_TestNetworkStructure.AddLayer ( _HiddenLayer );	
-			_TestNetworkStructure.AddLayer ( _ContextLayer );	
+			_TestNetworkStructure.AddLayer ( echoLayer );			
 			_TestNetworkStructure.AddLayer ( _OutputLayer );
 			
 			foreach ( Cranium.Structure.Layer.Base layer in _TestNetworkStructure.GetCurrentLayers() )

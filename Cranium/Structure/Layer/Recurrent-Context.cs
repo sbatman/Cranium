@@ -47,7 +47,7 @@ namespace Cranium.Structure.Layer
 			_SourceNodes.AddRange ( nodes );
 		}
 		
-		public virtual void Update ( )
+		public override void UpdateExtra ( )
 		{
 			foreach ( Node.Recurrent_Context n in _Nodes )
 				n.Update ();	

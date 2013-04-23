@@ -14,11 +14,11 @@ namespace Cranium.Structure.Layer
 {
 	public class Echo_Reservoir : Base
 	{
-		protected static Random rnd;
+		protected static Random rnd = new Random ();
 		protected int _NodeCount;
 		protected double _LevelOfConnectivity;
-		protected double _MinimumConnections;
-		protected double _MaximumConnections;
+		protected int _MinimumConnections;
+		protected int _MaximumConnections;
 
 		public Echo_Reservoir ( int nodeCount, double levelOfConnectivity, int minimumConnections, int maximumConnections )
 		{
@@ -30,8 +30,20 @@ namespace Cranium.Structure.Layer
 		
 		public override void PopulateNodeConnections ( )
 		{
+			PurgeNodeConnections ();
 			BuildNodeBank ();
-			base.PopulateNodeConnections ();
+			foreach ( Layer.Base l in _ForwardConnectedLayers )
+			{
+				foreach ( Node.Base n in _Nodes )
+				{
+					foreach ( Node.Base fn in l.GetNodes() )
+					{
+						n.ConnectToNode ( fn, Weight.Base.ConnectionDirection.Forward, 0 );
+					}
+				}
+			}
+			
+			
 		}
 		
 		public virtual void BuildNodeBank ( )
@@ -52,6 +64,16 @@ namespace Cranium.Structure.Layer
 					node.ConnectToNode ( _Nodes [rnd.Next ( 0, _Nodes.Count )], Weight.Base.ConnectionDirection.Forward, 0 );	
 				}
 			}
+		}
+		
+		public override void ForwardPass ()
+		{
+			base.ForwardPass ();
+		}
+
+		public override void ReversePass ( double learningRate, double momentum, bool recurseDownward = true )
+		{
+			base.ReversePass ( learningRate, momentum, false );
 		}
 	}
 }

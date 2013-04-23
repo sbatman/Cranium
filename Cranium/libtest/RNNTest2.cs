@@ -52,7 +52,7 @@ namespace Cranium.LibTest
 					{
 						_InputLayer.GetNodes () [0].SetValue ( _InputData [( x * 3 ) + i] );						
 						ForwardPass ();
-						_ContextLayer.Update ();
+						_ContextLayer.UpdateExtra ();
 					}
 					ReversePass ( x, 0 );
 					

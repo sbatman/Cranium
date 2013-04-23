@@ -42,6 +42,7 @@
     <Compile Include="RNNTest.cs" />
     <Compile Include="RNNTest2.cs" />
     <Compile Include="MG_Recurrent_Test.cs" />
+    <Compile Include="MG_EchoState_Test.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
