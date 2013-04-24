@@ -29,15 +29,15 @@ namespace Cranium.LibTest
 		{			
 			_TestNetworkStructure = new Network ();
 			BuildStructure ();
-			_TestNetworkStructure.RandomiseWeights ( 0.1d );
+			_TestNetworkStructure.RandomiseWeights ( 0.05d );
 			PrepData ();
 			int epoch = 0;
-			int time = 0;
-			while (epoch<1000)
+			bool Continue = true;
+			while (Continue)
 			{
+				Continue = false;
 				epoch++;
-				time++;
-				if ( time % 100 == 0 )
+				if ( epoch % 100 == 0 )
 				{
 					Console.Clear ();
 					Console.WriteLine ( "RNNTest2" );
@@ -56,12 +56,17 @@ namespace Cranium.LibTest
 					}
 					ReversePass ( x, 0 );
 					
-					if ( time % 100 == 0 )
+					if(x==0 && _OutputLayer.GetNodes () [0].GetValue () >0.05f) Continue= true;
+					if(x>0 && x<7 && _OutputLayer.GetNodes () [0].GetValue () <0.95f) Continue= true;					
+					if(x==7 && _OutputLayer.GetNodes () [0].GetValue () >0.05f) Continue= true;			
+					
+					if ( epoch % 100 == 0 )
 					{
-						Console.WriteLine ( _InputData [x * 3] + "-" + _InputData [( x * 3 ) + 1] + "-" + _InputData [( x * 3 ) + 2] + "  -  " + Math.Round ( _OutputLayer.GetNodes () [0].GetValue (), 6 ) );
+						Console.WriteLine ( _InputData [x * 3] + "-" + _InputData [( x * 3 ) + 1] + "-" + _InputData [( x * 3 ) + 2] + "  -  " + Math.Round ( _OutputLayer.GetNodes () [0].GetValue (), 2 ) );
 					}
 				}
 			}
+			Console.WriteLine("Training complete in "+ epoch +" epochs");
 			Console.ReadKey ();
 		}
 
@@ -91,7 +96,7 @@ namespace Cranium.LibTest
 			}			
 			_HiddenLayer2.SetNodes ( HiddenLayerNodes2 );	
 			
-			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 4 );
+			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 3 );
 
 			
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
@@ -179,7 +184,7 @@ namespace Cranium.LibTest
 		{
 			Structure.Node.Output outputNode = ( Structure.Node.Output )( _OutputLayer.GetNodes () [0] );
 			outputNode.SetTargetValue ( _OutputData [row] );
-			_OutputLayer.ReversePass ( 0.01, 0.7 );
+			_OutputLayer.ReversePass ( 0.04, 0.7 );
 		}
 	}
 }
