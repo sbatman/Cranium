@@ -15,13 +15,11 @@ using System.Collections.Generic;
 
 namespace Cranium.LibTest
 {
-	public class MG_Recurrent_Test
+	public class MG_EchoState_Test
 	{
 		private static Cranium.Structure.Network _TestNetworkStructure;
 		private static Cranium.Activity.Training.SlidingWindow _SlidingWindowTraining;
-		private static Cranium.Structure.Layer.Base _InputLayer;
-		private static Cranium.Structure.Layer.Base _HiddenLayer;
-		private static Cranium.Structure.Layer.Recurrent_Context _ContextLayer;
+		private static Cranium.Structure.Layer.Base _InputLayer;		
 		private static Cranium.Structure.Layer.Base _OutputLayer;
 		private static List<Cranium.Structure.Node.Base> _InputLayerNodes;
 		private static List<Cranium.Structure.Node.Base> _OuputLayerNodes;
@@ -37,21 +35,17 @@ namespace Cranium.LibTest
 			
 			//Prepare training activity
 			_SlidingWindowTraining = new Cranium.Activity.Training.SlidingWindow ();
-			_SlidingWindowTraining.SetMomentum ( 0.7f ); // The ammount of the previous weight change applied to current weight change - google if u need to know more
-			_SlidingWindowTraining.SetLearningRate ( 0.004f ); // The rate at which the neural entwork learns (the more agressive this is the harded itll be for the network)
-			_SlidingWindowTraining.SetTargetNetwork ( _TestNetworkStructure ); // the target network for the training to take place on
-			_SlidingWindowTraining.SetDatasetReservedLength ( 0 ); // How many elements off the end of the dataset should not be used for training
-			_SlidingWindowTraining.SetDistanceToForcastHorrison ( 3 ); // How far beyond the window should be be trying to predict 
-			_SlidingWindowTraining.SetWindowWidth ( 12 ); // The window of elements that should be presented before the backward pass is performed
-			_SlidingWindowTraining.SetMaximumEpochs ( 900 ); // The maximum number of epochs the network can train for
-			_SlidingWindowTraining.SetInputNodes ( _InputLayerNodes ); // Setting the nodes that are used for input
-			_SlidingWindowTraining.SetOutputNodes ( _OuputLayerNodes ); // Setting the nodes that are generating output
-			_SlidingWindowTraining.SetWorkingDataset ( dataSet ); // Setting the working dataset for the training phase
-			
-			// Sets the contect layers that are used as part of the training (have to updates)
-			List<Structure.Layer.Base> contextLayers = new List<Structure.Layer.Base> ();
-			contextLayers.Add ( _ContextLayer );
-			_SlidingWindowTraining.SetRecurrentConextLayers ( contextLayers );
+			_SlidingWindowTraining.SetMomentum ( 0.7f );
+			_SlidingWindowTraining.SetLearningRate ( 0.004f );
+			_SlidingWindowTraining.SetTargetNetwork ( _TestNetworkStructure );
+			_SlidingWindowTraining.SetDatasetReservedLength ( 0 );
+			_SlidingWindowTraining.SetDistanceToForcastHorrison ( 3 );
+			_SlidingWindowTraining.SetWindowWidth ( 12 );
+			_SlidingWindowTraining.SetMaximumEpochs ( 900 );
+			_SlidingWindowTraining.SetInputNodes ( _InputLayerNodes );
+			_SlidingWindowTraining.SetOutputNodes ( _OuputLayerNodes );
+			_SlidingWindowTraining.SetWorkingDataset ( dataSet );
+				_SlidingWindowTraining.SetRecurrentConextLayers ( new List<Structure.Layer.Base>() );
 						
 			////////////////////////////////////////////////
 			////////////////////////////////////////////////
@@ -75,7 +69,7 @@ namespace Cranium.LibTest
 			_SlidingWindowTesting.SetDatasetReservedLength ( 0 );
 			_SlidingWindowTesting.SetInputNodes ( _InputLayerNodes );
 			_SlidingWindowTesting.SetOutputNodes ( _OuputLayerNodes );
-			_SlidingWindowTesting.SetRecurrentConextLayers ( contextLayers );
+			_SlidingWindowTraining.SetRecurrentConextLayers ( new List<Structure.Layer.Base>() );
 			_SlidingWindowTesting.SetWorkingDataset ( dataSet );
 			_SlidingWindowTesting.SetWindowWidth ( 12 );
 			_SlidingWindowTesting.SetDistanceToForcastHorrison ( 3 );
@@ -91,7 +85,6 @@ namespace Cranium.LibTest
 
 		public static void BuildStructure ( )
 		{
-			// Input layer construction
 			_InputLayer = new Cranium.Structure.Layer.Base ();
 			_InputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<1; i++)
@@ -100,43 +93,23 @@ namespace Cranium.LibTest
 			}			
 			_InputLayer.SetNodes ( _InputLayerNodes );		
 			
-			// Hidden layer construction
-			_HiddenLayer = new Cranium.Structure.Layer.Base ();
-			List<Cranium.Structure.Node.Base> HiddenLayerNodes = new List<Cranium.Structure.Node.Base> ();
-			for (int i=0; i<5; i++)
-			{
-				HiddenLayerNodes.Add ( new Cranium.Structure.Node.Base ( _HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh () ) );
-			}	
-			_HiddenLayer.SetNodes ( HiddenLayerNodes );	
-			
-			// Conext layer construction
-			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 4 );			
-			
-			//Output layer construction
+			Structure.Layer.Echo_Reservoir echoLayer = new Cranium.Structure.Layer.Echo_Reservoir (20,0.3f,1,2);
+				
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			_OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<1; i++)
 			{
 				_OuputLayerNodes.Add ( new Cranium.Structure.Node.Output ( _OutputLayer, new Cranium.Structure.ActivationFunction.Linear () ) );
 			}
-			_OutputLayer.SetNodes ( _OuputLayerNodes );
+			_OutputLayer.SetNodes ( _OuputLayerNodes );			
 			
-			// Add the nodes of the output and hidden layers to the context layer (so it generates context codes)
-			_ContextLayer.AddSourceNodes ( _OuputLayerNodes );
-			_ContextLayer.AddSourceNodes ( HiddenLayerNodes );
+			_InputLayer.ConnectFowardLayer ( echoLayer );			
+			echoLayer.ConnectFowardLayer ( _OutputLayer );			
 			
-			// Connecting the layers of the neural network together
-			_InputLayer.ConnectFowardLayer ( _HiddenLayer );			
-			_HiddenLayer.ConnectFowardLayer ( _OutputLayer );
-			_ContextLayer.ConnectFowardLayer ( _HiddenLayer );
-			
-			// Adding the layers to the neural network
 			_TestNetworkStructure.AddLayer ( _InputLayer );			
-			_TestNetworkStructure.AddLayer ( _HiddenLayer );	
-			_TestNetworkStructure.AddLayer ( _ContextLayer );	
+			_TestNetworkStructure.AddLayer ( echoLayer );			
 			_TestNetworkStructure.AddLayer ( _OutputLayer );
 			
-			// Generate all the node to node links
 			foreach ( Cranium.Structure.Layer.Base layer in _TestNetworkStructure.GetCurrentLayers() )
 				layer.PopulateNodeConnections ();									
 		}

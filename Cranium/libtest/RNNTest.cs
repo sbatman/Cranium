@@ -31,17 +31,17 @@ namespace Cranium.LibTest
 			_TestNetworkStructure.RandomiseWeights ( 0.001d );
 			PrepData ();
 			int epoch = 0;
-			int time = 0;
-			while (epoch<1000)
+			bool Continue = true;
+			while (Continue)
 			{
+				Continue = false;
 				epoch++;
-				time++;
-				if ( time % 100 == 0 )
+				
+				if ( epoch % 100 == 0 )
 				{
 					Console.Clear ();
-					Console.WriteLine ( "RNNTest" );
-				}
-		
+					Console.WriteLine ( "RNNTest - Stopping conditions are in the code" );
+				}	
 				for (int x=0; x<4; x++)
 				{
 					foreach ( Cranium.Structure.Node.Base n in _ContextLayer.GetNodes() )					
@@ -50,15 +50,29 @@ namespace Cranium.LibTest
 					{
 						_InputLayer.GetNodes () [0].SetValue ( _InputData [( x * 2 ) + i] );						
 						ForwardPass ();
-						_ContextLayer.Update ();
+						_ContextLayer.UpdateExtra ();
 					}
-					ReversePass ( x, 0 );					
-					if ( time % 100 == 0 )
+					ReversePass ( x, 0 );		
+					if ( x == 0 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
+					{
+						Continue = true;
+					}
+					if ( ( x == 1 || x == 2 ) && _OutputLayer.GetNodes () [0].GetValue () < 0.95f )
+					{
+						Continue = true;
+					}					
+					if ( x == 3 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
+					{
+						Continue = true;
+					}					
+					
+					if ( epoch % 100 == 0 )
 					{
 						Console.WriteLine ( _InputData [x * 2] + "-" + _InputData [( x * 2 ) + 1] + "  -  " + Math.Round ( _OutputLayer.GetNodes () [0].GetValue (), 3 ) );
 					}
 				}
 			}
+			Console.WriteLine ( "Training complete in " + epoch + " epochs" );
 			Console.ReadKey ();
 		}
 
@@ -140,7 +154,7 @@ namespace Cranium.LibTest
 		{
 			Structure.Node.Output outputNode = ( Structure.Node.Output )( _OutputLayer.GetNodes () [0] );
 			outputNode.SetTargetValue ( _OutputData [row] );
-			_OutputLayer.ReversePass ( 0.006, 0.7 );
+			_OutputLayer.ReversePass ( 0.06, 0.7 );
 		}
 	}
 }

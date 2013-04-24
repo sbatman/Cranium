@@ -28,7 +28,7 @@ namespace Cranium.Activity.Training
 		protected double _LastPassAverageError;
 		protected List<Cranium.Structure.Node.Base> _InputNodes;
 		protected List<Cranium.Structure.Node.Base> _OutputNodes;
-		protected List<Cranium.Structure.Layer.Recurrent_Context> _Recurrentlayers;
+		protected List<Cranium.Structure.Layer.Base> _Recurrentlayers;
 		protected StreamWriter _LogStream;
 		
 		/// <summary>
@@ -92,7 +92,7 @@ namespace Cranium.Activity.Training
 		/// <param name='layers'>
 		/// Layers.
 		/// </param>
-		public virtual void SetRecurrentConextLayers ( List<Structure.Layer.Recurrent_Context> layers )
+		public virtual void SetRecurrentConextLayers ( List<Structure.Layer.Base> layers )
 		{
 			_Recurrentlayers = layers;	
 		}
@@ -175,7 +175,7 @@ namespace Cranium.Activity.Training
 					}					
 					_TargetNetwork.FowardPass ();
 					foreach ( Structure.Layer.Recurrent_Context layer in _Recurrentlayers )
-						layer.Update ();
+						layer.UpdateExtra ();
 				}
 				for (int x=0; x<_OutputNodes.Count; x++)
 				{
