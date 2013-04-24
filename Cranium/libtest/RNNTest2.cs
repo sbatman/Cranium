@@ -56,9 +56,18 @@ namespace Cranium.LibTest
 					}
 					ReversePass ( x, 0 );
 					
-					if(x==0 && _OutputLayer.GetNodes () [0].GetValue () >0.05f) Continue= true;
-					if(x>0 && x<7 && _OutputLayer.GetNodes () [0].GetValue () <0.95f) Continue= true;					
-					if(x==7 && _OutputLayer.GetNodes () [0].GetValue () >0.05f) Continue= true;			
+					if ( x == 0 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
+					{
+						Continue = true;
+					}
+					if ( x > 0 && x < 7 && _OutputLayer.GetNodes () [0].GetValue () < 0.95f )
+					{
+						Continue = true;
+					}					
+					if ( x == 7 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
+					{
+						Continue = true;
+					}			
 					
 					if ( epoch % 100 == 0 )
 					{
@@ -66,7 +75,7 @@ namespace Cranium.LibTest
 					}
 				}
 			}
-			Console.WriteLine("Training complete in "+ epoch +" epochs");
+			Console.WriteLine ( "Training complete in " + epoch + " epochs" );
 			Console.ReadKey ();
 		}
 

@@ -53,9 +53,18 @@ namespace Cranium.LibTest
 						_ContextLayer.UpdateExtra ();
 					}
 					ReversePass ( x, 0 );		
-					if(x==0 && _OutputLayer.GetNodes () [0].GetValue () >0.05f) Continue= true;
-					if((x==1 || x==2) && _OutputLayer.GetNodes () [0].GetValue () <0.95f) Continue= true;					
-					if(x==3 && _OutputLayer.GetNodes () [0].GetValue () >0.05f) Continue= true;					
+					if ( x == 0 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
+					{
+						Continue = true;
+					}
+					if ( ( x == 1 || x == 2 ) && _OutputLayer.GetNodes () [0].GetValue () < 0.95f )
+					{
+						Continue = true;
+					}					
+					if ( x == 3 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
+					{
+						Continue = true;
+					}					
 					
 					if ( epoch % 100 == 0 )
 					{
@@ -63,11 +72,9 @@ namespace Cranium.LibTest
 					}
 				}
 			}
-			Console.WriteLine("Training complete in "+epoch +" epochs");
+			Console.WriteLine ( "Training complete in " + epoch + " epochs" );
 			Console.ReadKey ();
 		}
-		
-		
 
 		public static void BuildStructure ( )
 		{

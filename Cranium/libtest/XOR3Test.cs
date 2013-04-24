@@ -28,24 +28,41 @@ namespace Cranium.LibTest
 		{			
 			_TestNetworkStructure = new Network ();
 			BuildStructure ();
-			_TestNetworkStructure.RandomiseWeights ( 0.1d );
+			_TestNetworkStructure.RandomiseWeights ( 0.01d );
 			PrepData ();
 			int epoch = 0;
-			while (epoch<10000)
+			bool Continue = true;
+			while (Continue)
 			{
+				Continue = false;
 				epoch++;
-				if(epoch%200==0)Console.Clear();
-					Console.SetCursorPosition(0,0);
-					Console.WriteLine ( "XOR3Test" );
+				if ( epoch % 200 == 0 )
+				{
+					Console.Clear ();
+				}
+				Console.SetCursorPosition ( 0, 0 );
+				Console.WriteLine ( "XOR3Test" );
 				for (int x=0; x<8; x++)
 				{
 					PresentData ( x );
 					ForwardPass ();
-					ReversePass ( x, 0 );				
-						Console.WriteLine ( _InputLayer.GetNodes () [0].GetValue () + "-" + _InputLayer.GetNodes () [1].GetValue () + "-" + _InputLayer.GetNodes () [2].GetValue () + "  -  " + Math.Round ( _OutputLayer.GetNodes () [0].GetValue (), 2 )  );
+					ReversePass ( x, 0 );		
+					if ( x == 0 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
+					{
+						Continue = true;
+					}
+					if ( x > 0 && x < 7 && _OutputLayer.GetNodes () [0].GetValue () < 0.95f )
+					{
+						Continue = true;
+					}					
+					if ( x == 7 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
+					{
+						Continue = true;
+					}		
+					Console.WriteLine ( _InputLayer.GetNodes () [0].GetValue () + "-" + _InputLayer.GetNodes () [1].GetValue () + "-" + _InputLayer.GetNodes () [2].GetValue () + "  -  " + Math.Round ( _OutputLayer.GetNodes () [0].GetValue (), 2 ) );
 				}
 			}
-			Console.WriteLine("Training Complete");
+			Console.WriteLine ( "Training complete in " + epoch + " epochs" );
 			Console.ReadKey ();
 		}
 
@@ -62,13 +79,11 @@ namespace Cranium.LibTest
 			
 			_HiddenLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> HiddenLayerNodes = new List<Cranium.Structure.Node.Base> ();
-			for (int i=0; i<8; i++)
+			for (int i=0; i<4; i++)
 			{
 				HiddenLayerNodes.Add ( new Cranium.Structure.Node.Base ( _HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh () ) );
 			}
-			//HiddenLayerNodes.Add (new Cranium.Structure.Node.Bias (HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh ()));
 			_HiddenLayer.SetNodes ( HiddenLayerNodes );
-
 			
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();
@@ -157,7 +172,7 @@ namespace Cranium.LibTest
 		{
 			
 			
-				( ( Structure.Node.Output )_OutputLayer.GetNodes () [0] ).SetTargetValue ( _OutputData [row] );
+			( ( Structure.Node.Output )_OutputLayer.GetNodes () [0] ).SetTargetValue ( _OutputData [row] );
 			
 			_OutputLayer.ReversePass ( 0.1, 0.0 );
 		}

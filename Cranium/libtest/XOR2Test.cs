@@ -31,8 +31,10 @@ namespace Cranium.LibTest
 			_TestNetworkStructure.RandomiseWeights ( 0.4d );
 			PrepData ();
 			int epoch = 0;
-			while (epoch<1500)
+			bool Continue = true;
+			while (Continue)
 			{
+				Continue = false;
 				epoch++;
 				Console.Clear ();
 				Console.WriteLine ( "XOR2Test" );		
@@ -41,10 +43,26 @@ namespace Cranium.LibTest
 				{					
 					PresentData ( x );
 					ForwardPass ();
-					ReversePass ( x, 0 );					
+					ReversePass ( x, 0 );		
+					
+					if ( x == 0 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
+					{
+						Continue = true;
+					}
+					if ( ( x == 1 || x == 2 ) && _OutputLayer.GetNodes () [0].GetValue () < 0.95f )
+					{
+						Continue = true;
+					}					
+					if ( x == 3 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
+					{
+						Continue = true;
+					}					
+					
+					
 					Console.WriteLine ( _InputLayer.GetNodes () [0].GetValue () + "-" + _InputLayer.GetNodes () [1].GetValue () + "  -  " + Math.Round ( _OutputLayer.GetNodes () [0].GetValue (), 3 ) );
 				}
 			}
+			Console.WriteLine ( "Training complete in " + epoch + " epochs" );
 			Console.ReadKey ();
 		}
 
