@@ -41,9 +41,17 @@ namespace Cranium.Structure.Layer
 						n.ConnectToNode ( fn, Weight.Base.ConnectionDirection.Forward, 0 );
 					}
 				}
-			}
-			
-			
+			}	
+			foreach ( Layer.Base l in _ReverseConnectedLayers )
+			{
+				foreach ( Node.Base n in _Nodes )
+				{
+					foreach ( Node.Base fn in l.GetNodes() )
+					{
+						n.ConnectToNode ( fn, Weight.Base.ConnectionDirection.Reverse, 0 );
+					}
+				}
+			}	
 		}
 		
 		public virtual void BuildNodeBank ( )
@@ -66,7 +74,7 @@ namespace Cranium.Structure.Layer
 			}
 		}
 		
-		public override void ForwardPass ()
+		public override void ForwardPass ( )
 		{
 			base.ForwardPass ();
 		}
