@@ -153,6 +153,7 @@ namespace Cranium.Data.Preprocessing
 				inputData.Average [x] = avg;
 				inputData.StandardDeviation [x] = stdv;
 				
+				///Need to bring the data within the -1 to 1 range for maximising the effectiveness of most non-linear activation functions present at this time
 				double scale = Max;
 				if ( 0 - Min > scale )
 				{

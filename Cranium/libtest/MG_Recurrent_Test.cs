@@ -117,7 +117,7 @@ namespace Cranium.LibTest
 			_OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<1; i++)
 			{
-				_OuputLayerNodes.Add ( new Cranium.Structure.Node.Output ( _OutputLayer, new Cranium.Structure.ActivationFunction.Linear () ) );
+				_OuputLayerNodes.Add ( new Cranium.Structure.Node.Output ( _OutputLayer, new Cranium.Structure.ActivationFunction.Tanh () ) );
 			}
 			_OutputLayer.SetNodes ( _OuputLayerNodes );
 			
