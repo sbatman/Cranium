@@ -15,6 +15,15 @@ namespace Cranium.Data
 {
 	public static class UsefulFunctions
 	{
+		/// <summary>
+		/// Prints the provided array to a csv file with the given filename
+		/// </summary>
+		/// <param name='data'>
+		/// Data.
+		/// </param>
+		/// <param name='fileName'>
+		/// File name.
+		/// </param>
 		public static void PrintArrayToFile ( double[] data, string fileName )
 		{
 			StreamWriter stream = File.CreateText ( fileName );
@@ -26,6 +35,15 @@ namespace Cranium.Data
 			stream.Close ();
 		}
 
+		/// <summary>
+		/// Prints the provided multi-dimentional array to a csv file with the given filename
+		/// </summary>
+		/// <param name='data'>
+		/// Data.
+		/// </param>
+		/// <param name='fileName'>
+		/// File name.
+		/// </param>
 		public static void PrintArrayToFile ( double[,] data, string fileName )
 		{
 			StreamWriter stream = File.CreateText ( fileName );

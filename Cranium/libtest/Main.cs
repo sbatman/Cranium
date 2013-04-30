@@ -27,7 +27,7 @@ namespace Cranium.LibTest
 			Console.WriteLine ( "3 -  RNNTest" );
 			Console.WriteLine ( "4 -  RNNTest2" );
 			Console.WriteLine ( "5 -  MG Recurrent Test" );
-			Console.WriteLine ( "6 - MG Echo State Test" );
+			Console.WriteLine ( "6 -  MG Echo State Test" );
 			
 			ConsoleKey PressedKey = Console.ReadKey ().Key;
 			Console.Clear ();

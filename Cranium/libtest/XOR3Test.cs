@@ -36,6 +36,8 @@ namespace Cranium.LibTest
 			{
 				Continue = false;
 				epoch++;
+				
+				// No need to fully clear the screen constantly
 				if ( epoch % 200 == 0 )
 				{
 					Console.Clear ();

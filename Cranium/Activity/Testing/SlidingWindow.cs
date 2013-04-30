@@ -36,22 +36,22 @@ namespace Cranium.Activity.Testing
 		protected List<Cranium.Structure.Node.Base> _OutputNodes;
 		protected List<Cranium.Structure.Layer.Base> _Recurrentlayers;
 		
-		public virtual void SetWindowWidth (int windowWidth)
+		public virtual void SetWindowWidth ( int windowWidth )
 		{
 			_WindowWidth = windowWidth;	
 		}
 
-		public virtual void SetDistanceToForcastHorrison (int distance)
+		public virtual void SetDistanceToForcastHorrison ( int distance )
 		{
 			_DistanceToForcastHorrison = distance;	
 		}
 
-		public virtual void SetDatasetReservedLength (int reservedPortion)
+		public virtual void SetDatasetReservedLength ( int reservedPortion )
 		{
 			_PortionOfDatasetReserved = reservedPortion;
 		}
 		
-		public virtual void SetWorkingDataset (double[,] dataset)
+		public virtual void SetWorkingDataset ( double[,] dataset )
 		{
 			_WorkingDataset = dataset;	
 		}
@@ -62,7 +62,7 @@ namespace Cranium.Activity.Testing
 		/// <param name='nodes'>
 		/// Nodes.
 		/// </param>
-		public virtual void SetInputNodes (List<Structure.Node.Base> nodes)
+		public virtual void SetInputNodes ( List<Structure.Node.Base> nodes )
 		{
 			_InputNodes = nodes;
 		}
@@ -73,12 +73,12 @@ namespace Cranium.Activity.Testing
 		/// <param name='nodes'>
 		/// Nodes.
 		/// </param>
-		public virtual void SetOutputNodes (List<Structure.Node.Base> nodes)
+		public virtual void SetOutputNodes ( List<Structure.Node.Base> nodes )
 		{
 			_OutputNodes = nodes;	
 		}
 		
-		public virtual void SetRecurrentConextLayers (List<Structure.Layer.Base> layers)
+		public virtual void SetRecurrentConextLayers ( List<Structure.Layer.Base> layers )
 		{
 			_Recurrentlayers = layers;	
 		}
@@ -86,7 +86,7 @@ namespace Cranium.Activity.Testing
 		/// <summary>
 		/// Prepares the data before training.
 		/// </summary>
-		public virtual void PrepareData ()
+		public virtual void PrepareData ( )
 		{
 			_SequenceCount = ( ( _WorkingDataset.GetLength ( 1 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
 			int inputCount = _WorkingDataset.GetLength ( 0 );
@@ -95,58 +95,58 @@ namespace Cranium.Activity.Testing
 			_ExpectedOutputs = new double[_SequenceCount, outputCount];
 			_ActualOutputs = new double[_SequenceCount, outputCount];
 			_OutputErrors = new double[_SequenceCount, outputCount];
-			for ( int i=0 ; i<_SequenceCount ; i++ )
+			for (int i=0; i<_SequenceCount; i++)
 			{
-				for ( int j=0 ; j<_WindowWidth ; j++ )
+				for (int j=0; j<_WindowWidth; j++)
 				{
-					for ( int k=0 ; k<inputCount ; k++ )
+					for (int k=0; k<inputCount; k++)
 					{
-						InputSequences [ i, j, k ] = _WorkingDataset [ k, i + j ];						
+						InputSequences [i, j, k] = _WorkingDataset [k, i + j];						
 					}
-					for ( int l=0 ; l<outputCount ; l++ )
+					for (int l=0; l<outputCount; l++)
 					{
-						_ExpectedOutputs [ i, l ] = _WorkingDataset [ l, i + j + _DistanceToForcastHorrison ];
+						_ExpectedOutputs [i, l] = _WorkingDataset [l, i + j + _DistanceToForcastHorrison];
 					}
 				}				
 			}
 		}
 		
-		public virtual TestResults TestNetwork (Structure.Network network)
+		public virtual TestResults TestNetwork ( Structure.Network network )
 		{
-			PrepareData ( );
+			PrepareData ();
 			//Ensure that the networks state is clean
-			foreach (Structure.Layer.Base layer in network.GetCurrentLayers())
-				foreach (Structure.Node.Base node in layer.GetNodes())
+			foreach ( Structure.Layer.Base layer in network.GetCurrentLayers() )
+				foreach ( Structure.Node.Base node in layer.GetNodes() )
 					node.SetValue ( 0 );
 			
 			int errorCount = 0;
 			double RMSE = 0;
-			for ( int s=0 ; s<_SequenceCount ; s++ )
+			for (int s=0; s<_SequenceCount; s++)
 			{
-				for ( int i=0 ; i<_WindowWidth ; i++ )
+				for (int i=0; i<_WindowWidth; i++)
 				{
-					for ( int x=0 ; x<_InputNodes.Count ; x++ )
+					for (int x=0; x<_InputNodes.Count; x++)
 					{
-						_InputNodes [ x ].SetValue ( InputSequences [ s, i, x ] );
+						_InputNodes [x].SetValue ( InputSequences [s, i, x] );
 					}					
-					network.FowardPass ( );
-					foreach (Structure.Layer.Recurrent_Context layer in _Recurrentlayers)
-						layer.UpdateExtra ( );
+					network.FowardPass ();
+					foreach ( Structure.Layer.Recurrent_Context layer in _Recurrentlayers )
+						layer.UpdateExtra ();
 				}
-				for ( int x=0 ; x<_OutputNodes.Count ; x++ )
+				for (int x=0; x<_OutputNodes.Count; x++)
 				{
-					_ActualOutputs [ s, x ] = _OutputNodes [ x ].GetValue ( );
-					_OutputErrors [ s, x ] = _ExpectedOutputs [ s, x ] - _ActualOutputs [ s, x ];
+					_ActualOutputs [s, x] = _OutputNodes [x].GetValue ();
+					_OutputErrors [s, x] = _ExpectedOutputs [s, x] - _ActualOutputs [s, x];
 					errorCount++;
-					RMSE += _OutputErrors [ s, x ] * _OutputErrors [ s, x ];
+					RMSE += _OutputErrors [s, x] * _OutputErrors [s, x];
 				}				
 			}
 			//All the sequewnces have been run through and the outputs and their erros collected
-			TestResults result = new TestResults ( );
+			TestResults result = new TestResults ();
 			result.ExpectedOutputs = _ExpectedOutputs;
 			result.ActualOutputs = _ActualOutputs;
 			result.OutputErrors = _OutputErrors;
-			result.RMSE = RMSE / (double)errorCount;
+			result.RMSE = RMSE / ( double )errorCount;
 			return result;
 		}
 	}
