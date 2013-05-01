@@ -167,6 +167,10 @@ namespace Cranium.Activity.Training
 				int s = sequencyList [_RND.Next ( 0, sequencyList.Count )];
 				sequencyList.Remove ( s );
 				
+				foreach ( Structure.Layer.Base layer in _TargetNetwork.GetCurrentLayers() )
+					foreach ( Structure.Node.Base node in layer.GetNodes() )
+						node.SetValue ( 0 );
+				
 				for (int i=0; i<_WindowWidth; i++)
 				{
 					for (int x=0; x<_InputNodes.Count; x++)
@@ -183,11 +187,7 @@ namespace Cranium.Activity.Training
 				}				
 				_TargetNetwork.ReversePass ( _LearningRate, _Momentum );
 				
-				//Reset the conext nodes
-				foreach ( Structure.Layer.Recurrent_Context layer in _Recurrentlayers )
-					foreach ( Structure.Node.Recurrent_Context node in layer.GetNodes() )
-						node.SetValue ( 0 );
-				
+	
 				//Calculate the current error				
 				double passError = 0;
 				for (int x=0; x<_OutputNodes.Count; x++)

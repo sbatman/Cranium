@@ -36,6 +36,7 @@ namespace Cranium.Activity.Testing
 		protected List<Cranium.Structure.Node.Base> _OutputNodes;
 		protected List<Cranium.Structure.Layer.Base> _Recurrentlayers;
 		
+		
 		public virtual void SetWindowWidth ( int windowWidth )
 		{
 			_WindowWidth = windowWidth;	
@@ -115,14 +116,15 @@ namespace Cranium.Activity.Testing
 		{
 			PrepareData ();
 			//Ensure that the networks state is clean
-			foreach ( Structure.Layer.Base layer in network.GetCurrentLayers() )
-				foreach ( Structure.Node.Base node in layer.GetNodes() )
-					node.SetValue ( 0 );
+		
 			
 			int errorCount = 0;
 			double RMSE = 0;
 			for (int s=0; s<_SequenceCount; s++)
 			{
+				foreach ( Structure.Layer.Base layer in network.GetCurrentLayers() )
+					foreach ( Structure.Node.Base node in layer.GetNodes() )
+						node.SetValue ( 0 );
 				for (int i=0; i<_WindowWidth; i++)
 				{
 					for (int x=0; x<_InputNodes.Count; x++)
@@ -130,8 +132,11 @@ namespace Cranium.Activity.Testing
 						_InputNodes [x].SetValue ( InputSequences [s, i, x] );
 					}					
 					network.FowardPass ();
-					foreach ( Structure.Layer.Recurrent_Context layer in _Recurrentlayers )
-						layer.UpdateExtra ();
+					if ( _Recurrentlayers != null )
+					{
+						foreach ( Structure.Layer.Recurrent_Context layer in _Recurrentlayers )
+							layer.UpdateExtra ();
+					}
 				}
 				for (int x=0; x<_OutputNodes.Count; x++)
 				{
