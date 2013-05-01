@@ -94,7 +94,6 @@ namespace Cranium.LibTest
 			_InputLayer.SetNodes ( _InputLayerNodes );		
 			
 			Structure.Layer.Echo_Reservoir echoLayer = new Cranium.Structure.Layer.Echo_Reservoir ( 60, 0.5f, 0, 2 );
-
 				
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			_OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();

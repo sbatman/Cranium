@@ -54,6 +54,7 @@
     <Compile Include="Data\Preprocessing\StandardDeviationVariance.cs" />
     <Compile Include="Data\Functions.cs" />
     <Compile Include="Structure\Layer\Echo-Reservoir.cs" />
+    <Compile Include="Data\PostProcessing\RandomWalkComparison.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -77,5 +78,6 @@
     <Folder Include="Activity\Testing\" />
     <Folder Include="Data\" />
     <Folder Include="Data\Preprocessing\" />
+    <Folder Include="Data\PostProcessing\" />
   </ItemGroup>
 </Project>
