@@ -98,7 +98,7 @@ namespace Cranium.Activity.Testing
 				InputSequences [i] = new double[_WindowWidth][];
 				for (int y=0; y< _WindowWidth; y++)
 				{
-					InputSequences [_SequenceCount] [_WindowWidth] = new double[inputCount];	
+					InputSequences [i] [y] = new double[inputCount];	
 				}
 			}
 			
