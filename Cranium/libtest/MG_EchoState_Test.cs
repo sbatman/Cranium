@@ -31,7 +31,7 @@ namespace Cranium.LibTest
 			BuildStructure ();
 			_TestNetworkStructure.RandomiseWeights ( 1.1d );
 			//PrepData
-			double[,] dataSet = Cranium.Data.Preprocessing.StandardDeviationVariance.ProduceDataset ( "TestData/Mackey-Glass-Pure.csv" ).DataSet;
+			double[][] dataSet = Cranium.Data.Preprocessing.StandardDeviationVariance.ProduceDataset ( "TestData/Mackey-Glass-Pure.csv" ).DataSet;
 			
 			//Prepare training activity
 			_SlidingWindowTraining = new Cranium.Activity.Training.SlidingWindow ();
@@ -79,6 +79,9 @@ namespace Cranium.LibTest
 			Data.UsefulFunctions.PrintArrayToFile ( Result.ActualOutputs, "ActualOutputs.csv" );
 			Data.UsefulFunctions.PrintArrayToFile ( Result.ExpectedOutputs, "ExpectedOutputs.csv" );
 			Console.WriteLine ( "Complete Testing" );
+			Console.WriteLine("Comparing Against Random Walk 3 Step");
+			Console.WriteLine(Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk(Result.ExpectedOutputs,Result.ActualOutputs,3));
+			
 			
 			Console.ReadKey ();
 		}

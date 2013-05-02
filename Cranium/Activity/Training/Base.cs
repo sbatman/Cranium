@@ -20,7 +20,7 @@ namespace Cranium.Activity.Training
 		private bool _Stopping = false;
 		private Thread _LoopThread;
 		protected Structure.Network _TargetNetwork;
-		protected double[,] _WorkingDataset;
+		protected double[][] _WorkingDataset;
 		protected int _MaxEpochs;
 		protected int _CurrentEpoch;
 
@@ -51,7 +51,7 @@ namespace Cranium.Activity.Training
 		/// <param name='workingDataset'>
 		/// Working dataset.
 		/// </param>
-		public virtual void SetWorkingDataset ( double[,] workingDataset )
+		public virtual void SetWorkingDataset ( double[][] workingDataset )
 		{
 			_WorkingDataset = workingDataset;	
 		}

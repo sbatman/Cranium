@@ -16,7 +16,7 @@ namespace Cranium.Data.Preprocessing
 {
 	public struct Data_Preprocessed_StandardDeviationVariance
 	{
-		public double[,] DataSet;
+		public double[][] DataSet;
 		public double[] Average;
 		public double[] StandardDeviation;
 		public double[] Scale;
@@ -47,8 +47,8 @@ namespace Cranium.Data.Preprocessing
 				throw( new Exception ( "Bad filename provided" ) );
 			}			
 			
-			try
-			{
+			//try
+			//{
 				StreamReader fileStream = File.OpenText ( fileName );
 			
 				List<string> Data = new List<string> ();
@@ -57,13 +57,14 @@ namespace Cranium.Data.Preprocessing
 					Data.Add ( fileStream.ReadLine () );
 				}	
 				int columnCount = Data [0].Split ( new char[]{( char )44} ).Length;			
-				double[,] WorkingDataSet = new double[columnCount, Data.Count];
+				double[][] WorkingDataSet = new double[columnCount][];
+				for(int i=0;i<columnCount;i++) WorkingDataSet[i] = new double[ Data.Count];
 				for (int i=0; i<Data.Count; i++)
 				{
 					string[] currentLine = Data [i].Split ( new char[]{( char )44} );
 					for (int x=0; x<columnCount; x++)
 					{
-						WorkingDataSet [x, i] = Double.Parse ( currentLine [x] );
+						WorkingDataSet [x][i] = Double.Parse ( currentLine [x] );
 					}
 				}
 				fileStream.Close ();
@@ -71,11 +72,11 @@ namespace Cranium.Data.Preprocessing
 				ReturnResult.DataSet = WorkingDataSet;
 				ProcessData ( ref ReturnResult );				
 				return ReturnResult;
-			}
-			catch ( Exception e )
-			{
-				throw( new Exception ( "Data pre-processing failed :" + e.Message ) );				
-			}
+		//	}
+		//	catch ( Exception e )
+		//	{
+			//	throw( new Exception ( "Data pre-processing failed :" + e.Message ) );				
+		//	}
 		}
 
 		/// <summary>
@@ -87,7 +88,7 @@ namespace Cranium.Data.Preprocessing
 		/// <param name='inputData'>
 		/// Input data.
 		/// </param>
-		public static Data_Preprocessed_StandardDeviationVariance ProduceDataset ( double[,] inputData )
+		public static Data_Preprocessed_StandardDeviationVariance ProduceDataset ( double[][] inputData )
 		{
 			try
 			{
@@ -111,7 +112,7 @@ namespace Cranium.Data.Preprocessing
 		private  static void ProcessData ( ref Data_Preprocessed_StandardDeviationVariance inputData )
 		{
 			int colCount = inputData.DataSet.GetLength ( 0 );
-			int rowCount = inputData.DataSet.GetLength ( 1 );
+			int rowCount = inputData.DataSet[0].GetLength ( 0 );
 			inputData.Average = new double[colCount];
 			inputData.StandardDeviation = new double[colCount];
 			inputData.Scale = new double[colCount];
@@ -123,7 +124,7 @@ namespace Cranium.Data.Preprocessing
 				double avg = 0;
 				for (int y=0; y<rowCount; y++)
 				{
-					avg += inputData.DataSet [x, y];
+					avg += inputData.DataSet [x][ y];
 				}				
 				avg /= rowCount;
 				
@@ -131,7 +132,7 @@ namespace Cranium.Data.Preprocessing
 				Double stdv = 0;
 				for (int y=0; y<rowCount; y++)
 				{
-					stdv += Math.Pow ( inputData.DataSet [x, y] - avg, 2 );
+					stdv += Math.Pow ( inputData.DataSet [x][ y] - avg, 2 );
 				}
 				stdv = Math.Sqrt ( stdv / rowCount );
 				
@@ -140,14 +141,14 @@ namespace Cranium.Data.Preprocessing
 				//Processing The Data
 				for (int y=0; y<rowCount; y++)
 				{
-					inputData.DataSet [x, y] = ( inputData.DataSet [x, y] - avg ) / stdv;
-					if ( inputData.DataSet [x, y] < Min )
+					inputData.DataSet [x][ y] = ( inputData.DataSet [x][ y] - avg ) / stdv;
+					if ( inputData.DataSet [x][y] < Min )
 					{
-						Min = inputData.DataSet [x, y];
+						Min = inputData.DataSet [x][ y];
 					}
-					if ( inputData.DataSet [x, y] > Max )
+					if ( inputData.DataSet [x][ y] > Max )
 					{
-						Max = inputData.DataSet [x, y];
+						Max = inputData.DataSet [x][ y];
 					}
 				}
 				inputData.Average [x] = avg;
@@ -167,7 +168,7 @@ namespace Cranium.Data.Preprocessing
 				{
 					for (int y=0; y<rowCount; y++)
 					{
-						inputData.DataSet [x, y] /= scale;
+						inputData.DataSet [x][ y] /= scale;
 					}
 					inputData.Scale [x] = scale;	
 				}

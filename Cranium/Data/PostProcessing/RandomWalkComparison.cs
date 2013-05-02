@@ -55,7 +55,18 @@ namespace Cranium.Data.PostProcessing
 			double avgRandomWalkError = totalRandomWalkError / ( expectedValues.Length - distanceOffsetOfRandomWalk );
 			double avgActualError = totalActualError / ( expectedValues.Length - distanceOffsetOfRandomWalk );
 			
-			return (avgActualError-avgRandomWalkError)/avgRandomWalkError;
+			return ( avgActualError - avgRandomWalkError ) / avgRandomWalkError;
+		}
+
+		public static double[] 	 CalculateErrorAgainstRandomWalk ( double[][] expectedValues, double[][] actualValues, int distanceOffsetOfRandomWalk )
+		{
+			int comparisonSets = expectedValues.GetLength ( 0 );
+			double[] results = new double[comparisonSets];
+			for (int i=0; i<comparisonSets; i++)
+			{
+				results[i] = CalculateErrorAgainstRandomWalk(expectedValues[i],actualValues[i],3);
+			}
+			return results;
 		}
 	}
 }
