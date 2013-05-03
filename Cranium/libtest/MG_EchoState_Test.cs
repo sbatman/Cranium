@@ -29,19 +29,19 @@ namespace Cranium.LibTest
 			//Build Network
 			_TestNetworkStructure = new Network ();
 			BuildStructure ();
-			_TestNetworkStructure.RandomiseWeights ( 0.01d );
+			_TestNetworkStructure.RandomiseWeights ( 1.1d );
 			//PrepData
-			double[,] dataSet = Cranium.Data.Preprocessing.StandardDeviationVariance.ProduceDataset ( "TestData/Mackey-Glass-Pure.csv" ).DataSet;
+			double[][] dataSet = Cranium.Data.Preprocessing.StandardDeviationVariance.ProduceDataset ( "TestData/Mackey-Glass-Pure.csv" ).DataSet;
 			
 			//Prepare training activity
 			_SlidingWindowTraining = new Cranium.Activity.Training.SlidingWindow ();
-			_SlidingWindowTraining.SetMomentum ( 0.7f );
-			_SlidingWindowTraining.SetLearningRate ( 0.4f );
+			_SlidingWindowTraining.SetMomentum ( 0.5f );
+			_SlidingWindowTraining.SetLearningRate ( 0.004f );
 			_SlidingWindowTraining.SetTargetNetwork ( _TestNetworkStructure );
 			_SlidingWindowTraining.SetDatasetReservedLength ( 0 );
 			_SlidingWindowTraining.SetDistanceToForcastHorrison ( 3 );
 			_SlidingWindowTraining.SetWindowWidth ( 12 );
-			_SlidingWindowTraining.SetMaximumEpochs ( 900 );
+			_SlidingWindowTraining.SetMaximumEpochs ( 100 );
 			_SlidingWindowTraining.SetInputNodes ( _InputLayerNodes );
 			_SlidingWindowTraining.SetOutputNodes ( _OuputLayerNodes );
 			_SlidingWindowTraining.SetWorkingDataset ( dataSet );
@@ -79,6 +79,13 @@ namespace Cranium.LibTest
 			Data.UsefulFunctions.PrintArrayToFile ( Result.ActualOutputs, "ActualOutputs.csv" );
 			Data.UsefulFunctions.PrintArrayToFile ( Result.ExpectedOutputs, "ExpectedOutputs.csv" );
 			Console.WriteLine ( "Complete Testing" );
+			Console.WriteLine ( "Comparing Against Random Walk 3 Step" );
+			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 3 ) [0] * 100, 3 ) );
+			Console.WriteLine ( "Comparing Against Random Walk 2 Step" );
+			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 2 ) [0] * 100, 3 ) );
+			Console.WriteLine ( "Comparing Against Random Walk 1 Step" );
+			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 1 ) [0] * 100, 3 ) );
+					
 			
 			Console.ReadKey ();
 		}
@@ -93,8 +100,7 @@ namespace Cranium.LibTest
 			}			
 			_InputLayer.SetNodes ( _InputLayerNodes );		
 			
-			Structure.Layer.Echo_Reservoir echoLayer = new Cranium.Structure.Layer.Echo_Reservoir ( 20, 0.3f, 1, 2 );
-
+			Structure.Layer.Echo_Reservoir echoLayer = new Cranium.Structure.Layer.Echo_Reservoir ( 130, 0.4f, 0, 2 );
 				
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			_OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();

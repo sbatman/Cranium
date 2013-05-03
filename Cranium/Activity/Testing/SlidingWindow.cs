@@ -17,20 +17,20 @@ namespace Cranium.Activity.Testing
 	{
 		public struct TestResults
 		{
-			public double[,] ExpectedOutputs;
-			public double[,] ActualOutputs;
-			public double[,] OutputErrors;
+			public double[][] ExpectedOutputs;
+			public double[][] ActualOutputs;
+			public double[][] OutputErrors;
 			public double RMSE;
 		}
 		protected int _WindowWidth;
 		protected int _SequenceCount;
 		protected int _DistanceToForcastHorrison;
 		protected int _PortionOfDatasetReserved;
-		protected double[,] _WorkingDataset;
-		protected double[,,] InputSequences;
-		protected double[,] _ExpectedOutputs;
-		protected double[,] _ActualOutputs;
-		protected double[,] _OutputErrors;
+		protected double[][] _WorkingDataset;
+		protected double[][][] InputSequences;
+		protected double[][] _ExpectedOutputs;
+		protected double[][] _ActualOutputs;
+		protected double[][] _OutputErrors;
 		protected double _LastPassAverageError;
 		protected List<Cranium.Structure.Node.Base> _InputNodes;
 		protected List<Cranium.Structure.Node.Base> _OutputNodes;
@@ -51,7 +51,7 @@ namespace Cranium.Activity.Testing
 			_PortionOfDatasetReserved = reservedPortion;
 		}
 		
-		public virtual void SetWorkingDataset ( double[,] dataset )
+		public virtual void SetWorkingDataset ( double[][] dataset )
 		{
 			_WorkingDataset = dataset;	
 		}
@@ -88,24 +88,49 @@ namespace Cranium.Activity.Testing
 		/// </summary>
 		public virtual void PrepareData ( )
 		{
-			_SequenceCount = ( ( _WorkingDataset.GetLength ( 1 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
+			_SequenceCount = ( ( _WorkingDataset[0].GetLength ( 0 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
 			int inputCount = _WorkingDataset.GetLength ( 0 );
 			int outputCount = 1;
-			InputSequences = new double[_SequenceCount, _WindowWidth, inputCount];
-			_ExpectedOutputs = new double[_SequenceCount, outputCount];
-			_ActualOutputs = new double[_SequenceCount, outputCount];
-			_OutputErrors = new double[_SequenceCount, outputCount];
+			
+			InputSequences = new double[_SequenceCount][ ] [];
+			for (int i=0; i<_SequenceCount; i++)
+			{
+				InputSequences [i] = new double[_WindowWidth][];
+				for (int y=0; y< _WindowWidth; y++)
+				{
+					InputSequences [i] [y] = new double[inputCount];	
+				}
+			}
+			
+			_ExpectedOutputs = new double[_SequenceCount] [];
+			for (int i=0; i<_SequenceCount; i++)
+			{
+				_ExpectedOutputs [i] = new double[outputCount];
+			}
+			
+			_ActualOutputs = new double[_SequenceCount] [];
+			for (int i=0; i<_SequenceCount; i++)
+			{
+				_ActualOutputs [i] = new double[outputCount];
+			}
+			
+			_OutputErrors = new double[_SequenceCount] [];
+			for (int i=0; i<_SequenceCount; i++)
+			{
+				_OutputErrors [i] = new double[outputCount];
+			}
+			
 			for (int i=0; i<_SequenceCount; i++)
 			{
 				for (int j=0; j<_WindowWidth; j++)
 				{
 					for (int k=0; k<inputCount; k++)
 					{
-						InputSequences [i, j, k] = _WorkingDataset [k, i + j];						
+						InputSequences [i] [j] [k] = _WorkingDataset [k] [i + j];						
 					}
 					for (int l=0; l<outputCount; l++)
 					{
-						_ExpectedOutputs [i, l] = _WorkingDataset [l, i + j + _DistanceToForcastHorrison];
+						_ExpectedOutputs [i] [l] = _WorkingDataset [l] [i + j + _DistanceToForcastHorrison];
 					}
 				}				
 			}
@@ -115,30 +140,34 @@ namespace Cranium.Activity.Testing
 		{
 			PrepareData ();
 			//Ensure that the networks state is clean
-			foreach ( Structure.Layer.Base layer in network.GetCurrentLayers() )
-				foreach ( Structure.Node.Base node in layer.GetNodes() )
-					node.SetValue ( 0 );
+		
 			
 			int errorCount = 0;
 			double RMSE = 0;
 			for (int s=0; s<_SequenceCount; s++)
 			{
+				foreach ( Structure.Layer.Base layer in network.GetCurrentLayers() )
+					foreach ( Structure.Node.Base node in layer.GetNodes() )
+						node.SetValue ( 0 );
 				for (int i=0; i<_WindowWidth; i++)
 				{
 					for (int x=0; x<_InputNodes.Count; x++)
 					{
-						_InputNodes [x].SetValue ( InputSequences [s, i, x] );
+						_InputNodes [x].SetValue ( InputSequences [s][ i][ x] );
 					}					
 					network.FowardPass ();
-					foreach ( Structure.Layer.Recurrent_Context layer in _Recurrentlayers )
-						layer.UpdateExtra ();
+					if ( _Recurrentlayers != null )
+					{
+						foreach ( Structure.Layer.Recurrent_Context layer in _Recurrentlayers )
+							layer.UpdateExtra ();
+					}
 				}
 				for (int x=0; x<_OutputNodes.Count; x++)
 				{
-					_ActualOutputs [s, x] = _OutputNodes [x].GetValue ();
-					_OutputErrors [s, x] = _ExpectedOutputs [s, x] - _ActualOutputs [s, x];
+					_ActualOutputs [s] [x] = _OutputNodes [x].GetValue ();
+					_OutputErrors [s] [x] = _ExpectedOutputs [s] [x] - _ActualOutputs [s] [x];
 					errorCount++;
-					RMSE += _OutputErrors [s, x] * _OutputErrors [s, x];
+					RMSE += _OutputErrors [s] [x] * _OutputErrors [s] [x];
 				}				
 			}
 			//All the sequewnces have been run through and the outputs and their erros collected

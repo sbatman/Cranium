@@ -124,7 +124,7 @@ namespace Cranium.Activity.Training
 		/// </summary>
 		public virtual void PrepareData ( )
 		{
-			_SequenceCount = ( ( _WorkingDataset.GetLength ( 1 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
+			_SequenceCount = ( ( _WorkingDataset[0].GetLength (0 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
 			int inputCount = _WorkingDataset.GetLength ( 0 );
 			int outputCount = 1;
 			InputSequences = new double[_SequenceCount, _WindowWidth, inputCount];
@@ -135,11 +135,11 @@ namespace Cranium.Activity.Training
 				{
 					for (int k=0; k<inputCount; k++)
 					{
-						InputSequences [i, j, k] = _WorkingDataset [k, i + j];						
+						InputSequences [i, j, k] = _WorkingDataset [k][ i + j];						
 					}
 					for (int l=0; l<outputCount; l++)
 					{
-						ExpectedOutputs [i, l] = _WorkingDataset [l, i + j + _DistanceToForcastHorrison];
+						ExpectedOutputs [i, l] = _WorkingDataset [l][ i + j + _DistanceToForcastHorrison];
 					}
 				}				
 			}
@@ -167,6 +167,10 @@ namespace Cranium.Activity.Training
 				int s = sequencyList [_RND.Next ( 0, sequencyList.Count )];
 				sequencyList.Remove ( s );
 				
+				foreach ( Structure.Layer.Base layer in _TargetNetwork.GetCurrentLayers() )
+					foreach ( Structure.Node.Base node in layer.GetNodes() )
+						node.SetValue ( 0 );
+				
 				for (int i=0; i<_WindowWidth; i++)
 				{
 					for (int x=0; x<_InputNodes.Count; x++)
@@ -183,11 +187,7 @@ namespace Cranium.Activity.Training
 				}				
 				_TargetNetwork.ReversePass ( _LearningRate, _Momentum );
 				
-				//Reset the conext nodes
-				foreach ( Structure.Layer.Recurrent_Context layer in _Recurrentlayers )
-					foreach ( Structure.Node.Recurrent_Context node in layer.GetNodes() )
-						node.SetValue ( 0 );
-				
+	
 				//Calculate the current error				
 				double passError = 0;
 				for (int x=0; x<_OutputNodes.Count; x++)
