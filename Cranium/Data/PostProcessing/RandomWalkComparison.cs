@@ -60,11 +60,18 @@ namespace Cranium.Data.PostProcessing
 
 		public static double[] 	 CalculateErrorAgainstRandomWalk ( double[][] expectedValues, double[][] actualValues, int distanceOffsetOfRandomWalk )
 		{
-			int comparisonSets = expectedValues.GetLength ( 0 );
+			int comparisonSets = expectedValues[0].GetLength ( 0 );
 			double[] results = new double[comparisonSets];
 			for (int i=0; i<comparisonSets; i++)
 			{
-				results[i] = CalculateErrorAgainstRandomWalk(expectedValues[i],actualValues[i],3);
+				double[] expected = new double[expectedValues.Length];
+				double[] actual = new double[expectedValues.Length];
+				for(int x=0;x<expectedValues.Length;x++){
+				expected[x]=expectedValues[x][i];
+					actual[x]=actualValues[x][i];
+				}
+				results[i] = CalculateErrorAgainstRandomWalk(expected,actual,distanceOffsetOfRandomWalk);
+					
 			}
 			return results;
 		}
