@@ -41,7 +41,7 @@ namespace Cranium.LibTest
 			_SlidingWindowTraining.SetDatasetReservedLength ( 0 );
 			_SlidingWindowTraining.SetDistanceToForcastHorrison ( 3 );
 			_SlidingWindowTraining.SetWindowWidth ( 12 );
-			_SlidingWindowTraining.SetMaximumEpochs ( 100 );
+			_SlidingWindowTraining.SetMaximumEpochs ( 300 );
 			_SlidingWindowTraining.SetInputNodes ( _InputLayerNodes );
 			_SlidingWindowTraining.SetOutputNodes ( _OuputLayerNodes );
 			_SlidingWindowTraining.SetWorkingDataset ( dataSet );
@@ -100,7 +100,7 @@ namespace Cranium.LibTest
 			}			
 			_InputLayer.SetNodes ( _InputLayerNodes );		
 			
-			Structure.Layer.Echo_Reservoir echoLayer = new Cranium.Structure.Layer.Echo_Reservoir ( 130, 0.4f, 0, 2 );
+			Structure.Layer.Echo_Reservoir echoLayer = new Cranium.Structure.Layer.Echo_Reservoir ( 130, 0.4f, 0, 5 );
 				
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			_OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -8,10 +8,10 @@
     <ProjectGuid>{509EEFCA-0006-4685-B217-A255BA989BD5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <RootNamespace>Cranium.LibTest</RootNamespace>
-    <AssemblyName>libtest</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <AssemblyName>LibTest</AssemblyName>
     <Description>A library of test for the Crainium Library</Description>
     <ReleaseVersion>0.3</ReleaseVersion>
+    <StartupObject>Cranium.LibTest.MainClass</StartupObject>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
