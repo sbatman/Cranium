@@ -80,11 +80,11 @@ namespace Cranium.LibTest
 			Data.UsefulFunctions.PrintArrayToFile ( Result.ExpectedOutputs, "ExpectedOutputs.csv" );
 			Console.WriteLine ( "Complete Testing" );
 			Console.WriteLine ( "Comparing Against Random Walk 3 Step" );
-			Console.WriteLine (Math.Round( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 3 )[0]*100,3) );
-				Console.WriteLine ( "Comparing Against Random Walk 2 Step" );
-			Console.WriteLine ( Math.Round( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 2 )[0]*100,3)  );
-						Console.WriteLine ( "Comparing Against Random Walk 1 Step" );
-			Console.WriteLine (Math.Round(  Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 1 )[0]*100,3)  );
+			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 3 ) [0] * 100, 3 ) );
+			Console.WriteLine ( "Comparing Against Random Walk 2 Step" );
+			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 2 ) [0] * 100, 3 ) );
+			Console.WriteLine ( "Comparing Against Random Walk 1 Step" );
+			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 1 ) [0] * 100, 3 ) );
 					
 			
 			Console.ReadKey ();
