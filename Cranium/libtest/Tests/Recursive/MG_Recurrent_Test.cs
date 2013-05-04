@@ -17,15 +17,42 @@ namespace Cranium.LibTest.Tests.Recursive
 {
 	public class MG_Recurrent_Test
 	{
+		/// <summary>
+		/// The Neural Network structure that is being tested
+		/// </summary>
 		private static Cranium.Structure.Network _TestNetworkStructure;
+		/// <summary>
+		/// The SlidingWindow training activity that will be used to train the neural network structure
+		/// </summary>
 		private static Cranium.Activity.Training.SlidingWindow _SlidingWindowTraining;
+		/// <summary>
+		/// The input layer of the nerual network
+		/// </summary>
 		private static Cranium.Structure.Layer.Base _InputLayer;
+		/// <summary>
+		/// The hidden layer of the nerual network.
+		/// </summary>
 		private static Cranium.Structure.Layer.Base _HiddenLayer;
+		/// <summary>
+		/// The recurvie context layer of the nerual network
+		/// </summary>
 		private static Cranium.Structure.Layer.Recurrent_Context _ContextLayer;
+		/// <summary>
+		/// The output layer of the neural network
+		/// </summary>
 		private static Cranium.Structure.Layer.Base _OutputLayer;
+		/// <summary>
+		/// A list of the input nodes present in this neural network structure
+		/// </summary>
 		private static List<Cranium.Structure.Node.Base> _InputLayerNodes;
+		/// <summary>
+		/// A list of the output nodes present in the neural network structure
+		/// </summary>
 		private static List<Cranium.Structure.Node.Base> _OuputLayerNodes;
-
+		
+		/// <summary>
+		/// Run this instance.
+		/// </summary>
 		public static void Run ( )
 		{			
 			//Build Network
@@ -89,6 +116,9 @@ namespace Cranium.LibTest.Tests.Recursive
 			Console.ReadKey ();
 		}
 
+		/// <summary>
+		/// Builds the structure of the neural netowrk to undergo training and testing.
+		/// </summary>
 		public static void BuildStructure ( )
 		{
 			// Input layer construction
