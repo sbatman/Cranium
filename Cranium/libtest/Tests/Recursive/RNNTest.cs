@@ -16,14 +16,39 @@ namespace Cranium.LibTest.Tests.Recursive
 {
 	public class RNNTest
 	{
+		
+				/// <summary>
+		/// The network structure to test.
+		/// </summary>
 		private static Cranium.Structure.Network _TestNetworkStructure;
+		/// <summary>
+		/// The current input layer of the neural network structure that is being tested
+		/// </summary>
 		private static  Cranium.Structure.Layer.Base _InputLayer;
+		/// <summary>
+		/// The current hidden layer of the neural network structure that is being tested
+		/// </summary>
 		private static  Cranium.Structure.Layer.Base _HiddenLayer;
+		/// <summary>
+		/// The recursive context layer used in this neural network structure.
+		/// </summary>
 		private static  Cranium.Structure.Layer.Recurrent_Context _ContextLayer;
+		/// <summary>
+		/// The _ output layer of the neural network structure that is being tested
+		/// </summary>
 		private static  Cranium.Structure.Layer.Base _OutputLayer;
+		/// <summary>
+		/// The Input data to be presented to the network during the foward pass
+		/// </summary>
 		private static  Int32[] _InputData;
-		private static  Int32[] _OutputData;
-
+		/// <summary>
+		/// The output data to be tested against during the reverse pass
+		/// </summary>
+		private static  Int32[] _OutputData;		
+		
+		/// <summary>
+		/// Run this instance.
+		/// </summary>
 		public static void Run ( )
 		{			
 			_TestNetworkStructure = new Network ();
@@ -54,6 +79,8 @@ namespace Cranium.LibTest.Tests.Recursive
 						_ContextLayer.UpdateExtra ();
 					}
 					ReversePass ( x, 0 );		
+					
+					//Stopping conditions
 					if ( x == 0 && _OutputLayer.GetNodes () [0].GetValue () > 0.05f )
 					{
 						Continue = true;
@@ -66,6 +93,7 @@ namespace Cranium.LibTest.Tests.Recursive
 					{
 						Continue = true;
 					}					
+					//
 					
 					if ( epoch % 100 == 0 )
 					{
@@ -75,8 +103,11 @@ namespace Cranium.LibTest.Tests.Recursive
 			}
 			Console.WriteLine ( "Training complete in " + epoch + " epochs" );
 			Console.ReadKey ();
-		}
-
+		}		
+		
+		/// <summary>
+		/// Builds the structure for this nerual netowrk test and training.
+		/// </summary>
 		public static void BuildStructure ( )
 		{
 			_InputLayer = new Cranium.Structure.Layer.Base ();
@@ -121,6 +152,9 @@ namespace Cranium.LibTest.Tests.Recursive
 				layer.PopulateNodeConnections ();									
 		}
 		
+		/// <summary>
+		/// Preps the data for both training and testing this nerual network structure.
+		/// </summary>
 		public static void PrepData ( )
 		{
 			_InputData = new Int32[8];
@@ -146,11 +180,23 @@ namespace Cranium.LibTest.Tests.Recursive
 			_OutputData [o++] = 0;
 		}
 	
+		/// <summary>
+		/// Performs the foward pass on the neural network
+		/// </summary>
 		public static void ForwardPass ( )
 		{
 			_TestNetworkStructure.FowardPass ();	
 		}
 		
+		/// <summary>
+		/// Performs the reverse pass on the neural netowrk with the row of prepared training data provided and the given momentum
+		/// </summary>
+		/// <param name='row'>
+		/// Row.
+		/// </param>
+		/// <param name='momentum'>
+		/// Momentum.
+		/// </param>
 		public static void ReversePass ( int row, Double momentum )
 		{
 			Structure.Node.Output outputNode = ( Structure.Node.Output )( _OutputLayer.GetNodes () [0] );
