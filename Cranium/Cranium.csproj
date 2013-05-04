@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -21,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -67,17 +68,5 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-  <ItemGroup>
-    <Folder Include="Structure\" />
-    <Folder Include="Structure\Layer\" />
-    <Folder Include="Structure\Node\" />
-    <Folder Include="Structure\Weight\" />
-    <Folder Include="Structure\ActivationFunction\" />
-    <Folder Include="Activity\" />
-    <Folder Include="Activity\Training\" />
-    <Folder Include="Activity\Testing\" />
-    <Folder Include="Data\" />
-    <Folder Include="Data\Preprocessing\" />
-    <Folder Include="Data\PostProcessing\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
