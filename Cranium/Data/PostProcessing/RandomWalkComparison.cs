@@ -15,7 +15,7 @@ namespace Cranium.Data.PostProcessing
 	public  static class RandomWalkComparison
 	{
 		/// <summary>
-		/// Calculates the error of the actual values compared to the expected values against he error of the ranom walk against eh expsected values.
+		/// Calculates the error of the actual values compared to the expected values against he error of the ranom walk against thw expected values.
 		/// This in most cases is a viable method of benchmarking error levels of a network.
 		/// </summary>
 		/// <returns>

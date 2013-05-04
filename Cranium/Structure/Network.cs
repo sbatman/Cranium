@@ -14,7 +14,7 @@ using System.Collections.Generic;
 
 namespace Cranium.Structure
 {
-	public class Network
+	public class Network : IDisposable
 	{
 		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ();
@@ -151,11 +151,34 @@ namespace Cranium.Structure
 				l.ForwardPass ();			
 		}
 	
+		/// <summary>
+		/// Performs a recursive foward pass across the network
+		/// </summary>
+		/// <param name='learningRate'>
+		/// Learning rate.
+		/// </param>
+		/// <param name='momentum'>
+		/// Momentum.
+		/// </param>
 		public virtual void ReversePass ( double learningRate, double momentum )
 		{
 			foreach ( Layer.Base l in _DetectedTopLayers )
 				l.ReversePass ( learningRate, momentum );
 		}
+
+		#region IDisposable implementation
+		public virtual void Dispose ()
+		{
+			_DetectedTopLayers.Clear();
+			_DetectedTopLayers=null;
+			_DetectedBottomLayers.Clear();
+			_DetectedBottomLayers = null;
+			foreach(Layer.Base l in _CurrentLayers)
+				l.Dispose();
+			_CurrentLayers.Clear();
+			_CurrentLayers = null;
+		}
+		#endregion
 	}
 }
 

@@ -110,7 +110,9 @@ namespace Cranium.Structure.Layer
 			return _ReverseConnectedLayers;
 		}
 		
-		//uses the current forward and reverse layers to populate the node connections
+		/// <summary>
+		/// Uses the current forward and reverse layers to populate the node connections (aka building weights)
+		/// </summary>
 		public virtual void PopulateNodeConnections ( )
 		{
 			PurgeNodeConnections ();
@@ -162,16 +164,31 @@ namespace Cranium.Structure.Layer
 			
 		}
 		
+		/// <summary>
+		/// Returns the ID of the layer
+		/// </summary>
+		/// <returns>
+		/// The ID
+		/// </returns>
 		public int GetID ( )
 		{
 			return _LayerID;	
 		}
 		
+		/// <summary>
+		/// Sets the ID of the layer
+		/// </summary>
+		/// <param name='id'>
+		/// Identifier.
+		/// </param>
 		public void SetID ( int id )
 		{
 			_LayerID = id;
 		}
 		
+		/// <summary>
+		/// Updates any extra logic required, This is used when pre/post epoc logic needs to run on the layer
+		/// </summary>
 		public virtual void UpdateExtra ( )
 		{
 		}
