@@ -13,6 +13,10 @@ using System.IO;
 
 namespace Cranium.Data
 {
+	/// <summary>
+	/// A collection of usefull functions for interacting with a loaded dataset. These include thing like prointing the double array to disk etc.
+	/// This section is prone to change as new useful functions are described and as these functions are categorised.
+	/// </summary>
 	public static class UsefulFunctions
 	{
 		/// <summary>

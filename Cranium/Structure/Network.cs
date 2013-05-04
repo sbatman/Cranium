@@ -14,12 +14,18 @@ using System.Collections.Generic;
 
 namespace Cranium.Structure
 {
-	public class Network
+	/// <summary>
+	/// A base network class, This primarily acts as a structure container of the network and used at a later stage for a large ammount of the netowrks IO
+	/// </summary>
+	public class Network : IDisposable
 	{
 		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base> ();
 		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Network"/> class.
+		/// </summary>
 		public Network ()
 		{			
 			_CurrentLayers = new List<Layer.Base> ();
@@ -151,11 +157,34 @@ namespace Cranium.Structure
 				l.ForwardPass ();			
 		}
 	
+		/// <summary>
+		/// Performs a recursive foward pass across the network
+		/// </summary>
+		/// <param name='learningRate'>
+		/// Learning rate.
+		/// </param>
+		/// <param name='momentum'>
+		/// Momentum.
+		/// </param>
 		public virtual void ReversePass ( double learningRate, double momentum )
 		{
 			foreach ( Layer.Base l in _DetectedTopLayers )
 				l.ReversePass ( learningRate, momentum );
 		}
+
+		#region IDisposable implementation
+		public virtual void Dispose ()
+		{
+			_DetectedTopLayers.Clear();
+			_DetectedTopLayers=null;
+			_DetectedBottomLayers.Clear();
+			_DetectedBottomLayers = null;
+			foreach(Layer.Base l in _CurrentLayers)
+				l.Dispose();
+			_CurrentLayers.Clear();
+			_CurrentLayers = null;
+		}
+		#endregion
 	}
 }
 

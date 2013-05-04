@@ -14,16 +14,44 @@ using System.Collections.Generic;
 
 namespace Cranium.LibTest.Tests.Linear
 {
+	/// <summary>
+	/// This is a test showing a neural network that is capable if learning the functionality of a two input xor gate
+	/// </summary>
 	public static class XOR2Test
 	{
-		private static Cranium.Structure.Network _TestNetworkStructure;
-		private static  Cranium.Structure.Layer.Base _InputLayer;
-		private static  Cranium.Structure.Layer.Base _HiddenLayer;
-		private static  Cranium.Structure.Layer.Base _HiddenLayer2;
-		private static  Cranium.Structure.Layer.Base _OutputLayer;
-		private static  Int32[] _InputData;
-		private static  Int32[] _OutputData;
 
+		/// <summary>
+		/// The network structure to test.
+		/// </summary>
+		private static Cranium.Structure.Network _TestNetworkStructure;
+		/// <summary>
+		/// The current input layer of the neural network structure that is being tested
+		/// </summary>
+		private static  Cranium.Structure.Layer.Base _InputLayer;
+		/// <summary>
+		/// The first hidden layer of the neural network structure that is being tested
+		/// </summary>
+		private static  Cranium.Structure.Layer.Base _HiddenLayer;
+		/// <summary>
+		/// The second hidden layer of the neural network structure that is being tested
+		/// </summary>
+		private static  Cranium.Structure.Layer.Base _HiddenLayer2;
+		/// <summary>
+		/// The _ output layer of the neural network structure that is being tested
+		/// </summary>
+		private static  Cranium.Structure.Layer.Base _OutputLayer;
+		/// <summary>
+		/// The Input data to be presented to the network during the foward pass
+		/// </summary>
+		private static  Int32[] _InputData;
+		/// <summary>
+		/// The output data to be tested against during the reverse pass
+		/// </summary>
+		private static  Int32[] _OutputData;
+		
+		/// <summary>
+		/// Run this instance.
+		/// </summary>
 		public static void Run ( )
 		{			
 			_TestNetworkStructure = new Network ();
@@ -64,6 +92,9 @@ namespace Cranium.LibTest.Tests.Linear
 			Console.ReadKey ();
 		}
 
+		/// <summary>
+		/// Builds the structure of the neural network.
+		/// </summary>
 		public static void BuildStructure ( )
 		{
 			_InputLayer = new Cranium.Structure.Layer.Base ();
@@ -104,6 +135,9 @@ namespace Cranium.LibTest.Tests.Linear
 									
 		}
 		
+		/// <summary>
+		/// Prepares the training data
+		/// </summary>
 		public static void PrepData ( )
 		{
 			_InputData = new Int32[8];
@@ -126,17 +160,35 @@ namespace Cranium.LibTest.Tests.Linear
 			_OutputData [3] = 0;
 		}
 		
+		/// <summary>
+		/// Presents the specified row of prepared training data to the network.
+		/// </summary>
+		/// <param name='row'>
+		/// Row.
+		/// </param>
 		public static void PresentData ( int row )
 		{
 			_InputLayer.GetNodes () [0].SetValue ( _InputData [( row * 2 )] );
 			_InputLayer.GetNodes () [1].SetValue ( _InputData [( row * 2 ) + 1] );
 		}
 		
+		/// <summary>
+		/// Performs the foward pass on the network
+		/// </summary>
 		public static void ForwardPass ( )
 		{
 			_TestNetworkStructure.FowardPass ();	
 		}
 		
+		/// <summary>
+		/// Performs the reverse pass ont he network with the given row of prepared training data and the given weight momentum
+		/// </summary>
+		/// <param name='row'>
+		/// Row.
+		/// </param>
+		/// <param name='momentum'>
+		/// Momentum.
+		/// </param>
 		public static void ReversePass ( int row, Double momentum )
 		{
 			Structure.Node.Output outputNode = ( Structure.Node.Output )( _OutputLayer.GetNodes () [0] );

@@ -13,7 +13,9 @@ using System;
 namespace Cranium.Structure.ActivationFunction
 {
 	/// <summary>
-	/// Elliott. http://drum.lib.umd.edu/handle/1903/5355
+	/// The Elliott activations functions acts as a computationaly cheaper version of tanH although with known problems with reaching the lowest
+	/// errors and becoming trapped in local minima. This activation function is good for prototyping netowrk structures, however in many cases
+	/// it should not be used for practival implementations of networks. http://drum.lib.umd.edu/handle/1903/5355
 	/// </summary>
 	public class Elliott :Base
 	{
@@ -24,6 +26,12 @@ namespace Cranium.Structure.ActivationFunction
 		}
 
 		#region implemented abstract members of Cranium.Structure.ActivationFunction.Base
+				/// <summary>
+		/// Returns the input after running through the activation function.
+		/// </summary>
+		/// <param name='input'>
+		/// The value to pass to the activation function
+		/// </param>
 		public override double Compute (double input)
 		{
 			return  (input*_Scale) / (1 + Math.Abs(input*_Scale)); 

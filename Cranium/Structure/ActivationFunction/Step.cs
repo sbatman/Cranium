@@ -23,12 +23,26 @@ namespace Cranium.Structure.ActivationFunction
 		{
 			_ActivationPoint = activationPoint;	
 		}
-
+		
+				/// <summary>
+		/// Returns the input after running through the activation function.
+		/// </summary>
+		/// <param name='input'>
+		/// The value to pass to the activation function
+		/// </param>
 		public override Double Compute ( Double input )
 		{
 			return input >= _ActivationPoint ? 1 : 0;
 		}
-
+		/// <summary>
+		/// Computes the derivative using the activation function.
+		/// </summary>
+		/// <returns>
+		/// The derivative.
+		/// </returns>
+		/// <param name='input'>
+		/// Input.
+		/// </param>
 		public override Double ComputeDerivative ( Double input )
 		{
 			return 1;

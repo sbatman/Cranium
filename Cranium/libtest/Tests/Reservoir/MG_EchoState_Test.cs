@@ -15,6 +15,9 @@ using System.Collections.Generic;
 
 namespace Cranium.LibTest.Tests.Reservoir
 {
+	/// <summary>
+	/// This test shows an example of an echo state neural netowrk learning the Makey-Glass time series dataset
+	/// </summary>
 	public class MG_EchoState_Test
 	{
 		private static Cranium.Structure.Network _TestNetworkStructure;
@@ -23,7 +26,10 @@ namespace Cranium.LibTest.Tests.Reservoir
 		private static Cranium.Structure.Layer.Base _OutputLayer;
 		private static List<Cranium.Structure.Node.Base> _InputLayerNodes;
 		private static List<Cranium.Structure.Node.Base> _OuputLayerNodes;
-
+		
+		/// <summary>
+		/// Run this instance.
+		/// </summary>
 		public static void Run ( )
 		{			
 			//Build Network

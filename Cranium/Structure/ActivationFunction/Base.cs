@@ -12,6 +12,9 @@ using System;
 
 namespace Cranium.Structure.ActivationFunction
 {
+	/// <summary>
+	/// A base class for activation functions, Exstend this when implementing new activation functions
+	/// </summary>
 	public abstract class Base :IDisposable
 	{
 		/// <summary>

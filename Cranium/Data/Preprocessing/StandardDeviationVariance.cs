@@ -23,8 +23,8 @@ namespace Cranium.Data.Preprocessing
 	}
 	
 	/// <summary>
-	/// This class is designed as a Dataset Preprocessor. It will take in the data provided, calculate teh average and standard deviation
-	/// and then return the data as a comparrison against variance of the standeviation from the average. So a value of 2 would signify
+	/// This class is designed as a Dataset Preprocessor. It will take in the data provided, calculate the average and standard deviation
+	/// and then return the data as a comparison against variance of the standeviation from the average. So a value of 2 would signify
 	/// that it is twice the standard deviation higher than the average.
 	/// </summary>
 	public static class StandardDeviationVariance
