@@ -54,6 +54,7 @@
     <Compile Include="Data\Functions.cs" />
     <Compile Include="Structure\Layer\Echo-Reservoir.cs" />
     <Compile Include="Data\PostProcessing\RandomWalkComparison.cs" />
+    <Compile Include="Structure\ActivationFunction\Elliott.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

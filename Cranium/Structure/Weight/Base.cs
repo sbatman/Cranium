@@ -77,6 +77,12 @@ namespace Cranium.Structure.Weight
 			Weight = newWeight;	
 		}
 		
+		/// <summary>
+		/// Gets the previous total weight change caused by ApplyPendingWeightChanges
+		/// </summary>
+		/// <returns>
+		/// The past weight change.
+		/// </returns>
 		public virtual double GetPastWeightChange ( )
 		{
 			return _PastWeightChange;	
