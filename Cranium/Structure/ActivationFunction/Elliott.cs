@@ -13,26 +13,33 @@ using System;
 namespace Cranium.Structure.ActivationFunction
 {
 	/// <summary>
-	/// This activation function scales the input into the range of -1 to 1 which is very important for the majority
-	/// or neural network structures that wish to learn signal data.
+	/// Elliott. http://drum.lib.umd.edu/handle/1903/5355
 	/// </summary>
-	public class Tanh : Base
+	public class Elliott :Base
 	{
-		public override Double Compute ( Double input )
+		private double _Scale =1;
+		
+		public Elliott () : base()
 		{
-            double temp = Math.Exp(input * 2.0);
-            return (temp - 1.0) / (temp + 1.0);
 		}
 
-		public override Double ComputeDerivative ( Double input )
-		{	
-			return  1 - Math.Pow ( ( input ), 2 );
+		#region implemented abstract members of Cranium.Structure.ActivationFunction.Base
+		public override double Compute (double input)
+		{
+			return  (input*_Scale) / (1 + Math.Abs(input*_Scale)); 
 		}
 
-		public override void Dispose ( )
+		public override double ComputeDerivative (double input)
+		{
+			
+    	return  _Scale/(Math.Pow((1.0d+Math.Abs(input*_Scale)),2));
+		}
+
+		public override void Dispose ()
 		{
 			
 		}
+		#endregion
 	}
 }
 

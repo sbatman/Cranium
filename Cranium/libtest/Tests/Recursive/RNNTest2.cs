@@ -12,7 +12,7 @@ using System;
 using Cranium.Structure;
 using System.Collections.Generic;
 
-namespace Cranium.LibTest
+namespace Cranium.LibTest.Tests.Recursive
 {
 	public class RNNTest2
 	{
@@ -108,7 +108,6 @@ namespace Cranium.LibTest
 			_HiddenLayer2.SetNodes ( HiddenLayerNodes2 );	
 			
 			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 3 );
-
 			
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();

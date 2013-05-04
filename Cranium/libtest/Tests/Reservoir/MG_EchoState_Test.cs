@@ -13,7 +13,7 @@ using System.Threading;
 using Cranium.Structure;
 using System.Collections.Generic;
 
-namespace Cranium.LibTest
+namespace Cranium.LibTest.Tests.Reservoir
 {
 	public class MG_EchoState_Test
 	{
@@ -41,7 +41,7 @@ namespace Cranium.LibTest
 			_SlidingWindowTraining.SetDatasetReservedLength ( 0 );
 			_SlidingWindowTraining.SetDistanceToForcastHorrison ( 3 );
 			_SlidingWindowTraining.SetWindowWidth ( 12 );
-			_SlidingWindowTraining.SetMaximumEpochs ( 100 );
+			_SlidingWindowTraining.SetMaximumEpochs ( 300 );
 			_SlidingWindowTraining.SetInputNodes ( _InputLayerNodes );
 			_SlidingWindowTraining.SetOutputNodes ( _OuputLayerNodes );
 			_SlidingWindowTraining.SetWorkingDataset ( dataSet );
@@ -86,7 +86,6 @@ namespace Cranium.LibTest
 			Console.WriteLine ( "Comparing Against Random Walk 1 Step" );
 			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 1 ) [0] * 100, 3 ) );
 					
-			
 			Console.ReadKey ();
 		}
 
@@ -96,17 +95,17 @@ namespace Cranium.LibTest
 			_InputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<1; i++)
 			{
-				_InputLayerNodes.Add ( new Cranium.Structure.Node.Base ( _InputLayer, new Cranium.Structure.ActivationFunction.Tanh () ) );
+				_InputLayerNodes.Add ( new Cranium.Structure.Node.Base ( _InputLayer, new Cranium.Structure.ActivationFunction.Elliott () ) );
 			}			
 			_InputLayer.SetNodes ( _InputLayerNodes );		
 			
-			Structure.Layer.Echo_Reservoir echoLayer = new Cranium.Structure.Layer.Echo_Reservoir ( 130, 0.4f, 0, 2 );
+			Structure.Layer.Echo_Reservoir echoLayer = new Cranium.Structure.Layer.Echo_Reservoir ( 130, 0.4f, 0, 5,new Cranium.Structure.ActivationFunction.Elliott ()  );
 				
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			_OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();
 			for (int i=0; i<1; i++)
 			{
-				_OuputLayerNodes.Add ( new Cranium.Structure.Node.Output ( _OutputLayer, new Cranium.Structure.ActivationFunction.Tanh () ) );
+				_OuputLayerNodes.Add ( new Cranium.Structure.Node.Output ( _OutputLayer, new Cranium.Structure.ActivationFunction.Elliott () ) );
 			}
 			_OutputLayer.SetNodes ( _OuputLayerNodes );			
 			

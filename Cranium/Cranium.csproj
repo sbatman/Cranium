@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="3.5" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -9,7 +9,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Cranium</RootNamespace>
     <AssemblyName>Cranium</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <Description>A Lightweight Neural Network Famework for C#</Description>
     <ReleaseVersion>0.3</ReleaseVersion>
   </PropertyGroup>
@@ -22,6 +21,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -55,6 +55,7 @@
     <Compile Include="Data\Functions.cs" />
     <Compile Include="Structure\Layer\Echo-Reservoir.cs" />
     <Compile Include="Data\PostProcessing\RandomWalkComparison.cs" />
+    <Compile Include="Structure\ActivationFunction\Elliott.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -67,17 +68,5 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-  <ItemGroup>
-    <Folder Include="Structure\" />
-    <Folder Include="Structure\Layer\" />
-    <Folder Include="Structure\Node\" />
-    <Folder Include="Structure\Weight\" />
-    <Folder Include="Structure\ActivationFunction\" />
-    <Folder Include="Activity\" />
-    <Folder Include="Activity\Training\" />
-    <Folder Include="Activity\Testing\" />
-    <Folder Include="Data\" />
-    <Folder Include="Data\Preprocessing\" />
-    <Folder Include="Data\PostProcessing\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>

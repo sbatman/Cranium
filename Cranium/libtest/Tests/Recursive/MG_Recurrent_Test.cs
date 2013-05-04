@@ -13,7 +13,7 @@ using System.Threading;
 using Cranium.Structure;
 using System.Collections.Generic;
 
-namespace Cranium.LibTest
+namespace Cranium.LibTest.Tests.Recursive
 {
 	public class MG_Recurrent_Test
 	{

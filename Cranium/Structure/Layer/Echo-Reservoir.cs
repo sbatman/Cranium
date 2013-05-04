@@ -19,13 +19,15 @@ namespace Cranium.Structure.Layer
 		protected double _LevelOfConnectivity;
 		protected int _MinimumConnections;
 		protected int _MaximumConnections;
+		protected ActivationFunction.Base _ActivationFunction;
 
-		public Echo_Reservoir ( int nodeCount, double levelOfConnectivity, int minimumConnections, int maximumConnections )
+		public Echo_Reservoir ( int nodeCount, double levelOfConnectivity, int minimumConnections, int maximumConnections, ActivationFunction.Base activationFunction )
 		{
 			_NodeCount = nodeCount;
 			_LevelOfConnectivity = levelOfConnectivity;
 			_MinimumConnections = minimumConnections;
 			_MaximumConnections = maximumConnections;
+			_ActivationFunction = activationFunction;
 		}
 		
 		public override void PopulateNodeConnections ( )
@@ -58,7 +60,7 @@ namespace Cranium.Structure.Layer
 		{	
 			for (int x=0; x<_NodeCount; x++)
 			{
-				_Nodes.Add ( new Node.Base ( this, new ActivationFunction.Tanh () ) );
+				_Nodes.Add ( new Node.Base ( this, _ActivationFunction ) );
 			}
 			foreach ( Node.Base node in _Nodes )
 			{
