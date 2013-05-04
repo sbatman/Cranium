@@ -29,32 +29,29 @@ namespace Cranium.LibTest
 			Console.WriteLine ( "5 -  MG Recurrent Test" );
 			Console.WriteLine ( "6 -  MG Echo State Test" );
 			
-			ConsoleKey PressedKey = Console.ReadKey ().Key;
+			ConsoleKey pressedKey = Console.ReadKey ().Key;
 			Console.Clear ();
-			if ( PressedKey == ConsoleKey.D1 )
+			switch ( pressedKey )
 			{
-				XOR2Test.Run ();
-			}
-			if ( PressedKey == ConsoleKey.D2 )
-			{
-				XOR3Test.Run ();
-			}
-			if ( PressedKey == ConsoleKey.D3 )
-			{
-				RNNTest.Run ();
-			}
-			if ( PressedKey == ConsoleKey.D4 )
-			{
-				RNNTest2.Run ();
-			}
-			if ( PressedKey == ConsoleKey.D5 )
-			{
-				MG_Recurrent_Test.Run ();
-			}
-			if ( PressedKey == ConsoleKey.D6 )
-			{
-				MG_EchoState_Test.Run ();	
-			}
+				case 	ConsoleKey.D1 :
+					Cranium.LibTest.Tests.Linear.XOR2Test.Run ();
+					break;
+				case 	ConsoleKey.D2 :
+					Cranium.LibTest.Tests.Linear.XOR3Test.Run ();
+					break;
+				case 	ConsoleKey.D3 :
+					Cranium.LibTest.Tests.Recursive.RNNTest.Run ();
+					break;
+				case 	ConsoleKey.D4 :
+					Cranium.LibTest.Tests.Recursive.RNNTest2.Run ();
+					break;
+				case 	ConsoleKey.D5 :
+					Cranium.LibTest.Tests.Recursive.MG_Recurrent_Test.Run ();
+					break;
+				case 	ConsoleKey.D6 :
+					Cranium.LibTest.Tests.Reservoir.MG_EchoState_Test.Run ();
+					break;
+			}			
 		}
 	}
 }

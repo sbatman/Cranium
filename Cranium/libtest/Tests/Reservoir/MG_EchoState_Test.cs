@@ -86,7 +86,6 @@ namespace Cranium.LibTest.Tests.Reservoir
 			Console.WriteLine ( "Comparing Against Random Walk 1 Step" );
 			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 1 ) [0] * 100, 3 ) );
 					
-			
 			Console.ReadKey ();
 		}
 
