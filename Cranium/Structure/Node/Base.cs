@@ -52,17 +52,10 @@ namespace Cranium.Structure.Node
 			}
 			_Value = 0;
 			
-			foreach ( Weight.Base W in _T_ReverseWeights )
-				_Value += W.GetNodeA ().GetValue () * W.GetWeight ();	
-			if ( Double.IsNaN ( _Value ) || Double.IsInfinity ( _Value ) )
-			{
-				throw( new Exception ( "Activation Function Error" ) );
-			}
+			foreach ( Weight.Base w in _T_ReverseWeights )            
+				_Value += w.NodeA._Value * w.Weight;	
 			_Value = _ActivationFunction.Compute ( _Value );
-			if ( Double.IsNaN ( _Value ) || Double.IsInfinity ( _Value ) )
-			{
-				throw( new Exception ( "Activation Function Error" ) );
-			}
+
 		}
 		
 		/// <summary>
@@ -111,7 +104,7 @@ namespace Cranium.Structure.Node
 			Double tempError = 0;
 			foreach ( Weight.Base w in _T_FowardWeights )
 			{
-				tempError += w.GetWeight () * w.GetNodeB ().GetError ();
+				tempError += w.Weight * w.NodeB.GetError ();
 			}
 			_Error = _ActivationFunction.ComputeDerivative ( _Value ) * tempError;
 				
@@ -126,7 +119,7 @@ namespace Cranium.Structure.Node
 		{
 			foreach ( Weight.Base w in _FowardWeights )
 			{		
-				w.AddWeightChange ( _Value * w.GetNodeB ().GetError () * learningRate );
+				w.AddWeightChange ( _Value * w.NodeB._Error * learningRate );
 			}
 		}
 		
@@ -134,7 +127,7 @@ namespace Cranium.Structure.Node
 		{
 			foreach ( Weight.Base w in _FowardWeights )
 			{
-				w.SetWeight ( w.GetWeight () + ( w.GetPastWeightChange () * momentum ) );
+				w.SetWeight ( w.Weight + ( w.GetPastWeightChange () * momentum ) );
 				w.ApplyPendingWeightChanges ();	
 			}
 		}
@@ -218,8 +211,8 @@ namespace Cranium.Structure.Node
 				foreach ( Weight.Base w in _T_FowardWeights )
 				{
 					w.Dispose ();
-					w.GetNodeB ()._T_ReverseWeights = null;
-					w.GetNodeB ()._ReverseWeights.Remove ( w );
+					w.NodeB._T_ReverseWeights = null;
+					w.NodeB._ReverseWeights.Remove ( w );
 				}
 				_FowardWeights.Clear ();
 				_T_FowardWeights = null;
@@ -229,8 +222,8 @@ namespace Cranium.Structure.Node
 				foreach ( Weight.Base w in _T_ReverseWeights )
 				{
 					w.Dispose ();
-					w.GetNodeB ()._T_FowardWeights = null;
-					w.GetNodeB ()._FowardWeights.Remove ( w );
+					w.NodeB._T_FowardWeights = null;
+					w.NodeB._FowardWeights.Remove ( w );
 				}
 				_ReverseWeights.Clear ();
 				_T_ReverseWeights = null;

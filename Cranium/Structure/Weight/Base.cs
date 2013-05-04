@@ -20,9 +20,9 @@ namespace Cranium.Structure.Weight
 			Forward
 		};
 		
-		protected Node.Base _NodeA;
-		protected Node.Base _NodeB;
-		protected Double _Weight;
+		public Node.Base NodeA;
+        public Node.Base NodeB;
+        public Double Weight;
 		protected Double _InitialValue;
 		protected Double _PendingWeightChange;
 		protected Double _PendingWeightChangeCount;
@@ -30,48 +30,15 @@ namespace Cranium.Structure.Weight
 		
 		public Base ( Node.Base nodeA, Node.Base nodeB, Double weight )
 		{
-			_NodeA = nodeA;
-			_NodeB = nodeB;
-			_Weight = weight;
+			NodeA = nodeA;
+			NodeB = nodeB;
+			Weight = weight;
 			_InitialValue = weight;
 			_PendingWeightChange = 0;
 			_PendingWeightChangeCount = 0;
 			_PastWeightChange = 0;
 		}
-		
-		/// <summary>
-		/// Gets the first node in the weighting.
-		/// </summary>
-		/// <returns>
-		/// The node a.
-		/// </returns>
-		public virtual Node.Base GetNodeA ( )
-		{
-			return _NodeA;
-		}
-
-		/// <summary>
-		/// Gets the second node in the weighting.
-		/// </summary>
-		/// <returns>
-		/// The node b.
-		/// </returns>
-		public virtual Node.Base GetNodeB ( )
-		{
-			return _NodeB;
-		}
-		
-		/// <summary>
-		/// Gets the current weight.
-		/// </summary>
-		/// <returns>
-		/// The weight.
-		/// </returns>
-		public virtual Double GetWeight ( )
-		{
-			return _Weight;	
-		}
-
+			
 		/// <summary>
 		/// Gets the total change from the initial value the weight was set with.
 		/// </summary>
@@ -80,7 +47,7 @@ namespace Cranium.Structure.Weight
 		/// </returns>
 		public virtual Double GetTotalChange ( )
 		{
-			return _Weight - _InitialValue;
+			return Weight - _InitialValue;
 		}
 		
 		/// <summary>
@@ -91,7 +58,7 @@ namespace Cranium.Structure.Weight
 		/// </param>
 		public virtual void AddWeightChange ( Double weightModification )
 		{
-			if ( Double.IsNaN ( _Weight ) || Double.IsInfinity ( weightModification ) )
+			if ( Double.IsNaN ( Weight ) || Double.IsInfinity ( weightModification ) )
 			{
 				throw( new Exception ( "Weight Error" ) );
 			}
@@ -107,7 +74,7 @@ namespace Cranium.Structure.Weight
 		/// </param>
 		public virtual void SetWeight ( Double newWeight )
 		{
-			_Weight = newWeight;	
+			Weight = newWeight;	
 		}
 		
 		public virtual double GetPastWeightChange ( )
@@ -121,9 +88,9 @@ namespace Cranium.Structure.Weight
 		public virtual void ApplyPendingWeightChanges ( )
 		{
 			_PastWeightChange = ( _PendingWeightChange / _PendingWeightChangeCount );
-			_Weight += _PastWeightChange;									
+			Weight += _PastWeightChange;									
 
-			if ( Double.IsNaN ( _Weight ) || Double.IsInfinity ( _Weight ) )
+			if ( Double.IsNaN ( Weight ) || Double.IsInfinity ( Weight ) )
 			{
 				throw( new Exception ( "Weight Error" ) );
 			}
@@ -143,8 +110,8 @@ namespace Cranium.Structure.Weight
 		#region IDisposable implementation
 		public void Dispose ( )
 		{
-			_NodeA = null;
-			_NodeB = null;
+			NodeA = null;
+			NodeB = null;
 		}
 		#endregion
 	}

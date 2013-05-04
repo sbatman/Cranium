@@ -20,7 +20,8 @@ namespace Cranium.Structure.ActivationFunction
 	{
 		public override Double Compute ( Double input )
 		{
-			return ( Math.Exp ( input * 2.0 ) - 1.0 ) / ( Math.Exp ( input * 2.0 ) + 1.0 );
+            double temp = Math.Exp(input * 2.0);
+            return (temp - 1.0) / (temp + 1.0);
 		}
 
 		public override Double ComputeDerivative ( Double input )
