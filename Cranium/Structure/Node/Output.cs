@@ -14,21 +14,42 @@ using Cranium.Structure;
 
 namespace Cranium.Structure.Node
 {
+	/// <summary>
+	/// The output node functions differntly from normal nodes as its error is calcuated from the targetvalue rather than the error of foward nodes.
+	/// </summary>
 	public class Output : Base
 	{
 		protected Double _TargetValue;
 		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Node.Output"/> class.
+		/// </summary>
+		/// <param name='parentLayer'>
+		/// Parent layer.
+		/// </param>
+		/// <param name='activationFunction'>
+		/// Activation function.
+		/// </param>
 		public Output ( Cranium.Structure.Layer.Base parentLayer, Cranium.Structure.ActivationFunction.Base activationFunction ):base(parentLayer,activationFunction)
 		{
 			
 		}
 		
+		/// <summary>
+		/// Calculates the error of the node based on its distance from the target value
+		/// </summary>
 		public override void CalculateError ( )
 		{
 			_Error = ( ( 1 - _Value ) * ( 1 + _Value ) ) * ( _TargetValue - _Value );
 
 		}
 
+		/// <summary>
+		/// Sets the target value, used for error calculation
+		/// </summary>
+		/// <param name='targetValue'>
+		/// Target value.
+		/// </param>
 		public virtual void SetTargetValue ( Double targetValue )
 		{
 			_TargetValue = targetValue;

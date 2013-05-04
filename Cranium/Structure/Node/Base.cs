@@ -31,6 +31,15 @@ namespace Cranium.Structure.Node
 		protected Weight.Base[] _T_FowardWeights;
 		protected Weight.Base[] _T_ReverseWeights;
 		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Node.Base"/> class.
+		/// </summary>
+		/// <param name='layer'>
+		/// Layer.
+		/// </param>
+		/// <param name='activationFunction'>
+		/// Activation function.
+		/// </param>
 		public Base ( Layer.Base layer, ActivationFunction.Base activationFunction )
 		{
 			_ParentLayer = layer;
@@ -94,11 +103,20 @@ namespace Cranium.Structure.Node
 			return _T_FowardWeights;
 		}
 		
-		public virtual void SetPositionInParentLayer ( int _position )
+		/// <summary>
+		/// Sets the position of the node within the parent layer. This only effects weight loading and saving
+		/// </summary>
+		/// <param name='position'>
+		/// _position.
+		/// </param>
+		public virtual void SetPositionInParentLayer ( int position )
 		{
-			_ParentLayerPosition = _position;	
+			_ParentLayerPosition = position;	
 		}
 		
+		/// <summary>
+		/// Calculates the error of the node based on its contibution to the error of foward nodes.
+		/// </summary>
 		public virtual void CalculateError ( )
 		{
 			Double tempError = 0;
@@ -115,6 +133,12 @@ namespace Cranium.Structure.Node
 			}
 		}
 		
+		/// <summary>
+		/// Causes a spending weight change based on learning rate and errors
+		/// </summary>
+		/// <param name='learningRate'>
+		/// Learning rate.
+		/// </param>
 		public virtual void AdjustWeights ( Double learningRate )
 		{
 			foreach ( Weight.Base w in _FowardWeights )
@@ -123,6 +147,12 @@ namespace Cranium.Structure.Node
 			}
 		}
 		
+		/// <summary>
+		/// Triggers the addition of the momentum and the application of all pending weights
+		/// </summary>
+		/// <param name='momentum'>
+		/// Momentum.
+		/// </param>
 		public virtual void UpdateWeights ( double momentum )
 		{
 			foreach ( Weight.Base w in _FowardWeights )
@@ -132,6 +162,12 @@ namespace Cranium.Structure.Node
 			}
 		}
 		
+		/// <summary>
+		/// Returns the error of the node, used when back propogating
+		/// </summary>
+		/// <returns>
+		/// The error.
+		/// </returns>
 		public virtual Double GetError ( )
 		{
 			if ( Double.IsNaN ( _Error ) || Double.IsInfinity ( _Error ) )
@@ -231,7 +267,7 @@ namespace Cranium.Structure.Node
 		}
 		
 			#region IDisposable implementation
-		public void Dispose ( )
+		public virtual void Dispose ( )
 		{
 			_ParentLayer = null;
 			_FowardWeights.Clear ();

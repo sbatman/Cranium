@@ -14,12 +14,18 @@ using System.Collections.Generic;
 
 namespace Cranium.Structure
 {
+	/// <summary>
+	/// A base network class, This primarily acts as a structure container of the network and used at a later stage for a large ammount of the netowrks IO
+	/// </summary>
 	public class Network : IDisposable
 	{
 		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base> ();
 		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Network"/> class.
+		/// </summary>
 		public Network ()
 		{			
 			_CurrentLayers = new List<Layer.Base> ();

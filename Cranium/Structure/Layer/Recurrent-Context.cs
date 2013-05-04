@@ -23,6 +23,12 @@ namespace Cranium.Structure.Layer
 		protected List<Node.Base> _SourceNodes;
 		protected int _LevelOfContext = 1;
 		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Recurrent_Context"/> class.
+		/// </summary>
+		/// <param name='levelOfContext'>
+		/// Level of context.
+		/// </param>
 		public Recurrent_Context ( int levelOfContext )
 		{
 			_SourceNodes = new List<Node.Base> ();
