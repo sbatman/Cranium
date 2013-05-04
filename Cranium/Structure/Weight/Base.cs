@@ -12,22 +12,62 @@ using System;
 
 namespace Cranium.Structure.Weight
 {
+	/// <summary>
+	/// This is the base weight class and acts as a standard weight between two nodes. weight changes can be applied immediatly
+	/// or added to a pending list and applied at a later stage.
+	/// </summary>
 	public class Base : IDisposable
 	{
+		/// <summary>
+		/// Connection direction. Either foward or reverse, Added for code readability
+		/// </summary>
 		public enum ConnectionDirection
 		{
 			Reverse,
 			Forward
 		};
 		
+		/// <summary>
+		/// Node a, this should be the reverse node
+		/// </summary>
 		public Node.Base NodeA;
+		/// <summary>
+		/// Node b, this should be the forward node
+		/// </summary>
         public Node.Base NodeB;
+		/// <summary>
+		/// The current weight
+		/// </summary>
         public Double Weight;
+		/// <summary>
+		/// The initial value of the weight
+		/// </summary>
 		protected Double _InitialValue;
+		/// <summary>
+		/// The total pending weight change before count devision
+		/// </summary>
 		protected Double _PendingWeightChange;
+		/// <summary>
+		/// The number of pending weight changes
+		/// </summary>
 		protected Double _PendingWeightChangeCount;
+		/// <summary>
+		/// The last total weight change
+		/// </summary>
 		protected Double _PastWeightChange;
 		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Weight.Base"/> class.
+		/// </summary>
+		/// <param name='nodeA'>
+		/// Node a.
+		/// </param>
+		/// <param name='nodeB'>
+		/// Node b.
+		/// </param>
+		/// <param name='weight'>
+		/// Initial Weight.
+		/// </param>
 		public Base ( Node.Base nodeA, Node.Base nodeB, Double weight )
 		{
 			NodeA = nodeA;
@@ -114,7 +154,7 @@ namespace Cranium.Structure.Weight
 		}
 
 		#region IDisposable implementation
-		public void Dispose ( )
+		public virtual void Dispose ( )
 		{
 			NodeA = null;
 			NodeB = null;

@@ -2,6 +2,8 @@
 [Bb]in/
 [Oo]bj/
 
+# Docs
+[Dd]ocs/
 # mstest test results
 TestResults
 

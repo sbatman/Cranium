@@ -12,6 +12,12 @@ using System;
 
 namespace Cranium.Structure.Layer
 {
+	/// <summary>
+	/// This is an implementation of the echo reservoir found in EchoState netowrks. It provides a form of recursive memory as each node within the layer
+	/// is randomly connected to a number of other nodes. When presented with data over a number of iterations this causes a RNN style memory behaviour.
+	/// However due to the chaotic nature of the revervoirs contrcution, accuracy and learning limits of this type of network can vary heavily.
+	/// Further information can be sourced here http://www.scholarpedia.org/article/Echo_state_network
+	/// </summary>
 	public class Echo_Reservoir : Base
 	{
 		protected static Random rnd = new Random ();
@@ -21,6 +27,25 @@ namespace Cranium.Structure.Layer
 		protected int _MaximumConnections;
 		protected ActivationFunction.Base _ActivationFunction;
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Echo_Reservoir"/> class.
+		/// </summary>
+		/// <param name='nodeCount'>
+		/// The number of nodes in the Reservoir
+		/// </param>
+		/// <param name='levelOfConnectivity'>
+		/// The connectivity is calculated as chances = max-min, for each chance the levelOfConnectivity is compared to a random double, if levelOfConnectivity is higher 
+		/// then an additional connection is made ontop of the origional Min
+		/// </param>
+		/// <param name='minimumConnections'>
+		/// Minimum connections.
+		/// </param>
+		/// <param name='maximumConnections'>
+		/// Maximum connections.
+		/// </param>
+		/// <param name='activationFunction'>
+		/// Activation function.
+		/// </param>
 		public Echo_Reservoir ( int nodeCount, double levelOfConnectivity, int minimumConnections, int maximumConnections, ActivationFunction.Base activationFunction )
 		{
 			_NodeCount = nodeCount;
@@ -30,6 +55,9 @@ namespace Cranium.Structure.Layer
 			_ActivationFunction = activationFunction;
 		}
 		
+		/// <summary>
+		/// Populates the node connections aka builds the weights.
+		/// </summary>
 		public override void PopulateNodeConnections ( )
 		{
 			PurgeNodeConnections ();
@@ -56,6 +84,9 @@ namespace Cranium.Structure.Layer
 			}	
 		}
 		
+		/// <summary>
+		/// Creates all the nodes and inter node connections in this layer
+		/// </summary>
 		public virtual void BuildNodeBank ( )
 		{	
 			for (int x=0; x<_NodeCount; x++)
@@ -75,12 +106,19 @@ namespace Cranium.Structure.Layer
 				}
 			}
 		}
-		
-		public override void ForwardPass ( )
-		{
-			base.ForwardPass ();
-		}
 
+		/// <summary>
+		/// Reverses the pass, and prevents the call to recurse downwards, as the internode connections will not have their weights changed.
+		/// </summary>
+		/// <param name='learningRate'>
+		/// Learning rate.
+		/// </param>
+		/// <param name='momentum'>
+		/// Momentum.
+		/// </param>
+		/// <param name='recurseDownward'>
+		/// Recurse downward.
+		/// </param>
 		public override void ReversePass ( double learningRate, double momentum, bool recurseDownward = true )
 		{
 			base.ReversePass ( learningRate, momentum, false );

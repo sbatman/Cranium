@@ -12,10 +12,16 @@ using System;
 
 namespace Cranium.Data.PostProcessing
 {
+	/// <summary>
+	/// This class contains functions for testing a dataset and a neural networks learnt knowledge of the dataset against a random walk of the dataset.
+	/// The random walk offers a benchmark by providing a compareable error. The random walk error is calculated by determining the error between the
+	/// expected value and that of the value N steps before. So a step of 3 would assume that the ransom walk would predict the value of the signal
+	/// in 3 steps is the same as the value now.
+	/// </summary>
 	public  static class RandomWalkComparison
 	{
 		/// <summary>
-		/// Calculates the error of the actual values compared to the expected values against he error of the ranom walk against eh expsected values.
+		/// Calculates the error of the actual values compared to the expected values against he error of the ranom walk against thw expected values.
 		/// This in most cases is a viable method of benchmarking error levels of a network.
 		/// </summary>
 		/// <returns>

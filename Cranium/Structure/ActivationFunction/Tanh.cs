@@ -18,12 +18,26 @@ namespace Cranium.Structure.ActivationFunction
 	/// </summary>
 	public class Tanh : Base
 	{
+				/// <summary>
+		/// Returns the input after running through the activation function.
+		/// </summary>
+		/// <param name='input'>
+		/// The value to pass to the activation function
+		/// </param>
 		public override Double Compute ( Double input )
 		{
             double temp = Math.Exp(input * 2.0);
             return (temp - 1.0) / (temp + 1.0);
 		}
-
+		/// <summary>
+		/// Computes the derivative using the activation function.
+		/// </summary>
+		/// <returns>
+		/// The derivative.
+		/// </returns>
+		/// <param name='input'>
+		/// Input.
+		/// </param>
 		public override Double ComputeDerivative ( Double input )
 		{	
 			return  1 - Math.Pow ( ( input ), 2 );

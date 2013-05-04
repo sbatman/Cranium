@@ -14,7 +14,7 @@ using System.Collections.ObjectModel;
 
 namespace Cranium.Structure.Layer
 {
-	/// <summary></summary>
+	/// <summary>
 	/// This is the base Layer structure of the Neural Network, It is used to house collections of nodes and provide the linking structure of these nodes with other groups of nodes.
 	/// The layer class also provides some of the basic functionality for back and foward propogation. This class can be overriden to add additional functionality to a layer.
 	/// </summary>
@@ -110,7 +110,9 @@ namespace Cranium.Structure.Layer
 			return _ReverseConnectedLayers;
 		}
 		
-		//uses the current forward and reverse layers to populate the node connections
+		/// <summary>
+		/// Uses the current forward and reverse layers to populate the node connections (aka building weights)
+		/// </summary>
 		public virtual void PopulateNodeConnections ( )
 		{
 			PurgeNodeConnections ();
@@ -162,16 +164,31 @@ namespace Cranium.Structure.Layer
 			
 		}
 		
+		/// <summary>
+		/// Returns the ID of the layer
+		/// </summary>
+		/// <returns>
+		/// The ID
+		/// </returns>
 		public int GetID ( )
 		{
 			return _LayerID;	
 		}
 		
+		/// <summary>
+		/// Sets the ID of the layer
+		/// </summary>
+		/// <param name='id'>
+		/// Identifier.
+		/// </param>
 		public void SetID ( int id )
 		{
 			_LayerID = id;
 		}
 		
+		/// <summary>
+		/// Updates any extra logic required, This is used when pre/post epoc logic needs to run on the layer
+		/// </summary>
 		public virtual void UpdateExtra ( )
 		{
 		}
