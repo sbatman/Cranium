@@ -26,6 +26,12 @@ namespace Cranium.Structure.ActivationFunction
 		}
 
 		#region implemented abstract members of Cranium.Structure.ActivationFunction.Base
+				/// <summary>
+		/// Returns the input after running through the activation function.
+		/// </summary>
+		/// <param name='input'>
+		/// The value to pass to the activation function
+		/// </param>
 		public override double Compute (double input)
 		{
 			return  (input*_Scale) / (1 + Math.Abs(input*_Scale)); 

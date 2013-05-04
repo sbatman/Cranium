@@ -18,18 +18,42 @@ namespace Cranium.Structure.Weight
 	/// </summary>
 	public class Base : IDisposable
 	{
+		/// <summary>
+		/// Connection direction. Either foward or reverse, Added for code readability
+		/// </summary>
 		public enum ConnectionDirection
 		{
 			Reverse,
 			Forward
 		};
 		
+		/// <summary>
+		/// Node a, this should be the reverse node
+		/// </summary>
 		public Node.Base NodeA;
+		/// <summary>
+		/// Node b, this should be the forward node
+		/// </summary>
         public Node.Base NodeB;
+		/// <summary>
+		/// The current weight
+		/// </summary>
         public Double Weight;
+		/// <summary>
+		/// The initial value of the weight
+		/// </summary>
 		protected Double _InitialValue;
+		/// <summary>
+		/// The total pending weight change before count devision
+		/// </summary>
 		protected Double _PendingWeightChange;
+		/// <summary>
+		/// The number of pending weight changes
+		/// </summary>
 		protected Double _PendingWeightChangeCount;
+		/// <summary>
+		/// The last total weight change
+		/// </summary>
 		protected Double _PastWeightChange;
 		
 		/// <summary>

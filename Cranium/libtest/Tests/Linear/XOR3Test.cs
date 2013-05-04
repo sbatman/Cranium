@@ -14,6 +14,9 @@ using System.Collections.Generic;
 
 namespace Cranium.LibTest.Tests.Linear
 {
+	/// <summary>
+	/// This is a test showing a neural network that can implement the functionality of a three input xor gate
+	/// </summary>
 	public class XOR3Test
 	{
 		

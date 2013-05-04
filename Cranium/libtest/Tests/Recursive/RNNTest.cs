@@ -14,10 +14,12 @@ using System.Collections.Generic;
 
 namespace Cranium.LibTest.Tests.Recursive
 {
+	/// <summary>
+	/// This test shows a neural netowrk that can demonstate the functionality of an 2 input Xor gate using only one input and recursive context nodes
+	/// </summary>
 	public class RNNTest
-	{
-		
-				/// <summary>
+	{		
+		/// <summary>
 		/// The network structure to test.
 		/// </summary>
 		private static Cranium.Structure.Network _TestNetworkStructure;

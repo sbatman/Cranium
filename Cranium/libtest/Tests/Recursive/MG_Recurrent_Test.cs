@@ -15,6 +15,10 @@ using System.Collections.Generic;
 
 namespace Cranium.LibTest.Tests.Recursive
 {
+	/// <summary>
+	/// This is a test of a neural network that can show successful learning of the Mackey-Glass time series dataset using a standard
+	/// recursive context node bank for memory.
+	/// </summary>
 	public class MG_Recurrent_Test
 	{
 		/// <summary>

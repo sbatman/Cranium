@@ -14,6 +14,9 @@ using System.Collections.Generic;
 
 namespace Cranium.LibTest.Tests.Recursive
 {
+	/// <summary>
+	/// This test shows a neural netowrk that can demonstate the functionality of a three input Xor gate using only one input and recursive context nodes
+	/// </summary>
 	public class RNNTest2
 	{
 		/// <summary>
