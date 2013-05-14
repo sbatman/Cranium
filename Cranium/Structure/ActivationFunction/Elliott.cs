@@ -21,6 +21,9 @@ namespace Cranium.Structure.ActivationFunction
 	{
 		private double _Scale =1;
 		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Elliott"/> class.
+		/// </summary>
 		public Elliott () : base()
 		{
 		}
