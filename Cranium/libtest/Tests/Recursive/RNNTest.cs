@@ -128,7 +128,7 @@ namespace Cranium.LibTest.Tests.Recursive
 			}			
 			_HiddenLayer.SetNodes ( HiddenLayerNodes );	
 			
-			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 4 );
+			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 4 , new Cranium.Structure.ActivationFunction.Tanh());
 			
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();

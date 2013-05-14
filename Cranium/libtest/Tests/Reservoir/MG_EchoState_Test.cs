@@ -41,9 +41,9 @@ namespace Cranium.LibTest.Tests.Reservoir
 			
 			//Prepare training activity
 			_SlidingWindowTraining = new Cranium.Activity.Training.SlidingWindow ();
-			_SlidingWindowTraining.SetMomentum ( 0.5f );
-			_SlidingWindowTraining.SetLearningRate ( 0.004f );
 			_SlidingWindowTraining.SetTargetNetwork ( _TestNetworkStructure );
+			_SlidingWindowTraining.SetMomentum ( 0.5f );
+			_SlidingWindowTraining.SetLearningRate ( 0.004f );			
 			_SlidingWindowTraining.SetDatasetReservedLength ( 0 );
 			_SlidingWindowTraining.SetDistanceToForcastHorrison ( 3 );
 			_SlidingWindowTraining.SetWindowWidth ( 12 );

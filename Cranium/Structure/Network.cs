@@ -22,6 +22,9 @@ namespace Cranium.Structure
 		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base> ();
+		protected double _LearningRate = 0;
+		protected double _Momenum = 0;
+
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cranium.Structure.Network"/> class.
@@ -166,22 +169,66 @@ namespace Cranium.Structure
 		/// <param name='momentum'>
 		/// Momentum.
 		/// </param>
-		public virtual void ReversePass ( double learningRate, double momentum )
+		public virtual void ReversePass ( )
 		{
 			foreach ( Layer.Base l in _DetectedTopLayers )
-				l.ReversePass ( learningRate, momentum );
+				l.ReversePass ( _LearningRate, _Momenum );
+		}
+		
+		/// <summary>
+		/// Gets the current learning rate.
+		/// </summary>
+		/// <returns>
+		/// The learning rate.
+		/// </returns>
+		public virtual double GetLearningRate ( )
+		{
+			return _LearningRate;
+		}
+		
+		/// <summary>
+		/// Gets the current momentum.
+		/// </summary>
+		/// <returns>
+		/// The momentum.
+		/// </returns>
+		public  virtual double GetMomentum ( )
+		{
+			return _Momenum;	
+		}
+		
+		/// <summary>
+		/// Sets the current learning rate.
+		/// </summary>
+		/// <param name='newLearningRate'>
+		/// New learning rate.
+		/// </param>
+		public virtual void SetLearningRate ( double newLearningRate )
+		{
+			_LearningRate = newLearningRate;	
+		}
+		
+		/// <summary>
+		/// Sets the current momentum.
+		/// </summary>
+		/// <param name='newMomentum'>
+		/// New momentum.
+		/// </param>
+		public virtual void SetMomentum ( double newMomentum )
+		{
+			_Momenum = _Momenum;	
 		}
 
 		#region IDisposable implementation
-		public virtual void Dispose ()
+		public virtual void Dispose ( )
 		{
-			_DetectedTopLayers.Clear();
-			_DetectedTopLayers=null;
-			_DetectedBottomLayers.Clear();
+			_DetectedTopLayers.Clear ();
+			_DetectedTopLayers = null;
+			_DetectedBottomLayers.Clear ();
 			_DetectedBottomLayers = null;
-			foreach(Layer.Base l in _CurrentLayers)
-				l.Dispose();
-			_CurrentLayers.Clear();
+			foreach ( Layer.Base l in _CurrentLayers )
+				l.Dispose ();
+			_CurrentLayers.Clear ();
 			_CurrentLayers = null;
 		}
 		#endregion

@@ -22,6 +22,7 @@ namespace Cranium.Structure.Layer
 	{
 		protected List<Node.Base> _SourceNodes;
 		protected int _LevelOfContext = 1;
+		protected ActivationFunction.Base _ActivationFunction;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Recurrent_Context"/> class.
@@ -29,8 +30,12 @@ namespace Cranium.Structure.Layer
 		/// <param name='levelOfContext'>
 		/// Level of context.
 		/// </param>
-		public Recurrent_Context ( int levelOfContext )
+		/// <param name='activationFunction'>
+		/// Activation function to be used for the context nodes.
+		/// </param>
+		public Recurrent_Context ( int levelOfContext, ActivationFunction.Base activationFunction )
 		{
+			_ActivationFunction= activationFunction;
 			_SourceNodes = new List<Node.Base> ();
 			_LevelOfContext = levelOfContext;
 		}
@@ -54,7 +59,7 @@ namespace Cranium.Structure.Layer
 			{
 				foreach ( Node.Base n in _SourceNodes )
 				{
-					_Nodes.Add ( new Node.Recurrent_Context ( n, step * x, this, new ActivationFunction.Tanh () ) );
+					_Nodes.Add ( new Node.Recurrent_Context ( n, step * x, this, _ActivationFunction) );
 				}
 			}
 		}
