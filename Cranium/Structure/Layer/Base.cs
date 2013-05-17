@@ -24,6 +24,7 @@ namespace Cranium.Structure.Layer
 		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base> ();
 		protected int _LayerID;
+		private int _NextNodeID;
 		
 		/// <summary>
 		/// Sets the nodes that are present in this layer, the previous list of nodes is purged.
@@ -38,7 +39,8 @@ namespace Cranium.Structure.Layer
 			_Nodes = nodes;	
 			for (int x=0; x<_Nodes.Count; x++)
 			{
-				_Nodes [x].SetPositionInParentLayer ( x );	
+				_Nodes [x].SetNodeID ( _NextNodeID );
+				_NextNodeID++;
 			}
 		}
 		
@@ -147,7 +149,19 @@ namespace Cranium.Structure.Layer
 			foreach ( Layer.Base l in _ForwardConnectedLayers ) 
 				l.ForwardPass ();				
 		}
-
+		
+		/// <summary>
+		/// Performs the defualt reverse pass logic.
+		/// </summary>
+		/// <param name='learningRate'>
+		/// Learning rate.
+		/// </param>
+		/// <param name='momentum'>
+		/// Momentum.
+		/// </param>
+		/// <param name='recurseDownward'>
+		/// Recurse downward, if set to false this well not call ReversePass on any layers below this one.
+		/// </param>
 		public virtual void ReversePass ( double learningRate, double momentum, bool recurseDownward = true )
 		{
 			foreach ( Node.Base n in _Nodes ) 
@@ -193,6 +207,28 @@ namespace Cranium.Structure.Layer
 		{
 		}
 
+		/// <summary>
+		/// Gets a node within the layer by ID
+		/// </summary>
+		/// <returns>
+		/// The Node, or null if unable to find
+		/// </returns>
+		/// <param name='id'>
+		/// Identifier.
+		/// </param>
+		public virtual Node.Base  GetNodeByID ( int id )
+		{
+			//look for a node with matching ID if we can find it return it else return null
+			foreach ( Node.Base n in _Nodes )
+			{
+				if ( n.GetID () == id )
+				{
+					return n;
+				}
+			}
+			return null;
+		}
+					   
 		#region IDisposable implementation
 		public void Dispose ( )
 		{

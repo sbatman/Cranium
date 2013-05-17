@@ -22,10 +22,10 @@ namespace Cranium.Structure.Node
 		protected Double _Value = 0;
 		protected Double _Error = 0;
 		protected Layer.Base _ParentLayer;
-		protected int _ParentLayerPosition;
 		protected List<Weight.Base> _FowardWeights = new List<Weight.Base> ();
 		protected List<Weight.Base> _ReverseWeights = new List<Weight.Base> ();
 		protected ActivationFunction.Base _ActivationFunction;
+		protected int _NodeID;
 		
 		//Baked or Temp fields
 		protected Weight.Base[] _T_FowardWeights;
@@ -101,17 +101,6 @@ namespace Cranium.Structure.Node
 				BakeLists ();
 			}
 			return _T_FowardWeights;
-		}
-		
-		/// <summary>
-		/// Sets the position of the node within the parent layer. This only effects weight loading and saving
-		/// </summary>
-		/// <param name='position'>
-		/// _position.
-		/// </param>
-		public virtual void SetPositionInParentLayer ( int position )
-		{
-			_ParentLayerPosition = position;	
 		}
 		
 		/// <summary>
@@ -266,6 +255,27 @@ namespace Cranium.Structure.Node
 			}
 		}
 		
+		/// <summary>
+		/// Returns the current nodes ID
+		/// </summary>
+		/// <returns>
+		/// The I.
+		/// </returns>
+		public virtual int GetID ( )
+		{
+			return _NodeID;	
+		}
+		
+		/// <summary>
+		/// Sets the current nodes ID
+		/// </summary>
+		/// <param name='newID'>
+		/// New I.
+		/// </param>
+		public virtual void SetNodeID ( int newID )
+		{
+			_NodeID = newID;	
+		}
 			#region IDisposable implementation
 		public virtual void Dispose ( )
 		{
