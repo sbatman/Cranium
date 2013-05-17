@@ -262,8 +262,11 @@ namespace Cranium.Structure.Layer
 		#endregion
 
 		#region ISerializable implementation
-		public void GetObjectData (SerializationInfo info, StreamingContext context)
+		public virtual void GetObjectData (SerializationInfo info, StreamingContext context)
 		{
+			info.AddValue("_Nodes",_Nodes,_Nodes.GetType());
+			info.AddValue("_LayerID",_LayerID);
+			info.AddValue("_NextNodeID",_NextNodeID);			
 		}
 		#endregion
 	}

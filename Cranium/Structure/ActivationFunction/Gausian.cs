@@ -15,6 +15,7 @@ namespace Cranium.Structure.ActivationFunction
 	/// <summary>
 	/// Gaussian Activation function acts as a bellcurve activation function
 	/// </summary>
+	[Serializable]
 	public class Gaussian : Base
 	{
 		/// <summary>
@@ -46,6 +47,11 @@ namespace Cranium.Structure.ActivationFunction
 		public override void Dispose ( )
 		{
 		
+		}
+
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			info.AddValue ( "_Steepness", _Steepness );
 		}
 		#endregion
 	}

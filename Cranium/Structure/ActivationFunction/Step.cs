@@ -15,6 +15,7 @@ namespace Cranium.Structure.ActivationFunction
 	/// <summary>
 	/// This activation function will return 1 when >= threshold else 0, its not recomended you use this in a backprop netowrk
 	/// </summary>
+	[Serializable]
 	public class Step : Base
 	{
 		protected double _ActivationPoint;
@@ -24,7 +25,7 @@ namespace Cranium.Structure.ActivationFunction
 			_ActivationPoint = activationPoint;	
 		}
 		
-				/// <summary>
+		/// <summary>
 		/// Returns the input after running through the activation function.
 		/// </summary>
 		/// <param name='input'>
@@ -51,6 +52,11 @@ namespace Cranium.Structure.ActivationFunction
 		public override void Dispose ( )
 		{
 			
+		}
+
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			info.AddValue ( "_ActivationPoint", _ActivationPoint );
 		}
 	}
 }

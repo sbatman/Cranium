@@ -55,15 +55,6 @@ namespace Cranium.LibTest.Tests.Linear
 		{			
 			_TestNetworkStructure = new Network ();
 			BuildStructure ();
-			
-			BinaryFormatter formatter =new BinaryFormatter();			
-			
-			FileStream atextwriter = File.Create("Test.xml");
-			
-			formatter.Serialize(atextwriter,_TestNetworkStructure);
-			
-			atextwriter.Close();
-			
 			_TestNetworkStructure.RandomiseWeights ( 0.4d );
 			PrepData ();
 			int epoch = 0;
