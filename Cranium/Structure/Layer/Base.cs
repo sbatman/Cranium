@@ -20,11 +20,26 @@ namespace Cranium.Structure.Layer
 	/// </summary>
 	public class Base : IDisposable
 	{
+		/// <summary>
+		/// The Nodes within the layer
+		/// </summary>
 		protected List<Node.Base> _Nodes = new List<Node.Base> ();
+		/// <summary>
+		/// The Layers that this layer connects to
+		/// </summary>
 		protected List<Layer.Base> _ForwardConnectedLayers = new List<Layer.Base> ();
+		/// <summary>
+		/// The Layers that are connected to this layer
+		/// </summary>
 		protected List<Layer.Base> _ReverseConnectedLayers = new List<Layer.Base> ();
+		/// <summary>
+		/// The ID of the layer
+		/// </summary>
 		protected int _LayerID;
-		private int _NextNodeID;
+		/// <summary>
+		/// The ID of the next node to be added to the layer
+		/// </summary>
+		protected int _NextNodeID;
 		
 		/// <summary>
 		/// Sets the nodes that are present in this layer, the previous list of nodes is purged.
@@ -184,7 +199,7 @@ namespace Cranium.Structure.Layer
 		/// <returns>
 		/// The ID
 		/// </returns>
-		public int GetID ( )
+		public virtual int GetID ( )
 		{
 			return _LayerID;	
 		}
@@ -195,7 +210,7 @@ namespace Cranium.Structure.Layer
 		/// <param name='id'>
 		/// Identifier.
 		/// </param>
-		public void SetID ( int id )
+		public virtual void SetID ( int id )
 		{
 			_LayerID = id;
 		}
