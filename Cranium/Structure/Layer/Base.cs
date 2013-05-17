@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 
 namespace Cranium.Structure.Layer
 {
@@ -18,7 +19,8 @@ namespace Cranium.Structure.Layer
 	/// This is the base Layer structure of the Neural Network, It is used to house collections of nodes and provide the linking structure of these nodes with other groups of nodes.
 	/// The layer class also provides some of the basic functionality for back and foward propogation. This class can be overriden to add additional functionality to a layer.
 	/// </summary>
-	public class Base : IDisposable
+	[Serializable]
+	public class Base : IDisposable, ISerializable
 	{
 		/// <summary>
 		/// The Nodes within the layer
@@ -256,6 +258,12 @@ namespace Cranium.Structure.Layer
 				n.Dispose ();
 			_Nodes.Clear ();
 			_Nodes = null;
+		}
+		#endregion
+
+		#region ISerializable implementation
+		public void GetObjectData (SerializationInfo info, StreamingContext context)
+		{
 		}
 		#endregion
 	}
