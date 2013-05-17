@@ -16,6 +16,7 @@ namespace Cranium.Structure.Node
 	/// <summary>
 	/// A Bias node retains a static value at all times and is useful in some neural network structures.
 	/// </summary>
+	[Serializable]
 	public class Bias : Base
 	{
 		protected double _BiasValue = 1;
@@ -85,6 +86,12 @@ namespace Cranium.Structure.Node
 				return;
 			}
 			base.ConnectToNode ( nodeToConnect, connectionDirectionToNode, startingWeight );
+		}
+	
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			base.GetObjectData ( info, context );
+			info.AddValue ( "_BiasValue", _BiasValue );
 		}
 	}
 }

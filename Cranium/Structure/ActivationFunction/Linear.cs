@@ -16,9 +16,10 @@ namespace Cranium.Structure.ActivationFunction
 	/// This activation function returns exactly what it is fed, this is extreamly useful fordata being fed in that has already been cooked external
 	/// of the network. Lacking a derivative function however it is not suited for back progopgation networks.
 	/// </summary>
+	[Serializable]
 	public class Linear : Base
 	{
-				/// <summary>
+		/// <summary>
 		/// Returns the input after running through the activation function.
 		/// </summary>
 		/// <param name='input'>
@@ -28,7 +29,7 @@ namespace Cranium.Structure.ActivationFunction
 		{
 			return input;
 		}
-				/// <summary>
+		/// <summary>
 		/// Computes the derivative using the activation function.
 		/// </summary>
 		/// <returns>
@@ -43,6 +44,11 @@ namespace Cranium.Structure.ActivationFunction
 		}
 
 		public override void Dispose ( )
+		{
+			
+		}
+
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
 		{
 			
 		}

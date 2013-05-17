@@ -12,6 +12,8 @@ using System;
 using System.Threading;
 using Cranium.Structure;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Cranium.LibTest.Tests.Reservoir
 {
@@ -35,6 +37,7 @@ namespace Cranium.LibTest.Tests.Reservoir
 			//Build Network
 			_TestNetworkStructure = new Network ();
 			BuildStructure ();
+			_TestNetworkStructure.SaveToFile("testtttt.dat");
 			_TestNetworkStructure.RandomiseWeights ( 1.1d );
 			//PrepData
 			double[][] dataSet = Cranium.Data.Preprocessing.StandardDeviationVariance.ProduceDataset ( "TestData/Mackey-Glass-Pure.csv" ).DataSet;

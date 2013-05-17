@@ -9,6 +9,7 @@
 // //
 // // //////////////////////
 using System;
+using System.Runtime.Serialization;
 
 namespace Cranium.Structure.Weight
 {
@@ -16,7 +17,8 @@ namespace Cranium.Structure.Weight
 	/// This is the base weight class and acts as a standard weight between two nodes. weight changes can be applied immediatly
 	/// or added to a pending list and applied at a later stage.
 	/// </summary>
-	public class Base : IDisposable
+	[Serializable]
+	public class Base : IDisposable,ISerializable
 	{
 		/// <summary>
 		/// Connection direction. Either foward or reverse, Added for code readability
@@ -158,6 +160,19 @@ namespace Cranium.Structure.Weight
 		{
 			NodeA = null;
 			NodeB = null;
+		}
+		#endregion
+
+		#region ISerializable implementation
+		public void GetObjectData (SerializationInfo info, StreamingContext context)
+		{
+			info.AddValue("NodeA",NodeA,NodeA.GetType());
+			info.AddValue("NodeB",NodeB,NodeB.GetType());
+			info.AddValue("Weight",Weight);
+			info.AddValue("_InitialValue",_InitialValue);
+			info.AddValue("_PendingWeightChange",_PendingWeightChange);
+			info.AddValue("_PendingWeightChangeCount",_PendingWeightChangeCount);
+			info.AddValue("_PastWeightChange",_PastWeightChange);
 		}
 		#endregion
 	}

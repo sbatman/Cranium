@@ -11,6 +11,9 @@
 using System;
 using Cranium.Structure;
 using System.Collections.Generic;
+using System.Xml.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Cranium.LibTest.Tests.Linear
 {
@@ -32,10 +35,6 @@ namespace Cranium.LibTest.Tests.Linear
 		/// The first hidden layer of the neural network structure that is being tested
 		/// </summary>
 		private static  Cranium.Structure.Layer.Base _HiddenLayer;
-		/// <summary>
-		/// The second hidden layer of the neural network structure that is being tested
-		/// </summary>
-		private static  Cranium.Structure.Layer.Base _HiddenLayer2;
 		/// <summary>
 		/// The _ output layer of the neural network structure that is being tested
 		/// </summary>

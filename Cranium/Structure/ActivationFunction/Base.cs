@@ -9,13 +9,15 @@
 // //
 // // //////////////////////
 using System;
+using System.Runtime.Serialization;
 
 namespace Cranium.Structure.ActivationFunction
 {
 	/// <summary>
 	/// A base class for activation functions, Exstend this when implementing new activation functions
 	/// </summary>
-	public abstract class Base :IDisposable
+	[Serializable]
+	public abstract class Base :IDisposable, ISerializable
 	{
 		/// <summary>
 		/// Returns the input after running through the activation function.
@@ -37,6 +39,10 @@ namespace Cranium.Structure.ActivationFunction
 
 		#region IDisposable implementation
 		public abstract void Dispose ( );
+		#endregion5
+
+		#region ISerializable implementation
+		public abstract void GetObjectData ( SerializationInfo info, StreamingContext context );
 		#endregion
 	}
 }

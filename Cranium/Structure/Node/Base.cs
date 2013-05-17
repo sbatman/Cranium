@@ -10,6 +10,7 @@
 // // //////////////////////
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Cranium.Structure.Node
 {
@@ -17,7 +18,8 @@ namespace Cranium.Structure.Node
 	/// The base node class is a core part of the Neural Netowrk framework and represents a neuron that is placed within layers in the network.
 	/// This class can be derived to add additional functionality to a node such as adding recurive memory.
 	/// </summary>
-	public class Base : IDisposable
+	[Serializable]
+	public class Base : IDisposable, ISerializable
 	{
 		protected Double _Value = 0;
 		protected Double _Error = 0;
@@ -274,7 +276,8 @@ namespace Cranium.Structure.Node
 		{
 			_NodeID = newID;	
 		}
-			#region IDisposable implementation
+		
+		#region IDisposable implementation
 		public virtual void Dispose ( )
 		{
 			_ParentLayer = null;
@@ -284,6 +287,19 @@ namespace Cranium.Structure.Node
 			_ReverseWeights = null;
 			_ActivationFunction.Dispose ();
 			_ActivationFunction = null;
+		}
+		#endregion
+
+		#region ISerializable implementation
+		public virtual void GetObjectData ( SerializationInfo info, StreamingContext context )
+		{
+			info.AddValue ( "_Value", _Value );
+			info.AddValue ( "_Error", _Error );
+			info.AddValue ( "_ParentLayer", _ParentLayer );
+			info.AddValue ( "_ForwardWeights", _FowardWeights, typeof (List<Weight.Base>) );
+			info.AddValue ( "_ReverseWeights", _ReverseWeights, typeof (List<Weight.Base>) );
+			info.AddValue ( "_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType () );
+			info.AddValue ( "_NodeID", _NodeID );
 		}
 		#endregion
 	}

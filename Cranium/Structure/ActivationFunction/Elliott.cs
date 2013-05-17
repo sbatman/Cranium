@@ -17,9 +17,10 @@ namespace Cranium.Structure.ActivationFunction
 	/// errors and becoming trapped in local minima. This activation function is good for prototyping netowrk structures, however in many cases
 	/// it should not be used for practival implementations of networks. http://drum.lib.umd.edu/handle/1903/5355
 	/// </summary>
+	[Serializable]
 	public class Elliott :Base
 	{
-		private double _Scale =1;
+		private double _Scale = 1;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Elliott"/> class.
@@ -29,26 +30,31 @@ namespace Cranium.Structure.ActivationFunction
 		}
 
 		#region implemented abstract members of Cranium.Structure.ActivationFunction.Base
-				/// <summary>
+		/// <summary>
 		/// Returns the input after running through the activation function.
 		/// </summary>
 		/// <param name='input'>
 		/// The value to pass to the activation function
 		/// </param>
-		public override double Compute (double input)
+		public override double Compute ( double input )
 		{
-			return  (input*_Scale) / (1 + Math.Abs(input*_Scale)); 
+			return  ( input * _Scale ) / ( 1 + Math.Abs ( input * _Scale ) ); 
 		}
 
-		public override double ComputeDerivative (double input)
+		public override double ComputeDerivative ( double input )
 		{
 			
-    	return  _Scale/(Math.Pow((1.0d+Math.Abs(input*_Scale)),2));
+			return  _Scale / ( Math.Pow ( ( 1.0d + Math.Abs ( input * _Scale ) ), 2 ) );
 		}
 
-		public override void Dispose ()
+		public override void Dispose ( )
 		{
 			
+		}
+
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			info.AddValue ( "_Scale", _Scale );
 		}
 		#endregion
 	}

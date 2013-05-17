@@ -11,13 +11,19 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Formatters;
+using System.IO.Compression;
 
 namespace Cranium.Structure
 {
 	/// <summary>
 	/// A base network class, This primarily acts as a structure container of the network and used at a later stage for a large ammount of the netowrks IO
 	/// </summary>
-	public class Network : IDisposable
+	[Serializable]
+	public class Network : IDisposable , ISerializable
 	{
 		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ();
@@ -31,6 +37,11 @@ namespace Cranium.Structure
 		public Network ()
 		{			
 			_CurrentLayers = new List<Layer.Base> ();
+		}
+		
+		public Network ( SerializationInfo info, StreamingContext context )
+		{
+			_CurrentLayers = ( List<Layer.Base> )info.GetValue ( "CurrentLayers", typeof (List<Layer.Base>) );
 		}
 		
 		/// <summary>
@@ -217,7 +228,19 @@ namespace Cranium.Structure
 		{
 			_Momenum = newMomentum;	
 		}
-
+		
+		public virtual void SaveToFile(string fileName)
+		{			
+			BinaryFormatter formatter =new BinaryFormatter();	
+			formatter.AssemblyFormat = FormatterAssemblyStyle.Simple;			
+			FileStream atextwriter = File.Create(fileName);		
+			GZipStream CompressionStream = new GZipStream(atextwriter,CompressionMode.Compress);			
+			formatter.Serialize(CompressionStream,this);	
+			CompressionStream.Flush();
+			CompressionStream.Close();
+			atextwriter.Close();
+		}
+		
 		#region IDisposable implementation
 		public virtual void Dispose ( )
 		{
@@ -229,6 +252,16 @@ namespace Cranium.Structure
 				l.Dispose ();
 			_CurrentLayers.Clear ();
 			_CurrentLayers = null;
+		}
+		#endregion
+
+		#region ISerializable implementation
+		public void GetObjectData ( SerializationInfo info, StreamingContext context )
+		{
+			//Right lets serialise this thing
+			//LayerCount
+			info.AddValue ( "LayerCount", _CurrentLayers.Count );
+			info.AddValue ( "CurrentLayers", _CurrentLayers, typeof (List<Layer.Base>) );			
 		}
 		#endregion
 	}

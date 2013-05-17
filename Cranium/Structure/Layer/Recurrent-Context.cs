@@ -18,6 +18,7 @@ namespace Cranium.Structure.Layer
 	/// This is described in detail in Ulbrich, C., 1994. Multi-Recurrent Netowrks for Traffic Forecasting. Vienna: Austrian Research Institute for Artificial Intelligence.
 	/// The white paper can be found here http://www.aaai.org/Papers/AAAI/1994/AAAI94-135.pdf
 	/// </summary>
+	[Serializable]
 	public class Recurrent_Context : Base
 	{
 		protected List<Node.Base> _SourceNodes;
@@ -35,7 +36,7 @@ namespace Cranium.Structure.Layer
 		/// </param>
 		public Recurrent_Context ( int levelOfContext, ActivationFunction.Base activationFunction )
 		{
-			_ActivationFunction= activationFunction;
+			_ActivationFunction = activationFunction;
 			_SourceNodes = new List<Node.Base> ();
 			_LevelOfContext = levelOfContext;
 		}
@@ -59,7 +60,7 @@ namespace Cranium.Structure.Layer
 			{
 				foreach ( Node.Base n in _SourceNodes )
 				{
-					_Nodes.Add ( new Node.Recurrent_Context ( n, step * x, this, _ActivationFunction) );
+					_Nodes.Add ( new Node.Recurrent_Context ( n, step * x, this, _ActivationFunction ) );
 				}
 			}
 		}
@@ -82,6 +83,14 @@ namespace Cranium.Structure.Layer
 		{
 			foreach ( Node.Recurrent_Context n in _Nodes )
 				n.Update ();	
+		}
+		
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			base.GetObjectData ( info, context );
+			info.AddValue ( "_SourceNodes", _SourceNodes, _SourceNodes.GetType () );
+			info.AddValue ( "_LevelOfContext", _LevelOfContext );
+			info.AddValue ( "_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType () );
 		}
 	}
 }

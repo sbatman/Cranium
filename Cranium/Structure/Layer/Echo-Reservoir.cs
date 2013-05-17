@@ -18,6 +18,7 @@ namespace Cranium.Structure.Layer
 	/// However due to the chaotic nature of the revervoirs contrcution, accuracy and learning limits of this type of network can vary heavily.
 	/// Further information can be sourced here http://www.scholarpedia.org/article/Echo_state_network
 	/// </summary>
+	[Serializable]
 	public class Echo_Reservoir : Base
 	{
 		protected static Random rnd = new Random ();
@@ -122,6 +123,17 @@ namespace Cranium.Structure.Layer
 		public override void ReversePass ( double learningRate, double momentum, bool recurseDownward = true )
 		{
 			base.ReversePass ( learningRate, momentum, false );
+		}
+		
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			base.GetObjectData ( info, context );
+			info.AddValue ( "_NodeCount", _NodeCount );
+			info.AddValue ( "_LevelOfConnectivity", _LevelOfConnectivity );
+			info.AddValue ( "_MinimumConnections", _MinimumConnections );
+			info.AddValue ( "_MaximumConnections", _MaximumConnections );
+			info.AddValue ( "_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType () );
+			info.AddValue("rnd",rnd,typeof(Random));
 		}
 	}
 }
