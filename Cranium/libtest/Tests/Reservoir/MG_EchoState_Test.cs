@@ -37,15 +37,7 @@ namespace Cranium.LibTest.Tests.Reservoir
 			//Build Network
 			_TestNetworkStructure = new Network ();
 			BuildStructure ();
-						BinaryFormatter formatter =new BinaryFormatter();			
-			
-			FileStream atextwriter = File.Create("Test.xml");
-			
-			formatter.Serialize(atextwriter,_TestNetworkStructure);
-			
-			atextwriter.Close();
-			
-			
+			_TestNetworkStructure.SaveToFile("testtttt.dat");
 			_TestNetworkStructure.RandomiseWeights ( 1.1d );
 			//PrepData
 			double[][] dataSet = Cranium.Data.Preprocessing.StandardDeviationVariance.ProduceDataset ( "TestData/Mackey-Glass-Pure.csv" ).DataSet;

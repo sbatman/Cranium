@@ -13,6 +13,9 @@ using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Formatters;
+using System.IO.Compression;
 
 namespace Cranium.Structure
 {
@@ -224,6 +227,18 @@ namespace Cranium.Structure
 		public virtual void SetMomentum ( double newMomentum )
 		{
 			_Momenum = newMomentum;	
+		}
+		
+		public virtual void SaveToFile(string fileName)
+		{			
+			BinaryFormatter formatter =new BinaryFormatter();	
+			formatter.AssemblyFormat = FormatterAssemblyStyle.Simple;			
+			FileStream atextwriter = File.Create(fileName);		
+			GZipStream CompressionStream = new GZipStream(atextwriter,CompressionMode.Compress);			
+			formatter.Serialize(CompressionStream,this);	
+			CompressionStream.Flush();
+			CompressionStream.Close();
+			atextwriter.Close();
 		}
 		
 		#region IDisposable implementation
