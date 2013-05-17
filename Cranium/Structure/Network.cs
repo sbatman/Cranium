@@ -236,7 +236,7 @@ namespace Cranium.Structure
 			FileStream atextwriter = File.Create(fileName);		
 			GZipStream CompressionStream = new GZipStream(atextwriter,CompressionMode.Compress);			
 			formatter.Serialize(CompressionStream,this);	
-			CompressionStream.Flush();
+			
 			CompressionStream.Close();
 			atextwriter.Close();
 		}

@@ -61,6 +61,7 @@ namespace Cranium.LibTest.Tests.Recursive
 		{			
 			//Build Network
 			_TestNetworkStructure = new Network ();
+			_TestNetworkStructure.SaveToFile("test.dat");
 			BuildStructure ();
 			_TestNetworkStructure.RandomiseWeights ( 0.01d );
 			//PrepData

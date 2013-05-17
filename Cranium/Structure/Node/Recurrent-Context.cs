@@ -30,7 +30,7 @@ namespace Cranium.Structure.Node
 		/// <summary>
 		/// The initial value of the node.
 		/// </summary>
-		protected double _StartValue = 0.5f;
+		protected double _StartValue = 0.0f;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cranium.Structure.Node.Recurrent_Context"/> class.
