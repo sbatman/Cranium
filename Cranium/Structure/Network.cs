@@ -24,7 +24,6 @@ namespace Cranium.Structure
 		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base> ();
 		protected double _LearningRate = 0;
 		protected double _Momenum = 0;
-
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cranium.Structure.Network"/> class.
@@ -216,7 +215,7 @@ namespace Cranium.Structure
 		/// </param>
 		public virtual void SetMomentum ( double newMomentum )
 		{
-			_Momenum = _Momenum;	
+			_Momenum = newMomentum;	
 		}
 
 		#region IDisposable implementation

@@ -85,8 +85,7 @@ namespace Cranium.Structure.Node
 		{
 			_T_FowardWeights = _FowardWeights.ToArray ();
 			_T_ReverseWeights = _ReverseWeights.ToArray ();
-		}
-		
+		}		
 		
 		/// <summary>
 		/// Returns the currently assigned forward weights
@@ -181,7 +180,6 @@ namespace Cranium.Structure.Node
 			}
 			return _T_ReverseWeights;	
 		}
-
 		
 		/// <summary>
 		/// Connects a second node to this one, building the correct weight and adding it to the list of weights that are updated when required
