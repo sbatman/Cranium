@@ -39,6 +39,15 @@ namespace Cranium.Structure.ActivationFunction
 			return Math.Exp ( -Math.Pow ( _Steepness * input, 2.0d ) );
 		}
 
+		/// <summary>
+		/// Computes the derivative using the activation function.
+		/// </summary>
+		/// <returns>
+		/// The derivative.
+		/// </returns>
+		/// <param name='input'>
+		/// Input.
+		/// </param>
 		public override double ComputeDerivative ( double input )
 		{
 			return -2 * input * _Steepness * Compute ( input ) * input;

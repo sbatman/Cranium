@@ -21,8 +21,17 @@ namespace Cranium.Structure.Layer
 	[Serializable]
 	public class Recurrent_Context : Base
 	{
+		/// <summary>
+		/// The source ndoes used when building the recurrent context
+		/// </summary>
 		protected List<Node.Base> _SourceNodes;
+		/// <summary>
+		/// How many context nodes should be created per source node
+		/// </summary>
 		protected int _LevelOfContext = 1;
+		/// <summary>
+		/// The Activation function that should be used for all nodes within the layer
+		/// </summary>
 		protected ActivationFunction.Base _ActivationFunction;
 		
 		/// <summary>

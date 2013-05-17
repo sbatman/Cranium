@@ -21,16 +21,42 @@ namespace Cranium.Structure.Node
 	[Serializable]
 	public class Base : IDisposable, ISerializable
 	{
+		/// <summary>
+		/// Current Value
+		/// </summary>
 		protected Double _Value = 0;
+		/// <summary>
+		/// Current Error
+		/// </summary>
 		protected Double _Error = 0;
+		/// <summary>
+		/// The parent layer.
+		/// </summary>
 		protected Layer.Base _ParentLayer;
+		/// <summary>
+		/// A list of foward weights on this node, where this node is NodeA on the weight
+		/// </summary>
 		protected List<Weight.Base> _FowardWeights = new List<Weight.Base> ();
+		/// <summary>
+		/// A list of reverse weights on this node, where this node is NodeB on the weight
+		/// </summary>
 		protected List<Weight.Base> _ReverseWeights = new List<Weight.Base> ();
+		/// <summary>
+		/// The Activation function of this node.
+		/// </summary>
 		protected ActivationFunction.Base _ActivationFunction;
+		/// <summary>
+		/// The Nodes current ID.
+		/// </summary>
 		protected int _NodeID;
 		
-		//Baked or Temp fields
+		/// <summary>
+		/// A baked copy of the foward weights, updated automaticaly
+		/// </summary>
 		protected Weight.Base[] _T_FowardWeights;
+		/// <summary>
+		/// A baked copy of the reverse weights, updated automaticaly
+		/// </summary>
 		protected Weight.Base[] _T_ReverseWeights;
 		
 		/// <summary>

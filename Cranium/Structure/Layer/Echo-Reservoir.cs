@@ -21,11 +21,30 @@ namespace Cranium.Structure.Layer
 	[Serializable]
 	public class Echo_Reservoir : Base
 	{
+		/// <summary>
+		/// The random used for building connections
+		/// </summary>
 		protected static Random rnd = new Random ();
-		protected int _NodeCount;
+		/// <summary>
+		/// The number of nodes present in the Reservoir
+		/// </summary>
+		protected int _NodeCount;		
+		/// <summary>
+		/// The connectivity is calculated as chances = max-min, for each chance the levelOfConnectivity is compared to a random double, if levelOfConnectivity is higher 
+		/// then an additional connection is made ontop of the origional Min
+		/// </summary>
 		protected double _LevelOfConnectivity;
+		/// <summary>
+		/// The minimum connections per node.
+		/// </summary>
 		protected int _MinimumConnections;
+		/// <summary>
+		/// The Maximum connections per node
+		/// </summary>
 		protected int _MaximumConnections;
+		/// <summary>
+		/// The Activation to use for all the nodes created within the Reservoir
+		/// </summary>
 		protected ActivationFunction.Base _ActivationFunction;
 
 		/// <summary>
@@ -39,10 +58,10 @@ namespace Cranium.Structure.Layer
 		/// then an additional connection is made ontop of the origional Min
 		/// </param>
 		/// <param name='minimumConnections'>
-		/// Minimum connections.
+		/// Minimum connections per node.
 		/// </param>
 		/// <param name='maximumConnections'>
-		/// Maximum connections.
+		/// Maximum connections per node.
 		/// </param>
 		/// <param name='activationFunction'>
 		/// Activation function.

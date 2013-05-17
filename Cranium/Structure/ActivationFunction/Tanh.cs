@@ -30,6 +30,7 @@ namespace Cranium.Structure.ActivationFunction
 			double temp = Math.Exp ( input * 2.0 );
 			return ( temp - 1.0 ) / ( temp + 1.0 );
 		}
+		
 		/// <summary>
 		/// Computes the derivative using the activation function.
 		/// </summary>

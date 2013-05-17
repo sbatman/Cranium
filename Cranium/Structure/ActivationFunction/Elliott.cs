@@ -40,7 +40,16 @@ namespace Cranium.Structure.ActivationFunction
 		{
 			return  ( input * _Scale ) / ( 1 + Math.Abs ( input * _Scale ) ); 
 		}
-
+		
+		/// <summary>
+		/// Computes the derivative using the activation function.
+		/// </summary>
+		/// <returns>
+		/// The derivative.
+		/// </returns>
+		/// <param name='input'>
+		/// Input.
+		/// </param>
 		public override double ComputeDerivative ( double input )
 		{
 			

@@ -29,6 +29,7 @@ namespace Cranium.Structure.ActivationFunction
 		{
 			return input;
 		}
+		
 		/// <summary>
 		/// Computes the derivative using the activation function.
 		/// </summary>
