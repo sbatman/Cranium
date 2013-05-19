@@ -11,6 +11,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using Cranium.Structure;
 
 namespace Cranium.Activity.Training
 {
@@ -153,7 +154,7 @@ namespace Cranium.Activity.Training
 		
 		#region implemented abstract members of Cranium.Activity.Training.Base
 		protected override bool _Tick ( )
-		{
+		{		
 			if ( _CurrentEpoch >= _MaxEpochs )
 			{
 				return false;

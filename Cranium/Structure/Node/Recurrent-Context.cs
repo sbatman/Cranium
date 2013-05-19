@@ -53,7 +53,23 @@ namespace Cranium.Structure.Node
 			_SourceNode = sourceNode;
 			_RateOfUpdate = rateOfUpdate;
 		}
-
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Node.Recurrent_Context"/> class. Used by the Serializer.
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Recurrent_Context ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ):base(info,context)
+		{
+			_SourceNode = ( Node.Base )info.GetValue ( "_SourceNode", typeof (Node.Base) );
+			_RateOfUpdate = info.GetDouble ( "_RateOfUpdate" );
+			_StartValue = info.GetDouble ( "_StartValue" );
+		}
+		
 		/// <summary>
 		/// Update this nodes value.
 		/// </summary>

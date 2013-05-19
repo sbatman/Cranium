@@ -14,7 +14,7 @@ namespace Cranium.Structure.ActivationFunction
 {
 	/// <summary>
 	/// The Elliott activations functions acts as a computationaly cheaper version of tanH although with known problems with reaching the lowest
-	/// errors and becoming trapped in local minima. This activation function is good for prototyping netowrk structures, however in many cases
+	/// errors and becoming trapped in local minima. This activation function is good for prototyping network structures, however in many cases
 	/// it should not be used for practival implementations of networks. http://drum.lib.umd.edu/handle/1903/5355
 	/// </summary>
 	[Serializable]
@@ -27,6 +27,20 @@ namespace Cranium.Structure.ActivationFunction
 		/// </summary>
 		public Elliott () : base()
 		{
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Elliott"/> class. Used by the serializer.
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Elliott ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base(info,context)
+		{
+			_Scale = info.GetDouble ( "_Scale" );	
 		}
 
 		#region implemented abstract members of Cranium.Structure.ActivationFunction.Base

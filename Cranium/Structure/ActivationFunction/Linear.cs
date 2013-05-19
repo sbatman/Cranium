@@ -20,6 +20,26 @@ namespace Cranium.Structure.ActivationFunction
 	public class Linear : Base
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Linear"/> class.
+		/// </summary>
+		public Linear () :base()
+		{			
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Linear"/> class. Used by the Serializer.
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Linear ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ):base(info,context)
+		{			
+		}
+		
+		/// <summary>
 		/// Returns the input after running through the activation function.
 		/// </summary>
 		/// <param name='input'>

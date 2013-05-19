@@ -61,12 +61,10 @@ namespace Cranium.LibTest.Tests.Recursive
 		{			
 			//Build Network
 			_TestNetworkStructure = new Network ();
-			_TestNetworkStructure.SaveToFile("test.dat");
 			BuildStructure ();
 			_TestNetworkStructure.RandomiseWeights ( 0.01d );
 			//PrepData
 			double[][] dataSet = Cranium.Data.Preprocessing.StandardDeviationVariance.ProduceDataset ( "TestData/Mackey-Glass-Pure.csv" ).DataSet;
-			
 			//Prepare training activity
 			_SlidingWindowTraining = new Cranium.Activity.Training.SlidingWindow ();
 			_SlidingWindowTraining.SetTargetNetwork ( _TestNetworkStructure ); // the target network for the training to take place on
@@ -75,14 +73,14 @@ namespace Cranium.LibTest.Tests.Recursive
 			_SlidingWindowTraining.SetDatasetReservedLength ( 0 ); // How many elements off the end of the dataset should not be used for training
 			_SlidingWindowTraining.SetDistanceToForcastHorrison ( 3 ); // How far beyond the window should be be trying to predict 
 			_SlidingWindowTraining.SetWindowWidth ( 12 ); // The window of elements that should be presented before the backward pass is performed
-			_SlidingWindowTraining.SetMaximumEpochs ( 3000 ); // The maximum number of epochs the network can train for
+			_SlidingWindowTraining.SetMaximumEpochs ( 50 ); // The maximum number of epochs the network can train for
 			_SlidingWindowTraining.SetInputNodes ( _InputLayerNodes ); // Setting the nodes that are used for input
 			_SlidingWindowTraining.SetOutputNodes ( _OuputLayerNodes ); // Setting the nodes that are generating output
 			_SlidingWindowTraining.SetWorkingDataset ( dataSet ); // Setting the working dataset for the training phase
-			_SlidingWindowTraining.SetDynamicLearningRateDelegate(DynamicLearningRate);
+			_SlidingWindowTraining.SetDynamicLearningRateDelegate ( DynamicLearningRate );
 			
 			// Sets the contect layers that are used as part of the training (have to updates)
-			List<Structure.Layer.Base> contextLayers = new List<Structure.Layer.Base> ();
+			contextLayers = new List<Structure.Layer.Base> ();
 			contextLayers.Add ( _ContextLayer );
 			_SlidingWindowTraining.SetRecurrentConextLayers ( contextLayers );
 						
@@ -96,9 +94,7 @@ namespace Cranium.LibTest.Tests.Recursive
 			{
 				Thread.Sleep ( 20 );
 			}
-			
-			Console.WriteLine ( "Complete Training" );
-			
+				
 			////////////////////////////////////////////////
 			////////////////////////////////////////////////
 			
@@ -129,7 +125,7 @@ namespace Cranium.LibTest.Tests.Recursive
 		}
 
 		/// <summary>
-		/// Builds the structure of the neural netowrk to undergo training and testing.
+		/// Builds the structure of the neural network to undergo training and testing.
 		/// </summary>
 		public static void BuildStructure ( )
 		{
@@ -195,7 +191,7 @@ namespace Cranium.LibTest.Tests.Recursive
 		/// <param name='y'>
 		/// Y.
 		/// </param>
-		public static double DynamicLearningRate(int x, double y)
+		public static double DynamicLearningRate ( int x, double y )
 		{
 			return  0.004f;
 		}

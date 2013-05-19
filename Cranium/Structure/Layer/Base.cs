@@ -37,12 +37,20 @@ namespace Cranium.Structure.Layer
 		/// <summary>
 		/// The ID of the layer
 		/// </summary>
-		protected int _LayerID;
+		protected int _LayerID = -1;
 		/// <summary>
 		/// The ID of the next node to be added to the layer
 		/// </summary>
 		protected int _NextNodeID;
 		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Base"/> class.
+		/// </summary>
+		public Base ()
+		{
+			
+		}
+				
 		/// <summary>
 		/// Sets the nodes that are present in this layer, the previous list of nodes is purged.
 		/// </summary>
@@ -262,9 +270,30 @@ namespace Cranium.Structure.Layer
 		#endregion
 
 		#region ISerializable implementation
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Base"/> class. Used by the Serializer.
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Base ( SerializationInfo info, StreamingContext context )
+		{
+			_Nodes = ( List<Node.Base> )info.GetValue ( "_Nodes", typeof (List<Node.Base>) );
+			_LayerID = info.GetInt32 ( "_LayerID" );
+			_NextNodeID = info.GetInt32 ( "_NextNodeID" );
+			_ForwardConnectedLayers = ( List<Layer.Base> )info.GetValue ( "_ForwardConnectedLayers", typeof (List<Layer.Base>) );
+			_ReverseConnectedLayers = ( List<Layer.Base> )info.GetValue ( "_ReverseConnectedLayers", typeof (List<Layer.Base>) );
+		}
+		
 		public virtual void GetObjectData ( SerializationInfo info, StreamingContext context )
 		{
 			info.AddValue ( "_Nodes", _Nodes, _Nodes.GetType () );
+			info.AddValue ( "_ForwardConnectedLayers", _ForwardConnectedLayers, typeof (List<Layer.Base>) );
+			info.AddValue ( "_ReverseConnectedLayers", _ReverseConnectedLayers, typeof (List<Layer.Base>) ); 
 			info.AddValue ( "_LayerID", _LayerID );
 			info.AddValue ( "_NextNodeID", _NextNodeID );			
 		}

@@ -36,11 +36,11 @@ namespace Cranium.Structure.Weight
 		/// <summary>
 		/// Node b, this should be the forward node
 		/// </summary>
-        public Node.Base NodeB;
+		public Node.Base NodeB;
 		/// <summary>
 		/// The current weight
 		/// </summary>
-        public Double Weight;
+		public Double Weight;
 		/// <summary>
 		/// The initial value of the weight
 		/// </summary>
@@ -80,7 +80,7 @@ namespace Cranium.Structure.Weight
 			_PendingWeightChangeCount = 0;
 			_PastWeightChange = 0;
 		}
-			
+		
 		/// <summary>
 		/// Gets the total change from the initial value the weight was set with.
 		/// </summary>
@@ -164,15 +164,36 @@ namespace Cranium.Structure.Weight
 		#endregion
 
 		#region ISerializable implementation
-		public void GetObjectData (SerializationInfo info, StreamingContext context)
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Weight.Base"/> class. Used by the Serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Base ( SerializationInfo info, StreamingContext context )
 		{
-			info.AddValue("NodeA",NodeA,NodeA.GetType());
-			info.AddValue("NodeB",NodeB,NodeB.GetType());
-			info.AddValue("Weight",Weight);
-			info.AddValue("_InitialValue",_InitialValue);
-			info.AddValue("_PendingWeightChange",_PendingWeightChange);
-			info.AddValue("_PendingWeightChangeCount",_PendingWeightChangeCount);
-			info.AddValue("_PastWeightChange",_PastWeightChange);
+			NodeA = ( Node.Base )info.GetValue ( "NodeA", typeof (Node.Base) );
+			NodeB = ( Node.Base )info.GetValue ( "NodeB", typeof (Node.Base) );
+			Weight = info.GetDouble ( "Weight" );
+			_InitialValue = info.GetDouble ( "_InitialValue" );
+			_PendingWeightChange = info.GetDouble ( "_PendingWeightChange" );
+			_PendingWeightChangeCount = info.GetDouble ( "_PendingWeightChangeCount" );
+			_PastWeightChange = info.GetDouble ( "_PastWeightChange" );			
+		}
+		
+		public void GetObjectData ( SerializationInfo info, StreamingContext context )
+		{
+			info.AddValue ( "NodeA", NodeA, NodeA.GetType () );
+			info.AddValue ( "NodeB", NodeB, NodeB.GetType () );
+			info.AddValue ( "Weight", Weight );
+			info.AddValue ( "_InitialValue", _InitialValue );
+			info.AddValue ( "_PendingWeightChange", _PendingWeightChange );
+			info.AddValue ( "_PendingWeightChangeCount", _PendingWeightChangeCount );
+			info.AddValue ( "_PastWeightChange", _PastWeightChange );
 		}
 		#endregion
 	}

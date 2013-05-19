@@ -20,6 +20,27 @@ namespace Cranium.Structure.ActivationFunction
 	public class Tanh : Base
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Tanh"/> class.
+		/// </summary>
+		public Tanh () : base()
+		{
+			
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Tanh"/> class. Used by the serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Tanh ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base(info,context)
+		{
+			
+		}
+		
+		/// <summary>
 		/// Returns the input after running through the activation function.
 		/// </summary>
 		/// <param name='input'>
