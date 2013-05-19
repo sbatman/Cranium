@@ -61,8 +61,8 @@ namespace Cranium.Structure.Layer
 		/// </param>
 		public Recurrent_Context ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ):base(info,context)
 		{
-			_SourceNodes =(List<Node.Base>) info.GetValue("_SourceNodes",typeof(List<Node.Base>));
-			_LevelOfContext = info.GetInt32("_LevelOfContext");
+			_SourceNodes = ( List<Node.Base> )info.GetValue ( "_SourceNodes", typeof (List<Node.Base>) );
+			_LevelOfContext = info.GetInt32 ( "_LevelOfContext" );
 			_ActivationFunction = ( ActivationFunction.Base )info.GetValue ( "_ActivationFunction", typeof (ActivationFunction.Base) );
 		}
 		
