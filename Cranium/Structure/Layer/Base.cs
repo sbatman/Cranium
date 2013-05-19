@@ -44,6 +44,14 @@ namespace Cranium.Structure.Layer
 		protected int _NextNodeID;
 		
 		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Base"/> class.
+		/// </summary>
+		public Base()
+		{
+			
+		}
+				
+		/// <summary>
 		/// Sets the nodes that are present in this layer, the previous list of nodes is purged.
 		/// </summary>
 		/// <param name='nodes'>
@@ -262,6 +270,23 @@ namespace Cranium.Structure.Layer
 		#endregion
 
 		#region ISerializable implementation
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Base"/> class. Used by the Serializer.
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Base(SerializationInfo info, StreamingContext context)
+		{
+			_Nodes = (List<Node.Base>)info.GetValue("_Nodes", typeof(List<Node.Base>));
+			_LayerID = info.GetInt32("_LayerID");
+			_NextNodeID = info.GetInt32("_NextNodeID");
+		}
+		
 		public virtual void GetObjectData ( SerializationInfo info, StreamingContext context )
 		{
 			info.AddValue ( "_Nodes", _Nodes, _Nodes.GetType () );

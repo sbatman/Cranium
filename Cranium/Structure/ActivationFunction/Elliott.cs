@@ -38,7 +38,7 @@ namespace Cranium.Structure.ActivationFunction
 		/// <param name='context'>
 		/// Context.
 		/// </param>
-		public Elliott ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base()
+		public Elliott ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base(info,context)
 		{
 			_Scale = info.GetDouble ( "_Scale" );	
 		}

@@ -43,9 +43,9 @@ namespace Cranium.Structure.ActivationFunction
 		/// <param name='context'>
 		/// Context.
 		/// </param>
-		public Step(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base()
+		public Step ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base(info,context)
 		{
-			_ActivationPoint = info.GetDouble( "_ActivationPoint" );
+			_ActivationPoint = info.GetDouble ( "_ActivationPoint" );
 		}
 		
 		/// <summary>

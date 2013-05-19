@@ -43,11 +43,27 @@ namespace Cranium.Structure.Layer
 		/// <param name='activationFunction'>
 		/// Activation function to be used for the context nodes.
 		/// </param>
-		public Recurrent_Context ( int levelOfContext, ActivationFunction.Base activationFunction )
+		public Recurrent_Context ( int levelOfContext, ActivationFunction.Base activationFunction ) : base()
 		{
 			_ActivationFunction = activationFunction;
 			_SourceNodes = new List<Node.Base> ();
 			_LevelOfContext = levelOfContext;
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Recurrent_Context"/> class. Used by Serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Recurrent_Context ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ):base(info,context)
+		{
+			_SourceNodes =(List<Node.Base>) info.GetValue("_SourceNodes",typeof(List<Node.Base>));
+			_LevelOfContext = info.GetInt32("_LevelOfContext");
+			_ActivationFunction = ( ActivationFunction.Base )info.GetValue ( "_ActivationFunction", typeof (ActivationFunction.Base) );
 		}
 		
 		/// <summary>

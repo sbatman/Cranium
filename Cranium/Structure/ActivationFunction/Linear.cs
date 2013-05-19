@@ -35,7 +35,7 @@ namespace Cranium.Structure.ActivationFunction
 		/// <param name='context'>
 		/// Context.
 		/// </param>
-		public Linear ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ):base()
+		public Linear ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ):base(info,context)
 		{			
 		}
 		

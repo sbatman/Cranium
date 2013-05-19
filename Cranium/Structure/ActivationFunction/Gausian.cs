@@ -43,7 +43,7 @@ namespace Cranium.Structure.ActivationFunction
 		/// <param name='context'>
 		/// 	Context.
 		/// </param>
-		public Gaussian ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base()
+		public Gaussian ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base(info,context)
 		{
 			_Steepness = info.GetDouble ( "_Steepness" );	
 		}

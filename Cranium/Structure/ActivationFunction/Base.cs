@@ -20,6 +20,13 @@ namespace Cranium.Structure.ActivationFunction
 	public abstract class Base :IDisposable, ISerializable
 	{
 		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Base"/> class.
+		/// </summary>
+		public Base()
+		{
+		}
+		
+		/// <summary>
 		/// Returns the input after running through the activation function.
 		/// </summary>
 		/// <param name='input'>
