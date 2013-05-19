@@ -28,6 +28,20 @@ namespace Cranium.Structure.ActivationFunction
 		public Elliott () : base()
 		{
 		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Elliott"/> class. Used by the serializer.
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Elliott ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base()
+		{
+			_Scale = info.GetDouble ( "_Scale" );	
+		}
 
 		#region implemented abstract members of Cranium.Structure.ActivationFunction.Base
 		/// <summary>

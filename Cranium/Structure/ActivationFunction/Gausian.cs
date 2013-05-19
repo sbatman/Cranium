@@ -33,6 +33,22 @@ namespace Cranium.Structure.ActivationFunction
 		{
 			_Steepness = steepness;	
 		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Gaussian"/> class. Used by the serializer.
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// 	Context.
+		/// </param>
+		public Gaussian ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base()
+		{
+			_Steepness = info.GetDouble ( "_Steepness" );	
+		}
+		
+		
 		#region implemented abstract members of Cranium.Structure.ActivationFunction.Base
 		public override double Compute ( double input )
 		{

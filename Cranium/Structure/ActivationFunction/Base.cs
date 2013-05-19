@@ -42,6 +42,9 @@ namespace Cranium.Structure.ActivationFunction
 		#endregion5
 
 		#region ISerializable implementation
+		public Base(SerializationInfo info, StreamingContext context )
+		{
+		}
 		public abstract void GetObjectData ( SerializationInfo info, StreamingContext context );
 		#endregion
 	}
