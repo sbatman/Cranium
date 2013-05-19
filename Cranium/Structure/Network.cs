@@ -30,6 +30,7 @@ namespace Cranium.Structure
 		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base> ();
 		protected double _LearningRate = 0;
 		protected double _Momenum = 0;
+		protected int _LastIssuedLayerID = 0;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cranium.Structure.Network"/> class.
@@ -39,9 +40,22 @@ namespace Cranium.Structure
 			_CurrentLayers = new List<Layer.Base> ();
 		}
 		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Network"/> class. Used by the Serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
 		public Network ( SerializationInfo info, StreamingContext context )
 		{
 			_CurrentLayers = ( List<Layer.Base> )info.GetValue ( "CurrentLayers", typeof (List<Layer.Base>) );
+			_LearningRate = info.GetDouble ( "_LearningRate" );
+			_Momenum = info.GetDouble ( "_Momenum" );
+			_LastIssuedLayerID = info.GetInt32("_LastIssuedLayerID");
+			StructureUpdate ();
 		}
 		
 		/// <summary>
@@ -81,7 +95,6 @@ namespace Cranium.Structure
 		/// </summary>
 		protected virtual void StructureUpdate ( )
 		{
-			int id = 0;
 			foreach ( Layer.Base l in _CurrentLayers )
 			{
 				if ( l.GetForwardConnectedLayers ().Count == 0 )
@@ -92,8 +105,11 @@ namespace Cranium.Structure
 				{
 					_DetectedBottomLayers.Add ( l );
 				}
-				l.SetID ( id );
-				id++;
+				if ( l.GetID () == -1 )
+				{
+					_LastIssuedLayerID++;
+					l.SetID ( _LastIssuedLayerID );					
+				}
 			}
 		}
 		
@@ -229,16 +245,16 @@ namespace Cranium.Structure
 			_Momenum = newMomentum;	
 		}
 		
-		public virtual void SaveToFile(string fileName)
+		public virtual void SaveToFile ( string fileName )
 		{			
-			BinaryFormatter formatter =new BinaryFormatter();	
+			BinaryFormatter formatter = new BinaryFormatter ();	
 			formatter.AssemblyFormat = FormatterAssemblyStyle.Simple;			
-			FileStream atextwriter = File.Create(fileName);		
-			GZipStream CompressionStream = new GZipStream(atextwriter,CompressionMode.Compress);			
-			formatter.Serialize(CompressionStream,this);	
+			FileStream atextwriter = File.Create ( fileName );		
+			GZipStream CompressionStream = new GZipStream ( atextwriter, CompressionMode.Compress );			
+			formatter.Serialize ( CompressionStream, this );	
 			
-			CompressionStream.Close();
-			atextwriter.Close();
+			CompressionStream.Close ();
+			atextwriter.Close ();
 		}
 		
 		#region IDisposable implementation
@@ -259,9 +275,10 @@ namespace Cranium.Structure
 		public void GetObjectData ( SerializationInfo info, StreamingContext context )
 		{
 			//Right lets serialise this thing
-			//LayerCount
-			info.AddValue ( "LayerCount", _CurrentLayers.Count );
-			info.AddValue ( "CurrentLayers", _CurrentLayers, typeof (List<Layer.Base>) );			
+			info.AddValue ( "CurrentLayers", _CurrentLayers, typeof (List<Layer.Base>) );		
+			info.AddValue ( "_LearningRate", _LearningRate );
+			info.AddValue ( "_Momenum", _Momenum );
+			info.AddValue ( "_LastIssuedLayerID", _LastIssuedLayerID );
 		}
 		#endregion
 	}

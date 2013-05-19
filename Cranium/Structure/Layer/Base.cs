@@ -37,7 +37,7 @@ namespace Cranium.Structure.Layer
 		/// <summary>
 		/// The ID of the layer
 		/// </summary>
-		protected int _LayerID;
+		protected int _LayerID = -1;
 		/// <summary>
 		/// The ID of the next node to be added to the layer
 		/// </summary>
