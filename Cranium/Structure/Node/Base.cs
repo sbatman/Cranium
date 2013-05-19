@@ -317,11 +317,31 @@ namespace Cranium.Structure.Node
 		#endregion
 
 		#region ISerializable implementation
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Node.Base"/> class. Used by the Serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Base ( SerializationInfo info, StreamingContext context )
+		{
+			_Value = info.GetDouble ( "_Value" );
+			_Error = info.GetDouble ( "_Error" );
+			_ParentLayer = ( Layer.Base )info.GetValue ( "_ParentLayer", typeof (Layer.Base) );
+			_FowardWeights = ( List<Weight.Base> )info.GetValue ( "_ForwardWeights", typeof (List<Weight.Base>) );
+			_ReverseWeights = ( List<Weight.Base> )info.GetValue ( "_ReverseWeights", typeof (List<Weight.Base>) );
+			_ActivationFunction = ( ActivationFunction.Base )info.GetValue ( "_ActivationFunction", typeof (ActivationFunction.Base) );
+			_NodeID = info.GetInt32 ( "_NodeID" );
+		}
+		
 		public virtual void GetObjectData ( SerializationInfo info, StreamingContext context )
 		{
 			info.AddValue ( "_Value", _Value );
 			info.AddValue ( "_Error", _Error );
-			info.AddValue ( "_ParentLayer", _ParentLayer );
+			info.AddValue ( "_ParentLayer", _ParentLayer, typeof (Layer.Base) );
 			info.AddValue ( "_ForwardWeights", _FowardWeights, typeof (List<Weight.Base>) );
 			info.AddValue ( "_ReverseWeights", _ReverseWeights, typeof (List<Weight.Base>) );
 			info.AddValue ( "_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType () );

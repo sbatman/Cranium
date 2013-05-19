@@ -46,7 +46,7 @@ namespace Cranium.Structure.Layer
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Base"/> class.
 		/// </summary>
-		public Base()
+		public Base ()
 		{
 			
 		}
@@ -280,11 +280,11 @@ namespace Cranium.Structure.Layer
 		/// <param name='context'>
 		/// Context.
 		/// </param>
-		public Base(SerializationInfo info, StreamingContext context)
+		public Base ( SerializationInfo info, StreamingContext context )
 		{
-			_Nodes = (List<Node.Base>)info.GetValue("_Nodes", typeof(List<Node.Base>));
-			_LayerID = info.GetInt32("_LayerID");
-			_NextNodeID = info.GetInt32("_NextNodeID");
+			_Nodes = ( List<Node.Base> )info.GetValue ( "_Nodes", typeof (List<Node.Base>) );
+			_LayerID = info.GetInt32 ( "_LayerID" );
+			_NextNodeID = info.GetInt32 ( "_NextNodeID" );
 		}
 		
 		public virtual void GetObjectData ( SerializationInfo info, StreamingContext context )

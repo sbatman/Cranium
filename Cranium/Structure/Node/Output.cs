@@ -37,6 +37,20 @@ namespace Cranium.Structure.Node
 		}
 		
 		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Node.Output"/> class. Used by the Serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Output(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context):base(info,context)
+		{
+			_TargetValue = info.GetDouble("_TargetValue");
+		}
+		
+		/// <summary>
 		/// Calculates the error of the node based on its distance from the target value
 		/// </summary>
 		public override void CalculateError ( )
