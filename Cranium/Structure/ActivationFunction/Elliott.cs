@@ -14,7 +14,7 @@ namespace Cranium.Structure.ActivationFunction
 {
 	/// <summary>
 	/// The Elliott activations functions acts as a computationaly cheaper version of tanH although with known problems with reaching the lowest
-	/// errors and becoming trapped in local minima. This activation function is good for prototyping netowrk structures, however in many cases
+	/// errors and becoming trapped in local minima. This activation function is good for prototyping network structures, however in many cases
 	/// it should not be used for practival implementations of networks. http://drum.lib.umd.edu/handle/1903/5355
 	/// </summary>
 	[Serializable]

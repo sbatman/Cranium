@@ -20,7 +20,7 @@ using System.IO.Compression;
 namespace Cranium.Structure
 {
 	/// <summary>
-	/// A base network class, This primarily acts as a structure container of the network and used at a later stage for a large ammount of the netowrks IO
+	/// A base network class, This primarily acts as a structure container of the network and used at a later stage for a large ammount of the networks IO
 	/// </summary>
 	[Serializable]
 	public class Network : IDisposable , ISerializable
@@ -54,8 +54,8 @@ namespace Cranium.Structure
 			_CurrentLayers = ( List<Layer.Base> )info.GetValue ( "CurrentLayers", typeof (List<Layer.Base>) );
 			_LearningRate = info.GetDouble ( "_LearningRate" );
 			_Momenum = info.GetDouble ( "_Momenum" );
-			_LastIssuedLayerID = info.GetInt32("_LastIssuedLayerID");
-			StructureUpdate ();
+			_LastIssuedLayerID = info.GetInt32 ( "_LastIssuedLayerID" );
+		//	StructureUpdate ();
 		}
 		
 		/// <summary>
@@ -91,7 +91,7 @@ namespace Cranium.Structure
 		}
 		
 		/// <summary>
-		/// Called when a change is detected to this level of the nerual netowrks structure
+		/// Called when a change is detected to this level of the nerual networks structure
 		/// </summary>
 		protected virtual void StructureUpdate ( )
 		{
@@ -245,7 +245,7 @@ namespace Cranium.Structure
 			_Momenum = newMomentum;	
 		}
 		
-		public virtual void SaveToFile ( string fileName )
+		public void SaveToFile ( string fileName )
 		{			
 			BinaryFormatter formatter = new BinaryFormatter ();	
 			formatter.AssemblyFormat = FormatterAssemblyStyle.Simple;			
@@ -255,6 +255,18 @@ namespace Cranium.Structure
 			
 			CompressionStream.Close ();
 			atextwriter.Close ();
+		}
+		
+		public static Network LoadFromFile ( string filename )
+		{
+			FileStream loadedFile = File.OpenRead ( filename );
+			GZipStream CompressionStream = new GZipStream ( loadedFile, CompressionMode.Decompress );
+			BinaryFormatter formatter = new BinaryFormatter ();	
+			Network returnNetwork = ( Network )formatter.Deserialize ( CompressionStream );
+			returnNetwork.StructureUpdate();
+			CompressionStream.Close ();
+			loadedFile.Close ();
+			return returnNetwork;
 		}
 		
 		#region IDisposable implementation

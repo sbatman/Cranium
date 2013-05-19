@@ -285,11 +285,15 @@ namespace Cranium.Structure.Layer
 			_Nodes = ( List<Node.Base> )info.GetValue ( "_Nodes", typeof (List<Node.Base>) );
 			_LayerID = info.GetInt32 ( "_LayerID" );
 			_NextNodeID = info.GetInt32 ( "_NextNodeID" );
+			_ForwardConnectedLayers = ( List<Layer.Base> )info.GetValue ( "_ForwardConnectedLayers", typeof (List<Layer.Base>) );
+			_ReverseConnectedLayers = ( List<Layer.Base> )info.GetValue ( "_ReverseConnectedLayers", typeof (List<Layer.Base>) );
 		}
 		
 		public virtual void GetObjectData ( SerializationInfo info, StreamingContext context )
 		{
 			info.AddValue ( "_Nodes", _Nodes, _Nodes.GetType () );
+			info.AddValue ( "_ForwardConnectedLayers", _ForwardConnectedLayers, typeof (List<Layer.Base>) );
+			info.AddValue ( "_ReverseConnectedLayers", _ReverseConnectedLayers, typeof (List<Layer.Base>) ); 
 			info.AddValue ( "_LayerID", _LayerID );
 			info.AddValue ( "_NextNodeID", _NextNodeID );			
 		}

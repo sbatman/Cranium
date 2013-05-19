@@ -15,7 +15,7 @@ namespace Cranium.Structure.Layer
 {
 	/// <summary>
 	/// This type of layer offers a form of recursive memory in the form of gradually lower momentum recursive stores.
-	/// This is described in detail in Ulbrich, C., 1994. Multi-Recurrent Netowrks for Traffic Forecasting. Vienna: Austrian Research Institute for Artificial Intelligence.
+	/// This is described in detail in Ulbrich, C., 1994. Multi-Recurrent networks for Traffic Forecasting. Vienna: Austrian Research Institute for Artificial Intelligence.
 	/// The white paper can be found here http://www.aaai.org/Papers/AAAI/1994/AAAI94-135.pdf
 	/// </summary>
 	[Serializable]

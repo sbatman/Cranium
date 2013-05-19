@@ -13,7 +13,7 @@ using System;
 namespace Cranium.Structure.Layer
 {
 	/// <summary>
-	/// This is an implementation of the echo reservoir found in EchoState netowrks. It provides a form of recursive memory as each node within the layer
+	/// This is an implementation of the echo reservoir found in EchoState networks. It provides a form of recursive memory as each node within the layer
 	/// is randomly connected to a number of other nodes. When presented with data over a number of iterations this causes a RNN style memory behaviour.
 	/// However due to the chaotic nature of the revervoirs contrcution, accuracy and learning limits of this type of network can vary heavily.
 	/// Further information can be sourced here http://www.scholarpedia.org/article/Echo_state_network

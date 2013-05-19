@@ -15,7 +15,7 @@ using System.Runtime.Serialization;
 namespace Cranium.Structure.Node
 {
 	/// <summary>
-	/// The base node class is a core part of the Neural Netowrk framework and represents a neuron that is placed within layers in the network.
+	/// The base node class is a core part of the Neural network framework and represents a neuron that is placed within layers in the network.
 	/// This class can be derived to add additional functionality to a node such as adding recurive memory.
 	/// </summary>
 	[Serializable]
@@ -131,7 +131,7 @@ namespace Cranium.Structure.Node
 		}
 		
 		/// <summary>
-		/// Calculates the error of the node based on its contibution to the error of foward nodes.
+		/// Calculates the error of the node based on its contibution to the error of forward nodes.
 		/// </summary>
 		public virtual void CalculateError ( )
 		{
@@ -253,17 +253,20 @@ namespace Cranium.Structure.Node
 		}
 		
 		/// <summary>
-		/// Destroies all the foward and reverse weights connected tot his node.
+		/// Destroies all the foward and reverse weights connected to this node.
 		/// </summary>
 		public virtual void DestroyAllConnections ( )
 		{
 			if ( _T_FowardWeights != null )
 			{
 				foreach ( Weight.Base w in _T_FowardWeights )
-				{
-					w.Dispose ();
+				{					
 					w.NodeB._T_ReverseWeights = null;
-					w.NodeB._ReverseWeights.Remove ( w );
+					if ( w.NodeB._ReverseWeights != null )
+					{
+						w.NodeB._ReverseWeights.Remove ( w );
+					}
+					w.Dispose ();
 				}
 				_FowardWeights.Clear ();
 				_T_FowardWeights = null;

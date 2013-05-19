@@ -13,7 +13,7 @@ using System;
 namespace Cranium.Structure.ActivationFunction
 {
 	/// <summary>
-	/// This activation function will return 1 when >= threshold else 0, its not recomended you use this in a backprop netowrk
+	/// This activation function will return 1 when >= threshold else 0, its not recomended you use this in a backprop network
 	/// </summary>
 	[Serializable]
 	public class Step : Base

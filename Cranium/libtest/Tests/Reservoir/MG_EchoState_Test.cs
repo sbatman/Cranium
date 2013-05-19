@@ -18,7 +18,7 @@ using System.IO;
 namespace Cranium.LibTest.Tests.Reservoir
 {
 	/// <summary>
-	/// This test shows an example of an echo state neural netowrk learning the Makey-Glass time series dataset
+	/// This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
 	/// </summary>
 	public class MG_EchoState_Test
 	{
