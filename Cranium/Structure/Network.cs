@@ -23,7 +23,7 @@ namespace Cranium.Structure
 	/// A base network class, This primarily acts as a structure container of the network and used at a later stage for a large ammount of the networks IO
 	/// </summary>
 	[Serializable]
-	public class Network : IDisposable , ISerializable
+	public class Network : IDisposable , ISerializable , IDeserializationCallback
 	{
 		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ();
@@ -55,7 +55,7 @@ namespace Cranium.Structure
 			_LearningRate = info.GetDouble ( "_LearningRate" );
 			_Momenum = info.GetDouble ( "_Momenum" );
 			_LastIssuedLayerID = info.GetInt32 ( "_LastIssuedLayerID" );
-		//	StructureUpdate ();
+			//	StructureUpdate ();
 		}
 		
 		/// <summary>
@@ -263,7 +263,6 @@ namespace Cranium.Structure
 			GZipStream CompressionStream = new GZipStream ( loadedFile, CompressionMode.Decompress );
 			BinaryFormatter formatter = new BinaryFormatter ();	
 			Network returnNetwork = ( Network )formatter.Deserialize ( CompressionStream );
-			returnNetwork.StructureUpdate();
 			CompressionStream.Close ();
 			loadedFile.Close ();
 			return returnNetwork;
@@ -291,6 +290,13 @@ namespace Cranium.Structure
 			info.AddValue ( "_LearningRate", _LearningRate );
 			info.AddValue ( "_Momenum", _Momenum );
 			info.AddValue ( "_LastIssuedLayerID", _LastIssuedLayerID );
+		}
+		#endregion
+
+		#region IDeserializationCallback implementation
+		public void OnDeserialization (object sender)
+		{
+			StructureUpdate ();
 		}
 		#endregion
 	}
