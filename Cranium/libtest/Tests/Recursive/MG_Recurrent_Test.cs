@@ -80,7 +80,7 @@ namespace Cranium.LibTest.Tests.Recursive
 			_SlidingWindowTraining.SetDynamicLearningRateDelegate ( DynamicLearningRate );
 			
 			// Sets the contect layers that are used as part of the training (have to updates)
-			contextLayers = new List<Structure.Layer.Base> ();
+			List<Structure.Layer.Base> contextLayers = new List<Structure.Layer.Base> ();
 			contextLayers.Add ( _ContextLayer );
 			_SlidingWindowTraining.SetRecurrentConextLayers ( contextLayers );
 						
