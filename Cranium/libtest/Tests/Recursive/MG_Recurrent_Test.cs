@@ -65,22 +65,22 @@ namespace Cranium.LibTest.Tests.Recursive
 			_TestNetworkStructure.RandomiseWeights ( 0.01d );
 			//PrepData
 			double[][] dataSet = Cranium.Data.Preprocessing.StandardDeviationVariance.ProduceDataset ( "TestData/Mackey-Glass-Pure.csv" ).DataSet;
-			
 			//Prepare training activity
 			_SlidingWindowTraining = new Cranium.Activity.Training.SlidingWindow ();
-			_SlidingWindowTraining.SetMomentum ( 0.7f ); // The ammount of the previous weight change applied to current weight change - google if u need to know more
-			_SlidingWindowTraining.SetLearningRate ( 0.004f ); // The rate at which the neural entwork learns (the more agressive this is the harded itll be for the network)
 			_SlidingWindowTraining.SetTargetNetwork ( _TestNetworkStructure ); // the target network for the training to take place on
+			_SlidingWindowTraining.SetMomentum ( 0.7f ); // The ammount of the previous weight change applied to current weight change - google if u need to know more
+			_SlidingWindowTraining.SetLearningRate ( 0.004f ); // The rate at which the neural entwork learns (the more agressive this is the harded itll be for the network)			
 			_SlidingWindowTraining.SetDatasetReservedLength ( 0 ); // How many elements off the end of the dataset should not be used for training
 			_SlidingWindowTraining.SetDistanceToForcastHorrison ( 3 ); // How far beyond the window should be be trying to predict 
 			_SlidingWindowTraining.SetWindowWidth ( 12 ); // The window of elements that should be presented before the backward pass is performed
-			_SlidingWindowTraining.SetMaximumEpochs ( 900 ); // The maximum number of epochs the network can train for
+			_SlidingWindowTraining.SetMaximumEpochs ( 50 ); // The maximum number of epochs the network can train for
 			_SlidingWindowTraining.SetInputNodes ( _InputLayerNodes ); // Setting the nodes that are used for input
 			_SlidingWindowTraining.SetOutputNodes ( _OuputLayerNodes ); // Setting the nodes that are generating output
 			_SlidingWindowTraining.SetWorkingDataset ( dataSet ); // Setting the working dataset for the training phase
+			_SlidingWindowTraining.SetDynamicLearningRateDelegate ( DynamicLearningRate );
 			
 			// Sets the contect layers that are used as part of the training (have to updates)
-			List<Structure.Layer.Base> contextLayers = new List<Structure.Layer.Base> ();
+			contextLayers = new List<Structure.Layer.Base> ();
 			contextLayers.Add ( _ContextLayer );
 			_SlidingWindowTraining.SetRecurrentConextLayers ( contextLayers );
 						
@@ -94,9 +94,7 @@ namespace Cranium.LibTest.Tests.Recursive
 			{
 				Thread.Sleep ( 20 );
 			}
-			
-			Console.WriteLine ( "Complete Training" );
-			
+				
 			////////////////////////////////////////////////
 			////////////////////////////////////////////////
 			
@@ -115,13 +113,19 @@ namespace Cranium.LibTest.Tests.Recursive
 			Console.WriteLine ( Result.RMSE );
 			Data.UsefulFunctions.PrintArrayToFile ( Result.ActualOutputs, "ActualOutputs.csv" );
 			Data.UsefulFunctions.PrintArrayToFile ( Result.ExpectedOutputs, "ExpectedOutputs.csv" );
-			Console.WriteLine ( "Complete Testing" );
+			Console.WriteLine ( "Comparing Against Random Walk 3 Step" );
+			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 3 ) [0] * 100, 3 ) );
+			Console.WriteLine ( "Comparing Against Random Walk 2 Step" );
+			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 2 ) [0] * 100, 3 ) );
+			Console.WriteLine ( "Comparing Against Random Walk 1 Step" );
+			Console.WriteLine ( Math.Round ( Cranium.Data.PostProcessing.RandomWalkComparison.CalculateErrorAgainstRandomWalk ( Result.ExpectedOutputs, Result.ActualOutputs, 1 ) [0] * 100, 3 ) );
+					
 			
 			Console.ReadKey ();
 		}
 
 		/// <summary>
-		/// Builds the structure of the neural netowrk to undergo training and testing.
+		/// Builds the structure of the neural network to undergo training and testing.
 		/// </summary>
 		public static void BuildStructure ( )
 		{
@@ -137,14 +141,14 @@ namespace Cranium.LibTest.Tests.Recursive
 			// Hidden layer construction
 			_HiddenLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> HiddenLayerNodes = new List<Cranium.Structure.Node.Base> ();
-			for (int i=0; i<5; i++)
+			for (int i=0; i<10; i++)
 			{
 				HiddenLayerNodes.Add ( new Cranium.Structure.Node.Base ( _HiddenLayer, new Cranium.Structure.ActivationFunction.Tanh () ) );
 			}	
 			_HiddenLayer.SetNodes ( HiddenLayerNodes );	
 			
 			// Conext layer construction
-			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 4 );			
+			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 6, new Cranium.Structure.ActivationFunction.Tanh () );			
 			
 			//Output layer construction
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
@@ -173,6 +177,23 @@ namespace Cranium.LibTest.Tests.Recursive
 			// Generate all the node to node links
 			foreach ( Cranium.Structure.Layer.Base layer in _TestNetworkStructure.GetCurrentLayers() )
 				layer.PopulateNodeConnections ();									
+		}
+		
+		/// <summary>
+		/// Function that is passed as a delate that dynamiclay calculates the learning rate
+		/// </summary>
+		/// <returns>
+		/// The learning rate.
+		/// </returns>
+		/// <param name='x'>
+		/// X.
+		/// </param>
+		/// <param name='y'>
+		/// Y.
+		/// </param>
+		public static double DynamicLearningRate ( int x, double y )
+		{
+			return  0.004f;
 		}
 	}
 }

@@ -16,9 +16,31 @@ namespace Cranium.Structure.ActivationFunction
 	/// This activation function scales the input into the range of -1 to 1 which is very important for the majority
 	/// or neural network structures that wish to learn signal data.
 	/// </summary>
+	[Serializable]
 	public class Tanh : Base
 	{
-				/// <summary>
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Tanh"/> class.
+		/// </summary>
+		public Tanh () : base()
+		{
+			
+		}
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Tanh"/> class. Used by the serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Tanh ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base(info,context)
+		{
+			
+		}
+		
+		/// <summary>
 		/// Returns the input after running through the activation function.
 		/// </summary>
 		/// <param name='input'>
@@ -26,9 +48,10 @@ namespace Cranium.Structure.ActivationFunction
 		/// </param>
 		public override Double Compute ( Double input )
 		{
-            double temp = Math.Exp(input * 2.0);
-            return (temp - 1.0) / (temp + 1.0);
+			double temp = Math.Exp ( input * 2.0 );
+			return ( temp - 1.0 ) / ( temp + 1.0 );
 		}
+		
 		/// <summary>
 		/// Computes the derivative using the activation function.
 		/// </summary>
@@ -44,6 +67,11 @@ namespace Cranium.Structure.ActivationFunction
 		}
 
 		public override void Dispose ( )
+		{
+			
+		}
+
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
 		{
 			
 		}

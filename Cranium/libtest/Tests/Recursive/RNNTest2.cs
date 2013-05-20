@@ -15,7 +15,7 @@ using System.Collections.Generic;
 namespace Cranium.LibTest.Tests.Recursive
 {
 	/// <summary>
-	/// This test shows a neural netowrk that can demonstate the functionality of a three input Xor gate using only one input and recursive context nodes
+	/// This test shows a neural network that can demonstate the functionality of a three input Xor gate using only one input and recursive context nodes
 	/// </summary>
 	public class RNNTest2
 	{
@@ -140,7 +140,7 @@ namespace Cranium.LibTest.Tests.Recursive
 			}			
 			_HiddenLayer2.SetNodes ( HiddenLayerNodes2 );	
 			
-			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 3 );
+			_ContextLayer = new Cranium.Structure.Layer.Recurrent_Context ( 3 ,new Cranium.Structure.ActivationFunction.Tanh());
 			
 			_OutputLayer = new Cranium.Structure.Layer.Base ();
 			List<Cranium.Structure.Node.Base> OuputLayerNodes = new List<Cranium.Structure.Node.Base> ();
@@ -229,7 +229,7 @@ namespace Cranium.LibTest.Tests.Recursive
 		}
 		
 		/// <summary>
-		/// Performs the reverse pass on the neural netowrk with the row of prepared training data provided and the given momentum
+		/// Performs the reverse pass on the neural network with the row of prepared training data provided and the given momentum
 		/// </summary>
 		/// <param name='row'>
 		/// Row.

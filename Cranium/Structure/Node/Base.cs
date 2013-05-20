@@ -10,25 +10,53 @@
 // // //////////////////////
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 
 namespace Cranium.Structure.Node
 {
 	/// <summary>
-	/// The base node class is a core part of the Neural Netowrk framework and represents a neuron that is placed within layers in the network.
+	/// The base node class is a core part of the Neural network framework and represents a neuron that is placed within layers in the network.
 	/// This class can be derived to add additional functionality to a node such as adding recurive memory.
 	/// </summary>
-	public class Base : IDisposable
+	[Serializable]
+	public class Base : IDisposable, ISerializable
 	{
+		/// <summary>
+		/// Current Value
+		/// </summary>
 		protected Double _Value = 0;
+		/// <summary>
+		/// Current Error
+		/// </summary>
 		protected Double _Error = 0;
+		/// <summary>
+		/// The parent layer.
+		/// </summary>
 		protected Layer.Base _ParentLayer;
-		protected int _ParentLayerPosition;
+		/// <summary>
+		/// A list of foward weights on this node, where this node is NodeA on the weight
+		/// </summary>
 		protected List<Weight.Base> _FowardWeights = new List<Weight.Base> ();
+		/// <summary>
+		/// A list of reverse weights on this node, where this node is NodeB on the weight
+		/// </summary>
 		protected List<Weight.Base> _ReverseWeights = new List<Weight.Base> ();
+		/// <summary>
+		/// The Activation function of this node.
+		/// </summary>
 		protected ActivationFunction.Base _ActivationFunction;
+		/// <summary>
+		/// The Nodes current ID.
+		/// </summary>
+		protected int _NodeID;
 		
-		//Baked or Temp fields
+		/// <summary>
+		/// A baked copy of the foward weights, updated automaticaly
+		/// </summary>
 		protected Weight.Base[] _T_FowardWeights;
+		/// <summary>
+		/// A baked copy of the reverse weights, updated automaticaly
+		/// </summary>
 		protected Weight.Base[] _T_ReverseWeights;
 		
 		/// <summary>
@@ -85,8 +113,7 @@ namespace Cranium.Structure.Node
 		{
 			_T_FowardWeights = _FowardWeights.ToArray ();
 			_T_ReverseWeights = _ReverseWeights.ToArray ();
-		}
-		
+		}		
 		
 		/// <summary>
 		/// Returns the currently assigned forward weights
@@ -104,18 +131,7 @@ namespace Cranium.Structure.Node
 		}
 		
 		/// <summary>
-		/// Sets the position of the node within the parent layer. This only effects weight loading and saving
-		/// </summary>
-		/// <param name='position'>
-		/// _position.
-		/// </param>
-		public virtual void SetPositionInParentLayer ( int position )
-		{
-			_ParentLayerPosition = position;	
-		}
-		
-		/// <summary>
-		/// Calculates the error of the node based on its contibution to the error of foward nodes.
+		/// Calculates the error of the node based on its contibution to the error of forward nodes.
 		/// </summary>
 		public virtual void CalculateError ( )
 		{
@@ -192,7 +208,6 @@ namespace Cranium.Structure.Node
 			}
 			return _T_ReverseWeights;	
 		}
-
 		
 		/// <summary>
 		/// Connects a second node to this one, building the correct weight and adding it to the list of weights that are updated when required
@@ -238,17 +253,20 @@ namespace Cranium.Structure.Node
 		}
 		
 		/// <summary>
-		/// Destroies all the foward and reverse weights connected tot his node.
+		/// Destroies all the foward and reverse weights connected to this node.
 		/// </summary>
 		public virtual void DestroyAllConnections ( )
 		{
 			if ( _T_FowardWeights != null )
 			{
 				foreach ( Weight.Base w in _T_FowardWeights )
-				{
-					w.Dispose ();
+				{					
 					w.NodeB._T_ReverseWeights = null;
-					w.NodeB._ReverseWeights.Remove ( w );
+					if ( w.NodeB._ReverseWeights != null )
+					{
+						w.NodeB._ReverseWeights.Remove ( w );
+					}
+					w.Dispose ();
 				}
 				_FowardWeights.Clear ();
 				_T_FowardWeights = null;
@@ -266,7 +284,29 @@ namespace Cranium.Structure.Node
 			}
 		}
 		
-			#region IDisposable implementation
+		/// <summary>
+		/// Returns the current nodes ID
+		/// </summary>
+		/// <returns>
+		/// The I.
+		/// </returns>
+		public virtual int GetID ( )
+		{
+			return _NodeID;	
+		}
+		
+		/// <summary>
+		/// Sets the current nodes ID
+		/// </summary>
+		/// <param name='newID'>
+		/// New I.
+		/// </param>
+		public virtual void SetNodeID ( int newID )
+		{
+			_NodeID = newID;	
+		}
+		
+		#region IDisposable implementation
 		public virtual void Dispose ( )
 		{
 			_ParentLayer = null;
@@ -276,6 +316,39 @@ namespace Cranium.Structure.Node
 			_ReverseWeights = null;
 			_ActivationFunction.Dispose ();
 			_ActivationFunction = null;
+		}
+		#endregion
+
+		#region ISerializable implementation
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Node.Base"/> class. Used by the Serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Base ( SerializationInfo info, StreamingContext context )
+		{
+			_Value = info.GetDouble ( "_Value" );
+			_Error = info.GetDouble ( "_Error" );
+			_ParentLayer = ( Layer.Base )info.GetValue ( "_ParentLayer", typeof (Layer.Base) );
+			_FowardWeights = ( List<Weight.Base> )info.GetValue ( "_ForwardWeights", typeof (List<Weight.Base>) );
+			_ReverseWeights = ( List<Weight.Base> )info.GetValue ( "_ReverseWeights", typeof (List<Weight.Base>) );
+			_ActivationFunction = ( ActivationFunction.Base )info.GetValue ( "_ActivationFunction", typeof (ActivationFunction.Base) );
+			_NodeID = info.GetInt32 ( "_NodeID" );
+		}
+		
+		public virtual void GetObjectData ( SerializationInfo info, StreamingContext context )
+		{
+			info.AddValue ( "_Value", _Value );
+			info.AddValue ( "_Error", _Error );
+			info.AddValue ( "_ParentLayer", _ParentLayer, typeof (Layer.Base) );
+			info.AddValue ( "_ForwardWeights", _FowardWeights, typeof (List<Weight.Base>) );
+			info.AddValue ( "_ReverseWeights", _ReverseWeights, typeof (List<Weight.Base>) );
+			info.AddValue ( "_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType () );
+			info.AddValue ( "_NodeID", _NodeID );
 		}
 		#endregion
 	}

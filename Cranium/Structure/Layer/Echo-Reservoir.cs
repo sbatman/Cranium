@@ -13,18 +13,38 @@ using System;
 namespace Cranium.Structure.Layer
 {
 	/// <summary>
-	/// This is an implementation of the echo reservoir found in EchoState netowrks. It provides a form of recursive memory as each node within the layer
+	/// This is an implementation of the echo reservoir found in EchoState networks. It provides a form of recursive memory as each node within the layer
 	/// is randomly connected to a number of other nodes. When presented with data over a number of iterations this causes a RNN style memory behaviour.
 	/// However due to the chaotic nature of the revervoirs contrcution, accuracy and learning limits of this type of network can vary heavily.
 	/// Further information can be sourced here http://www.scholarpedia.org/article/Echo_state_network
 	/// </summary>
+	[Serializable]
 	public class Echo_Reservoir : Base
 	{
-		protected static Random rnd = new Random ();
-		protected int _NodeCount;
+		/// <summary>
+		/// The random used for building connections
+		/// </summary>
+		protected static Random _Rnd = new Random ();
+		/// <summary>
+		/// The number of nodes present in the Reservoir
+		/// </summary>
+		protected int _NodeCount;		
+		/// <summary>
+		/// The connectivity is calculated as chances = max-min, for each chance the levelOfConnectivity is compared to a random double, if levelOfConnectivity is higher 
+		/// then an additional connection is made ontop of the origional Min
+		/// </summary>
 		protected double _LevelOfConnectivity;
+		/// <summary>
+		/// The minimum connections per node.
+		/// </summary>
 		protected int _MinimumConnections;
+		/// <summary>
+		/// The Maximum connections per node
+		/// </summary>
 		protected int _MaximumConnections;
+		/// <summary>
+		/// The Activation to use for all the nodes created within the Reservoir
+		/// </summary>
 		protected ActivationFunction.Base _ActivationFunction;
 
 		/// <summary>
@@ -38,21 +58,40 @@ namespace Cranium.Structure.Layer
 		/// then an additional connection is made ontop of the origional Min
 		/// </param>
 		/// <param name='minimumConnections'>
-		/// Minimum connections.
+		/// Minimum connections per node.
 		/// </param>
 		/// <param name='maximumConnections'>
-		/// Maximum connections.
+		/// Maximum connections per node.
 		/// </param>
 		/// <param name='activationFunction'>
 		/// Activation function.
 		/// </param>
-		public Echo_Reservoir ( int nodeCount, double levelOfConnectivity, int minimumConnections, int maximumConnections, ActivationFunction.Base activationFunction )
+		public Echo_Reservoir ( int nodeCount, double levelOfConnectivity, int minimumConnections, int maximumConnections, ActivationFunction.Base activationFunction ) : base()
 		{
 			_NodeCount = nodeCount;
 			_LevelOfConnectivity = levelOfConnectivity;
 			_MinimumConnections = minimumConnections;
 			_MaximumConnections = maximumConnections;
 			_ActivationFunction = activationFunction;
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Echo_Reservoir"/> class. Used by the Serialiszer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Echo_Reservoir ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ):base(info,context)
+		{						
+			_NodeCount = info.GetInt32 ( "_NodeCount" );
+			_LevelOfConnectivity = info.GetDouble ( "_LevelOfConnectivity" ); 
+			_MinimumConnections = info.GetInt32 ( "_MinimumConnections" );
+			_MaximumConnections = info.GetInt32 ( "_MaximumConnections" ); 
+			_ActivationFunction = ( ActivationFunction.Base )info.GetValue ( "_ActivationFunction", typeof (ActivationFunction.Base) );
+			_Rnd = ( Random )info.GetValue ( "_Rnd", typeof (Random) ); 
 		}
 		
 		/// <summary>
@@ -98,11 +137,11 @@ namespace Cranium.Structure.Layer
 				int connections = _MinimumConnections;
 				for (int x=0; x< _MaximumConnections-_MinimumConnections; x++)
 				{
-					connections += rnd.NextDouble () > _LevelOfConnectivity ? 0 : 1;
+					connections += _Rnd.NextDouble () > _LevelOfConnectivity ? 0 : 1;
 				}
 				for (int i=0; i<connections; i++)
 				{
-					node.ConnectToNode ( _Nodes [rnd.Next ( 0, _Nodes.Count )], Weight.Base.ConnectionDirection.Forward, 0 );	
+					node.ConnectToNode ( _Nodes [_Rnd.Next ( 0, _Nodes.Count )], Weight.Base.ConnectionDirection.Forward, 0 );	
 				}
 			}
 		}
@@ -122,6 +161,17 @@ namespace Cranium.Structure.Layer
 		public override void ReversePass ( double learningRate, double momentum, bool recurseDownward = true )
 		{
 			base.ReversePass ( learningRate, momentum, false );
+		}
+		
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			base.GetObjectData ( info, context );
+			info.AddValue ( "_NodeCount", _NodeCount );
+			info.AddValue ( "_LevelOfConnectivity", _LevelOfConnectivity );
+			info.AddValue ( "_MinimumConnections", _MinimumConnections );
+			info.AddValue ( "_MaximumConnections", _MaximumConnections );
+			info.AddValue ( "_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType () );
+			info.AddValue ( "_Rnd", _Rnd, typeof (Random) );
 		}
 	}
 }

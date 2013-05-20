@@ -11,6 +11,7 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
+using Cranium.Structure;
 
 namespace Cranium.Activity.Training
 {
@@ -23,8 +24,6 @@ namespace Cranium.Activity.Training
 		protected int _PortionOfDatasetReserved;
 		protected double[,,] InputSequences;
 		protected double[,] ExpectedOutputs;
-		protected double _LearningRate;
-		protected double _Momentum;
 		protected double _LastPassAverageError;
 		protected List<Cranium.Structure.Node.Base> _InputNodes;
 		protected List<Cranium.Structure.Node.Base> _OutputNodes;
@@ -105,7 +104,11 @@ namespace Cranium.Activity.Training
 		/// </param>
 		public virtual void SetLearningRate ( double rate )
 		{
-			_LearningRate = rate;	
+			if ( _TargetNetwork == null )
+			{
+				throw( new Exception ( "Target Network must be defined first" ) );
+			}
+			_TargetNetwork.SetLearningRate ( rate );
 		}
 		
 		/// <summary>
@@ -116,7 +119,11 @@ namespace Cranium.Activity.Training
 		/// </param>
 		public virtual void SetMomentum ( double momentum )
 		{
-			_Momentum = momentum;	
+			if ( _TargetNetwork == null )
+			{
+				throw( new Exception ( "Target Network must be defined first" ) );
+			}
+			_TargetNetwork.SetMomentum ( momentum );
 		}
 				
 		/// <summary>
@@ -124,7 +131,7 @@ namespace Cranium.Activity.Training
 		/// </summary>
 		public virtual void PrepareData ( )
 		{
-			_SequenceCount = ( ( _WorkingDataset[0].GetLength (0 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
+			_SequenceCount = ( ( _WorkingDataset [0].GetLength ( 0 ) - _PortionOfDatasetReserved ) - _WindowWidth ) - _DistanceToForcastHorrison;
 			int inputCount = _WorkingDataset.GetLength ( 0 );
 			int outputCount = 1;
 			InputSequences = new double[_SequenceCount, _WindowWidth, inputCount];
@@ -135,11 +142,11 @@ namespace Cranium.Activity.Training
 				{
 					for (int k=0; k<inputCount; k++)
 					{
-						InputSequences [i, j, k] = _WorkingDataset [k][ i + j];						
+						InputSequences [i, j, k] = _WorkingDataset [k] [i + j];						
 					}
 					for (int l=0; l<outputCount; l++)
 					{
-						ExpectedOutputs [i, l] = _WorkingDataset [l][ i + j + _DistanceToForcastHorrison];
+						ExpectedOutputs [i, l] = _WorkingDataset [l] [i + j + _DistanceToForcastHorrison];
 					}
 				}				
 			}
@@ -147,12 +154,23 @@ namespace Cranium.Activity.Training
 		
 		#region implemented abstract members of Cranium.Activity.Training.Base
 		protected override bool _Tick ( )
-		{
+		{		
 			if ( _CurrentEpoch >= _MaxEpochs )
 			{
 				return false;
 			} // reached the max epoch so we are done for now
 			double error = 0;
+			
+			// if the Dynamic Learning Rate delegate is set call it
+			if ( _DynamicLearningRate != null )
+			{
+				_TargetNetwork.SetLearningRate ( _DynamicLearningRate ( _CurrentEpoch, _LastPassAverageError ) );
+			}
+			// if the Dynamic Momentum delegate is set call it
+			if ( _DynamicMomentum != null )
+			{
+				_TargetNetwork.SetMomentum ( _DynamicMomentum ( _CurrentEpoch, _LastPassAverageError ) );
+			}
 			
 			List<int> sequencyList = new List<int> ( _SequenceCount );
 			
@@ -184,8 +202,9 @@ namespace Cranium.Activity.Training
 				for (int x=0; x<_OutputNodes.Count; x++)
 				{
 					( _OutputNodes [x] as Structure.Node.Output ).SetTargetValue ( ExpectedOutputs [s, x] );
-				}				
-				_TargetNetwork.ReversePass ( _LearningRate, _Momentum );
+				}			
+				
+				_TargetNetwork.ReversePass ();
 				
 	
 				//Calculate the current error				
@@ -204,6 +223,9 @@ namespace Cranium.Activity.Training
 			return true;
 		}
 	
+		/// <summary>
+		/// Called as this training instance starts
+		/// </summary>
 		protected override void Starting ( )
 		{
 			PrepareData ();		
@@ -211,7 +233,9 @@ namespace Cranium.Activity.Training
 			_LogStream = File.CreateText ( "log.txt" );
 			_RND = new Random ();
 		}
-
+		/// <summary>
+		/// Called if this instance is stopped/finished
+		/// </summary>
 		protected override void Stopping ( )
 		{
 			_LogStream.Close ();

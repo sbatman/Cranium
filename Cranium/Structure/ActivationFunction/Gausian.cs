@@ -13,43 +13,48 @@ using System;
 namespace Cranium.Structure.ActivationFunction
 {
 	/// <summary>
-	/// This activation function returns exactly what it is fed, this is extreamly useful fordata being fed in that has already been cooked external
-	/// of the network. Lacking a derivative function however it is not suited for back progopgation networks.
+	/// Gaussian Activation function acts as a bellcurve activation function
 	/// </summary>
 	[Serializable]
-	public class Linear : Base
+	public class Gaussian : Base
 	{
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Linear"/> class.
+		/// The steepness of the bellcurve.
 		/// </summary>
-		public Linear () :base()
-		{			
+		protected double _Steepness;
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Gaussian"/> class.
+		/// </summary>
+		/// <param name='steepness'>
+		/// Steepness.
+		/// </param>
+		public Gaussian ( Double steepness )
+		{
+			_Steepness = steepness;	
 		}
 		
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Linear"/> class. Used by the Serializer.
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Gaussian"/> class. Used by the serializer.
 		/// </summary>
 		/// <param name='info'>
 		/// Info.
 		/// </param>
 		/// <param name='context'>
-		/// Context.
+		/// 	Context.
 		/// </param>
-		public Linear ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ):base(info,context)
-		{			
-		}
-		
-		/// <summary>
-		/// Returns the input after running through the activation function.
-		/// </summary>
-		/// <param name='input'>
-		/// The value to pass to the activation function
-		/// </param>
-		public override Double Compute ( Double input )
+		public Gaussian ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base(info,context)
 		{
-			return input;
+			_Steepness = info.GetDouble ( "_Steepness" );	
 		}
 		
+		
+		#region implemented abstract members of Cranium.Structure.ActivationFunction.Base
+		public override double Compute ( double input )
+		{
+			return Math.Exp ( -Math.Pow ( _Steepness * input, 2.0d ) );
+		}
+
 		/// <summary>
 		/// Computes the derivative using the activation function.
 		/// </summary>
@@ -59,20 +64,21 @@ namespace Cranium.Structure.ActivationFunction
 		/// <param name='input'>
 		/// Input.
 		/// </param>
-		public override Double ComputeDerivative ( Double input )
+		public override double ComputeDerivative ( double input )
 		{
-			return 1;
+			return -2 * input * _Steepness * Compute ( input ) * input;
 		}
 
 		public override void Dispose ( )
 		{
-			
+		
 		}
 
 		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
 		{
-			
+			info.AddValue ( "_Steepness", _Steepness );
 		}
+		#endregion
 	}
 }
 

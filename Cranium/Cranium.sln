@@ -1,4 +1,5 @@
-﻿Microsoft Visual Studio Solution File, Format Version 11.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cranium", "Cranium.csproj", "{9553B26D-5D2D-4013-82E1-4D7A24D526D8}"
 EndProject
@@ -10,17 +11,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{509EEFCA-0006-4685-B217-A255BA989BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{509EEFCA-0006-4685-B217-A255BA989BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{509EEFCA-0006-4685-B217-A255BA989BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{509EEFCA-0006-4685-B217-A255BA989BD5}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
+		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = libtest\LibTest.csproj
@@ -65,5 +63,8 @@ Global
 		$3.inheritsScope = text/x-csharp
 		$3.scope = text/x-csharp
 		version = 0.3
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

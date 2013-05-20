@@ -12,11 +12,13 @@ using System;
 using System.Threading;
 using Cranium.Structure;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace Cranium.LibTest.Tests.Reservoir
 {
 	/// <summary>
-	/// This test shows an example of an echo state neural netowrk learning the Makey-Glass time series dataset
+	/// This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
 	/// </summary>
 	public class MG_EchoState_Test
 	{
@@ -35,15 +37,16 @@ namespace Cranium.LibTest.Tests.Reservoir
 			//Build Network
 			_TestNetworkStructure = new Network ();
 			BuildStructure ();
+			_TestNetworkStructure.SaveToFile("testtttt.dat");
 			_TestNetworkStructure.RandomiseWeights ( 1.1d );
 			//PrepData
 			double[][] dataSet = Cranium.Data.Preprocessing.StandardDeviationVariance.ProduceDataset ( "TestData/Mackey-Glass-Pure.csv" ).DataSet;
 			
 			//Prepare training activity
 			_SlidingWindowTraining = new Cranium.Activity.Training.SlidingWindow ();
-			_SlidingWindowTraining.SetMomentum ( 0.5f );
-			_SlidingWindowTraining.SetLearningRate ( 0.004f );
 			_SlidingWindowTraining.SetTargetNetwork ( _TestNetworkStructure );
+			_SlidingWindowTraining.SetMomentum ( 0.5f );
+			_SlidingWindowTraining.SetLearningRate ( 0.004f );			
 			_SlidingWindowTraining.SetDatasetReservedLength ( 0 );
 			_SlidingWindowTraining.SetDistanceToForcastHorrison ( 3 );
 			_SlidingWindowTraining.SetWindowWidth ( 12 );

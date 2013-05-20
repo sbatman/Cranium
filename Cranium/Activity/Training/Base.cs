@@ -16,6 +16,8 @@ namespace Cranium.Activity.Training
 {
 	public abstract class Base
 	{
+		public delegate double DynamicVariable (int epoch,double currentRMSE);
+		
 		private bool _Running = false;
 		private bool _Stopping = false;
 		private Thread _LoopThread;
@@ -23,6 +25,8 @@ namespace Cranium.Activity.Training
 		protected double[][] _WorkingDataset;
 		protected int _MaxEpochs;
 		protected int _CurrentEpoch;
+		protected DynamicVariable _DynamicLearningRate;
+		protected DynamicVariable _DynamicMomentum;
 
 		/// <summary>
 		/// Start this training activity (launched in a sperate thread).
@@ -115,6 +119,28 @@ namespace Cranium.Activity.Training
 			}
 			Stopping ();
 			_Running = false;
+		}
+		
+		/// <summary>
+		/// Sets the dynamic learning rate delegate, passing null will switch back to static learning rate.
+		/// </summary>
+		/// <param name='function'>
+		/// Function.
+		/// </param>
+		public void SetDynamicLearningRateDelegate ( DynamicVariable function )
+		{
+			_DynamicLearningRate = function;
+		}
+		
+		/// <summary>
+		/// Sets the dynamic momenum delegate passing null will switch back to static momentum.
+		/// </summary>
+		/// <param name='function'>
+		/// Function.
+		/// </param>
+		public void SetDynamicMomenumDelegate ( DynamicVariable function )
+		{
+			_DynamicMomentum = function;
 		}
 	}
 }

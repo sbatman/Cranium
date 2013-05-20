@@ -11,17 +11,26 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+using System.IO;
+using System.Runtime.Serialization.Formatters;
+using System.IO.Compression;
 
 namespace Cranium.Structure
 {
 	/// <summary>
-	/// A base network class, This primarily acts as a structure container of the network and used at a later stage for a large ammount of the netowrks IO
+	/// A base network class, This primarily acts as a structure container of the network and used at a later stage for a large ammount of the networks IO
 	/// </summary>
-	public class Network : IDisposable
+	[Serializable]
+	public class Network : IDisposable , ISerializable
 	{
 		protected List<Layer.Base> _CurrentLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedTopLayers = new List<Layer.Base> ();
 		protected List<Layer.Base> _DetectedBottomLayers = new List<Layer.Base> ();
+		protected double _LearningRate = 0;
+		protected double _Momenum = 0;
+		protected int _LastIssuedLayerID = 0;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cranium.Structure.Network"/> class.
@@ -29,6 +38,24 @@ namespace Cranium.Structure
 		public Network ()
 		{			
 			_CurrentLayers = new List<Layer.Base> ();
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Network"/> class. Used by the Serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Network ( SerializationInfo info, StreamingContext context )
+		{
+			_CurrentLayers = ( List<Layer.Base> )info.GetValue ( "CurrentLayers", typeof (List<Layer.Base>) );
+			_LearningRate = info.GetDouble ( "_LearningRate" );
+			_Momenum = info.GetDouble ( "_Momenum" );
+			_LastIssuedLayerID = info.GetInt32 ( "_LastIssuedLayerID" );
+		//	StructureUpdate ();
 		}
 		
 		/// <summary>
@@ -64,11 +91,10 @@ namespace Cranium.Structure
 		}
 		
 		/// <summary>
-		/// Called when a change is detected to this level of the nerual netowrks structure
+		/// Called when a change is detected to this level of the nerual networks structure
 		/// </summary>
 		protected virtual void StructureUpdate ( )
 		{
-			int id = 0;
 			foreach ( Layer.Base l in _CurrentLayers )
 			{
 				if ( l.GetForwardConnectedLayers ().Count == 0 )
@@ -79,8 +105,11 @@ namespace Cranium.Structure
 				{
 					_DetectedBottomLayers.Add ( l );
 				}
-				l.SetID ( id );
-				id++;
+				if ( l.GetID () == -1 )
+				{
+					_LastIssuedLayerID++;
+					l.SetID ( _LastIssuedLayerID );					
+				}
 			}
 		}
 		
@@ -166,23 +195,102 @@ namespace Cranium.Structure
 		/// <param name='momentum'>
 		/// Momentum.
 		/// </param>
-		public virtual void ReversePass ( double learningRate, double momentum )
+		public virtual void ReversePass ( )
 		{
 			foreach ( Layer.Base l in _DetectedTopLayers )
-				l.ReversePass ( learningRate, momentum );
+				l.ReversePass ( _LearningRate, _Momenum );
 		}
-
-		#region IDisposable implementation
-		public virtual void Dispose ()
+		
+		/// <summary>
+		/// Gets the current learning rate.
+		/// </summary>
+		/// <returns>
+		/// The learning rate.
+		/// </returns>
+		public virtual double GetLearningRate ( )
 		{
-			_DetectedTopLayers.Clear();
-			_DetectedTopLayers=null;
-			_DetectedBottomLayers.Clear();
+			return _LearningRate;
+		}
+		
+		/// <summary>
+		/// Gets the current momentum.
+		/// </summary>
+		/// <returns>
+		/// The momentum.
+		/// </returns>
+		public  virtual double GetMomentum ( )
+		{
+			return _Momenum;	
+		}
+		
+		/// <summary>
+		/// Sets the current learning rate.
+		/// </summary>
+		/// <param name='newLearningRate'>
+		/// New learning rate.
+		/// </param>
+		public virtual void SetLearningRate ( double newLearningRate )
+		{
+			_LearningRate = newLearningRate;	
+		}
+		
+		/// <summary>
+		/// Sets the current momentum.
+		/// </summary>
+		/// <param name='newMomentum'>
+		/// New momentum.
+		/// </param>
+		public virtual void SetMomentum ( double newMomentum )
+		{
+			_Momenum = newMomentum;	
+		}
+		
+		public void SaveToFile ( string fileName )
+		{			
+			BinaryFormatter formatter = new BinaryFormatter ();	
+			formatter.AssemblyFormat = FormatterAssemblyStyle.Simple;			
+			FileStream atextwriter = File.Create ( fileName );		
+			GZipStream CompressionStream = new GZipStream ( atextwriter, CompressionMode.Compress );			
+			formatter.Serialize ( CompressionStream, this );	
+			
+			CompressionStream.Close ();
+			atextwriter.Close ();
+		}
+		
+		public static Network LoadFromFile ( string filename )
+		{
+			FileStream loadedFile = File.OpenRead ( filename );
+			GZipStream CompressionStream = new GZipStream ( loadedFile, CompressionMode.Decompress );
+			BinaryFormatter formatter = new BinaryFormatter ();	
+			Network returnNetwork = ( Network )formatter.Deserialize ( CompressionStream );
+			returnNetwork.StructureUpdate();
+			CompressionStream.Close ();
+			loadedFile.Close ();
+			return returnNetwork;
+		}
+		
+		#region IDisposable implementation
+		public virtual void Dispose ( )
+		{
+			_DetectedTopLayers.Clear ();
+			_DetectedTopLayers = null;
+			_DetectedBottomLayers.Clear ();
 			_DetectedBottomLayers = null;
-			foreach(Layer.Base l in _CurrentLayers)
-				l.Dispose();
-			_CurrentLayers.Clear();
+			foreach ( Layer.Base l in _CurrentLayers )
+				l.Dispose ();
+			_CurrentLayers.Clear ();
 			_CurrentLayers = null;
+		}
+		#endregion
+
+		#region ISerializable implementation
+		public void GetObjectData ( SerializationInfo info, StreamingContext context )
+		{
+			//Right lets serialise this thing
+			info.AddValue ( "CurrentLayers", _CurrentLayers, typeof (List<Layer.Base>) );		
+			info.AddValue ( "_LearningRate", _LearningRate );
+			info.AddValue ( "_Momenum", _Momenum );
+			info.AddValue ( "_LastIssuedLayerID", _LastIssuedLayerID );
 		}
 		#endregion
 	}

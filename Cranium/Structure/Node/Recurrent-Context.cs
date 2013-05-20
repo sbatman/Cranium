@@ -16,6 +16,7 @@ namespace Cranium.Structure.Node
 	/// This recursive node acts differntly from as standard node as it has a source node from which it generates its value,
 	/// this is based on the Rate of update pased as the constructor.
 	/// </summary>
+	[Serializable]
 	public class Recurrent_Context : Base
 	{
 		/// <summary>
@@ -29,7 +30,7 @@ namespace Cranium.Structure.Node
 		/// <summary>
 		/// The initial value of the node.
 		/// </summary>
-		protected double _StartValue = 0.5f;
+		protected double _StartValue = 0.0f;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cranium.Structure.Node.Recurrent_Context"/> class.
@@ -52,7 +53,23 @@ namespace Cranium.Structure.Node
 			_SourceNode = sourceNode;
 			_RateOfUpdate = rateOfUpdate;
 		}
-
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Node.Recurrent_Context"/> class. Used by the Serializer.
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Recurrent_Context ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ):base(info,context)
+		{
+			_SourceNode = ( Node.Base )info.GetValue ( "_SourceNode", typeof (Node.Base) );
+			_RateOfUpdate = info.GetDouble ( "_RateOfUpdate" );
+			_StartValue = info.GetDouble ( "_StartValue" );
+		}
+		
 		/// <summary>
 		/// Update this nodes value.
 		/// </summary>
@@ -70,6 +87,14 @@ namespace Cranium.Structure.Node
 		public virtual void SetStartValue ( double startValue )
 		{
 			_StartValue = startValue;
+		}
+		
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			base.GetObjectData ( info, context );
+			info.AddValue ( "_SourceNode", _SourceNode, _SourceNode.GetType () );
+			info.AddValue ( "_RateOfUpdate", _RateOfUpdate );
+			info.AddValue ( "_StartValue", _StartValue );
 		}
 	}
 }

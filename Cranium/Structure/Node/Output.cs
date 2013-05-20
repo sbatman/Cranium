@@ -17,6 +17,7 @@ namespace Cranium.Structure.Node
 	/// <summary>
 	/// The output node functions differntly from normal nodes as its error is calcuated from the targetvalue rather than the error of foward nodes.
 	/// </summary>
+	[Serializable]
 	public class Output : Base
 	{
 		protected Double _TargetValue;
@@ -33,6 +34,20 @@ namespace Cranium.Structure.Node
 		public Output ( Cranium.Structure.Layer.Base parentLayer, Cranium.Structure.ActivationFunction.Base activationFunction ):base(parentLayer,activationFunction)
 		{
 			
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Node.Output"/> class. Used by the Serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Output(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context):base(info,context)
+		{
+			_TargetValue = info.GetDouble("_TargetValue");
 		}
 		
 		/// <summary>
@@ -53,6 +68,12 @@ namespace Cranium.Structure.Node
 		public virtual void SetTargetValue ( Double targetValue )
 		{
 			_TargetValue = targetValue;
+		}
+		
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			base.GetObjectData ( info, context );
+			info.AddValue ( "_TargetValue", _TargetValue );
 		}
 	}
 }

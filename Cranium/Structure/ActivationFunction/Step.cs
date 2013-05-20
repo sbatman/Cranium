@@ -13,18 +13,42 @@ using System;
 namespace Cranium.Structure.ActivationFunction
 {
 	/// <summary>
-	/// This activation function will return 1 when >= threshold else 0, its not recomended you use this in a backprop netowrk
+	/// This activation function will return 1 when >= threshold else 0, its not recomended you use this in a backprop network
 	/// </summary>
+	[Serializable]
 	public class Step : Base
 	{
+		/// <summary>
+		/// The Point at which the value must be at or above to for the activation function to return one else zero
+		/// </summary>
 		protected double _ActivationPoint;
 		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Step"/> class.
+		/// </summary>
+		/// <param name='activationPoint'>
+		/// Activation point.
+		/// </param>
 		public Step ( double activationPoint )
 		{
 			_ActivationPoint = activationPoint;	
 		}
 		
-				/// <summary>
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Step"/> class.
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Step ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ) : base(info,context)
+		{
+			_ActivationPoint = info.GetDouble ( "_ActivationPoint" );
+		}
+		
+		/// <summary>
 		/// Returns the input after running through the activation function.
 		/// </summary>
 		/// <param name='input'>
@@ -34,6 +58,7 @@ namespace Cranium.Structure.ActivationFunction
 		{
 			return input >= _ActivationPoint ? 1 : 0;
 		}
+		
 		/// <summary>
 		/// Computes the derivative using the activation function.
 		/// </summary>
@@ -51,6 +76,11 @@ namespace Cranium.Structure.ActivationFunction
 		public override void Dispose ( )
 		{
 			
+		}
+
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			info.AddValue ( "_ActivationPoint", _ActivationPoint );
 		}
 	}
 }

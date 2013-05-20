@@ -15,13 +15,24 @@ namespace Cranium.Structure.Layer
 {
 	/// <summary>
 	/// This type of layer offers a form of recursive memory in the form of gradually lower momentum recursive stores.
-	/// This is described in detail in Ulbrich, C., 1994. Multi-Recurrent Netowrks for Traffic Forecasting. Vienna: Austrian Research Institute for Artificial Intelligence.
+	/// This is described in detail in Ulbrich, C., 1994. Multi-Recurrent networks for Traffic Forecasting. Vienna: Austrian Research Institute for Artificial Intelligence.
 	/// The white paper can be found here http://www.aaai.org/Papers/AAAI/1994/AAAI94-135.pdf
 	/// </summary>
+	[Serializable]
 	public class Recurrent_Context : Base
 	{
+		/// <summary>
+		/// The source ndoes used when building the recurrent context
+		/// </summary>
 		protected List<Node.Base> _SourceNodes;
+		/// <summary>
+		/// How many context nodes should be created per source node
+		/// </summary>
 		protected int _LevelOfContext = 1;
+		/// <summary>
+		/// The Activation function that should be used for all nodes within the layer
+		/// </summary>
+		protected ActivationFunction.Base _ActivationFunction;
 		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Recurrent_Context"/> class.
@@ -29,10 +40,30 @@ namespace Cranium.Structure.Layer
 		/// <param name='levelOfContext'>
 		/// Level of context.
 		/// </param>
-		public Recurrent_Context ( int levelOfContext )
+		/// <param name='activationFunction'>
+		/// Activation function to be used for the context nodes.
+		/// </param>
+		public Recurrent_Context ( int levelOfContext, ActivationFunction.Base activationFunction ) : base()
 		{
+			_ActivationFunction = activationFunction;
 			_SourceNodes = new List<Node.Base> ();
 			_LevelOfContext = levelOfContext;
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Cranium.Structure.Layer.Recurrent_Context"/> class. Used by Serializer
+		/// </summary>
+		/// <param name='info'>
+		/// Info.
+		/// </param>
+		/// <param name='context'>
+		/// Context.
+		/// </param>
+		public Recurrent_Context ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context ):base(info,context)
+		{
+			_SourceNodes = ( List<Node.Base> )info.GetValue ( "_SourceNodes", typeof (List<Node.Base>) );
+			_LevelOfContext = info.GetInt32 ( "_LevelOfContext" );
+			_ActivationFunction = ( ActivationFunction.Base )info.GetValue ( "_ActivationFunction", typeof (ActivationFunction.Base) );
 		}
 		
 		/// <summary>
@@ -54,7 +85,7 @@ namespace Cranium.Structure.Layer
 			{
 				foreach ( Node.Base n in _SourceNodes )
 				{
-					_Nodes.Add ( new Node.Recurrent_Context ( n, step * x, this, new ActivationFunction.Tanh () ) );
+					_Nodes.Add ( new Node.Recurrent_Context ( n, step * x, this, _ActivationFunction ) );
 				}
 			}
 		}
@@ -77,6 +108,14 @@ namespace Cranium.Structure.Layer
 		{
 			foreach ( Node.Recurrent_Context n in _Nodes )
 				n.Update ();	
+		}
+		
+		public override void GetObjectData ( System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context )
+		{
+			base.GetObjectData ( info, context );
+			info.AddValue ( "_SourceNodes", _SourceNodes, _SourceNodes.GetType () );
+			info.AddValue ( "_LevelOfContext", _LevelOfContext );
+			info.AddValue ( "_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType () );
 		}
 	}
 }
