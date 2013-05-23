@@ -97,17 +97,14 @@ namespace Cranium.Structure.Node
         /// </summary>
         public virtual void CalculateValue()
         {
-            if (_TFowardWeights == null || _TReverseWeights == null)
-                BakeLists();
+            if (_TFowardWeights == null || _TReverseWeights == null) BakeLists();
 
             Debug.Assert(_TReverseWeights != null, "_TReverseWeights != null");
-            if (_TReverseWeights.Length == 0)
-                return;
+            if (_TReverseWeights.Length == 0) return;
 
             _Value = 0;
 
-            foreach (Weight.Base w in _TReverseWeights)
-                _Value += w.NodeA._Value*w.Weight;
+            foreach (Weight.Base w in _TReverseWeights) _Value += w.NodeA._Value*w.Weight;
 
             _Value = _ActivationFunction.Compute(_Value);
         }
@@ -140,10 +137,7 @@ namespace Cranium.Structure.Node
         /// </returns>
         public virtual Weight.Base[] GetFowardWeights()
         {
-            if (_TFowardWeights == null || _TReverseWeights == null)
-            {
-                BakeLists();
-            }
+            if (_TFowardWeights == null || _TReverseWeights == null) BakeLists();
             return _TFowardWeights;
         }
 
@@ -164,10 +158,7 @@ namespace Cranium.Structure.Node
         /// </param>
         public virtual void AdjustWeights(Double learningRate)
         {
-            foreach (Weight.Base w in _FowardWeights)
-            {
-                w.AddWeightChange(_Value*w.NodeB._Error*learningRate);
-            }
+            foreach (Weight.Base w in _FowardWeights) w.AddWeightChange(_Value*w.NodeB._Error*learningRate);
         }
 
         /// <summary>
@@ -193,10 +184,7 @@ namespace Cranium.Structure.Node
         /// </returns>
         public virtual Double GetError()
         {
-            if (Double.IsNaN(_Error) || Double.IsInfinity(_Error))
-            {
-                throw (new Exception("Weight Error"));
-            }
+            if (Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw (new Exception("Weight Error"));
             return _Error;
         }
 
@@ -208,10 +196,7 @@ namespace Cranium.Structure.Node
         /// </returns>
         public virtual Weight.Base[] GetReverseWeights()
         {
-            if (_TFowardWeights == null || _TReverseWeights == null)
-            {
-                BakeLists();
-            }
+            if (_TFowardWeights == null || _TReverseWeights == null) BakeLists();
             return _TReverseWeights;
         }
 
@@ -269,10 +254,7 @@ namespace Cranium.Structure.Node
                 foreach (Weight.Base w in _TFowardWeights)
                 {
                     w.NodeB._TReverseWeights = null;
-                    if (w.NodeB._ReverseWeights != null)
-                    {
-                        w.NodeB._ReverseWeights.Remove(w);
-                    }
+                    if (w.NodeB._ReverseWeights != null) w.NodeB._ReverseWeights.Remove(w);
                     w.Dispose();
                 }
                 _FowardWeights.Clear();

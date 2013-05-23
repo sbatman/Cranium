@@ -85,20 +85,11 @@ namespace Cranium.LibTest.Tests.Linear
                     ForwardPass();
                     ReversePass(x, 0);
 
-                    if (x == 0 && _OutputLayer.GetNodes()[0].GetValue() > 0.02f)
-                    {
-                        Continue = true;
-                    }
-                    if ((x == 1 || x == 2) && _OutputLayer.GetNodes()[0].GetValue() < 0.98f)
-                    {
-                        Continue = true;
-                    }
-                    if (x == 3 && _OutputLayer.GetNodes()[0].GetValue() > 0.02f)
-                    {
-                        Continue = true;
-                    }
-                    Console.WriteLine(_InputLayer.GetNodes()[0].GetValue() + "-" + _InputLayer.GetNodes()[1].GetValue() +
-                                      "  -  " + Math.Round(_OutputLayer.GetNodes()[0].GetValue(), 3));
+                    if (x == 0 && _OutputLayer.GetNodes() [0].GetValue() > 0.02f) Continue = true;
+                    if ((x == 1 || x == 2) && _OutputLayer.GetNodes() [0].GetValue() < 0.98f) Continue = true;
+                    if (x == 3 && _OutputLayer.GetNodes() [0].GetValue() > 0.02f) Continue = true;
+                    Console.WriteLine(_InputLayer.GetNodes() [0].GetValue() + "-" + _InputLayer.GetNodes() [1].GetValue() +
+                                      "  -  " + Math.Round(_OutputLayer.GetNodes() [0].GetValue(), 3));
                 }
             }
             Console.WriteLine("Training complete in " + epoch + " epochs");
@@ -112,27 +103,18 @@ namespace Cranium.LibTest.Tests.Linear
         {
             _InputLayer = new Base();
             List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 2; i++)
-            {
-                inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
-            }
+            for (int i = 0; i < 2; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
 
             _InputLayer.SetNodes(inputLayerNodes);
 
             _HiddenLayer = new Base();
             List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 4; i++)
-            {
-                hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
-            }
+            for (int i = 0; i < 4; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _OutputLayer = new Base();
             List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++)
-            {
-                ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
-            }
+            for (int i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(ouputLayerNodes);
 
             _InputLayer.ConnectFowardLayer(_HiddenLayer);
@@ -142,8 +124,7 @@ namespace Cranium.LibTest.Tests.Linear
             _TestNetworkStructure.AddLayer(_HiddenLayer);
             _TestNetworkStructure.AddLayer(_OutputLayer);
 
-            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers())
-                layer.PopulateNodeConnections();
+            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
         }
 
         /// <summary>
@@ -154,21 +135,21 @@ namespace Cranium.LibTest.Tests.Linear
             _InputData = new Int32[8];
             _OutputData = new Int32[4];
 
-            _InputData[0] = 0;
-            _InputData[1] = 0;
-            _OutputData[0] = 0;
+            _InputData [0] = 0;
+            _InputData [1] = 0;
+            _OutputData [0] = 0;
 
-            _InputData[2] = 1;
-            _InputData[3] = 0;
-            _OutputData[1] = 1;
+            _InputData [2] = 1;
+            _InputData [3] = 0;
+            _OutputData [1] = 1;
 
-            _InputData[4] = 0;
-            _InputData[5] = 1;
-            _OutputData[2] = 1;
+            _InputData [4] = 0;
+            _InputData [5] = 1;
+            _OutputData [2] = 1;
 
-            _InputData[6] = 1;
-            _InputData[7] = 1;
-            _OutputData[3] = 0;
+            _InputData [6] = 1;
+            _InputData [7] = 1;
+            _OutputData [3] = 0;
         }
 
         /// <summary>
@@ -179,8 +160,8 @@ namespace Cranium.LibTest.Tests.Linear
         /// </param>
         private static void PresentData(int row)
         {
-            _InputLayer.GetNodes()[0].SetValue(_InputData[(row*2)]);
-            _InputLayer.GetNodes()[1].SetValue(_InputData[(row*2) + 1]);
+            _InputLayer.GetNodes() [0].SetValue(_InputData [(row*2)]);
+            _InputLayer.GetNodes() [1].SetValue(_InputData [(row*2) + 1]);
         }
 
         /// <summary>
@@ -202,8 +183,8 @@ namespace Cranium.LibTest.Tests.Linear
         /// </param>
         private static void ReversePass(int row, Double momentum)
         {
-            Output outputNode = (Output) (_OutputLayer.GetNodes()[0]);
-            outputNode.SetTargetValue(_OutputData[row]);
+            Output outputNode = (Output) (_OutputLayer.GetNodes() [0]);
+            outputNode.SetTargetValue(_OutputData [row]);
             _OutputLayer.ReversePass(0.3, 0.0);
         }
     }

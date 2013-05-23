@@ -91,35 +91,25 @@ namespace Cranium.LibTest.Tests.Recursive
                 }
                 for (int x = 0; x < 4; x++)
                 {
-                    foreach (Structure.Node.Base n in _ContextLayer.GetNodes())
-                        n.SetValue(0);
+                    foreach (Structure.Node.Base n in _ContextLayer.GetNodes()) n.SetValue(0);
                     for (int i = 0; i < 2; i++)
                     {
-                        _InputLayer.GetNodes()[0].SetValue(_InputData[(x*2) + i]);
+                        _InputLayer.GetNodes() [0].SetValue(_InputData [(x*2) + i]);
                         ForwardPass();
                         _ContextLayer.UpdateExtra();
                     }
                     ReversePass(x, 0);
 
                     //Stopping conditions
-                    if (x == 0 && _OutputLayer.GetNodes()[0].GetValue() > 0.05f)
-                    {
-                        Continue = true;
-                    }
-                    if ((x == 1 || x == 2) && _OutputLayer.GetNodes()[0].GetValue() < 0.95f)
-                    {
-                        Continue = true;
-                    }
-                    if (x == 3 && _OutputLayer.GetNodes()[0].GetValue() > 0.05f)
-                    {
-                        Continue = true;
-                    }
+                    if (x == 0 && _OutputLayer.GetNodes() [0].GetValue() > 0.05f) Continue = true;
+                    if ((x == 1 || x == 2) && _OutputLayer.GetNodes() [0].GetValue() < 0.95f) Continue = true;
+                    if (x == 3 && _OutputLayer.GetNodes() [0].GetValue() > 0.05f) Continue = true;
                     //
 
                     if (epoch%100 == 0)
                     {
-                        Console.WriteLine(_InputData[x*2] + "-" + _InputData[(x*2) + 1] + "  -  " +
-                                          Math.Round(_OutputLayer.GetNodes()[0].GetValue(), 3));
+                        Console.WriteLine(_InputData [x*2] + "-" + _InputData [(x*2) + 1] + "  -  " +
+                                          Math.Round(_OutputLayer.GetNodes() [0].GetValue(), 3));
                     }
                 }
             }
@@ -134,28 +124,19 @@ namespace Cranium.LibTest.Tests.Recursive
         {
             _InputLayer = new Base();
             List<Structure.Node.Base> InputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++)
-            {
-                InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
-            }
+            for (int i = 0; i < 1; i++) InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
             _InputLayer.SetNodes(InputLayerNodes);
 
             _HiddenLayer = new Base();
             List<Structure.Node.Base> HiddenLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 10; i++)
-            {
-                HiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
-            }
+            for (int i = 0; i < 10; i++) HiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(HiddenLayerNodes);
 
             _ContextLayer = new RecurrentContext(4, new Tanh());
 
             _OutputLayer = new Base();
             List<Structure.Node.Base> OuputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++)
-            {
-                OuputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
-            }
+            for (int i = 0; i < 1; i++) OuputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(OuputLayerNodes);
 
             _ContextLayer.AddSourceNodes(InputLayerNodes);
@@ -170,8 +151,7 @@ namespace Cranium.LibTest.Tests.Recursive
             _TestNetworkStructure.AddLayer(_ContextLayer);
             _TestNetworkStructure.AddLayer(_OutputLayer);
 
-            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers())
-                layer.PopulateNodeConnections();
+            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
         }
 
         /// <summary>
@@ -185,21 +165,21 @@ namespace Cranium.LibTest.Tests.Recursive
             int i = 0;
             int o = 0;
 
-            _InputData[i++] = 0;
-            _InputData[i++] = 0;
-            _OutputData[o++] = 0;
+            _InputData [i++] = 0;
+            _InputData [i++] = 0;
+            _OutputData [o++] = 0;
 
-            _InputData[i++] = 1;
-            _InputData[i++] = 0;
-            _OutputData[o++] = 1;
+            _InputData [i++] = 1;
+            _InputData [i++] = 0;
+            _OutputData [o++] = 1;
 
-            _InputData[i++] = 0;
-            _InputData[i++] = 1;
-            _OutputData[o++] = 1;
+            _InputData [i++] = 0;
+            _InputData [i++] = 1;
+            _OutputData [o++] = 1;
 
-            _InputData[i++] = 1;
-            _InputData[i++] = 1;
-            _OutputData[o++] = 0;
+            _InputData [i++] = 1;
+            _InputData [i++] = 1;
+            _OutputData [o++] = 0;
         }
 
         /// <summary>
@@ -221,8 +201,8 @@ namespace Cranium.LibTest.Tests.Recursive
         /// </param>
         public static void ReversePass(int row, Double momentum)
         {
-            Output outputNode = (Output) (_OutputLayer.GetNodes()[0]);
-            outputNode.SetTargetValue(_OutputData[row]);
+            Output outputNode = (Output) (_OutputLayer.GetNodes() [0]);
+            outputNode.SetTargetValue(_OutputData [row]);
             _OutputLayer.ReversePass(0.06, 0.7);
         }
     }

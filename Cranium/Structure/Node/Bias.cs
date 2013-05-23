@@ -106,10 +106,7 @@ namespace Cranium.Structure.Node
         public override void ConnectToNode(Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode,
                                            float startingWeight)
         {
-            if (connectionDirectionToNode == Weight.Base.ConnectionDirection.Reverse)
-            {
-                return;
-            }
+            if (connectionDirectionToNode == Weight.Base.ConnectionDirection.Reverse) return;
             base.ConnectToNode(nodeToConnect, connectionDirectionToNode, startingWeight);
         }
 

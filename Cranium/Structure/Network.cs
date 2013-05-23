@@ -77,10 +77,7 @@ namespace Cranium.Structure
         /// </param>
         public void AddLayer(Base newLayer)
         {
-            if (_CurrentLayers.Contains(newLayer))
-            {
-                return;
-            }
+            if (_CurrentLayers.Contains(newLayer)) return;
             _CurrentLayers.Add(newLayer);
             StructureUpdate();
         }
@@ -93,10 +90,7 @@ namespace Cranium.Structure
         /// </param>
         public void RemoveLayer(Base layer)
         {
-            if (!_CurrentLayers.Contains(layer))
-            {
-                return;
-            }
+            if (!_CurrentLayers.Contains(layer)) return;
             _CurrentLayers.Remove(layer);
             StructureUpdate();
         }
@@ -108,14 +102,8 @@ namespace Cranium.Structure
         {
             foreach (Base l in _CurrentLayers)
             {
-                if (l.GetForwardConnectedLayers().Count == 0)
-                {
-                    _DetectedTopLayers.Add(l);
-                }
-                if (l.GetReverseConnectedLayers().Count == 0)
-                {
-                    _DetectedBottomLayers.Add(l);
-                }
+                if (l.GetForwardConnectedLayers().Count == 0) _DetectedTopLayers.Add(l);
+                if (l.GetReverseConnectedLayers().Count == 0) _DetectedBottomLayers.Add(l);
                 if (l.GetID() == -1)
                 {
                     _LastIssuedLayerID++;
@@ -130,8 +118,7 @@ namespace Cranium.Structure
         /// </summary>
         protected virtual void BuildNodeConnections()
         {
-            foreach (Base l in _CurrentLayers)
-                l.PopulateNodeConnections();
+            foreach (Base l in _CurrentLayers) l.PopulateNodeConnections();
         }
 
         /// <summary>
@@ -178,10 +165,7 @@ namespace Cranium.Structure
             Random rnd = new Random();
             foreach (
                 Weight.Base w in from l in _CurrentLayers from n in l.GetNodes() from w in n.GetFowardWeights() select w
-                )
-            {
-                w.SetWeight(((rnd.NextDouble()*2) - 1)*varianceFromZero);
-            }
+                ) w.SetWeight(((rnd.NextDouble()*2) - 1)*varianceFromZero);
         }
 
         /// <summary>
@@ -189,8 +173,7 @@ namespace Cranium.Structure
         /// </summary>
         public virtual void FowardPass()
         {
-            foreach (Base l in  _DetectedBottomLayers)
-                l.ForwardPass();
+            foreach (Base l in  _DetectedBottomLayers) l.ForwardPass();
         }
 
         /// <summary>
@@ -198,8 +181,7 @@ namespace Cranium.Structure
         /// </summary>
         public virtual void ReversePass()
         {
-            foreach (Base l in _DetectedTopLayers)
-                l.ReversePass(_LearningRate, _Momenum);
+            foreach (Base l in _DetectedTopLayers) l.ReversePass(_LearningRate, _Momenum);
         }
 
         /// <summary>
@@ -276,8 +258,7 @@ namespace Cranium.Structure
             _DetectedTopLayers = null;
             _DetectedBottomLayers.Clear();
             _DetectedBottomLayers = null;
-            foreach (Base l in _CurrentLayers)
-                l.Dispose();
+            foreach (Base l in _CurrentLayers) l.Dispose();
             _CurrentLayers.Clear();
             _CurrentLayers = null;
         }

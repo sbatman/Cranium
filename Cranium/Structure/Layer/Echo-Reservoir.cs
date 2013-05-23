@@ -118,26 +118,8 @@ namespace Cranium.Structure.Layer
         {
             PurgeNodeConnections();
             BuildNodeBank();
-            foreach (Base l in _ForwardConnectedLayers)
-            {
-                foreach (Node.Base n in _Nodes)
-                {
-                    foreach (Node.Base fn in l.GetNodes())
-                    {
-                        n.ConnectToNode(fn, Weight.Base.ConnectionDirection.Forward, 0);
-                    }
-                }
-            }
-            foreach (Base l in _ReverseConnectedLayers)
-            {
-                foreach (Node.Base n in _Nodes)
-                {
-                    foreach (Node.Base fn in l.GetNodes())
-                    {
-                        n.ConnectToNode(fn, Weight.Base.ConnectionDirection.Reverse, 0);
-                    }
-                }
-            }
+            foreach (Base l in _ForwardConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.Forward, 0);
+            foreach (Base l in _ReverseConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.Reverse, 0);
         }
 
         /// <summary>
@@ -145,21 +127,12 @@ namespace Cranium.Structure.Layer
         /// </summary>
         public virtual void BuildNodeBank()
         {
-            for (int x = 0; x < _NodeCount; x++)
-            {
-                _Nodes.Add(new Node.Base(this, _ActivationFunction));
-            }
+            for (int x = 0; x < _NodeCount; x++) _Nodes.Add(new Node.Base(this, _ActivationFunction));
             foreach (Node.Base node in _Nodes)
             {
                 int connections = _MinimumConnections;
-                for (int x = 0; x < _MaximumConnections - _MinimumConnections; x++)
-                {
-                    connections += _Rnd.NextDouble() > _LevelOfConnectivity ? 0 : 1;
-                }
-                for (int i = 0; i < connections; i++)
-                {
-                    node.ConnectToNode(_Nodes[_Rnd.Next(0, _Nodes.Count)], Weight.Base.ConnectionDirection.Forward, 0);
-                }
+                for (int x = 0; x < _MaximumConnections - _MinimumConnections; x++) connections += _Rnd.NextDouble() > _LevelOfConnectivity ? 0 : 1;
+                for (int i = 0; i < connections; i++) node.ConnectToNode(_Nodes [_Rnd.Next(0, _Nodes.Count)], Weight.Base.ConnectionDirection.Forward, 0);
             }
         }
 

@@ -92,17 +92,17 @@ namespace Cranium.LibTest.Tests.Recursive
             //Prepare training activity
             _SlidingWindowTraining = new SlidingWindow();
             _SlidingWindowTraining.SetTargetNetwork(_TestNetworkStructure);
-                // the target network for the training to take place on
+            // the target network for the training to take place on
             _SlidingWindowTraining.SetMomentum(0.7f);
-                // The ammount of the previous weight change applied to current weight change - google if u need to know more
+            // The ammount of the previous weight change applied to current weight change - google if u need to know more
             _SlidingWindowTraining.SetLearningRate(0.004f);
-                // The rate at which the neural entwork learns (the more agressive this is the harded itll be for the network)			
+            // The rate at which the neural entwork learns (the more agressive this is the harded itll be for the network)			
             _SlidingWindowTraining.SetDatasetReservedLength(0);
-                // How many elements off the end of the dataset should not be used for training
+            // How many elements off the end of the dataset should not be used for training
             _SlidingWindowTraining.SetDistanceToForcastHorrison(3);
-                // How far beyond the window should be be trying to predict 
+            // How far beyond the window should be be trying to predict 
             _SlidingWindowTraining.SetWindowWidth(12);
-                // The window of elements that should be presented before the backward pass is performed
+            // The window of elements that should be presented before the backward pass is performed
             _SlidingWindowTraining.SetMaximumEpochs(50); // The maximum number of epochs the network can train for
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes); // Setting the nodes that are used for input
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes); // Setting the nodes that are generating output
@@ -120,10 +120,7 @@ namespace Cranium.LibTest.Tests.Recursive
             Console.WriteLine("Starting Training");
             _SlidingWindowTraining.Start();
             Thread.Sleep(1000);
-            while (_SlidingWindowTraining.IsRunning())
-            {
-                Thread.Sleep(20);
-            }
+            while (_SlidingWindowTraining.IsRunning()) Thread.Sleep(20);
 
             ////////////////////////////////////////////////
             ////////////////////////////////////////////////
@@ -159,7 +156,6 @@ namespace Cranium.LibTest.Tests.Recursive
                     RandomWalkComparison.CalculateErrorAgainstRandomWalk(Result.ExpectedOutputs, Result.ActualOutputs, 1)
                         [0]*100, 3));
 
-
             Console.ReadKey();
         }
 
@@ -171,19 +167,13 @@ namespace Cranium.LibTest.Tests.Recursive
             // Input layer construction
             _InputLayer = new Base();
             _InputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++)
-            {
-                _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
-            }
+            for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
             _InputLayer.SetNodes(_InputLayerNodes);
 
             // Hidden layer construction
             _HiddenLayer = new Base();
             List<Structure.Node.Base> HiddenLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 10; i++)
-            {
-                HiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
-            }
+            for (int i = 0; i < 10; i++) HiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(HiddenLayerNodes);
 
             // Conext layer construction
@@ -192,10 +182,7 @@ namespace Cranium.LibTest.Tests.Recursive
             //Output layer construction
             _OutputLayer = new Base();
             _OuputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++)
-            {
-                _OuputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
-            }
+            for (int i = 0; i < 1; i++) _OuputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(_OuputLayerNodes);
 
             // Add the nodes of the output and hidden layers to the context layer (so it generates context codes)
@@ -214,8 +201,7 @@ namespace Cranium.LibTest.Tests.Recursive
             _TestNetworkStructure.AddLayer(_OutputLayer);
 
             // Generate all the node to node links
-            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers())
-                layer.PopulateNodeConnections();
+            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
         }
 
         /// <summary>

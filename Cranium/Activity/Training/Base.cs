@@ -31,7 +31,6 @@ namespace Cranium.Activity.Training
         protected DynamicVariable _DynamicMomentum;
         private Thread _LoopThread;
         protected int _MaxEpochs;
-
         private bool _Running;
         private bool _Stopping;
         protected Network _TargetNetwork;
@@ -124,10 +123,7 @@ namespace Cranium.Activity.Training
         {
             _Running = true;
             Starting();
-            while (_Tick() && !_Stopping)
-            {
-                _CurrentEpoch++;
-            }
+            while (_Tick() && !_Stopping) _CurrentEpoch++;
             Stopping();
             _Running = false;
         }

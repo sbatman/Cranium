@@ -49,10 +49,7 @@ namespace Cranium.Data.PostProcessing
                                                              int distanceOffsetOfRandomWalk)
         {
             double[] randomWalkValues = new double[expectedValues.Length];
-            for (int x = distanceOffsetOfRandomWalk; x < expectedValues.Length; x++)
-            {
-                randomWalkValues[x] = expectedValues[x - distanceOffsetOfRandomWalk];
-            }
+            for (int x = distanceOffsetOfRandomWalk; x < expectedValues.Length; x++) randomWalkValues [x] = expectedValues [x - distanceOffsetOfRandomWalk];
 
             double[] randomWalkErrors = new double[expectedValues.Length - distanceOffsetOfRandomWalk];
             double[] actualErrors = new double[expectedValues.Length - distanceOffsetOfRandomWalk];
@@ -62,10 +59,10 @@ namespace Cranium.Data.PostProcessing
 
             for (int x = distanceOffsetOfRandomWalk; x < expectedValues.Length; x++)
             {
-                randomWalkErrors[x - distanceOffsetOfRandomWalk] = Math.Pow(randomWalkValues[x] - expectedValues[x], 2);
-                totalRandomWalkError += randomWalkErrors[x - distanceOffsetOfRandomWalk];
-                actualErrors[x - distanceOffsetOfRandomWalk] = Math.Pow(actualValues[x] - expectedValues[x], 2);
-                totalActualError += actualErrors[x - distanceOffsetOfRandomWalk];
+                randomWalkErrors [x - distanceOffsetOfRandomWalk] = Math.Pow(randomWalkValues [x] - expectedValues [x], 2);
+                totalRandomWalkError += randomWalkErrors [x - distanceOffsetOfRandomWalk];
+                actualErrors [x - distanceOffsetOfRandomWalk] = Math.Pow(actualValues [x] - expectedValues [x], 2);
+                totalActualError += actualErrors [x - distanceOffsetOfRandomWalk];
             }
 
             double avgRandomWalkError = totalRandomWalkError/(expectedValues.Length - distanceOffsetOfRandomWalk);
@@ -77,7 +74,7 @@ namespace Cranium.Data.PostProcessing
         public static double[] CalculateErrorAgainstRandomWalk(double[][] expectedValues, double[][] actualValues,
                                                                int distanceOffsetOfRandomWalk)
         {
-            int comparisonSets = expectedValues[0].GetLength(0);
+            int comparisonSets = expectedValues [0].GetLength(0);
             double[] results = new double[comparisonSets];
             for (int i = 0; i < comparisonSets; i++)
             {
@@ -85,10 +82,10 @@ namespace Cranium.Data.PostProcessing
                 double[] actual = new double[expectedValues.Length];
                 for (int x = 0; x < expectedValues.Length; x++)
                 {
-                    expected[x] = expectedValues[x][i];
-                    actual[x] = actualValues[x][i];
+                    expected [x] = expectedValues [x] [i];
+                    actual [x] = actualValues [x] [i];
                 }
-                results[i] = CalculateErrorAgainstRandomWalk(expected, actual, distanceOffsetOfRandomWalk);
+                results [i] = CalculateErrorAgainstRandomWalk(expected, actual, distanceOffsetOfRandomWalk);
             }
             return results;
         }

@@ -50,30 +50,21 @@ namespace Cranium.Data.Preprocessing
         /// </param>
         public static Data_Preprocessed_StandardDeviationVariance ProduceDataset(string fileName)
         {
-            if (fileName.Length == 0 || !File.Exists(fileName))
-            {
-                throw (new Exception("Bad filename provided"));
-            }
+            if (fileName.Length == 0 || !File.Exists(fileName)) throw (new Exception("Bad filename provided"));
 
             //try
             //{
             StreamReader fileStream = File.OpenText(fileName);
 
             List<string> data = new List<string>();
-            while (!fileStream.EndOfStream)
-            {
-                data.Add(fileStream.ReadLine());
-            }
-            int columnCount = data[0].Split(new[] {(char) 44}).Length;
+            while (!fileStream.EndOfStream) data.Add(fileStream.ReadLine());
+            int columnCount = data [0].Split(new[] {(char) 44}).Length;
             double[][] workingDataSet = new double[columnCount][];
-            for (int i = 0; i < columnCount; i++) workingDataSet[i] = new double[data.Count];
+            for (int i = 0; i < columnCount; i++) workingDataSet [i] = new double[data.Count];
             for (int i = 0; i < data.Count; i++)
             {
-                string[] currentLine = data[i].Split(new[] {(char) 44});
-                for (int x = 0; x < columnCount; x++)
-                {
-                    workingDataSet[x][i] = Double.Parse(currentLine[x]);
-                }
+                string[] currentLine = data [i].Split(new[] {(char) 44});
+                for (int x = 0; x < columnCount; x++) workingDataSet [x] [i] = Double.Parse(currentLine [x]);
             }
             fileStream.Close();
             Data_Preprocessed_StandardDeviationVariance returnResult = new Data_Preprocessed_StandardDeviationVariance
@@ -122,7 +113,7 @@ namespace Cranium.Data.Preprocessing
         private static void ProcessData(ref Data_Preprocessed_StandardDeviationVariance inputData)
         {
             int colCount = inputData.DataSet.GetLength(0);
-            int rowCount = inputData.DataSet[0].GetLength(0);
+            int rowCount = inputData.DataSet [0].GetLength(0);
             inputData.Average = new double[colCount];
             inputData.StandardDeviation = new double[colCount];
             inputData.Scale = new double[colCount];
@@ -131,18 +122,12 @@ namespace Cranium.Data.Preprocessing
             {
                 //Calculate the Average
                 double avg = 0;
-                for (int y = 0; y < rowCount; y++)
-                {
-                    avg += inputData.DataSet[x][y];
-                }
+                for (int y = 0; y < rowCount; y++) avg += inputData.DataSet [x] [y];
                 avg /= rowCount;
 
                 //Calculate the StandardDeviation
                 Double stdv = 0;
-                for (int y = 0; y < rowCount; y++)
-                {
-                    stdv += Math.Pow(inputData.DataSet[x][y] - avg, 2);
-                }
+                for (int y = 0; y < rowCount; y++) stdv += Math.Pow(inputData.DataSet [x] [y] - avg, 2);
                 stdv = Math.Sqrt(stdv/rowCount);
 
                 double min = 0;
@@ -150,36 +135,21 @@ namespace Cranium.Data.Preprocessing
                 //Processing The Data
                 for (int y = 0; y < rowCount; y++)
                 {
-                    inputData.DataSet[x][y] = (inputData.DataSet[x][y] - avg)/stdv;
-                    if (inputData.DataSet[x][y] < min)
-                    {
-                        min = inputData.DataSet[x][y];
-                    }
-                    if (inputData.DataSet[x][y] > max)
-                    {
-                        max = inputData.DataSet[x][y];
-                    }
+                    inputData.DataSet [x] [y] = (inputData.DataSet [x] [y] - avg)/stdv;
+                    if (inputData.DataSet [x] [y] < min) min = inputData.DataSet [x] [y];
+                    if (inputData.DataSet [x] [y] > max) max = inputData.DataSet [x] [y];
                 }
-                inputData.Average[x] = avg;
-                inputData.StandardDeviation[x] = stdv;
+                inputData.Average [x] = avg;
+                inputData.StandardDeviation [x] = stdv;
 
                 //Need to bring the data within the -1 to 1 range for maximising the effectiveness of most non-linear activation functions present at this time
                 double scale = max;
-                if (0 - min > scale)
-                {
-                    scale = -min;
-                }
-                if (1 > scale)
-                {
-                    scale = 1;
-                }
+                if (0 - min > scale) scale = -min;
+                if (1 > scale) scale = 1;
                 if (Math.Abs(scale - 1) > 0.00001)
                 {
-                    for (int y = 0; y < rowCount; y++)
-                    {
-                        inputData.DataSet[x][y] /= scale;
-                    }
-                    inputData.Scale[x] = scale;
+                    for (int y = 0; y < rowCount; y++) inputData.DataSet [x] [y] /= scale;
+                    inputData.Scale [x] = scale;
                 }
             }
         }

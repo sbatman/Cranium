@@ -77,10 +77,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             Console.WriteLine("Starting Training");
             _SlidingWindowTraining.Start();
             Thread.Sleep(1000);
-            while (_SlidingWindowTraining.IsRunning())
-            {
-                Thread.Sleep(20);
-            }
+            while (_SlidingWindowTraining.IsRunning()) Thread.Sleep(20);
 
             Console.WriteLine("Complete Training");
 
@@ -126,20 +123,14 @@ namespace Cranium.LibTest.Tests.Reservoir
         {
             _InputLayer = new Base();
             _InputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++)
-            {
-                _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Elliott()));
-            }
+            for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Elliott()));
             _InputLayer.SetNodes(_InputLayerNodes);
 
             Echo_Reservoir echoLayer = new Echo_Reservoir(130, 0.4f, 0, 5, new Elliott());
 
             _OutputLayer = new Base();
             _OuputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++)
-            {
-                _OuputLayerNodes.Add(new Output(_OutputLayer, new Elliott()));
-            }
+            for (int i = 0; i < 1; i++) _OuputLayerNodes.Add(new Output(_OutputLayer, new Elliott()));
             _OutputLayer.SetNodes(_OuputLayerNodes);
 
             _InputLayer.ConnectFowardLayer(echoLayer);
@@ -149,8 +140,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             _TestNetworkStructure.AddLayer(echoLayer);
             _TestNetworkStructure.AddLayer(_OutputLayer);
 
-            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers())
-                layer.PopulateNodeConnections();
+            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
         }
     }
 }

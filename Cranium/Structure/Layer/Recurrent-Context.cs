@@ -95,13 +95,7 @@ namespace Cranium.Structure.Layer
         public virtual void BuildNodeBank()
         {
             double step = 1d/_LevelOfContext;
-            for (int x = 0; x < _LevelOfContext; x++)
-            {
-                foreach (Node.Base n in _SourceNodes)
-                {
-                    _Nodes.Add(new Node.RecurrentContext(n, step*x, this, _ActivationFunction));
-                }
-            }
+            for (int x = 0; x < _LevelOfContext; x++) foreach (Node.Base n in _SourceNodes) _Nodes.Add(new Node.RecurrentContext(n, step*x, this, _ActivationFunction));
         }
 
         /// <summary>
@@ -120,8 +114,7 @@ namespace Cranium.Structure.Layer
         /// </summary>
         public override void UpdateExtra()
         {
-            foreach (Node.RecurrentContext n in _Nodes)
-                n.Update();
+            foreach (Node.RecurrentContext n in _Nodes) n.Update();
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

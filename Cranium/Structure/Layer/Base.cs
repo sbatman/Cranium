@@ -155,16 +155,7 @@ namespace Cranium.Structure.Layer
         public virtual void PopulateNodeConnections()
         {
             PurgeNodeConnections();
-            foreach (Base l in _ForwardConnectedLayers)
-            {
-                foreach (Node.Base n in _Nodes)
-                {
-                    foreach (Node.Base fn in l.GetNodes())
-                    {
-                        n.ConnectToNode(fn, Weight.Base.ConnectionDirection.Forward, 0);
-                    }
-                }
-            }
+            foreach (Base l in _ForwardConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.Forward, 0);
         }
 
         /// <summary>
@@ -172,8 +163,7 @@ namespace Cranium.Structure.Layer
         /// </summary>
         public virtual void PurgeNodeConnections()
         {
-            foreach (Node.Base n in _Nodes)
-                n.DestroyAllConnections();
+            foreach (Node.Base n in _Nodes) n.DestroyAllConnections();
         }
 
         /// <summary>
@@ -181,10 +171,8 @@ namespace Cranium.Structure.Layer
         /// </summary>
         public virtual void ForwardPass()
         {
-            foreach (Node.Base n in _Nodes)
-                n.CalculateValue();
-            foreach (Base l in _ForwardConnectedLayers)
-                l.ForwardPass();
+            foreach (Node.Base n in _Nodes) n.CalculateValue();
+            foreach (Base l in _ForwardConnectedLayers) l.ForwardPass();
         }
 
         /// <summary>
@@ -201,17 +189,10 @@ namespace Cranium.Structure.Layer
         /// </param>
         public virtual void ReversePass(double learningRate, double momentum, bool recurseDownward = true)
         {
-            foreach (Node.Base n in _Nodes)
-                n.CalculateError();
-            foreach (Node.Base n in _Nodes)
-                n.AdjustWeights(learningRate);
-            foreach (Node.Base n in _Nodes)
-                n.UpdateWeights(momentum);
-            if (recurseDownward)
-            {
-                foreach (Base l in _ReverseConnectedLayers)
-                    l.ReversePass(learningRate, momentum);
-            }
+            foreach (Node.Base n in _Nodes) n.CalculateError();
+            foreach (Node.Base n in _Nodes) n.AdjustWeights(learningRate);
+            foreach (Node.Base n in _Nodes) n.UpdateWeights(momentum);
+            if (recurseDownward) foreach (Base l in _ReverseConnectedLayers) l.ReversePass(learningRate, momentum);
         }
 
         /// <summary>
@@ -255,13 +236,7 @@ namespace Cranium.Structure.Layer
         public virtual Node.Base GetNodeByID(int id)
         {
             //look for a node with matching ID if we can find it return it else return null
-            foreach (Node.Base n in _Nodes)
-            {
-                if (n.GetID() == id)
-                {
-                    return n;
-                }
-            }
+            foreach (Node.Base n in _Nodes) if (n.GetID() == id) return n;
             return null;
         }
 
@@ -274,8 +249,7 @@ namespace Cranium.Structure.Layer
             _ReverseConnectedLayers = null;
             _ForwardConnectedLayers.Clear();
             _ForwardConnectedLayers = null;
-            foreach (Node.Base n in _Nodes)
-                n.Dispose();
+            foreach (Node.Base n in _Nodes) n.Dispose();
             _Nodes.Clear();
             _Nodes = null;
         }
