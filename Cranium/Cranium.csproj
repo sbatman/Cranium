@@ -54,7 +54,7 @@
     <Compile Include="Data\Preprocessing\StandardDeviationVariance.cs" />
     <Compile Include="Data\Functions.cs" />
     <Compile Include="Structure\Layer\Echo-Reservoir.cs" />
-    <Compile Include="Data\PostProcessing\RandomWalkComparison.cs" />
+    <Compile Include="Data\PostProcessing\RandomWalkCompare.cs" />
     <Compile Include="Structure\ActivationFunction\Elliott.cs" />
     <Compile Include="Structure\ActivationFunction\Gausian.cs" />
   </ItemGroup>
