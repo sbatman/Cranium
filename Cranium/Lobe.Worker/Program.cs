@@ -13,12 +13,30 @@
 
 #endregion
 
+using System.Collections.Generic;
+
 namespace Cranium.Lobe.Worker
 {
     internal class Program
     {
+        /// <summary>
+        /// A list containing all the active worker services
+        /// </summary>
+        private static readonly List<WorkerService> ActiveWorkerServices = new List<WorkerService>();
+        /// <summary>
+        /// Application entrypoint
+        /// </summary>
+        /// <param name="args"></param>
         private static void Main(string[] args)
         {
+            //Attempt to load the settings
+            if (!SettingsLoader.LoadSettings("Settings.ini")) return;
+
+            //Prepare the workers
+            for (int i = 0; i < SettingsLoader.WorkerCount; i++)
+            {
+                ActiveWorkerServices.Add(new WorkerService());
+            }
         }
     }
 }
