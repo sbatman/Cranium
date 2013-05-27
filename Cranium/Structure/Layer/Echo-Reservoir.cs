@@ -34,7 +34,7 @@ namespace Cranium.Structure.Layer
         /// <summary>
         ///     The random used for building connections
         /// </summary>
-        protected static Random _Rnd = new Random();
+        protected Random _Rnd = new Random();
 
         /// <summary>
         ///     The Activation to use for all the nodes created within the Reservoir
