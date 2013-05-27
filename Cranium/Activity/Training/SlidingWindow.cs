@@ -28,17 +28,53 @@ namespace Cranium.Activity.Training
 {
     public class SlidingWindow : Base
     {
+        /// <summary>
+        /// How far beyond the last presented value are we attempting to predict
+        /// </summary>
         protected int _DistanceToForcastHorrison;
+        /// <summary>
+        /// The outputs that are exspected
+        /// </summary>
         protected double[,] _ExpectedOutputs;
+        /// <summary>
+        /// A collection of the current input nodes
+        /// </summary>
         protected List<Structure.Node.Base> _InputNodes;
+        /// <summary>
+        /// Thre sequences of inputs to be presented during training
+        /// </summary>
         protected double[,,] _InputSequences;
+        /// <summary>
+        /// The average error experianced during the last pass
+        /// </summary>
         protected double _LastPassAverageError;
+        /// <summary>
+        /// A stream setup for logging the training information
+        /// </summary>
         protected StreamWriter _LogStream;
+        /// <summary>
+        /// A collection of the current output nodes
+        /// </summary>
         protected List<Structure.Node.Base> _OutputNodes;
+        /// <summary>
+        /// Th number of data entries to not use when building the trainign dataset, this allows testing and training against different sets
+        /// </summary>
         protected int _PortionOfDatasetReserved;
+        /// <summary>
+        /// The RND used during the netowrk setup when required
+        /// </summary>
         protected Random _RND;
+        /// <summary>
+        /// Any recurrent layers that are present in the network structure
+        /// </summary>
         protected List<Structure.Layer.Base> _Recurrentlayers;
+        /// <summary>
+        /// The number of sequences that weill be tested
+        /// </summary>
         protected int _SequenceCount;
+        /// <summary>
+        /// The width of the presented window
+        /// </summary>
         protected int _WindowWidth;
 
         /// <summary>
