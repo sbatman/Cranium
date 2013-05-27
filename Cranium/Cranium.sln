@@ -1,9 +1,21 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cranium", "Cranium.csproj", "{9553B26D-5D2D-4013-82E1-4D7A24D526D8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibTest", "libtest\LibTest.csproj", "{509EEFCA-0006-4685-B217-A255BA989BD5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{753A0852-4155-42E3-B28B-93F9BB83FA4C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{EAC19993-FB6C-4682-9FCC-5388032CEDF2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{08652AB1-F209-41D0-8A22-11D3B59572E5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lobe", "Lobe", "{609D120C-9AD4-43AB-B100-DD134ABD91F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Client", "Lobe.Client\Lobe.Client.csproj", "{DB8195A8-0085-4866-BE7A-065CED69CE4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Worker", "Lobe.Worker\Lobe.Worker.csproj", "{F26E3FEE-F29B-4027-9187-A0983763A3D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,14 +23,32 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{509EEFCA-0006-4685-B217-A255BA989BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{509EEFCA-0006-4685-B217-A255BA989BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{509EEFCA-0006-4685-B217-A255BA989BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{509EEFCA-0006-4685-B217-A255BA989BD5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{509EEFCA-0006-4685-B217-A255BA989BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{509EEFCA-0006-4685-B217-A255BA989BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{509EEFCA-0006-4685-B217-A255BA989BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{509EEFCA-0006-4685-B217-A255BA989BD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB8195A8-0085-4866-BE7A-065CED69CE4C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB8195A8-0085-4866-BE7A-065CED69CE4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB8195A8-0085-4866-BE7A-065CED69CE4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB8195A8-0085-4866-BE7A-065CED69CE4C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9553B26D-5D2D-4013-82E1-4D7A24D526D8} = {753A0852-4155-42E3-B28B-93F9BB83FA4C}
+		{509EEFCA-0006-4685-B217-A255BA989BD5} = {EAC19993-FB6C-4682-9FCC-5388032CEDF2}
+		{609D120C-9AD4-43AB-B100-DD134ABD91F1} = {08652AB1-F209-41D0-8A22-11D3B59572E5}
+		{DB8195A8-0085-4866-BE7A-065CED69CE4C} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
+		{F26E3FEE-F29B-4027-9187-A0983763A3D8} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = libtest\LibTest.csproj
@@ -63,8 +93,5 @@ Global
 		$3.inheritsScope = text/x-csharp
 		$3.scope = text/x-csharp
 		version = 0.3
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal

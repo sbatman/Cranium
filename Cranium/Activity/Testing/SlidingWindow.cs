@@ -16,13 +16,13 @@
 #region Usings
 
 using System.Collections.Generic;
-using Cranium.Structure;
-using Cranium.Structure.Node;
-using RecurrentContext = Cranium.Structure.Layer.RecurrentContext;
+using Cranium.Lib.Structure;
+using Cranium.Lib.Structure.Node;
+using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 
 #endregion
 
-namespace Cranium.Activity.Testing
+namespace Cranium.Lib.Activity.Testing
 {
     public class SlidingWindow
     {

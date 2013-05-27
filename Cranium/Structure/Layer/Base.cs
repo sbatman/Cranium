@@ -22,7 +22,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.Layer
+namespace Cranium.Lib.Structure.Layer
 {
     /// <summary>
     ///     This is the base Layer structure of the Neural Network, It is used to house collections of nodes and provide the linking structure of these nodes with other groups of nodes.
@@ -57,7 +57,7 @@ namespace Cranium.Structure.Layer
         protected List<Base> _ReverseConnectedLayers = new List<Base>();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Layer.Base" /> class.
+        ///     Initializes a new instance of the <see cref="Base" /> class.
         /// </summary>
         public Base()
         {
@@ -259,7 +259,7 @@ namespace Cranium.Structure.Layer
         #region ISerializable implementation
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Layer.Base" /> class. Used by the Serializer.
+        ///     Initializes a new instance of the <see cref="Base" /> class. Used by the Serializer.
         /// </summary>
         /// <param name='info'>
         ///     Info.

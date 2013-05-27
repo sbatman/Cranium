@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9553B26D-5D2D-4013-82E1-4D7A24D526D8}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Cranium</RootNamespace>
-    <AssemblyName>Cranium</AssemblyName>
+    <RootNamespace>Cranium.Lib</RootNamespace>
+    <AssemblyName>Cranium.Lib</AssemblyName>
     <Description>A Lightweight Neural Network Famework for C#</Description>
     <ReleaseVersion>0.3</ReleaseVersion>
   </PropertyGroup>

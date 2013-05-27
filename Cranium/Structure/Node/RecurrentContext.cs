@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.Node
+namespace Cranium.Lib.Structure.Node
 {
     /// <summary>
     ///     This recursive node acts differntly from as standard node as it has a source node from which it generates its value,

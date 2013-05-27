@@ -16,11 +16,11 @@
 #region Usings
 
 using System.Threading;
-using Cranium.Structure;
+using Cranium.Lib.Structure;
 
 #endregion
 
-namespace Cranium.Activity.Training
+namespace Cranium.Lib.Activity.Training
 {
     public abstract class Base
     {

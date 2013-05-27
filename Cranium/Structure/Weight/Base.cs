@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.Weight
+namespace Cranium.Lib.Structure.Weight
 {
     /// <summary>
     ///     This is the base weight class and acts as a standard weight between two nodes. weight changes can be applied immediatly
@@ -74,7 +74,7 @@ namespace Cranium.Structure.Weight
         protected Double _PendingWeightChangeCount;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Weight.Base" /> class.
+        ///     Initializes a new instance of the <see cref="Base" /> class.
         /// </summary>
         /// <param name='nodeA'>
         ///     Node a.
@@ -177,7 +177,7 @@ namespace Cranium.Structure.Weight
         #region ISerializable implementation
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Weight.Base" /> class. Used by the Serializer
+        ///     Initializes a new instance of the <see cref="Base" /> class. Used by the Serializer
         /// </summary>
         /// <param name='info'>
         ///     Info.

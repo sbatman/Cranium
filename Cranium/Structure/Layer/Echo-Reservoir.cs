@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.Layer
+namespace Cranium.Lib.Structure.Layer
 {
     /// <summary>
     ///     This is an implementation of the echo reservoir found in EchoState networks. It provides a form of recursive memory as each node within the layer
@@ -31,11 +31,6 @@ namespace Cranium.Structure.Layer
     [Serializable]
     public class Echo_Reservoir : Base
     {
-        /// <summary>
-        ///     The random used for building connections
-        /// </summary>
-        protected Random _Rnd = new Random();
-
         /// <summary>
         ///     The Activation to use for all the nodes created within the Reservoir
         /// </summary>
@@ -61,9 +56,13 @@ namespace Cranium.Structure.Layer
         ///     The number of nodes present in the Reservoir
         /// </summary>
         protected int _NodeCount;
+        /// <summary>
+        ///     The random used for building connections
+        /// </summary>
+        protected Random _Rnd = new Random();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Layer.Echo_Reservoir" /> class.
+        ///     Initializes a new instance of the <see cref="Echo_Reservoir" /> class.
         /// </summary>
         /// <param name='nodeCount'>
         ///     The number of nodes in the Reservoir
@@ -92,7 +91,7 @@ namespace Cranium.Structure.Layer
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Layer.Echo_Reservoir" /> class. Used by the Serialiszer
+        ///     Initializes a new instance of the <see cref="Echo_Reservoir" /> class. Used by the Serialiszer
         /// </summary>
         /// <param name='info'>
         ///     Info.

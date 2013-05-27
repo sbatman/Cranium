@@ -21,7 +21,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.Layer
+namespace Cranium.Lib.Structure.Layer
 {
     /// <summary>
     ///     This type of layer offers a form of recursive memory in the form of gradually lower momentum recursive stores.

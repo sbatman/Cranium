@@ -24,11 +24,11 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
-using Cranium.Structure.Layer;
+using Cranium.Lib.Structure.Layer;
 
 #endregion
 
-namespace Cranium.Structure
+namespace Cranium.Lib.Structure
 {
     /// <summary>
     ///     A base network class, This primarily acts as a structure container of the network and used at a later stage for a large ammount of the networks IO
@@ -39,20 +39,21 @@ namespace Cranium.Structure
         protected List<Base> _CurrentLayers = new List<Base>();
         protected List<Base> _DetectedBottomLayers = new List<Base>();
         protected List<Base> _DetectedTopLayers = new List<Base>();
-        protected int _LastIssuedLayerID = 0;
-        protected double _LearningRate = 0;
-        protected double _Momenum = 0;
+        protected int _LastIssuedLayerID;
+        protected double _LearningRate;
+        protected double _Momenum;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Network" /> class.
+        ///     Initializes a new instance of the <see cref="Network" /> class.
         /// </summary>
         public Network()
         {
+            _LearningRate = 0;
             _CurrentLayers = new List<Base>();
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Network" /> class. Used by the Serializer
+        ///     Initializes a new instance of the <see cref="Network" /> class. Used by the Serializer
         /// </summary>
         /// <param name='info'>
         ///     Info.
@@ -62,6 +63,7 @@ namespace Cranium.Structure
         /// </param>
         public Network(SerializationInfo info, StreamingContext context)
         {
+            _LearningRate = 0;
             _CurrentLayers = (List<Base>) info.GetValue("CurrentLayers", typeof (List<Base>));
             _LearningRate = info.GetDouble("_LearningRate");
             _Momenum = info.GetDouble("_Momenum");
@@ -241,12 +243,12 @@ namespace Cranium.Structure
 
         public static Network LoadFromFile(string filename)
         {
-            Network returnNetwork = null;
+            Network returnNetwork;
             using (FileStream loadedFile = File.OpenRead(filename))
             {
                 GZipStream compressionStream = new GZipStream(loadedFile, CompressionMode.Decompress);
                 BinaryFormatter formatter = new BinaryFormatter();
-                returnNetwork = (Network)formatter.Deserialize(compressionStream);
+                returnNetwork = (Network) formatter.Deserialize(compressionStream);
                 compressionStream.Close();
             }
             return returnNetwork;

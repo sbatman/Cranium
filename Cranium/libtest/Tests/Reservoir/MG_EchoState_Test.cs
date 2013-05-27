@@ -18,22 +18,22 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Cranium.Activity.Training;
 using Cranium.Data;
-using Cranium.Data.PostProcessing;
-using Cranium.Data.Preprocessing;
-using Cranium.Structure;
-using Cranium.Structure.ActivationFunction;
-using Cranium.Structure.Layer;
-using Cranium.Structure.Node;
-using Base = Cranium.Structure.Layer.Base;
+using Cranium.Lib.Activity.Training;
+using Cranium.Lib.Data.PostProcessing;
+using Cranium.Lib.Data.Preprocessing;
+using Cranium.Lib.Structure;
+using Cranium.Lib.Structure.ActivationFunction;
+using Cranium.Lib.Structure.Layer;
+using Cranium.Lib.Structure.Node;
+using Base = Cranium.Lib.Structure.Layer.Base;
 
 #endregion
 
-namespace Cranium.LibTest.Tests.Reservoir
+namespace Cranium.Lib.Test.Tests.Reservoir
 {
     /// <summary>
-    /// This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
+    ///     This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
     /// </summary>
     public static class MG_EchoState_Test
     {
@@ -41,8 +41,8 @@ namespace Cranium.LibTest.Tests.Reservoir
         private static SlidingWindow _SlidingWindowTraining;
         private static Base _InputLayer;
         private static Base _OutputLayer;
-        private static List<Structure.Node.Base> _InputLayerNodes;
-        private static List<Structure.Node.Base> _OuputLayerNodes;
+        private static List<Lib.Structure.Node.Base> _InputLayerNodes;
+        private static List<Lib.Structure.Node.Base> _OuputLayerNodes;
 
         /// <summary>
         ///     Run this instance.
@@ -86,7 +86,7 @@ namespace Cranium.LibTest.Tests.Reservoir
 
             Console.WriteLine("Starting Testing");
 
-            Activity.Testing.SlidingWindow slidingWindowTesting = new Activity.Testing.SlidingWindow();
+            Lib.Activity.Testing.SlidingWindow slidingWindowTesting = new Lib.Activity.Testing.SlidingWindow();
             slidingWindowTesting.SetDatasetReservedLength(0);
             slidingWindowTesting.SetInputNodes(_InputLayerNodes);
             slidingWindowTesting.SetOutputNodes(_OuputLayerNodes);
@@ -94,7 +94,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             slidingWindowTesting.SetWorkingDataset(dataSet);
             slidingWindowTesting.SetWindowWidth(12);
             slidingWindowTesting.SetDistanceToForcastHorrison(3);
-            Activity.Testing.SlidingWindow.TestResults result = slidingWindowTesting.TestNetwork(_TestNetworkStructure);
+            Lib.Activity.Testing.SlidingWindow.TestResults result = slidingWindowTesting.TestNetwork(_TestNetworkStructure);
 
             Console.WriteLine(result.RMSE);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
@@ -111,19 +111,19 @@ namespace Cranium.LibTest.Tests.Reservoir
         }
 
         /// <summary>
-        /// Builds the structure of the neural network ready for training and testing
+        ///     Builds the structure of the neural network ready for training and testing
         /// </summary>
         public static void BuildStructure()
         {
             _InputLayer = new Base();
-            _InputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Elliott()));
+            _InputLayerNodes = new List<Lib.Structure.Node.Base>();
+            for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Lib.Structure.Node.Base(_InputLayer, new Elliott()));
             _InputLayer.SetNodes(_InputLayerNodes);
 
             Echo_Reservoir echoLayer = new Echo_Reservoir(130, 0.4f, 0, 5, new Elliott());
 
             _OutputLayer = new Base();
-            _OuputLayerNodes = new List<Structure.Node.Base>();
+            _OuputLayerNodes = new List<Lib.Structure.Node.Base>();
             for (int i = 0; i < 1; i++) _OuputLayerNodes.Add(new Output(_OutputLayer, new Elliott()));
             _OutputLayer.SetNodes(_OuputLayerNodes);
 

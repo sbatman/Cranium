@@ -23,7 +23,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.Node
+namespace Cranium.Lib.Structure.Node
 {
     /// <summary>
     ///     The base node class is a core part of the Neural network framework and represents a neuron that is placed within layers in the network.
@@ -78,7 +78,7 @@ namespace Cranium.Structure.Node
         protected Double _Value = 0;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Node.Base" /> class.
+        ///     Initializes a new instance of the <see cref="Base" /> class.
         /// </summary>
         /// <param name='layer'>
         ///     Layer.
@@ -313,7 +313,7 @@ namespace Cranium.Structure.Node
         #region ISerializable implementation
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Node.Base" /> class. Used by the Serializer
+        ///     Initializes a new instance of the <see cref="Base" /> class. Used by the Serializer
         /// </summary>
         /// <param name='info'>
         ///     Info.

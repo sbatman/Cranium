@@ -17,15 +17,15 @@
 
 using System;
 using System.Collections.Generic;
-using Cranium.Structure;
-using Cranium.Structure.ActivationFunction;
-using Cranium.Structure.Node;
-using Base = Cranium.Structure.Layer.Base;
-using RecurrentContext = Cranium.Structure.Layer.RecurrentContext;
+using Cranium.Lib.Structure;
+using Cranium.Lib.Structure.ActivationFunction;
+using Cranium.Lib.Structure.Node;
+using Base = Cranium.Lib.Structure.Layer.Base;
+using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 
 #endregion
 
-namespace Cranium.LibTest.Tests.Recursive
+namespace Cranium.Lib.Test.Tests.Recursive
 {
     /// <summary>
     ///     This test shows a neural network that can demonstate the functionality of an 2 input Xor gate using only one input and recursive context nodes
@@ -91,7 +91,7 @@ namespace Cranium.LibTest.Tests.Recursive
                 }
                 for (int x = 0; x < 4; x++)
                 {
-                    foreach (Structure.Node.Base n in _ContextLayer.GetNodes()) n.SetValue(0);
+                    foreach (Lib.Structure.Node.Base n in _ContextLayer.GetNodes()) n.SetValue(0);
                     for (int i = 0; i < 2; i++)
                     {
                         _InputLayer.GetNodes() [0].SetValue(_InputData [(x*2) + i]);
@@ -123,19 +123,19 @@ namespace Cranium.LibTest.Tests.Recursive
         public static void BuildStructure()
         {
             _InputLayer = new Base();
-            List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
+            List<Lib.Structure.Node.Base> inputLayerNodes = new List<Lib.Structure.Node.Base>();
+            for (int i = 0; i < 1; i++) inputLayerNodes.Add(new Lib.Structure.Node.Base(_InputLayer, new Tanh()));
             _InputLayer.SetNodes(inputLayerNodes);
 
             _HiddenLayer = new Base();
-            List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 10; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
+            List<Lib.Structure.Node.Base> hiddenLayerNodes = new List<Lib.Structure.Node.Base>();
+            for (int i = 0; i < 10; i++) hiddenLayerNodes.Add(new Lib.Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _ContextLayer = new RecurrentContext(4, new Tanh());
 
             _OutputLayer = new Base();
-            List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
+            List<Lib.Structure.Node.Base> ouputLayerNodes = new List<Lib.Structure.Node.Base>();
             for (int i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(ouputLayerNodes);
 

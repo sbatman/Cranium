@@ -21,7 +21,7 @@ using System.IO;
 
 #endregion
 
-namespace Cranium.Data.Preprocessing
+namespace Cranium.Lib.Data.Preprocessing
 {
     public struct Data_Preprocessed_StandardDeviationVariance
     {

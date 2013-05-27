@@ -39,10 +39,7 @@ namespace Cranium.Data
         /// </param>
         public static void PrintArrayToFile(IEnumerable<double> data, string fileName)
         {
-            using (StreamWriter stream = File.CreateText(fileName))
-            {
-                foreach (double t in data) stream.WriteLine(t);
-            }
+            using (StreamWriter stream = File.CreateText(fileName)) foreach (double t in data) stream.WriteLine(t);
         }
 
         /// <summary>
