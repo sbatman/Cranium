@@ -97,8 +97,8 @@ namespace Cranium.LibTest.Tests.Reservoir
             Activity.Testing.SlidingWindow.TestResults result = slidingWindowTesting.TestNetwork(_TestNetworkStructure);
 
             Console.WriteLine(result.RMSE);
-            UsefulFunctions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
-            UsefulFunctions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
+            Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
+            Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
             Console.WriteLine("Complete Testing");
             Console.WriteLine("Comparing Against Random Walk 3 Step");
             Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3) [0]*100, 3));

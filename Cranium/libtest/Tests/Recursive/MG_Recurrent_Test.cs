@@ -137,8 +137,8 @@ namespace Cranium.LibTest.Tests.Recursive
             Activity.Testing.SlidingWindow.TestResults result = slidingWindowTesting.TestNetwork(_TestNetworkStructure);
 
             Console.WriteLine(result.RMSE);
-            UsefulFunctions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
-            UsefulFunctions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
+            Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
+            Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
             Console.WriteLine("Comparing Against Random Walk 3 Step");
             Console.WriteLine(
                 Math.Round(
