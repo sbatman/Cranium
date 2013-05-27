@@ -138,8 +138,8 @@ namespace Cranium.Activity.Training
         {
             _SequenceCount = ((_WorkingDataset [0].GetLength(0) - _PortionOfDatasetReserved) - _WindowWidth) -
                              _DistanceToForcastHorrison;
-            int inputCount = _WorkingDataset.GetLength(0);
-            int outputCount = 1;
+            int inputCount = _InputNodes.Count;
+            int outputCount = _OutputNodes.Count;
             _InputSequences = new double[_SequenceCount,_WindowWidth,inputCount];
             _ExpectedOutputs = new double[_SequenceCount,outputCount];
             for (int i = 0; i < _SequenceCount; i++)

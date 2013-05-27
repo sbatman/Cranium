@@ -93,8 +93,8 @@ namespace Cranium.Activity.Testing
         {
             _SequenceCount = ((_WorkingDataset [0].GetLength(0) - _PortionOfDatasetReserved) - _WindowWidth) -
                              _DistanceToForcastHorrison;
-            int inputCount = _WorkingDataset.GetLength(0);
-            int outputCount = 1; //TODO: Fix this
+            int inputCount = _InputNodes.Count;
+            int outputCount = _OutputNodes.Count;
 
             _InputSequences = new double[_SequenceCount][][];
             for (int i = 0; i < _SequenceCount; i++)
