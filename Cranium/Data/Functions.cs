@@ -15,6 +15,7 @@
 
 #region Usings
 
+using System.Collections.Generic;
 using System.IO;
 
 #endregion
@@ -36,7 +37,7 @@ namespace Cranium.Data
         /// <param name='fileName'>
         ///     File name.
         /// </param>
-        public static void PrintArrayToFile(double[] data, string fileName)
+        public static void PrintArrayToFile(IEnumerable<double> data, string fileName)
         {
             StreamWriter stream = File.CreateText(fileName);
             foreach (double t in data) stream.WriteLine(t);

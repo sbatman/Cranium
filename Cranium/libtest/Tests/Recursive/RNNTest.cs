@@ -30,7 +30,7 @@ namespace Cranium.LibTest.Tests.Recursive
     /// <summary>
     ///     This test shows a neural network that can demonstate the functionality of an 2 input Xor gate using only one input and recursive context nodes
     /// </summary>
-    public class RNNTest
+    public static class RNNTest
     {
         /// <summary>
         ///     The network structure to test.
@@ -98,7 +98,7 @@ namespace Cranium.LibTest.Tests.Recursive
                         ForwardPass();
                         _ContextLayer.UpdateExtra();
                     }
-                    ReversePass(x, 0);
+                    ReversePass(x);
 
                     //Stopping conditions
                     if (x == 0 && _OutputLayer.GetNodes() [0].GetValue() > 0.05f) Continue = true;
@@ -123,23 +123,23 @@ namespace Cranium.LibTest.Tests.Recursive
         public static void BuildStructure()
         {
             _InputLayer = new Base();
-            List<Structure.Node.Base> InputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++) InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
-            _InputLayer.SetNodes(InputLayerNodes);
+            List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
+            for (int i = 0; i < 1; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
+            _InputLayer.SetNodes(inputLayerNodes);
 
             _HiddenLayer = new Base();
-            List<Structure.Node.Base> HiddenLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 10; i++) HiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
-            _HiddenLayer.SetNodes(HiddenLayerNodes);
+            List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
+            for (int i = 0; i < 10; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
+            _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _ContextLayer = new RecurrentContext(4, new Tanh());
 
             _OutputLayer = new Base();
-            List<Structure.Node.Base> OuputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++) OuputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
-            _OutputLayer.SetNodes(OuputLayerNodes);
+            List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
+            for (int i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
+            _OutputLayer.SetNodes(ouputLayerNodes);
 
-            _ContextLayer.AddSourceNodes(InputLayerNodes);
+            _ContextLayer.AddSourceNodes(inputLayerNodes);
             //ContextLayer.AddSourceNodes (HiddenLayerNodes);
 
             _InputLayer.ConnectFowardLayer(_HiddenLayer);
@@ -178,8 +178,8 @@ namespace Cranium.LibTest.Tests.Recursive
             _OutputData [o++] = 1;
 
             _InputData [i++] = 1;
-            _InputData [i++] = 1;
-            _OutputData [o++] = 0;
+            _InputData [i] = 1;
+            _OutputData [o] = 0;
         }
 
         /// <summary>
@@ -196,10 +196,7 @@ namespace Cranium.LibTest.Tests.Recursive
         /// <param name='row'>
         ///     Row.
         /// </param>
-        /// <param name='momentum'>
-        ///     Momentum.
-        /// </param>
-        public static void ReversePass(int row, Double momentum)
+        public static void ReversePass(int row)
         {
             Output outputNode = (Output) (_OutputLayer.GetNodes() [0]);
             outputNode.SetTargetValue(_OutputData [row]);

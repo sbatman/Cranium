@@ -36,7 +36,7 @@ namespace Cranium.LibTest.Tests.Recursive
     ///     This is a test of a neural network that can show successful learning of the Mackey-Glass time series dataset using a standard
     ///     recursive context node bank for memory.
     /// </summary>
-    public class MG_Recurrent_Test
+    public static class MG_Recurrent_Test
     {
         /// <summary>
         ///     The Neural Network structure that is being tested
@@ -110,8 +110,7 @@ namespace Cranium.LibTest.Tests.Recursive
             _SlidingWindowTraining.SetDynamicLearningRateDelegate(DynamicLearningRate);
 
             // Sets the contect layers that are used as part of the training (have to updates)
-            List<Base> contextLayers = new List<Base>();
-            contextLayers.Add(_ContextLayer);
+            List<Base> contextLayers = new List<Base> {_ContextLayer};
             _SlidingWindowTraining.SetRecurrentConextLayers(contextLayers);
 
             ////////////////////////////////////////////////
@@ -127,33 +126,33 @@ namespace Cranium.LibTest.Tests.Recursive
 
             Console.WriteLine("Starting Testing");
 
-            Activity.Testing.SlidingWindow _SlidingWindowTesting = new Activity.Testing.SlidingWindow();
-            _SlidingWindowTesting.SetDatasetReservedLength(0);
-            _SlidingWindowTesting.SetInputNodes(_InputLayerNodes);
-            _SlidingWindowTesting.SetOutputNodes(_OuputLayerNodes);
-            _SlidingWindowTesting.SetRecurrentConextLayers(contextLayers);
-            _SlidingWindowTesting.SetWorkingDataset(dataSet);
-            _SlidingWindowTesting.SetWindowWidth(12);
-            _SlidingWindowTesting.SetDistanceToForcastHorrison(3);
-            Activity.Testing.SlidingWindow.TestResults Result = _SlidingWindowTesting.TestNetwork(_TestNetworkStructure);
+            Activity.Testing.SlidingWindow slidingWindowTesting = new Activity.Testing.SlidingWindow();
+            slidingWindowTesting.SetDatasetReservedLength(0);
+            slidingWindowTesting.SetInputNodes(_InputLayerNodes);
+            slidingWindowTesting.SetOutputNodes(_OuputLayerNodes);
+            slidingWindowTesting.SetRecurrentConextLayers(contextLayers);
+            slidingWindowTesting.SetWorkingDataset(dataSet);
+            slidingWindowTesting.SetWindowWidth(12);
+            slidingWindowTesting.SetDistanceToForcastHorrison(3);
+            Activity.Testing.SlidingWindow.TestResults result = slidingWindowTesting.TestNetwork(_TestNetworkStructure);
 
-            Console.WriteLine(Result.RMSE);
-            UsefulFunctions.PrintArrayToFile(Result.ActualOutputs, "ActualOutputs.csv");
-            UsefulFunctions.PrintArrayToFile(Result.ExpectedOutputs, "ExpectedOutputs.csv");
+            Console.WriteLine(result.RMSE);
+            UsefulFunctions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
+            UsefulFunctions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
             Console.WriteLine("Comparing Against Random Walk 3 Step");
             Console.WriteLine(
                 Math.Round(
-                    RandomWalkCompare.CalculateError(Result.ExpectedOutputs, Result.ActualOutputs, 3)
+                    RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)
                         [0]*100, 3));
             Console.WriteLine("Comparing Against Random Walk 2 Step");
             Console.WriteLine(
                 Math.Round(
-                    RandomWalkCompare.CalculateError(Result.ExpectedOutputs, Result.ActualOutputs, 2)
+                    RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)
                         [0]*100, 3));
             Console.WriteLine("Comparing Against Random Walk 1 Step");
             Console.WriteLine(
                 Math.Round(
-                    RandomWalkCompare.CalculateError(Result.ExpectedOutputs, Result.ActualOutputs, 1)
+                    RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)
                         [0]*100, 3));
 
             Console.ReadKey();
@@ -172,9 +171,9 @@ namespace Cranium.LibTest.Tests.Recursive
 
             // Hidden layer construction
             _HiddenLayer = new Base();
-            List<Structure.Node.Base> HiddenLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 10; i++) HiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
-            _HiddenLayer.SetNodes(HiddenLayerNodes);
+            List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
+            for (int i = 0; i < 10; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
+            _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             // Conext layer construction
             _ContextLayer = new RecurrentContext(6, new Tanh());
@@ -187,7 +186,7 @@ namespace Cranium.LibTest.Tests.Recursive
 
             // Add the nodes of the output and hidden layers to the context layer (so it generates context codes)
             _ContextLayer.AddSourceNodes(_OuputLayerNodes);
-            _ContextLayer.AddSourceNodes(HiddenLayerNodes);
+            _ContextLayer.AddSourceNodes(hiddenLayerNodes);
 
             // Connecting the layers of the neural network together
             _InputLayer.ConnectFowardLayer(_HiddenLayer);

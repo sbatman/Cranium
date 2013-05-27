@@ -30,7 +30,7 @@ namespace Cranium.LibTest.Tests.Recursive
     /// <summary>
     ///     This test shows a neural network that can demonstate the functionality of a three input Xor gate using only one input and recursive context nodes
     /// </summary>
-    public class RNNTest2
+    public static class RNNTest2
     {
         /// <summary>
         ///     The network structure to test.
@@ -105,7 +105,7 @@ namespace Cranium.LibTest.Tests.Recursive
                         ForwardPass();
                         _ContextLayer.UpdateExtra();
                     }
-                    ReversePass(x, 0);
+                    ReversePass(x);
 
                     if (x == 0 && _OutputLayer.GetNodes() [0].GetValue() > 0.05f) Continue = true;
                     if (x > 0 && x < 7 && _OutputLayer.GetNodes() [0].GetValue() < 0.95f) Continue = true;
@@ -232,10 +232,7 @@ namespace Cranium.LibTest.Tests.Recursive
         /// <param name='row'>
         ///     Row.
         /// </param>
-        /// <param name='momentum'>
-        ///     Momentum.
-        /// </param>
-        public static void ReversePass(int row, Double momentum)
+        public static void ReversePass(int row)
         {
             Output outputNode = (Output) (_OutputLayer.GetNodes() [0]);
             outputNode.SetTargetValue(_OutputData [row]);

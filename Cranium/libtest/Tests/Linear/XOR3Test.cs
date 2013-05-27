@@ -85,7 +85,7 @@ namespace Cranium.LibTest.Tests.Linear
                 {
                     PresentData(x);
                     ForwardPass();
-                    ReversePass(x, 0);
+                    ReversePass(x);
                     if (x == 0 && _OutputLayer.GetNodes() [0].GetValue() > 0.02f) Continue = true;
                     if (x > 0 && x < 7 && _OutputLayer.GetNodes() [0].GetValue() < 0.98f) Continue = true;
                     if (x == 7 && _OutputLayer.GetNodes() [0].GetValue() > 0.02f) Continue = true;
@@ -208,10 +208,7 @@ namespace Cranium.LibTest.Tests.Linear
         /// <param name='row'>
         ///     Row.
         /// </param>
-        /// <param name='momentum'>
-        ///     Momentum.
-        /// </param>
-        private static void ReversePass(int row, Double momentum)
+        private static void ReversePass(int row)
         {
             ((Output) _OutputLayer.GetNodes() [0]).SetTargetValue(_OutputData [row]);
             _OutputLayer.ReversePass(0.1, 0.0);

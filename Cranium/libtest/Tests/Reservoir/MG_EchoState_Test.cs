@@ -33,9 +33,9 @@ using Base = Cranium.Structure.Layer.Base;
 namespace Cranium.LibTest.Tests.Reservoir
 {
     /// <summary>
-    ///     This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
+    /// This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
     /// </summary>
-    public class MG_EchoState_Test
+    public static class MG_EchoState_Test
     {
         private static Network _TestNetworkStructure;
         private static SlidingWindow _SlidingWindowTraining;
@@ -86,30 +86,33 @@ namespace Cranium.LibTest.Tests.Reservoir
 
             Console.WriteLine("Starting Testing");
 
-            Activity.Testing.SlidingWindow _SlidingWindowTesting = new Activity.Testing.SlidingWindow();
-            _SlidingWindowTesting.SetDatasetReservedLength(0);
-            _SlidingWindowTesting.SetInputNodes(_InputLayerNodes);
-            _SlidingWindowTesting.SetOutputNodes(_OuputLayerNodes);
+            Activity.Testing.SlidingWindow slidingWindowTesting = new Activity.Testing.SlidingWindow();
+            slidingWindowTesting.SetDatasetReservedLength(0);
+            slidingWindowTesting.SetInputNodes(_InputLayerNodes);
+            slidingWindowTesting.SetOutputNodes(_OuputLayerNodes);
             _SlidingWindowTraining.SetRecurrentConextLayers(new List<Base>());
-            _SlidingWindowTesting.SetWorkingDataset(dataSet);
-            _SlidingWindowTesting.SetWindowWidth(12);
-            _SlidingWindowTesting.SetDistanceToForcastHorrison(3);
-            Activity.Testing.SlidingWindow.TestResults Result = _SlidingWindowTesting.TestNetwork(_TestNetworkStructure);
+            slidingWindowTesting.SetWorkingDataset(dataSet);
+            slidingWindowTesting.SetWindowWidth(12);
+            slidingWindowTesting.SetDistanceToForcastHorrison(3);
+            Activity.Testing.SlidingWindow.TestResults result = slidingWindowTesting.TestNetwork(_TestNetworkStructure);
 
-            Console.WriteLine(Result.RMSE);
-            UsefulFunctions.PrintArrayToFile(Result.ActualOutputs, "ActualOutputs.csv");
-            UsefulFunctions.PrintArrayToFile(Result.ExpectedOutputs, "ExpectedOutputs.csv");
+            Console.WriteLine(result.RMSE);
+            UsefulFunctions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
+            UsefulFunctions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
             Console.WriteLine("Complete Testing");
             Console.WriteLine("Comparing Against Random Walk 3 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(Result.ExpectedOutputs, Result.ActualOutputs, 3) [0]*100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3) [0]*100, 3));
             Console.WriteLine("Comparing Against Random Walk 2 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(Result.ExpectedOutputs, Result.ActualOutputs, 2) [0]*100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2) [0]*100, 3));
             Console.WriteLine("Comparing Against Random Walk 1 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(Result.ExpectedOutputs, Result.ActualOutputs, 1) [0]*100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1) [0]*100, 3));
 
             Console.ReadKey();
         }
 
+        /// <summary>
+        /// Builds the structure of the neural network ready for training and testing
+        /// </summary>
         public static void BuildStructure()
         {
             _InputLayer = new Base();
