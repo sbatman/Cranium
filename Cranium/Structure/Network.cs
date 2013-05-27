@@ -231,22 +231,24 @@ namespace Cranium.Structure
         public void SaveToFile(string fileName)
         {
             BinaryFormatter formatter = new BinaryFormatter {AssemblyFormat = FormatterAssemblyStyle.Simple};
-            FileStream atextwriter = File.Create(fileName);
-            GZipStream compressionStream = new GZipStream(atextwriter, CompressionMode.Compress);
-            formatter.Serialize(compressionStream, this);
-
-            compressionStream.Close();
-            atextwriter.Close();
+            using (FileStream atextwriter = File.Create(fileName))
+            {
+                GZipStream compressionStream = new GZipStream(atextwriter, CompressionMode.Compress);
+                formatter.Serialize(compressionStream, this);
+                compressionStream.Close();
+            }
         }
 
         public static Network LoadFromFile(string filename)
         {
-            FileStream loadedFile = File.OpenRead(filename);
-            GZipStream compressionStream = new GZipStream(loadedFile, CompressionMode.Decompress);
-            BinaryFormatter formatter = new BinaryFormatter();
-            Network returnNetwork = (Network) formatter.Deserialize(compressionStream);
-            compressionStream.Close();
-            loadedFile.Close();
+            Network returnNetwork = null;
+            using (FileStream loadedFile = File.OpenRead(filename))
+            {
+                GZipStream compressionStream = new GZipStream(loadedFile, CompressionMode.Decompress);
+                BinaryFormatter formatter = new BinaryFormatter();
+                returnNetwork = (Network)formatter.Deserialize(compressionStream);
+                compressionStream.Close();
+            }
             return returnNetwork;
         }
 
