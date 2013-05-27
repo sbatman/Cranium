@@ -39,10 +39,10 @@ namespace Cranium.Data
         /// </param>
         public static void PrintArrayToFile(IEnumerable<double> data, string fileName)
         {
-            StreamWriter stream = File.CreateText(fileName);
-            foreach (double t in data) stream.WriteLine(t);
-            stream.Flush();
-            stream.Close();
+            using (StreamWriter stream = File.CreateText(fileName))
+            {
+                foreach (double t in data) stream.WriteLine(t);
+            }
         }
 
         /// <summary>
@@ -56,18 +56,18 @@ namespace Cranium.Data
         /// </param>
         public static void PrintArrayToFile(double[][] data, string fileName)
         {
-            StreamWriter stream = File.CreateText(fileName);
-            for (int x = 0; x < data.GetLength(0); x++)
+            using (StreamWriter stream = File.CreateText(fileName))
             {
-                for (int y = 0; y < data [x].GetLength(0); y++)
+                for (int x = 0; x < data.GetLength(0); x++)
                 {
-                    if (y + 1 < data [x].GetLength(0)) stream.Write(data [x] [y] + ",");
-                    else stream.Write(data [x] [y]);
+                    for (int y = 0; y < data [x].GetLength(0); y++)
+                    {
+                        if (y + 1 < data [x].GetLength(0)) stream.Write(data [x] [y] + ",");
+                        else stream.Write(data [x] [y]);
+                    }
+                    stream.WriteLine("");
                 }
-                stream.WriteLine("");
             }
-            stream.Flush();
-            stream.Close();
         }
     }
 }
