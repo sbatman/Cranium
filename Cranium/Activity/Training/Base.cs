@@ -37,7 +37,7 @@ namespace Cranium.Activity.Training
         protected double[][] _WorkingDataset;
 
         /// <summary>
-        ///     Start this training activity (launched in a sperate thread).
+        /// Start this training activity (launched in a sperate thread).
         /// </summary>
         public void Start()
         {

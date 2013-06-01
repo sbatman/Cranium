@@ -78,7 +78,7 @@ namespace Cranium.Structure.Node
         protected Double _Value = 0;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Node.Base" /> class.
+        ///     Initializes a new instance of the <see cref="Cranium.Structure.Node.Base" /> class for use by the serializer.
         /// </summary>
         /// <param name='layer'>
         ///     Layer.
