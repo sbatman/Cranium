@@ -22,7 +22,7 @@ namespace Cranium.Lobe.Worker
         /// <summary>
         /// A list containing all the active worker services
         /// </summary>
-        private static readonly List<WorkerService> ActiveWorkerServices = new List<WorkerService>();
+        private static readonly List<WorkerThread> ActiveWorkerServices = new List<WorkerThread>();
         /// <summary>
         /// Application entrypoint
         /// </summary>
@@ -33,9 +33,9 @@ namespace Cranium.Lobe.Worker
             if (!SettingsLoader.LoadSettings("Settings.ini")) return;
 
             //Prepare the workers
-            for (int i = 0; i < SettingsLoader.WorkerCount; i++)
+            for (int i = 0; i < SettingsLoader.WorkerThreadCount; i++)
             {
-                ActiveWorkerServices.Add(new WorkerService());
+                ActiveWorkerServices.Add(new WorkerThread());
             }
         }
     }

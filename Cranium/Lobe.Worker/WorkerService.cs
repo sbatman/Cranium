@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Cranium.Lobe.Worker
 {
-    class WorkerService
+    class WorkerThread
     {
     }
 }
