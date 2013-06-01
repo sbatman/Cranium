@@ -56,7 +56,6 @@ namespace Cranium.LibTest.Tests.Reservoir
             //Build Network
             _TestNetworkStructure = new Network();
             BuildStructure();
-            _TestNetworkStructure.SaveToFile("testtttt.dat");
             _TestNetworkStructure.RandomiseWeights(1.1d);
             //PrepData
             double[][] dataSet = StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
@@ -101,9 +100,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             slidingWindowTesting.SetTargetNetwork(_TestNetworkStructure);
 
             Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults)slidingWindowTesting.TestNetwork();
-
-
-
+            
             Console.WriteLine(result.RMSE);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
             Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
@@ -114,38 +111,6 @@ namespace Cranium.LibTest.Tests.Reservoir
             Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0] * 100, 3));
             Console.WriteLine("Comparing Against Random Walk 1 Step");
             Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0] * 100, 3));
-
-            BinaryFormatter formatter = new BinaryFormatter { AssemblyFormat = FormatterAssemblyStyle.Simple };
-            FileStream stream = File.Create("Test.dat");
-            formatter.Serialize(stream, _TestNetworkStructure);
-            stream.Close();
-
-            Network gg = _TestNetworkStructure;
-            _TestNetworkStructure = null;
-           
-
-              stream = File.Open("Test.dat",FileMode.Open);
-            _TestNetworkStructure = (Network)formatter.Deserialize(stream);
-            stream.Close();
-
-            slidingWindowTesting.SetTargetNetwork(_TestNetworkStructure);
-            slidingWindowTesting.SetInputNodes(_TestNetworkStructure.GetDetectedBottomLayers()[0].GetNodes().ToList());
-            slidingWindowTesting.SetOutputNodes(_TestNetworkStructure.GetDetectedTopLayers()[0].GetNodes().ToList());
-             result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults)slidingWindowTesting.TestNetwork();
-
-
-
-            Console.WriteLine(result.RMSE);
-            Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
-            Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
-            Console.WriteLine("Complete Testing");
-            Console.WriteLine("Comparing Against Random Walk 3 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3) [0]*100, 3));
-            Console.WriteLine("Comparing Against Random Walk 2 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2) [0]*100, 3));
-            Console.WriteLine("Comparing Against Random Walk 1 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1) [0]*100, 3));
-
 
             Console.ReadKey();
         }
