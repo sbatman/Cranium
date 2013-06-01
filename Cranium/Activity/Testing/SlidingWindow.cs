@@ -74,6 +74,7 @@ namespace Cranium.Activity.Testing
         protected int _SequenceCount;
         protected int _WindowWidth;
         protected double[][] _WorkingDataset;
+       
 
         public SlidingWindow()
         {
@@ -170,7 +171,7 @@ namespace Cranium.Activity.Testing
         /// </summary>
         /// <param name="network">The network that requires testing</param>
         /// <returns>Returns acopy of the test results class (or derived class depending on class functionality)</returns>
-        public override TestResults TestNetwork(Network network)
+        public override TestResults TestNetwork()
         {
             PrepareData();
             //Ensure that the networks state is clean
@@ -179,11 +180,11 @@ namespace Cranium.Activity.Testing
             double rmse = 0;
             for (int s = 0; s < _SequenceCount; s++)
             {
-                foreach (Structure.Layer.Base layer in network.GetCurrentLayers()) foreach (Structure.Node.Base node in layer.GetNodes()) node.SetValue(0);
+                foreach (Structure.Layer.Base layer in _TargetNetwork.GetCurrentLayers()) foreach (Structure.Node.Base node in layer.GetNodes()) node.SetValue(0);
                 for (int i = 0; i < _WindowWidth; i++)
                 {
                     for (int x = 0; x < _InputNodes.Count; x++) _InputNodes[x].SetValue(_InputSequences[s][i][x]);
-                    network.FowardPass();
+                    _TargetNetwork.FowardPass();
                     if (_Recurrentlayers != null) foreach (RecurrentContext layer in _Recurrentlayers) layer.UpdateExtra();
                 }
                 for (int x = 0; x < _OutputNodes.Count; x++)
@@ -208,15 +209,15 @@ namespace Cranium.Activity.Testing
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("_ActualOutputs", _ActualOutputs, _ActualOutputs.GetType());
+            info.AddValue("_ActualOutputs", _ActualOutputs, typeof(double[][]));
             info.AddValue("_DistanceToForcastHorrison", _DistanceToForcastHorrison);
-            info.AddValue("_ExpectedOutputs", _ExpectedOutputs, _ExpectedOutputs.GetType());
-            info.AddValue("_InputSequences", _InputSequences, _InputSequences.GetType());
-            info.AddValue("_OutputErrors", _OutputErrors, _OutputErrors.GetType());
+            info.AddValue("_ExpectedOutputs", _ExpectedOutputs, typeof(double[][]));
+            info.AddValue("_InputSequences", _InputSequences, typeof(double[][][]));
+            info.AddValue("_OutputErrors", _OutputErrors, typeof(double[][]));
             info.AddValue("_PortionOfDatasetReserved", _ActualOutputs);
             info.AddValue("_SequenceCount", _SequenceCount);
             info.AddValue("_WindowWidth", _WindowWidth);
-            info.AddValue("_WorkingDataset", _WorkingDataset, _WorkingDataset.GetType());
+            info.AddValue("_WorkingDataset", _WorkingDataset, typeof(double[][]));
         }
     }
 }

@@ -27,6 +27,9 @@ using Cranium.Structure.ActivationFunction;
 using Cranium.Structure.Layer;
 using Cranium.Structure.Node;
 using Base = Cranium.Structure.Layer.Base;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters;
+using System.IO;
 
 #endregion
 
@@ -65,7 +68,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             _SlidingWindowTraining.SetDatasetReservedLength(0);
             _SlidingWindowTraining.SetDistanceToForcastHorrison(3);
             _SlidingWindowTraining.SetWindowWidth(12);
-            _SlidingWindowTraining.SetMaximumEpochs(300);
+            _SlidingWindowTraining.SetMaximumEpochs(5);
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
@@ -90,11 +93,26 @@ namespace Cranium.LibTest.Tests.Reservoir
             slidingWindowTesting.SetDatasetReservedLength(0);
             slidingWindowTesting.SetInputNodes(_InputLayerNodes);
             slidingWindowTesting.SetOutputNodes(_OuputLayerNodes);
-            _SlidingWindowTraining.SetRecurrentConextLayers(new List<Base>());
+            slidingWindowTesting.SetRecurrentConextLayers(new List<Base>());
             slidingWindowTesting.SetWorkingDataset(dataSet);
             slidingWindowTesting.SetWindowWidth(12);
             slidingWindowTesting.SetDistanceToForcastHorrison(3);
-            Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults)slidingWindowTesting.TestNetwork(_TestNetworkStructure);
+            slidingWindowTesting.SetTargetNetwork(_TestNetworkStructure);
+
+            BinaryFormatter formatter = new BinaryFormatter { AssemblyFormat = FormatterAssemblyStyle.Simple };
+            FileStream stream = File.Create("Test.dat");
+            formatter.Serialize(stream, slidingWindowTesting);
+            stream.Close();
+
+            slidingWindowTesting = null;
+
+            stream = File.Open("Test.dat",FileMode.Open);
+            slidingWindowTesting = (Activity.Testing.SlidingWindow)formatter.Deserialize(stream);
+            stream.Close();
+
+            Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults)slidingWindowTesting.TestNetwork();
+
+
 
             Console.WriteLine(result.RMSE);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");

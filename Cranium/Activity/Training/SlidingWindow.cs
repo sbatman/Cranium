@@ -218,6 +218,12 @@ namespace Cranium.Activity.Training
 
         #region implemented abstract members of Cranium.Activity.Training.Base
 
+        /// <summary>
+        ///     This function is called repeatedly untill trainingas been instructed to stop or untill the stopping criteria has been met
+        /// </summary>
+        /// <returns>
+        ///     The tick.
+        /// </returns>
         protected override bool _Tick()
         {
             if (_CurrentEpoch >= _MaxEpochs) return false;
