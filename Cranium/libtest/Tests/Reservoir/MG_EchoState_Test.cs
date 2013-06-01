@@ -120,9 +120,11 @@ namespace Cranium.LibTest.Tests.Reservoir
             formatter.Serialize(stream, _TestNetworkStructure);
             stream.Close();
 
+            Network gg = _TestNetworkStructure;
             _TestNetworkStructure = null;
+           
 
-            stream = File.Open("Test.dat",FileMode.Open);
+              stream = File.Open("Test.dat",FileMode.Open);
             _TestNetworkStructure = (Network)formatter.Deserialize(stream);
             stream.Close();
 
@@ -143,6 +145,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2) [0]*100, 3));
             Console.WriteLine("Comparing Against Random Walk 1 Step");
             Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1) [0]*100, 3));
+
 
             Console.ReadKey();
         }

@@ -106,8 +106,7 @@ namespace Cranium.Structure.Layer
             _LevelOfConnectivity = info.GetDouble("_LevelOfConnectivity");
             _MinimumConnections = info.GetInt32("_MinimumConnections");
             _MaximumConnections = info.GetInt32("_MaximumConnections");
-            _ActivationFunction =
-                (ActivationFunction.Base) info.GetValue("_ActivationFunction", typeof (ActivationFunction.Base));
+            _ActivationFunction = (ActivationFunction.Base) info.GetValue("_ActivationFunction", typeof (ActivationFunction.Base));
             _Rnd = (Random) info.GetValue("_Rnd", typeof (Random));
         }
 

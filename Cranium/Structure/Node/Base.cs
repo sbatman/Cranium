@@ -45,7 +45,7 @@ namespace Cranium.Structure.Node
         /// <summary>
         ///     A list of foward weights on this node, where this node is NodeA on the weight
         /// </summary>
-        protected List<Weight.Base> _FowardWeights = new List<Weight.Base>();
+        protected List<Weight.Base> _ForwardWeights = new List<Weight.Base>();
 
         /// <summary>
         ///     The Nodes current ID.
@@ -125,7 +125,7 @@ namespace Cranium.Structure.Node
         /// </summary>
         public virtual void BakeLists()
         {
-            _TFowardWeights = _FowardWeights.ToArray();
+            _TFowardWeights = _ForwardWeights.ToArray();
             _TReverseWeights = _ReverseWeights.ToArray();
         }
 
@@ -158,7 +158,7 @@ namespace Cranium.Structure.Node
         /// </param>
         public virtual void AdjustWeights(Double learningRate)
         {
-            foreach (Weight.Base w in _FowardWeights) w.AddWeightChange(_Value*w.NodeB._Error*learningRate);
+            foreach (Weight.Base w in _ForwardWeights) w.AddWeightChange(_Value*w.NodeB._Error*learningRate);
         }
 
         /// <summary>
@@ -169,7 +169,7 @@ namespace Cranium.Structure.Node
         /// </param>
         public virtual void UpdateWeights(double momentum)
         {
-            foreach (Weight.Base w in _FowardWeights)
+            foreach (Weight.Base w in _ForwardWeights)
             {
                 w.SetWeight(w.Weight + (w.GetPastWeightChange()*momentum));
                 w.ApplyPendingWeightChanges();
@@ -221,14 +221,14 @@ namespace Cranium.Structure.Node
                 case Weight.Base.ConnectionDirection.Forward:
                     _TFowardWeights = null;
                     theNewWeight = new Weight.Base(this, nodeToConnect, startingWeight);
-                    _FowardWeights.Add(theNewWeight);
+                    _ForwardWeights.Add(theNewWeight);
                     nodeToConnect._ReverseWeights.Add(theNewWeight);
                     break;
                 case Weight.Base.ConnectionDirection.Reverse:
                     _TReverseWeights = null;
                     theNewWeight = new Weight.Base(nodeToConnect, this, startingWeight);
                     _ReverseWeights.Add(theNewWeight);
-                    nodeToConnect._FowardWeights.Add(theNewWeight);
+                    nodeToConnect._ForwardWeights.Add(theNewWeight);
                     break;
             }
         }
@@ -257,7 +257,7 @@ namespace Cranium.Structure.Node
                     if (w.NodeB._ReverseWeights != null) w.NodeB._ReverseWeights.Remove(w);
                     w.Dispose();
                 }
-                _FowardWeights.Clear();
+                _ForwardWeights.Clear();
                 _TFowardWeights = null;
             }
             if (_TReverseWeights != null)
@@ -266,7 +266,7 @@ namespace Cranium.Structure.Node
                 {
                     w.Dispose();
                     w.NodeB._TFowardWeights = null;
-                    w.NodeB._FowardWeights.Remove(w);
+                    w.NodeB._ForwardWeights.Remove(w);
                 }
                 _ReverseWeights.Clear();
                 _TReverseWeights = null;
@@ -300,8 +300,8 @@ namespace Cranium.Structure.Node
         public virtual void Dispose()
         {
             _ParentLayer = null;
-            _FowardWeights.Clear();
-            _FowardWeights = null;
+            _ForwardWeights.Clear();
+            _ForwardWeights = null;
             _ReverseWeights.Clear();
             _ReverseWeights = null;
             _ActivationFunction.Dispose();
@@ -326,10 +326,9 @@ namespace Cranium.Structure.Node
             _Value = info.GetDouble("_Value");
             _Error = info.GetDouble("_Error");
             _ParentLayer = (Layer.Base) info.GetValue("_ParentLayer", typeof (Layer.Base));
-            _FowardWeights = (List<Weight.Base>) info.GetValue("_ForwardWeights", typeof (List<Weight.Base>));
+            _ForwardWeights = (List<Weight.Base>) info.GetValue("_ForwardWeights", typeof (List<Weight.Base>));
             _ReverseWeights = (List<Weight.Base>) info.GetValue("_ReverseWeights", typeof (List<Weight.Base>));
-            _ActivationFunction =
-                (ActivationFunction.Base) info.GetValue("_ActivationFunction", typeof (ActivationFunction.Base));
+            _ActivationFunction = (ActivationFunction.Base) info.GetValue("_ActivationFunction", typeof (ActivationFunction.Base));
             _NodeID = info.GetInt32("_NodeID");
         }
 
@@ -338,7 +337,7 @@ namespace Cranium.Structure.Node
             info.AddValue("_Value", _Value);
             info.AddValue("_Error", _Error);
             info.AddValue("_ParentLayer", _ParentLayer, typeof (Layer.Base));
-            info.AddValue("_ForwardWeights", _FowardWeights, typeof (List<Weight.Base>));
+            info.AddValue("_ForwardWeights", _ForwardWeights, typeof (List<Weight.Base>));
             info.AddValue("_ReverseWeights", _ReverseWeights, typeof (List<Weight.Base>));
             info.AddValue("_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType());
             info.AddValue("_NodeID", _NodeID);
