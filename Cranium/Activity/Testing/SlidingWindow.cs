@@ -83,15 +83,15 @@ namespace Cranium.Activity.Testing
         public SlidingWindow(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            _ActualOutputs = (double[][])info.GetValue("_ActualOutputs", _ActualOutputs.GetType());
+            _ActualOutputs = (double[][])info.GetValue("_ActualOutputs", typeof(double[][]));
             _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
-            _ExpectedOutputs = (double[][])info.GetValue("_ExpectedOutputs", _ExpectedOutputs.GetType());
-            _InputSequences = (double[][][])info.GetValue("_InputSequences", _InputSequences.GetType());
-            _OutputErrors = (double[][])info.GetValue("_OutputErrors", _OutputErrors.GetType());
+            _ExpectedOutputs = (double[][])info.GetValue("_ExpectedOutputs", typeof(double[][]));
+            _InputSequences = (double[][][])info.GetValue("_InputSequences", typeof(double[][][]));
+            _OutputErrors = (double[][])info.GetValue("_OutputErrors", typeof(double[][]));
             _PortionOfDatasetReserved = info.GetInt32("_PortionOfDatasetReserved");
             _SequenceCount = info.GetInt32("_SequenceCount");
             _WindowWidth = info.GetInt32("_WindowWidth");
-            _WorkingDataset = (double[][])info.GetValue("_WorkingDataset", _WorkingDataset.GetType());
+            _WorkingDataset = (double[][])info.GetValue("_WorkingDataset", typeof(double[][]));
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Cranium.Activity.Testing
             info.AddValue("_ExpectedOutputs", _ExpectedOutputs, typeof(double[][]));
             info.AddValue("_InputSequences", _InputSequences, typeof(double[][][]));
             info.AddValue("_OutputErrors", _OutputErrors, typeof(double[][]));
-            info.AddValue("_PortionOfDatasetReserved", _ActualOutputs);
+            info.AddValue("_PortionOfDatasetReserved", _PortionOfDatasetReserved);
             info.AddValue("_SequenceCount", _SequenceCount);
             info.AddValue("_WindowWidth", _WindowWidth);
             info.AddValue("_WorkingDataset", _WorkingDataset, typeof(double[][]));
