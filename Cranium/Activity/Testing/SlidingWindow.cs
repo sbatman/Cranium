@@ -35,28 +35,44 @@ namespace Cranium.Activity.Testing
         protected int _WindowWidth;
         protected double[][] _WorkingDataset;
 
+        /// <summary>
+        /// Sets teh width of the sliding window used for testing
+        /// </summary>
+        /// <param name="windowWidth"></param>
         public virtual void SetWindowWidth(int windowWidth)
         {
             _WindowWidth = windowWidth;
         }
 
+        /// <summary>
+        /// Sets the distance to prediction from the end of the presented window
+        /// </summary>
+        /// <param name="distance"></param>
         public virtual void SetDistanceToForcastHorrison(int distance)
         {
             _DistanceToForcastHorrison = distance;
         }
 
+        /// <summary>
+        /// Sets the ammount of data from the end of the dataset to to be used during testing
+        /// </summary>
+        /// <param name="reservedPortion"></param>
         public virtual void SetDatasetReservedLength(int reservedPortion)
         {
             _PortionOfDatasetReserved = reservedPortion;
         }
 
+        /// <summary>
+        /// sets the current dataset used for this test
+        /// </summary>
+        /// <param name="dataset"></param>
         public virtual void SetWorkingDataset(double[][] dataset)
         {
             _WorkingDataset = dataset;
         }
 
         /// <summary>
-        ///     Prepares the data before training.
+        /// Perpares any data that is required for testing
         /// </summary>
         public override void PrepareData()
         {
@@ -91,6 +107,11 @@ namespace Cranium.Activity.Testing
             }
         }
 
+        /// <summary>
+        /// Tests the provided network
+        /// </summary>
+        /// <param name="network">The network that requires testing</param>
+        /// <returns>Returns acopy of the test results class (or derived class depending on class functionality)</returns>
         public override TestResults TestNetwork(Network network)
         {
             PrepareData();
@@ -116,7 +137,7 @@ namespace Cranium.Activity.Testing
                 }
             }
             //All the sequewnces have been run through and the outputs and their erros collected
-            SlidingWindowTestResults result = new SlidingWindowTestResults
+            SlidingWindowTestResults result = new SlidingWindowTestResults()
                 {
                     ExpectedOutputs = _ExpectedOutputs,
                     ActualOutputs = _ActualOutputs,
@@ -126,11 +147,40 @@ namespace Cranium.Activity.Testing
             return result;
         }
 
+        /// <summary>
+        /// Returned results class for the SlidingWindow testing activity
+        /// </summary>
         public class SlidingWindowTestResults : TestResults
         {
             public double[][] ActualOutputs;
             public double[][] ExpectedOutputs;
             public double[][] OutputErrors;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class.
+            /// </summary>
+            public SlidingWindowTestResults()
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class, used by the serializer.
+            /// </summary>
+            public SlidingWindowTestResults(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+                : base(info, context)
+            {
+                ActualOutputs = (double[][])info.GetValue("ActualOutputs", ActualOutputs.GetType());
+                ExpectedOutputs = (double[][])info.GetValue("ActualOutputs", ExpectedOutputs.GetType());
+                OutputErrors = (double[][])info.GetValue("ActualOutputs", OutputErrors.GetType());
+            }
+
+            public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+            {
+                base.GetObjectData(info, context);
+                info.AddValue("ActualOutputs", ActualOutputs, ActualOutputs.GetType());
+                info.AddValue("ExpectedOutputs", ExpectedOutputs, ExpectedOutputs.GetType());
+                info.AddValue("OutputErrors", OutputErrors, OutputErrors.GetType());
+            }
         }
     }
 }
