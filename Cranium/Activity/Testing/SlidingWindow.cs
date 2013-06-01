@@ -18,13 +18,53 @@
 using System.Collections.Generic;
 using Cranium.Structure;
 using RecurrentContext = Cranium.Structure.Layer.RecurrentContext;
+using System.Runtime.Serialization;
+using System;
 
 #endregion
 
 namespace Cranium.Activity.Testing
 {
-    public class SlidingWindow : Base
+    [Serializable]
+    public class SlidingWindow : Base, ISerializable
     {
+
+        /// <summary>
+        /// Returned results class for the SlidingWindow testing activity
+        /// </summary>
+        public class SlidingWindowTestResults : TestResults
+        {
+            public double[][] ActualOutputs;
+            public double[][] ExpectedOutputs;
+            public double[][] OutputErrors;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class.
+            /// </summary>
+            public SlidingWindowTestResults()
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class, used by the serializer.
+            /// </summary>
+            public SlidingWindowTestResults(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+                : base(info, context)
+            {
+                ActualOutputs = (double[][])info.GetValue("ActualOutputs", ActualOutputs.GetType());
+                ExpectedOutputs = (double[][])info.GetValue("ActualOutputs", ExpectedOutputs.GetType());
+                OutputErrors = (double[][])info.GetValue("ActualOutputs", OutputErrors.GetType());
+            }
+
+            public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+            {
+                base.GetObjectData(info, context);
+                info.AddValue("ActualOutputs", ActualOutputs, ActualOutputs.GetType());
+                info.AddValue("ExpectedOutputs", ExpectedOutputs, ExpectedOutputs.GetType());
+                info.AddValue("OutputErrors", OutputErrors, OutputErrors.GetType());
+            }
+        }
+
         protected double[][] _ActualOutputs;
         protected int _DistanceToForcastHorrison;
         protected double[][] _ExpectedOutputs;
@@ -34,6 +74,24 @@ namespace Cranium.Activity.Testing
         protected int _SequenceCount;
         protected int _WindowWidth;
         protected double[][] _WorkingDataset;
+
+        public SlidingWindow()
+        {
+        }
+
+        public SlidingWindow(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            _ActualOutputs = (double[][])info.GetValue("_ActualOutputs", _ActualOutputs.GetType());
+            _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
+            _ExpectedOutputs = (double[][])info.GetValue("_ExpectedOutputs", _ExpectedOutputs.GetType());
+            _InputSequences = (double[][][])info.GetValue("_InputSequences", _InputSequences.GetType());
+            _OutputErrors = (double[][])info.GetValue("_OutputErrors", _OutputErrors.GetType());
+            _PortionOfDatasetReserved = info.GetInt32("_PortionOfDatasetReserved");
+            _SequenceCount = info.GetInt32("_SequenceCount");
+            _WindowWidth = info.GetInt32("_WindowWidth");
+            _WorkingDataset = (double[][])info.GetValue("_WorkingDataset", _WorkingDataset.GetType());
+        }
 
         /// <summary>
         /// Sets teh width of the sliding window used for testing
@@ -147,40 +205,18 @@ namespace Cranium.Activity.Testing
             return result;
         }
 
-        /// <summary>
-        /// Returned results class for the SlidingWindow testing activity
-        /// </summary>
-        public class SlidingWindowTestResults : TestResults
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            public double[][] ActualOutputs;
-            public double[][] ExpectedOutputs;
-            public double[][] OutputErrors;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class.
-            /// </summary>
-            public SlidingWindowTestResults()
-            {
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class, used by the serializer.
-            /// </summary>
-            public SlidingWindowTestResults(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-                : base(info, context)
-            {
-                ActualOutputs = (double[][])info.GetValue("ActualOutputs", ActualOutputs.GetType());
-                ExpectedOutputs = (double[][])info.GetValue("ActualOutputs", ExpectedOutputs.GetType());
-                OutputErrors = (double[][])info.GetValue("ActualOutputs", OutputErrors.GetType());
-            }
-
-            public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            {
-                base.GetObjectData(info, context);
-                info.AddValue("ActualOutputs", ActualOutputs, ActualOutputs.GetType());
-                info.AddValue("ExpectedOutputs", ExpectedOutputs, ExpectedOutputs.GetType());
-                info.AddValue("OutputErrors", OutputErrors, OutputErrors.GetType());
-            }
+            base.GetObjectData(info, context);
+            info.AddValue("_ActualOutputs", _ActualOutputs, _ActualOutputs.GetType());
+            info.AddValue("_DistanceToForcastHorrison", _DistanceToForcastHorrison);
+            info.AddValue("_ExpectedOutputs", _ExpectedOutputs, _ExpectedOutputs.GetType());
+            info.AddValue("_InputSequences", _InputSequences, _InputSequences.GetType());
+            info.AddValue("_OutputErrors", _OutputErrors, _OutputErrors.GetType());
+            info.AddValue("_PortionOfDatasetReserved", _ActualOutputs);
+            info.AddValue("_SequenceCount", _SequenceCount);
+            info.AddValue("_WindowWidth", _WindowWidth);
+            info.AddValue("_WorkingDataset", _WorkingDataset, _WorkingDataset.GetType());
         }
     }
 }
