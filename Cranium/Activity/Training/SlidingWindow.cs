@@ -27,6 +27,11 @@ using System.Runtime.Serialization;
 
 namespace Cranium.Activity.Training
 {
+    /// <summary>
+    /// This training activity presents the given data as a series of windows, this type of of training activity is best suited to networks
+    /// with forms of recursive memory. You need to specify the data set, how wide the window much be and the range from the end of the
+    /// presented window to the desired prediction
+    /// </summary>
     public class SlidingWindow : Base, ISerializable
     {
         /// <summary>
