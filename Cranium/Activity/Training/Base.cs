@@ -17,12 +17,15 @@
 
 using System.Threading;
 using Cranium.Structure;
+using System.Runtime.Serialization;
+using System;
 
 #endregion
 
 namespace Cranium.Activity.Training
 {
-    public abstract class Base
+    [Serializable]
+    public abstract class Base : ISerializable
     {
         public delegate double DynamicVariable(int epoch, double currentRMSE);
 
@@ -35,6 +38,21 @@ namespace Cranium.Activity.Training
         private bool _Stopping;
         protected Network _TargetNetwork;
         protected double[][] _WorkingDataset;
+
+        public Base()
+        {
+        }
+
+        public Base(SerializationInfo info, StreamingContext context)
+        {
+            _CurrentEpoch = info.GetInt32("_CurrentEpoch_CurrentEpoch");
+            _DynamicLearningRate = (DynamicVariable)info.GetValue("DynamicVariable", typeof(DynamicVariable));
+            _DynamicMomentum = (DynamicVariable)info.GetValue("_DynamicMomentum", typeof(DynamicVariable));
+            _MaxEpochs = info.GetInt32("_MaxEpochs");
+            _TargetNetwork = (Network)info.GetValue("_TargetNetwork", typeof(Network));
+            _WorkingDataset = (double[][])info.GetValue("_WorkingDataset", typeof(double[][]));
+        }
+
 
         /// <summary>
         /// Start this training activity (launched in a sperate thread).
@@ -148,6 +166,16 @@ namespace Cranium.Activity.Training
         public void SetDynamicMomenumDelegate(DynamicVariable function)
         {
             _DynamicMomentum = function;
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_CurrentEpoch", _CurrentEpoch);
+            info.AddValue("_DynamicLearningRate", _DynamicLearningRate, _DynamicLearningRate.GetType());
+            info.AddValue("_DynamicMomentum", _DynamicMomentum, _DynamicMomentum.GetType());
+            info.AddValue("_MaxEpochs", _MaxEpochs);
+            info.AddValue("_TargetNetwork", _TargetNetwork, _TargetNetwork.GetType());
+            info.AddValue("_WorkingDataset", _WorkingDataset, _WorkingDataset.GetType());
         }
     }
 }
