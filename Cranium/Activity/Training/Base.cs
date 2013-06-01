@@ -152,7 +152,7 @@ namespace Cranium.Activity.Training
         /// <param name='function'>
         ///     Function.
         /// </param>
-        public void SetDynamicLearningRateDelegate(DynamicVariable function)
+        public virtual void SetDynamicLearningRateDelegate(DynamicVariable function)
         {
             _DynamicLearningRate = function;
         }
@@ -163,12 +163,12 @@ namespace Cranium.Activity.Training
         /// <param name='function'>
         ///     Function.
         /// </param>
-        public void SetDynamicMomenumDelegate(DynamicVariable function)
+        public virtual void SetDynamicMomenumDelegate(DynamicVariable function)
         {
             _DynamicMomentum = function;
         }
 
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_CurrentEpoch", _CurrentEpoch);
             info.AddValue("_DynamicLearningRate", _DynamicLearningRate, _DynamicLearningRate.GetType());
