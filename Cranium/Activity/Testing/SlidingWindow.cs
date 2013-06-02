@@ -26,7 +26,7 @@ using System;
 namespace Cranium.Lib.Activity.Testing
 {
     [Serializable]
-    public class SlidingWindow : Base, ISerializable
+    public class SlidingWindow : Cranium.Lib.Activity.Testing.Base, ISerializable
     {
 
         /// <summary>

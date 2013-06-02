@@ -12,7 +12,7 @@ namespace Cranium.Lib.Activity.Testing
     /// This base class is provided as a structure guide, point of refrence for serialisation and for distribution.
     /// </summary>
     [Serializable]
-    public abstract class Base : ISerializable
+    public abstract class Base : Cranium.Lib.Activity.Base, ISerializable
     {
         /// <summary>
         /// Basse Class for formatting and delivering test results
@@ -139,7 +139,7 @@ namespace Cranium.Lib.Activity.Testing
         /// <returns>Returns acopy of the test results class (or derived class depending on class functionality)</returns>
         public abstract TestResults TestNetwork();
 
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_InputNodes", _InputNodes, _InputNodes.GetType());
             info.AddValue("_OutputNodes", _OutputNodes, _OutputNodes.GetType());

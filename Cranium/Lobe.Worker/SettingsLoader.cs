@@ -17,6 +17,7 @@ namespace Cranium.Lobe.Worker
         /// <param name="fileName"></param>
         public static bool LoadSettings(string fileName)
         {
+            Console.WriteLine("Loading Settings from file "+fileName);
             Dictionary<string, string> dictionaryOfSettings = new Dictionary<string, string>();
             if (!File.Exists(fileName)) throw (new Exception("Settings file " + fileName + " not found"));
             using (StreamReader settingsFile = File.OpenText(fileName))

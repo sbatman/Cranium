@@ -19,13 +19,14 @@ using System.Threading;
 using Cranium.Lib.Structure;
 using System.Runtime.Serialization;
 using System;
+using System.Diagnostics;
 
 #endregion
 
 namespace Cranium.Lib.Activity.Training
 {
     [Serializable]
-    public abstract class Base : ISerializable
+    public abstract class Base : Cranium.Lib.Activity.Base, ISerializable
     {
         public delegate double DynamicVariable(int epoch, double currentRMSE);
 
@@ -60,8 +61,24 @@ namespace Cranium.Lib.Activity.Training
         public void Start()
         {
             _CurrentEpoch = 0;
+            if (_LoopThread != null)
+            {
+                Debug.Assert(_LoopThread != null, "Calling Start on a training activity that has already been started");
+                _LoopThread.Abort();
+                _LoopThread = null;
+            }
             _LoopThread = new Thread(_UpdateLoop);
             _LoopThread.Start();
+        }
+
+        public void StartSynchronous()
+        {
+            _CurrentEpoch = 0;
+            _Running = true;
+            Starting();
+            while (_Tick() && !_Stopping) _CurrentEpoch++;
+            Stopping();
+            _Running = false;
         }
 
         /// <summary>
@@ -177,7 +194,7 @@ namespace Cranium.Lib.Activity.Training
             _DynamicMomentum = function;
         }
 
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_CurrentEpoch", _CurrentEpoch);
             info.AddValue("_DynamicLearningRate", _DynamicLearningRate, typeof(DynamicVariable));

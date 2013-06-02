@@ -33,7 +33,7 @@ namespace Cranium.Lib.Activity.Training
     /// presented window to the desired prediction
     /// </summary>
     [Serializable]
-    public class SlidingWindow : Base, ISerializable
+    public class SlidingWindow : Cranium.Lib.Activity.Training.Base, ISerializable
     {
         /// <summary>
         /// How far beyond the last presented value are we attempting to predict
