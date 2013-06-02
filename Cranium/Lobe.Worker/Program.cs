@@ -27,7 +27,7 @@ namespace Cranium.Lobe.Worker
         /// </summary>
         private static readonly List<WorkerThread> _ActiveWorkerServices = new List<WorkerThread>();
 
-        private static Dictionary<string, Cranium.Lib.Activity.Base> PendingWork = new Dictionary<string, Cranium.Lib.Activity.Base>();
+        private static Dictionary<Guid, Cranium.Lib.Activity.Base> PendingWork = new Dictionary<Guid, Cranium.Lib.Activity.Base>();
 
         private static InsaneDev.Networking.Server.Base _CommsServer;
         private static bool _Running = false;
@@ -75,7 +75,7 @@ namespace Cranium.Lobe.Worker
             Console.WriteLine("Lobe Worker Exiting");
         }
 
-        public static void RegisterWork(string jobGUID, Cranium.Lib.Activity.Base activity)
+        public static void RegisterWork(Guid jobGUID, Cranium.Lib.Activity.Base activity)
         {
             Console.WriteLine("Registering new work " + jobGUID);
             lock (PendingWork) PendingWork.Add(jobGUID, activity);

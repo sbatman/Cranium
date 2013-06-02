@@ -67,6 +67,10 @@
       <Project>{9553B26D-5D2D-4013-82E1-4D7A24D526D8}</Project>
       <Name>Cranium</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Lobe.Client\Lobe.Client.csproj">
+      <Project>{db8195a8-0085-4866-be7a-065ced69ce4c}</Project>
+      <Name>Lobe.Client</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">

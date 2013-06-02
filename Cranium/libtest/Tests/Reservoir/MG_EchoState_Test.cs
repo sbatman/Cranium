@@ -74,6 +74,16 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
             _SlidingWindowTraining.SetRecurrentConextLayers(new List<Structure.Layer.Base>());
 
+            Lobe.Client.CommsClient lobeConnection = new Lobe.Client.CommsClient();
+            lobeConnection.ConnectToWorker("localhost", 7432);
+            lobeConnection.SendJob(_SlidingWindowTraining);
+
+            while (true)
+            {
+                Thread.Sleep(1000);
+                Console.WriteLine(".");
+            }
+
             ////////////////////////////////////////////////
             ////////////////////////////////////////////////
 

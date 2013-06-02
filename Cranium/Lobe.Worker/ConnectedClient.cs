@@ -48,8 +48,8 @@ namespace Cranium.Lobe.Worker
         protected void HandelA1000(Packet p)
         {
             object[] packetObjects = p.GetObjects();
-            string JobGUID = (string)packetObjects[0];
-            byte[] JobData = (byte[])packetObjects[1];
+            Guid JobGUID = Guid.NewGuid();
+            byte[] JobData = (byte[])packetObjects[0];
 
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             Cranium.Lib.Activity.Base Activity = (Cranium.Lib.Activity.Base)binaryFormatter.Deserialize(new MemoryStream(JobData));
