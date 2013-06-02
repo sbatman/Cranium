@@ -68,7 +68,8 @@ namespace Cranium.Lib.Structure
             _LearningRate = info.GetDouble("_LearningRate");
             _Momenum = info.GetDouble("_Momenum");
             _LastIssuedLayerID = info.GetInt32("_LastIssuedLayerID");
-            //	StructureUpdate ();
+           _DetectedBottomLayers  = (List<Base>)info.GetValue("_DetectedBottomLayers", typeof(List<Base>));
+           _DetectedTopLayers = (List<Base>)info.GetValue("_DetectedTopLayers", typeof(List<Base>));
         }
 
         /// <summary>
@@ -102,6 +103,8 @@ namespace Cranium.Lib.Structure
         /// </summary>
         protected virtual void StructureUpdate()
         {
+            _DetectedTopLayers.Clear();
+            _DetectedBottomLayers.Clear();
             foreach (Base l in _CurrentLayers)
             {
                 if (l.GetForwardConnectedLayers().Count == 0) _DetectedTopLayers.Add(l);
@@ -278,6 +281,8 @@ namespace Cranium.Lib.Structure
             info.AddValue("_LearningRate", _LearningRate);
             info.AddValue("_Momenum", _Momenum);
             info.AddValue("_LastIssuedLayerID", _LastIssuedLayerID);
+            info.AddValue("_DetectedBottomLayers", _DetectedBottomLayers, typeof(List<Base>));
+            info.AddValue("_DetectedTopLayers", _DetectedTopLayers, typeof(List<Base>));
         }
 
         #endregion

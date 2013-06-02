@@ -35,6 +35,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activity\Testing\Base.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Structure\Layer\Base.cs" />
     <Compile Include="Structure\Node\Base.cs" />
