@@ -17,12 +17,15 @@
 
 using System.Threading;
 using Cranium.Structure;
+using System.Runtime.Serialization;
+using System;
 
 #endregion
 
 namespace Cranium.Activity.Training
 {
-    public abstract class Base
+    [Serializable]
+    public abstract class Base : ISerializable
     {
         public delegate double DynamicVariable(int epoch, double currentRMSE);
 
@@ -36,8 +39,23 @@ namespace Cranium.Activity.Training
         protected Network _TargetNetwork;
         protected double[][] _WorkingDataset;
 
+        public Base()
+        {
+        }
+
+        public Base(SerializationInfo info, StreamingContext context)
+        {
+            _CurrentEpoch = info.GetInt32("_CurrentEpoch");
+            _DynamicLearningRate = (DynamicVariable)info.GetValue("_DynamicLearningRate", typeof(DynamicVariable));
+            _DynamicMomentum = (DynamicVariable)info.GetValue("_DynamicMomentum", typeof(DynamicVariable));
+            _MaxEpochs = info.GetInt32("_MaxEpochs");
+            _TargetNetwork = (Network)info.GetValue("_TargetNetwork", typeof(Network));
+            _WorkingDataset = (double[][])info.GetValue("_WorkingDataset", typeof(double[][]));
+        }
+
+
         /// <summary>
-        ///     Start this training activity (launched in a sperate thread).
+        /// Start this training activity (launched in a sperate thread).
         /// </summary>
         public void Start()
         {
@@ -55,6 +73,15 @@ namespace Cranium.Activity.Training
         public virtual void SetTargetNetwork(Network targetNetwork)
         {
             _TargetNetwork = targetNetwork;
+        }
+
+        /// <summary>
+        /// Returns the current target network
+        /// </summary>
+        /// <returns></returns>
+        public virtual Network GetTargetNetwork()
+        {
+            return _TargetNetwork;
         }
 
         /// <summary>
@@ -134,7 +161,7 @@ namespace Cranium.Activity.Training
         /// <param name='function'>
         ///     Function.
         /// </param>
-        public void SetDynamicLearningRateDelegate(DynamicVariable function)
+        public virtual void SetDynamicLearningRateDelegate(DynamicVariable function)
         {
             _DynamicLearningRate = function;
         }
@@ -145,9 +172,19 @@ namespace Cranium.Activity.Training
         /// <param name='function'>
         ///     Function.
         /// </param>
-        public void SetDynamicMomenumDelegate(DynamicVariable function)
+        public virtual void SetDynamicMomenumDelegate(DynamicVariable function)
         {
             _DynamicMomentum = function;
+        }
+
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_CurrentEpoch", _CurrentEpoch);
+            info.AddValue("_DynamicLearningRate", _DynamicLearningRate, typeof(DynamicVariable));
+            info.AddValue("_DynamicMomentum", _DynamicMomentum, typeof(DynamicVariable));
+            info.AddValue("_MaxEpochs", _MaxEpochs);
+            info.AddValue("_TargetNetwork", _TargetNetwork, _TargetNetwork.GetType());
+            info.AddValue("_WorkingDataset", _WorkingDataset, _WorkingDataset.GetType());
         }
     }
 }

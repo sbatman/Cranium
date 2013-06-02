@@ -21,21 +21,28 @@ using System.IO;
 using System.Linq;
 using Cranium.Structure.Node;
 using RecurrentContext = Cranium.Structure.Layer.RecurrentContext;
+using System.Runtime.Serialization;
 
 #endregion
 
 namespace Cranium.Activity.Training
 {
-    public class SlidingWindow : Base
+    /// <summary>
+    /// This training activity presents the given data as a series of windows, this type of of training activity is best suited to networks
+    /// with forms of recursive memory. You need to specify the data set, how wide the window much be and the range from the end of the
+    /// presented window to the desired prediction
+    /// </summary>
+    [Serializable]
+    public class SlidingWindow : Base, ISerializable
     {
         /// <summary>
         /// How far beyond the last presented value are we attempting to predict
         /// </summary>
-        protected int _DistanceToForcastHorrison;
+        protected Int32 _DistanceToForcastHorrison;
         /// <summary>
         /// The outputs that are exspected
         /// </summary>
-        protected double[,] _ExpectedOutputs;
+        protected Double[,] _ExpectedOutputs;
         /// <summary>
         /// A collection of the current input nodes
         /// </summary>
@@ -43,11 +50,11 @@ namespace Cranium.Activity.Training
         /// <summary>
         /// Thre sequences of inputs to be presented during training
         /// </summary>
-        protected double[,,] _InputSequences;
+        protected Double[,,] _InputSequences;
         /// <summary>
         /// The average error experianced during the last pass
         /// </summary>
-        protected double _LastPassAverageError;
+        protected Double _LastPassAverageError;
         /// <summary>
         /// A stream setup for logging the training information
         /// </summary>
@@ -59,7 +66,7 @@ namespace Cranium.Activity.Training
         /// <summary>
         /// Th number of data entries to not use when building the trainign dataset, this allows testing and training against different sets
         /// </summary>
-        protected int _PortionOfDatasetReserved;
+        protected Int32 _PortionOfDatasetReserved;
         /// <summary>
         /// The RND used during the netowrk setup when required
         /// </summary>
@@ -71,11 +78,30 @@ namespace Cranium.Activity.Training
         /// <summary>
         /// The number of sequences that weill be tested
         /// </summary>
-        protected int _SequenceCount;
+        protected Int32 _SequenceCount;
         /// <summary>
         /// The width of the presented window
         /// </summary>
-        protected int _WindowWidth;
+        protected Int32 _WindowWidth;
+
+
+        public SlidingWindow()
+        {
+            _RND=  new Random();
+        }
+
+        public SlidingWindow(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
+            _InputNodes = (List<Structure.Node.Base>)info.GetValue("_InputNodes", typeof(List<Structure.Node.Base>));
+            _LastPassAverageError = info.GetInt32("_LastPassAverageError");
+            _OutputNodes = (List<Structure.Node.Base>)info.GetValue("_OutputNodes", typeof(List<Structure.Node.Base>));
+            _PortionOfDatasetReserved = info.GetInt32("_PortionOfDatasetReserved");
+            _RND = (Random)info.GetValue("_RND", typeof(Random));
+            _Recurrentlayers = (List<Structure.Layer.Base>)info.GetValue("_Recurrentlayers", typeof(List<Structure.Layer.Base>));
+            _WindowWidth = info.GetInt32("_WindowWidth");
+        }
 
         /// <summary>
         ///     Sets the width of the sliding window for data fed to the network before it is trained.
@@ -83,7 +109,7 @@ namespace Cranium.Activity.Training
         /// <param name='windowWidth'>
         ///     Window width.
         /// </param>
-        public virtual void SetWindowWidth(int windowWidth)
+        public virtual void SetWindowWidth(Int32 windowWidth)
         {
             _WindowWidth = windowWidth;
         }
@@ -94,7 +120,7 @@ namespace Cranium.Activity.Training
         /// <param name='distance'>
         ///     Distance.
         /// </param>
-        public virtual void SetDistanceToForcastHorrison(int distance)
+        public virtual void SetDistanceToForcastHorrison(Int32 distance)
         {
             _DistanceToForcastHorrison = distance;
         }
@@ -105,7 +131,7 @@ namespace Cranium.Activity.Training
         /// <param name='reservedPortion'>
         ///     Reserved portion.
         /// </param>
-        public virtual void SetDatasetReservedLength(int reservedPortion)
+        public virtual void SetDatasetReservedLength(Int32 reservedPortion)
         {
             _PortionOfDatasetReserved = reservedPortion;
         }
@@ -149,7 +175,7 @@ namespace Cranium.Activity.Training
         /// <param name='rate'>
         ///     Rate.
         /// </param>
-        public virtual void SetLearningRate(double rate)
+        public virtual void SetLearningRate(Double rate)
         {
             if (_TargetNetwork == null) throw (new Exception("Target Network must be defined first"));
             _TargetNetwork.SetLearningRate(rate);
@@ -161,7 +187,7 @@ namespace Cranium.Activity.Training
         /// <param name='momentum'>
         ///     Momentum.
         /// </param>
-        public virtual void SetMomentum(double momentum)
+        public virtual void SetMomentum(Double momentum)
         {
             if (_TargetNetwork == null) throw (new Exception("Target Network must be defined first"));
             _TargetNetwork.SetMomentum(momentum);
@@ -176,8 +202,8 @@ namespace Cranium.Activity.Training
                              _DistanceToForcastHorrison;
             int inputCount = _InputNodes.Count;
             int outputCount = _OutputNodes.Count;
-            _InputSequences = new double[_SequenceCount,_WindowWidth,inputCount];
-            _ExpectedOutputs = new double[_SequenceCount,outputCount];
+            _InputSequences = new Double[_SequenceCount,_WindowWidth,inputCount];
+            _ExpectedOutputs = new Double[_SequenceCount,outputCount];
             for (int i = 0; i < _SequenceCount; i++)
             {
                 for (int j = 0; j < _WindowWidth; j++)
@@ -190,10 +216,16 @@ namespace Cranium.Activity.Training
 
         #region implemented abstract members of Cranium.Activity.Training.Base
 
+        /// <summary>
+        ///     This function is called repeatedly untill trainingas been instructed to stop or untill the stopping criteria has been met
+        /// </summary>
+        /// <returns>
+        ///     The tick.
+        /// </returns>
         protected override bool _Tick()
         {
             if (_CurrentEpoch >= _MaxEpochs) return false;
-            double error = 0;
+            Double error = 0;
 
             // if the Dynamic Learning Rate delegate is set call it
             if (_DynamicLearningRate != null) _TargetNetwork.SetLearningRate(_DynamicLearningRate(_CurrentEpoch, _LastPassAverageError));
@@ -227,7 +259,7 @@ namespace Cranium.Activity.Training
                 _TargetNetwork.ReversePass();
 
                 //Calculate the current error				
-                double passError = _OutputNodes.OfType<Output>().Sum(output => output.GetError());
+                Double passError = _OutputNodes.OfType<Output>().Sum(output => output.GetError());
                 passError /= _OutputNodes.Count;
                 error += passError*passError;
             }
@@ -246,7 +278,6 @@ namespace Cranium.Activity.Training
             PrepareData();
             _LastPassAverageError = 0;
             _LogStream = File.CreateText("log.txt");
-            _RND = new Random();
         }
 
         /// <summary>
@@ -255,6 +286,19 @@ namespace Cranium.Activity.Training
         protected override void Stopping()
         {
             _LogStream.Close();
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue("_DistanceToForcastHorrison", _DistanceToForcastHorrison);
+            info.AddValue("_InputNodes", _InputNodes, typeof(List<Structure.Node.Base>));
+            info.AddValue("_LastPassAverageError", _LastPassAverageError);
+            info.AddValue("_OutputNodes", _OutputNodes, typeof(List<Structure.Node.Base>));
+            info.AddValue("_PortionOfDatasetReserved", _PortionOfDatasetReserved);
+            info.AddValue("_RND", _RND, typeof(Random));
+            info.AddValue("_Recurrentlayers", _Recurrentlayers, typeof(List<Structure.Layer.Base>));
+            info.AddValue("_WindowWidth", _WindowWidth);
         }
 
         #endregion

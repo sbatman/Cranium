@@ -16,9 +16,9 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
-using Cranium.Activity.Training;
 using Cranium.Data;
 using Cranium.Data.PostProcessing;
 using Cranium.Data.Preprocessing;
@@ -27,6 +27,9 @@ using Cranium.Structure.ActivationFunction;
 using Cranium.Structure.Layer;
 using Cranium.Structure.Node;
 using Base = Cranium.Structure.Layer.Base;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters;
+using System.IO;
 
 #endregion
 
@@ -38,7 +41,7 @@ namespace Cranium.LibTest.Tests.Reservoir
     public static class MG_EchoState_Test
     {
         private static Network _TestNetworkStructure;
-        private static SlidingWindow _SlidingWindowTraining;
+        private static Activity.Training.SlidingWindow _SlidingWindowTraining;
         private static Base _InputLayer;
         private static Base _OutputLayer;
         private static List<Structure.Node.Base> _InputLayerNodes;
@@ -58,7 +61,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             double[][] dataSet = StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
 
             //Prepare training activity
-            _SlidingWindowTraining = new SlidingWindow();
+            _SlidingWindowTraining = new Activity.Training.SlidingWindow();
             _SlidingWindowTraining.SetTargetNetwork(_TestNetworkStructure);
             _SlidingWindowTraining.SetMomentum(0.5f);
             _SlidingWindowTraining.SetLearningRate(0.004f);
@@ -88,26 +91,29 @@ namespace Cranium.LibTest.Tests.Reservoir
 
             Activity.Testing.SlidingWindow slidingWindowTesting = new Activity.Testing.SlidingWindow();
             slidingWindowTesting.SetDatasetReservedLength(0);
-            slidingWindowTesting.SetInputNodes(_InputLayerNodes);
-            slidingWindowTesting.SetOutputNodes(_OuputLayerNodes);
-            _SlidingWindowTraining.SetRecurrentConextLayers(new List<Base>());
+            slidingWindowTesting.SetInputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedBottomLayers()[0].GetNodes().ToList());
+            slidingWindowTesting.SetOutputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedTopLayers()[0].GetNodes().ToList());
+            slidingWindowTesting.SetRecurrentConextLayers(new List<Base>());
             slidingWindowTesting.SetWorkingDataset(dataSet);
             slidingWindowTesting.SetWindowWidth(12);
             slidingWindowTesting.SetDistanceToForcastHorrison(3);
-            Activity.Testing.SlidingWindow.TestResults result = slidingWindowTesting.TestNetwork(_TestNetworkStructure);
+            slidingWindowTesting.SetTargetNetwork(_SlidingWindowTraining.GetTargetNetwork());
+
+            Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults)slidingWindowTesting.TestNetwork();
 
             Console.WriteLine(result.RMSE);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
             Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
             Console.WriteLine("Complete Testing");
             Console.WriteLine("Comparing Against Random Walk 3 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3) [0]*100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)[0] * 100, 3));
             Console.WriteLine("Comparing Against Random Walk 2 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2) [0]*100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0] * 100, 3));
             Console.WriteLine("Comparing Against Random Walk 1 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1) [0]*100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0] * 100, 3));
 
             Console.ReadKey();
+
         }
 
         /// <summary>
