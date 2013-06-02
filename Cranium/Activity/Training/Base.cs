@@ -16,13 +16,13 @@
 #region Usings
 
 using System.Threading;
-using Cranium.Structure;
+using Cranium.Lib.Structure;
 using System.Runtime.Serialization;
 using System;
 
 #endregion
 
-namespace Cranium.Activity.Training
+namespace Cranium.Lib.Activity.Training
 {
     [Serializable]
     public abstract class Base : ISerializable

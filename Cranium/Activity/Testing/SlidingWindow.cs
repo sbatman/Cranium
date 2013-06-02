@@ -16,14 +16,14 @@
 #region Usings
 
 using System.Collections.Generic;
-using Cranium.Structure;
-using RecurrentContext = Cranium.Structure.Layer.RecurrentContext;
+using Cranium.Lib.Structure;
+using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 using System.Runtime.Serialization;
 using System;
 
 #endregion
 
-namespace Cranium.Activity.Testing
+namespace Cranium.Lib.Activity.Testing
 {
     [Serializable]
     public class SlidingWindow : Base, ISerializable

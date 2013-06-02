@@ -11,7 +11,7 @@
     <AssemblyName>Cranium.Lib.Test</AssemblyName>
     <Description>A library of test for the Crainium Library</Description>
     <ReleaseVersion>0.3</ReleaseVersion>
-    <StartupObject>Cranium.LibTest.MainClass</StartupObject>
+    <StartupObject>Cranium.Lib.Test.MainClass</StartupObject>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>

@@ -23,7 +23,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.Node
+namespace Cranium.Lib.Structure.Node
 {
     /// <summary>
     ///     The base node class is a core part of the Neural network framework and represents a neuron that is placed within layers in the network.

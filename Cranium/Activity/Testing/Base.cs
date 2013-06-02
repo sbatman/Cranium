@@ -1,11 +1,11 @@
-﻿using Cranium.Structure;
+﻿using Cranium.Lib.Structure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 
-namespace Cranium.Activity.Testing
+namespace Cranium.Lib.Activity.Testing
 {
     /// <summary>
     /// A Base class for the Testing Activity. Testing a network can many differnt tasks so creating derivatives of this class to allow that is intended.

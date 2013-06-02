@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Cranium.Structure.Node;
-using RecurrentContext = Cranium.Structure.Layer.RecurrentContext;
+using Cranium.Lib.Structure.Node;
+using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Activity.Training
+namespace Cranium.Lib.Activity.Training
 {
     /// <summary>
     /// This training activity presents the given data as a series of windows, this type of of training activity is best suited to networks

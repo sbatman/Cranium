@@ -19,21 +19,21 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
-using Cranium.Data;
-using Cranium.Data.PostProcessing;
-using Cranium.Data.Preprocessing;
-using Cranium.Structure;
-using Cranium.Structure.ActivationFunction;
-using Cranium.Structure.Layer;
-using Cranium.Structure.Node;
-using Base = Cranium.Structure.Layer.Base;
+using Cranium.Lib.Data;
+using Cranium.Lib.Data.PostProcessing;
+using Cranium.Lib.Data.Preprocessing;
+using Cranium.Lib.Structure;
+using Cranium.Lib.Structure.ActivationFunction;
+using Cranium.Lib.Structure.Layer;
+using Cranium.Lib.Structure.Node;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters;
 using System.IO;
+using Cranium.Data;
 
 #endregion
 
-namespace Cranium.LibTest.Tests.Reservoir
+namespace Cranium.Lib.Test.Tests.Reservoir
 {
     /// <summary>
     /// This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
@@ -42,8 +42,8 @@ namespace Cranium.LibTest.Tests.Reservoir
     {
         private static Network _TestNetworkStructure;
         private static Activity.Training.SlidingWindow _SlidingWindowTraining;
-        private static Base _InputLayer;
-        private static Base _OutputLayer;
+        private static Structure.Layer.Base _InputLayer;
+        private static Structure.Layer.Base _OutputLayer;
         private static List<Structure.Node.Base> _InputLayerNodes;
         private static List<Structure.Node.Base> _OuputLayerNodes;
 
@@ -72,7 +72,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
-            _SlidingWindowTraining.SetRecurrentConextLayers(new List<Base>());
+            _SlidingWindowTraining.SetRecurrentConextLayers(new List<Structure.Layer.Base>());
 
             ////////////////////////////////////////////////
             ////////////////////////////////////////////////
@@ -93,7 +93,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             slidingWindowTesting.SetDatasetReservedLength(0);
             slidingWindowTesting.SetInputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedBottomLayers()[0].GetNodes().ToList());
             slidingWindowTesting.SetOutputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedTopLayers()[0].GetNodes().ToList());
-            slidingWindowTesting.SetRecurrentConextLayers(new List<Base>());
+            slidingWindowTesting.SetRecurrentConextLayers(new List<Structure.Layer.Base>());
             slidingWindowTesting.SetWorkingDataset(dataSet);
             slidingWindowTesting.SetWindowWidth(12);
             slidingWindowTesting.SetDistanceToForcastHorrison(3);
@@ -121,14 +121,14 @@ namespace Cranium.LibTest.Tests.Reservoir
         /// </summary>
         public static void BuildStructure()
         {
-            _InputLayer = new Base();
+            _InputLayer = new Structure.Layer.Base();
             _InputLayerNodes = new List<Structure.Node.Base>();
             for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Elliott()));
             _InputLayer.SetNodes(_InputLayerNodes);
 
             Echo_Reservoir echoLayer = new Echo_Reservoir(130, 0.4f, 0, 5, new Elliott());
 
-            _OutputLayer = new Base();
+            _OutputLayer = new Structure.Layer.Base();
             _OuputLayerNodes = new List<Structure.Node.Base>();
             for (int i = 0; i < 1; i++) _OuputLayerNodes.Add(new Output(_OutputLayer, new Elliott()));
             _OutputLayer.SetNodes(_OuputLayerNodes);
@@ -140,7 +140,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             _TestNetworkStructure.AddLayer(echoLayer);
             _TestNetworkStructure.AddLayer(_OutputLayer);
 
-            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
+            foreach (Structure.Layer.Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
         }
     }
 }
