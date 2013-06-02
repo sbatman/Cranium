@@ -45,8 +45,8 @@ namespace Cranium.Activity.Training
 
         public Base(SerializationInfo info, StreamingContext context)
         {
-            _CurrentEpoch = info.GetInt32("_CurrentEpoch_CurrentEpoch");
-            _DynamicLearningRate = (DynamicVariable)info.GetValue("DynamicVariable", typeof(DynamicVariable));
+            _CurrentEpoch = info.GetInt32("_CurrentEpoch");
+            _DynamicLearningRate = (DynamicVariable)info.GetValue("_DynamicLearningRate", typeof(DynamicVariable));
             _DynamicMomentum = (DynamicVariable)info.GetValue("_DynamicMomentum", typeof(DynamicVariable));
             _MaxEpochs = info.GetInt32("_MaxEpochs");
             _TargetNetwork = (Network)info.GetValue("_TargetNetwork", typeof(Network));
@@ -73,6 +73,15 @@ namespace Cranium.Activity.Training
         public virtual void SetTargetNetwork(Network targetNetwork)
         {
             _TargetNetwork = targetNetwork;
+        }
+
+        /// <summary>
+        /// Returns the current target network
+        /// </summary>
+        /// <returns></returns>
+        public virtual Network GetTargetNetwork()
+        {
+            return _TargetNetwork;
         }
 
         /// <summary>
@@ -171,8 +180,8 @@ namespace Cranium.Activity.Training
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_CurrentEpoch", _CurrentEpoch);
-            info.AddValue("_DynamicLearningRate", _DynamicLearningRate, _DynamicLearningRate.GetType());
-            info.AddValue("_DynamicMomentum", _DynamicMomentum, _DynamicMomentum.GetType());
+            info.AddValue("_DynamicLearningRate", _DynamicLearningRate, typeof(DynamicVariable));
+            info.AddValue("_DynamicMomentum", _DynamicMomentum, typeof(DynamicVariable));
             info.AddValue("_MaxEpochs", _MaxEpochs);
             info.AddValue("_TargetNetwork", _TargetNetwork, _TargetNetwork.GetType());
             info.AddValue("_WorkingDataset", _WorkingDataset, _WorkingDataset.GetType());

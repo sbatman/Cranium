@@ -32,6 +32,7 @@ namespace Cranium.Activity.Training
     /// with forms of recursive memory. You need to specify the data set, how wide the window much be and the range from the end of the
     /// presented window to the desired prediction
     /// </summary>
+    [Serializable]
     public class SlidingWindow : Base, ISerializable
     {
         /// <summary>
@@ -86,22 +87,19 @@ namespace Cranium.Activity.Training
 
         public SlidingWindow()
         {
-
+            _RND=  new Random();
         }
 
         public SlidingWindow(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
-            _ExpectedOutputs = (double[,])info.GetValue("_ExpectedOutputs", typeof(double[,]));
             _InputNodes = (List<Structure.Node.Base>)info.GetValue("_InputNodes", typeof(List<Structure.Node.Base>));
-            _InputSequences = (double[, ,])info.GetValue("_InputSequences", typeof(double[, ,]));
             _LastPassAverageError = info.GetInt32("_LastPassAverageError");
             _OutputNodes = (List<Structure.Node.Base>)info.GetValue("_OutputNodes", typeof(List<Structure.Node.Base>));
             _PortionOfDatasetReserved = info.GetInt32("_PortionOfDatasetReserved");
             _RND = (Random)info.GetValue("_RND", typeof(Random));
             _Recurrentlayers = (List<Structure.Layer.Base>)info.GetValue("_Recurrentlayers", typeof(List<Structure.Layer.Base>));
-            _SequenceCount = info.GetInt32("_SequenceCount");
             _WindowWidth = info.GetInt32("_WindowWidth");
         }
 
@@ -280,7 +278,6 @@ namespace Cranium.Activity.Training
             PrepareData();
             _LastPassAverageError = 0;
             _LogStream = File.CreateText("log.txt");
-            _RND = new Random();
         }
 
         /// <summary>
@@ -295,15 +292,12 @@ namespace Cranium.Activity.Training
         {
             base.GetObjectData(info, context);
             info.AddValue("_DistanceToForcastHorrison", _DistanceToForcastHorrison);
-            info.AddValue("_ExpectedOutputs", _ExpectedOutputs, _ExpectedOutputs.GetType());
-            info.AddValue("_InputNodes", _InputNodes, _InputNodes.GetType());
-            info.AddValue("_InputSequences", _InputSequences, _InputSequences.GetType());
+            info.AddValue("_InputNodes", _InputNodes, typeof(List<Structure.Node.Base>));
             info.AddValue("_LastPassAverageError", _LastPassAverageError);
-            info.AddValue("_OutputNodes", _OutputNodes, _OutputNodes.GetType());
+            info.AddValue("_OutputNodes", _OutputNodes, typeof(List<Structure.Node.Base>));
             info.AddValue("_PortionOfDatasetReserved", _PortionOfDatasetReserved);
-            info.AddValue("_RND", _RND, _RND.GetType());
-            info.AddValue("_Recurrentlayers", _Recurrentlayers, _Recurrentlayers.GetType());
-            info.AddValue("_SequenceCount", _SequenceCount);
+            info.AddValue("_RND", _RND, typeof(Random));
+            info.AddValue("_Recurrentlayers", _Recurrentlayers, typeof(List<Structure.Layer.Base>));
             info.AddValue("_WindowWidth", _WindowWidth);
         }
 

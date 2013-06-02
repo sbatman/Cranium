@@ -19,7 +19,6 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
-using Cranium.Activity.Training;
 using Cranium.Data;
 using Cranium.Data.PostProcessing;
 using Cranium.Data.Preprocessing;
@@ -42,7 +41,7 @@ namespace Cranium.LibTest.Tests.Reservoir
     public static class MG_EchoState_Test
     {
         private static Network _TestNetworkStructure;
-        private static SlidingWindow _SlidingWindowTraining;
+        private static Activity.Training.SlidingWindow _SlidingWindowTraining;
         private static Base _InputLayer;
         private static Base _OutputLayer;
         private static List<Structure.Node.Base> _InputLayerNodes;
@@ -56,19 +55,20 @@ namespace Cranium.LibTest.Tests.Reservoir
             //Build Network
             _TestNetworkStructure = new Network();
             BuildStructure();
+            _TestNetworkStructure.SaveToFile("testtttt.dat");
             _TestNetworkStructure.RandomiseWeights(1.1d);
             //PrepData
             double[][] dataSet = StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
 
             //Prepare training activity
-            _SlidingWindowTraining = new SlidingWindow();
+            _SlidingWindowTraining = new Activity.Training.SlidingWindow();
             _SlidingWindowTraining.SetTargetNetwork(_TestNetworkStructure);
             _SlidingWindowTraining.SetMomentum(0.5f);
             _SlidingWindowTraining.SetLearningRate(0.004f);
             _SlidingWindowTraining.SetDatasetReservedLength(0);
             _SlidingWindowTraining.SetDistanceToForcastHorrison(3);
             _SlidingWindowTraining.SetWindowWidth(12);
-            _SlidingWindowTraining.SetMaximumEpochs(5);
+            _SlidingWindowTraining.SetMaximumEpochs(300);
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
@@ -91,16 +91,16 @@ namespace Cranium.LibTest.Tests.Reservoir
 
             Activity.Testing.SlidingWindow slidingWindowTesting = new Activity.Testing.SlidingWindow();
             slidingWindowTesting.SetDatasetReservedLength(0);
-            slidingWindowTesting.SetInputNodes(_InputLayerNodes);
-            slidingWindowTesting.SetOutputNodes(_OuputLayerNodes);
+            slidingWindowTesting.SetInputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedBottomLayers()[0].GetNodes().ToList());
+            slidingWindowTesting.SetOutputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedTopLayers()[0].GetNodes().ToList());
             slidingWindowTesting.SetRecurrentConextLayers(new List<Base>());
             slidingWindowTesting.SetWorkingDataset(dataSet);
             slidingWindowTesting.SetWindowWidth(12);
             slidingWindowTesting.SetDistanceToForcastHorrison(3);
-            slidingWindowTesting.SetTargetNetwork(_TestNetworkStructure);
+            slidingWindowTesting.SetTargetNetwork(_SlidingWindowTraining.GetTargetNetwork());
 
             Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults)slidingWindowTesting.TestNetwork();
-            
+
             Console.WriteLine(result.RMSE);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
             Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
@@ -113,6 +113,7 @@ namespace Cranium.LibTest.Tests.Reservoir
             Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0] * 100, 3));
 
             Console.ReadKey();
+
         }
 
         /// <summary>
