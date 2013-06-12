@@ -17,6 +17,8 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
+using Cranium.Lib.Activity;
+using MS.Internal.Xml.XPath;
 
 namespace Cranium.Lobe.Worker
 {
@@ -27,6 +29,8 @@ namespace Cranium.Lobe.Worker
         /// </summary>
         protected static InsaneDev.Networking.Client.Base _ConnectionToLobeManager = new InsaneDev.Networking.Client.Base();
         protected static readonly List<WorkerThread> _ActiveWorkerServices = new List<WorkerThread>();
+        protected static readonly List<Cranium.Lib.Activity.Base> _PendingWork = new List<Cranium.Lib.Activity.Base>();
+        protected static readonly List<Cranium.Lib.Activity.Base> _CompletedWork = new List<Base>();
         protected static bool _Running = false;
         /// <summary>
         /// Application entrypoint
@@ -49,8 +53,8 @@ namespace Cranium.Lobe.Worker
             }
 
             Console.WriteLine("Connecting To Manager");
-            _ConnectionToLobeManager.Connect(SettingsLoader.CommsLocalIP, SettingsLoader.CommsLocalPort);
-            if (!_ConnectionToLobeManager.IsConnected())
+            ;
+            if (!_ConnectionToLobeManager.Connect(SettingsLoader.CommsLocalIP, SettingsLoader.CommsLocalPort))
             {
                 Console.WriteLine("Unable to communicate with specified lobe manager, aborting!");
             }
@@ -58,6 +62,33 @@ namespace Cranium.Lobe.Worker
             Console.WriteLine("Lobe Worker Online");
             while (_Running)
             {
+                if (!_ConnectionToLobeManager.IsConnected())
+                {
+                    Console.WriteLine("Unable to communicate with specified lobe manager, Attempting to reconnect");
+                    if (_ConnectionToLobeManager.Connect(SettingsLoader.CommsLocalIP, SettingsLoader.CommsLocalPort))
+                    {
+                        Console.WriteLine("Connection Re-established");
+                    }
+                }
+                else
+                {
+                    lock (_CompletedWork)
+                    {
+                        if (_CompletedWork.Count > 0)
+                        {
+                            //Send Work back To Manager
+                        }
+                    }
+                    lock (_PendingWork)
+                    {
+                        if (_PendingWork.Count == 0)
+                        {
+                            //Request work from manager
+                        }
+                    }
+                }
+
+
                 Thread.Sleep(100);
             }
             Console.WriteLine("Lobe Worker Exiting");
