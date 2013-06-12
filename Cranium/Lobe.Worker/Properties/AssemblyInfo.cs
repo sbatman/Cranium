@@ -24,7 +24,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle("LobeWorker")]
+[assembly: AssemblyTitle("Cranium.Lobe.Worker")]
 [assembly: AssemblyDescription("A Lightweight Neural Network Framework for C#")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("InsaneDev.co.uk")]

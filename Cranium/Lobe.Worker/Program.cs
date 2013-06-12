@@ -44,20 +44,7 @@ namespace Cranium.Lobe.Worker
             if (!SettingsLoader.LoadSettings("Settings.ini")) return;
             Console.WriteLine("Setting Load Successful");
 
-            //Online The Comms system
-            Console.WriteLine("Starting Comms Server");
-            _CommsServer = new InsaneDev.Networking.Server.Base();
-            if (SettingsLoader.CommsLocalIP.Equals("any", System.StringComparison.InvariantCultureIgnoreCase))
-            {
-                _CommsServer.Init(new System.Net.IPEndPoint(IPAddress.Any, SettingsLoader.CommsLocalPort), typeof(ConnectedClient));
-            }
-            else
-            {
-                _CommsServer.Init(new System.Net.IPEndPoint(IPAddress.Parse(SettingsLoader.CommsLocalIP), SettingsLoader.CommsLocalPort), typeof(ConnectedClient));
-            }
-            Console.WriteLine("Comss Server Online at " + SettingsLoader.CommsLocalIP + ":" + SettingsLoader.CommsLocalPort);
-
-            //Prepare the workers
+            //Prepare the worker threads
             Console.WriteLine("Preparing Workers");
             for (int i = 0; i < SettingsLoader.WorkerThreadCount; i++)
             {

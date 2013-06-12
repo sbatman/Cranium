@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Client", "Lobe.Client\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Worker", "Lobe.Worker\Lobe.Worker.csproj", "{F26E3FEE-F29B-4027-9187-A0983763A3D8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Manager", "..\Lobe.Manager\Lobe.Manager.csproj", "{A1601401-0896-4016-B519-1A83FD31D337}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1601401-0896-4016-B519-1A83FD31D337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1601401-0896-4016-B519-1A83FD31D337}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1601401-0896-4016-B519-1A83FD31D337}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1601401-0896-4016-B519-1A83FD31D337}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -49,6 +55,7 @@ Global
 		{609D120C-9AD4-43AB-B100-DD134ABD91F1} = {08652AB1-F209-41D0-8A22-11D3B59572E5}
 		{DB8195A8-0085-4866-BE7A-065CED69CE4C} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
+		{A1601401-0896-4016-B519-1A83FD31D337} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = libtest\LibTest.csproj
