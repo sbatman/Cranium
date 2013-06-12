@@ -25,12 +25,9 @@ namespace Cranium.Lobe.Worker
         /// <summary>
         /// A list containing all the active worker services
         /// </summary>
-        private static readonly List<WorkerThread> _ActiveWorkerServices = new List<WorkerThread>();
-
-        private static Dictionary<Guid, Cranium.Lib.Activity.Base> PendingWork = new Dictionary<Guid, Cranium.Lib.Activity.Base>();
-
-        private static InsaneDev.Networking.Server.Base _CommsServer;
-        private static bool _Running = false;
+        protected static InsaneDev.Networking.Client.Base _ConnectionToLobeManager = new InsaneDev.Networking.Client.Base();
+        protected static readonly List<WorkerThread> _ActiveWorkerServices = new List<WorkerThread>();
+        protected static bool _Running = false;
         /// <summary>
         /// Application entrypoint
         /// </summary>
@@ -51,8 +48,12 @@ namespace Cranium.Lobe.Worker
                 _ActiveWorkerServices.Add(new WorkerThread());
             }
 
-            Console.WriteLine("Comms Server Listening");
-            _CommsServer.StartListening();
+            Console.WriteLine("Connecting To Manager");
+            _ConnectionToLobeManager.Connect(SettingsLoader.CommsLocalIP, SettingsLoader.CommsLocalPort);
+            if (!_ConnectionToLobeManager.IsConnected())
+            {
+                Console.WriteLine("Unable to communicate with specified lobe manager, aborting!");
+            }
 
             Console.WriteLine("Lobe Worker Online");
             while (_Running)
@@ -60,12 +61,6 @@ namespace Cranium.Lobe.Worker
                 Thread.Sleep(100);
             }
             Console.WriteLine("Lobe Worker Exiting");
-        }
-
-        public static void RegisterWork(Guid jobGUID, Cranium.Lib.Activity.Base activity)
-        {
-            Console.WriteLine("Registering new work " + jobGUID);
-            lock (PendingWork) PendingWork.Add(jobGUID, activity);
         }
     }
 }
