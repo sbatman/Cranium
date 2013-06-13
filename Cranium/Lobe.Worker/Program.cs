@@ -14,11 +14,13 @@
 #endregion
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading;
-using Cranium.Lib.Activity;
+using Cranium.Lib;
 using MS.Internal.Xml.XPath;
 using InsaneDev.Networking;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Cranium.Lobe.Worker
 {
@@ -29,11 +31,11 @@ namespace Cranium.Lobe.Worker
         /// </summary>
         protected static InsaneDev.Networking.Client.Base _ConnectionToLobeManager = new InsaneDev.Networking.Client.Base();
         protected static readonly List<WorkerThread> _ActiveWorkerServices = new List<WorkerThread>();
-        protected static readonly List<Cranium.Lib.Activity.Base> _PendingWork = new List<Cranium.Lib.Activity.Base>();
-        protected static readonly List<Cranium.Lib.Activity.Base> _CompletedWork = new List<Base>();
-        protected static readonly List<Packet>  _PacketsToBeProcessed = new List<Packet>();
+        protected static readonly List<Lib.Activity.Base> _PendingWork = new List<Lib.Activity.Base>();
+        protected static readonly List<Lib.Activity.Base> _CompletedWork = new List<Lib.Activity.Base>();
+        protected static readonly List<Packet> _PacketsToBeProcessed = new List<Packet>();
         protected static DateTime _TimeOfLastManagerComms;
-        protected static readonly TimeSpan _TimeBeforeManagerConsideredLost = new TimeSpan(0,0,1,0);
+        protected static readonly TimeSpan _TimeBeforeManagerConsideredLost = new TimeSpan(0, 0, 1, 0);
         protected static bool _Running = false;
 
         /// <summary>
@@ -42,7 +44,6 @@ namespace Cranium.Lobe.Worker
         /// <param name="args"></param>
         private static void Main(string[] args)
         {
-
             Console.WriteLine("Lobe Worker Launching");
             _Running = true;
             _TimeOfLastManagerComms = DateTime.Now;
@@ -92,7 +93,8 @@ namespace Cranium.Lobe.Worker
                     {
                         if (_PendingWork.Count == 0)
                         {
-                            //Request work from manager
+                            Packet p = new Packet(300); //Generate a work request packet
+                            _ConnectionToLobeManager.SendPacket(p);
                         }
                     }
                     lock (_ConnectionToLobeManager)
@@ -116,7 +118,7 @@ namespace Cranium.Lobe.Worker
                     {
                         foreach (Packet p in _PacketsToBeProcessed)
                         {
-                           
+                            HandelIncomingPacket(p);
                         }
                         _PacketsToBeProcessed.Clear();
                     }
@@ -124,6 +126,52 @@ namespace Cranium.Lobe.Worker
                 Thread.Sleep(100);
             }
             Console.WriteLine("Lobe Worker Exiting");
+        }
+        private static void HandelIncomingPacket(Packet p)
+        {
+            switch (p.Type)
+            {
+                case 200: HandelA200Packet(p); break;
+                case 301: HandelA200Packet(p); break;
+                case 302: HandelA200Packet(p); break;
+            }
+            p.Dispose();
+        }
+        /// <summary>
+        /// Handels and incoming packet with ID 200, this is a hello packet from the lobe manager to which we repsond
+        /// with the number of worker threads we ahve running
+        /// </summary>
+        /// <param name="p"></param>
+        private static void HandelA200Packet(Packet p)
+        {
+            Packet responsePacket = new Packet(201);
+            responsePacket.AddInt(_ActiveWorkerServices.Count);
+            _ConnectionToLobeManager.SendPacket(responsePacket);
+        }
+        /// <summary>
+        /// Handels an incoming packet with ID 301, this is a No work avaliable packet
+        /// </summary>
+        /// <param name="p"></param>
+        private static void HandelA301Packet(Packet p)
+        {
+            Console.WriteLine("Servers got no work");
+        }
+        /// <summary>
+        /// Handels an incoming packet with ID 302, this is a work packet
+        /// </summary>
+        /// <param name="p"></param>
+        private static void HandelA302Packet(Packet p)
+        {
+
+            object[] dataPackage = p.GetObjects();
+            byte[] serialisedAcitvity = (byte[])dataPackage[0];
+            MemoryStream datastream = new MemoryStream(serialisedAcitvity);
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            Lib.Activity.Base activity = (Lib.Activity.Base)binaryFormatter.Deserialize(datastream);
+            lock (_PendingWork)
+            {
+                _PendingWork.Add(activity);
+            }
         }
     }
 }

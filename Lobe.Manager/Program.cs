@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Cranium.Lib;
 
 namespace Cranium.Lobe.Manager
 {
@@ -12,6 +13,9 @@ namespace Cranium.Lobe.Manager
     {
         private static InsaneDev.Networking.Server.Base _CommsServerClient;
         private static InsaneDev.Networking.Server.Base _CommsServerWorker;
+        private static readonly List<Lib.Activity.Base> PendingWork = new List<Lib.Activity.Base>();
+        private static readonly List<Lib.Activity.Base> WorkBeingProcessed = new List<Lib.Activity.Base>();
+        private static readonly List<Lib.Activity.Base> CompleteWork = new List<Lib.Activity.Base>();
         private static bool _Running;
         static void Main(string[] args)
         {
@@ -33,6 +37,23 @@ namespace Cranium.Lobe.Manager
             while (_Running)
             {
                 Thread.Sleep(200);
+            }
+        }
+        /// <summary>
+        /// Gets a single piece of pending work, if the there is none this will return null
+        /// </summary>
+        /// <returns>A piece of pending work or null</returns>
+        public static Lib.Activity.Base GetPendingJob()
+        {
+            lock (PendingWork)
+            {
+                if (PendingWork.Count > 0)
+                {
+                    Lib.Activity.Base work = PendingWork [0];
+                    PendingWork.RemoveAt(0);
+                    return work;
+                }
+                return null;
             }
         }
     }
