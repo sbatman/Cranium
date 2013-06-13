@@ -30,7 +30,7 @@ namespace Cranium.Lobe.Manager
 
         protected override void OnConnect()
         {
-            Console.WriteLine("New Client Connected");
+            Console.WriteLine("New Worker Connected");
             SendPacket(new Packet(200)); //Lets say hello
         }
 
@@ -51,7 +51,7 @@ namespace Cranium.Lobe.Manager
 
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             Cranium.Lib.Activity.Base Activity = (Cranium.Lib.Activity.Base)binaryFormatter.Deserialize(new MemoryStream(JobData));
-            Program.RegisterWork(JobGUID, Activity);
+            
         }
     }
 }

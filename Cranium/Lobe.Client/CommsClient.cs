@@ -12,31 +12,31 @@ namespace Cranium.Lobe.Client
 {
     public class CommsClient
     {
-        protected InsaneDev.Networking.Client.Base _ClientConntection = new InsaneDev.Networking.Client.Base();
+        protected InsaneDev.Networking.Client.Base _ConnectionToManager = new InsaneDev.Networking.Client.Base();
 
         public bool ConnectToWorker(string ipAddress, int port)
         {
-            return _ClientConntection.Connect(ipAddress, port);
+            return _ConnectionToManager.Connect(ipAddress, port);
         }
 
         public bool SendJob(Cranium.Lib.Activity.Base activity)
         {
-            if (!_ClientConntection.IsConnected()) return false;
+            if (!_ConnectionToManager.IsConnected()) return false;
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             MemoryStream datastream = new MemoryStream();
             binaryFormatter.Serialize(datastream, activity);
             Packet p = new Packet(1000);
             
             p.AddBytePacket(datastream.GetBuffer());
-            _ClientConntection.SendPacket(p);
+            _ConnectionToManager.SendPacket(p);
             Stopwatch sendTime = new Stopwatch();
             sendTime.Start();
             bool recievedResponce = false;
             while (sendTime.ElapsedMilliseconds < 5000 && !recievedResponce)
             {
-                if (_ClientConntection.GetPacketsToProcessCount() > 0)
+                if (_ConnectionToManager.GetPacketsToProcessCount() > 0)
                 {
-                    foreach (Packet packet in _ClientConntection.GetPacketsToProcess())
+                    foreach (Packet packet in _ConnectionToManager.GetPacketsToProcess())
                     {
                         if (packet.Type == 1001)
                         {

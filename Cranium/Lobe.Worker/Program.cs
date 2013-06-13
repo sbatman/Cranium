@@ -12,13 +12,13 @@
 // //////////////////////
 
 #endregion
-
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Cranium.Lib.Activity;
 using MS.Internal.Xml.XPath;
+using InsaneDev.Networking;
 
 namespace Cranium.Lobe.Worker
 {
@@ -31,18 +31,27 @@ namespace Cranium.Lobe.Worker
         protected static readonly List<WorkerThread> _ActiveWorkerServices = new List<WorkerThread>();
         protected static readonly List<Cranium.Lib.Activity.Base> _PendingWork = new List<Cranium.Lib.Activity.Base>();
         protected static readonly List<Cranium.Lib.Activity.Base> _CompletedWork = new List<Base>();
+        protected static readonly List<Packet>  _PacketsToBeProcessed = new List<Packet>();
+        protected static DateTime _TimeOfLastManagerComms;
+        protected static readonly TimeSpan _TimeBeforeManagerConsideredLost = new TimeSpan(0,0,1,0);
         protected static bool _Running = false;
+
         /// <summary>
         /// Application entrypoint
         /// </summary>
         /// <param name="args"></param>
         private static void Main(string[] args)
         {
+
             Console.WriteLine("Lobe Worker Launching");
             _Running = true;
+            _TimeOfLastManagerComms = DateTime.Now;
 
             //Attempt to load the settings
-            if (!SettingsLoader.LoadSettings("Settings.ini")) return;
+            if (!SettingsLoader.LoadSettings("Settings.ini"))
+            {
+                return;
+            }
             Console.WriteLine("Setting Load Successful");
 
             //Prepare the worker threads
@@ -86,9 +95,32 @@ namespace Cranium.Lobe.Worker
                             //Request work from manager
                         }
                     }
+                    lock (_ConnectionToLobeManager)
+                    {
+                        if (_ConnectionToLobeManager.GetPacketsToProcessCount() > 0)
+                        {
+                            //manager is communicating
+                            _TimeOfLastManagerComms = DateTime.Now;
+                            lock (_PacketsToBeProcessed)
+                            {
+                                _PacketsToBeProcessed.AddRange(_ConnectionToLobeManager.GetPacketsToProcess());
+                            }
+                        }
+                        if (DateTime.Now - _TimeOfLastManagerComms > _TimeBeforeManagerConsideredLost)
+                        {
+                            //Disconnect as it seems the manager isnt there , this will cause an attempted reconnect above
+                            _ConnectionToLobeManager.Disconnect();
+                        }
+                    }
+                    lock (_PacketsToBeProcessed)
+                    {
+                        foreach (Packet p in _PacketsToBeProcessed)
+                        {
+                           
+                        }
+                        _PacketsToBeProcessed.Clear();
+                    }
                 }
-
-
                 Thread.Sleep(100);
             }
             Console.WriteLine("Lobe Worker Exiting");
