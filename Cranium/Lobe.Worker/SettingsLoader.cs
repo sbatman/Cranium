@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace Cranium.Lobe.Worker
@@ -36,7 +35,7 @@ namespace Cranium.Lobe.Worker
 
             if (dictionaryOfSettings.ContainsKey("WorkerThreadCount"))
             {
-                int count = 0;
+                int count;
                 if (!int.TryParse(dictionaryOfSettings["WorkerThreadCount"], out count)) throw (new Exception("Error parsing WorkerThreadCount"));
                 if (count < 1 || count > 255) throw (new Exception("Invalid WorkerThreadCount specified"));
                 WorkerThreadCount = count;
@@ -52,7 +51,7 @@ namespace Cranium.Lobe.Worker
 
             if (dictionaryOfSettings.ContainsKey("Port"))
             {
-                int port = 0;
+                int port;
                 if (!int.TryParse(dictionaryOfSettings["Port"], out port)) throw (new Exception("Error parsing Port"));
                 if (port < 1000 || port > 36000) throw (new Exception("Invalid Port specified, must be within 1000-36000"));
                 CommsLocalPort = port;

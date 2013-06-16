@@ -42,12 +42,12 @@ namespace Cranium.Lib.Activity
             }
         }
 
-        public static Activity.Base LoadFromDisk(string filename)
+        public static Base LoadFromDisk(string filename)
         {
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             using (FileStream dataFile = File.Open(filename, FileMode.Open))
             {
-                return (Lib.Activity.Base)binaryFormatter.Deserialize(dataFile);
+                return (Base)binaryFormatter.Deserialize(dataFile);
             }
         }
     }

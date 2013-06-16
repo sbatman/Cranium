@@ -26,7 +26,7 @@ using System.Diagnostics;
 namespace Cranium.Lib.Activity.Training
 {
     [Serializable]
-    public abstract class Base : Cranium.Lib.Activity.Base, ISerializable
+    public abstract class Base : Activity.Base
     {
         public delegate double DynamicVariable(int epoch, double currentRMSE);
 
