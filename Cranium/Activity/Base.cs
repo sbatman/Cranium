@@ -1,5 +1,7 @@
 ﻿using System;
+using System.IO;
 using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Cranium.Lib.Activity
 {
@@ -29,6 +31,24 @@ namespace Cranium.Lib.Activity
         public virtual void SetGUID(Guid newGuid)
         {
             _ActivityInstanceIdentifier = newGuid;
+        }
+
+        public virtual void SaveToDisk(string filename)
+        {
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            using (FileStream dataFile = File.Create(filename))
+            {
+                binaryFormatter.Serialize(dataFile,this);
+            }
+        }
+
+        public static Activity.Base LoadFromDisk(string filename)
+        {
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            using (FileStream dataFile = File.Open(filename, FileMode.Open))
+            {
+                return (Lib.Activity.Base)binaryFormatter.Deserialize(dataFile);
+            }
         }
     }
 }
