@@ -78,7 +78,10 @@ namespace Cranium.Lib.Structure.Node
         protected Double _Value = 0;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Node.Base" /> class for use by the serializer.
+        ///     Initializes a new instance of the <see>
+        ///                                           <cref>Cranium.Structure.Node.Base</cref>
+        ///                                       </see>
+        ///     class for use by the serializer.
         /// </summary>
         /// <param name='layer'>
         ///     Layer.
@@ -313,7 +316,10 @@ namespace Cranium.Lib.Structure.Node
         #region ISerializable implementation
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Node.Base" /> class. Used by the Serializer
+        ///     Initializes a new instance of the <see>
+        ///                                           <cref>Cranium.Structure.Node.Base</cref>
+        ///                                       </see>
+        ///     class. Used by the Serializer
         /// </summary>
         /// <param name='info'>
         ///     Info.

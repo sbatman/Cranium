@@ -1,9 +1,7 @@
 ﻿using Cranium.Lib.Structure;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace Cranium.Lib.Activity.Testing
 {
@@ -12,7 +10,7 @@ namespace Cranium.Lib.Activity.Testing
     /// This base class is provided as a structure guide, point of refrence for serialisation and for distribution.
     /// </summary>
     [Serializable]
-    public abstract class Base : Cranium.Lib.Activity.Base, ISerializable
+    public abstract class Base : Activity.Base
     {
         /// <summary>
         /// Basse Class for formatting and delivering test results
@@ -23,14 +21,20 @@ namespace Cranium.Lib.Activity.Testing
             public double RMSE;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.Base.TestResults" /> class.
+            /// Initializes a new instance of the <see>
+            ///                                       <cref>Activity.Testing.Base.TestResults</cref>
+            ///                                   </see>
+            ///     class.
             /// </summary>
             public TestResults()
             {
             }
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.Base.TestResults" /> class, for use by the serialiser.
+            /// Initializes a new instance of the <see>
+            ///                                       <cref>Activity.Testing.Base.TestResults</cref>
+            ///                                   </see>
+            ///     class, for use by the serialiser.
             /// </summary>
             public TestResults(SerializationInfo info, StreamingContext context)
             {
@@ -72,16 +76,17 @@ namespace Cranium.Lib.Activity.Testing
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.Base" /> class.
+        /// Initializes a new instance of the <see cref="Activity.Testing.Base" /> class.
         /// </summary>
         protected Base()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.Base" /> class, for use by the serialiser.
+        /// Initializes a new instance of the <see cref="Activity.Testing.Base" /> class, for use by the serialiser.
         /// </summary>
-        protected Base(SerializationInfo info, StreamingContext context) : base (info,context)
+        protected Base(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
             _InputNodes = (List<Structure.Node.Base>)info.GetValue("_InputNodes", typeof(List<Structure.Node.Base>));
             _OutputNodes = (List<Structure.Node.Base>)info.GetValue("_OutputNodes", typeof(List<Structure.Node.Base>));
@@ -135,7 +140,6 @@ namespace Cranium.Lib.Activity.Testing
         /// <summary>
         /// Tests the provided network
         /// </summary>
-        /// <param name="network">The network that requires testing</param>
         /// <returns>Returns acopy of the test results class (or derived class depending on class functionality)</returns>
         public abstract TestResults TestNetwork();
 
