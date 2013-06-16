@@ -1,14 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace Cranium.Lib.Activity
 {
     [Serializable]
     public abstract class Base : ISerializable
     {
+        protected Guid _ActivityInstanceIdentifier = new Guid();
         public Base()
         {
         }
@@ -18,5 +16,15 @@ namespace Cranium.Lib.Activity
         }
 
         public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
+
+        public virtual Guid GetGUID()
+        {
+            return _ActivityInstanceIdentifier;
+        }
+
+        public virtual void SetGUID(Guid newGuid)
+        {
+            _ActivityInstanceIdentifier = newGuid;
+        }
     }
 }

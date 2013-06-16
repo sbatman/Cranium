@@ -26,16 +26,39 @@ namespace Cranium.Lobe.Worker
 {
     internal class Program
     {
+       /// <summary>
+       /// The current connection to the lobe manager, a connection is not required for work to be completed however for the manager to recieve work or
+       /// for this worker lobe to get further work it will be required.
+       /// </summary>
+        protected static InsaneDev.Networking.Client.Base _ConnectionToLobeManager = new InsaneDev.Networking.Client.Base();
         /// <summary>
         /// A list containing all the active worker services
         /// </summary>
-        protected static InsaneDev.Networking.Client.Base _ConnectionToLobeManager = new InsaneDev.Networking.Client.Base();
         protected static readonly List<WorkerThread> _ActiveWorkerServices = new List<WorkerThread>();
+        /// <summary>
+        /// A list of all the current pending work that needs to be processed. This will commonly contain
+        /// only one pending job unless settings are changed to specify otherwise.
+        /// </summary>
         protected static readonly List<Lib.Activity.Base> _PendingWork = new List<Lib.Activity.Base>();
+        /// <summary>
+        /// This is a list of completed jobs, these will need ot be uploaded to the lobe manager when possible
+        /// </summary>
         protected static readonly List<Lib.Activity.Base> _CompletedWork = new List<Lib.Activity.Base>();
+        /// <summary>
+        /// This is a list of packets recieved from the lobe manager that needs to be processed when possible
+        /// </summary>
         protected static readonly List<Packet> _PacketsToBeProcessed = new List<Packet>();
+        /// <summary>
+        /// The timestamp of the last received comunications from the lobe manager.
+        /// </summary>
         protected static DateTime _TimeOfLastManagerComms;
+        /// <summary>
+        /// The time spent without communication from the lobe manager after we consider the communcations down and attempt to reconnect  (for thoes odd tcp stak times)
+        /// </summary>
         protected static readonly TimeSpan _TimeBeforeManagerConsideredLost = new TimeSpan(0, 0, 1, 0);
+        /// <summary>
+        /// States wether the system is running and when set to false acts as a kill switch
+        /// </summary>
         protected static bool _Running = false;
 
         /// <summary>
@@ -127,6 +150,10 @@ namespace Cranium.Lobe.Worker
             }
             Console.WriteLine("Lobe Worker Exiting");
         }
+        /// <summary>
+        /// Basic function for calling packet specific functions on a given packet
+        /// </summary>
+        /// <param name="p"></param>
         private static void HandelIncomingPacket(Packet p)
         {
             switch (p.Type)
@@ -171,6 +198,23 @@ namespace Cranium.Lobe.Worker
             lock (_PendingWork)
             {
                 _PendingWork.Add(activity);
+            }
+        }
+        /// <summary>
+        /// Used by the owrker threads to get a piece of work to use, this function will return null if there is no work avaliable.
+        /// </summary>
+        /// <returns></returns>
+        public static Lib.Activity.Base GetPendingWork()
+        {
+            lock (_PendingWork)
+            {
+                if (_PendingWork.Count > 0)
+                {
+                    Lib.Activity.Base work=_PendingWork [0];
+                    _PendingWork.RemoveAt(0);
+                    return  work
+                }
+                return null;
             }
         }
     }

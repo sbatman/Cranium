@@ -28,7 +28,7 @@ namespace Cranium.Lobe.Worker
             {
                 if (_CurrentWork == null)
                 {
-                    //Check program.cs to see if there is any
+                    _CurrentWork = Program.GetPendingWork(); //Gets pending work from the main program
                 }
                 else
                 {
