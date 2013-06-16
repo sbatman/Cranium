@@ -195,6 +195,8 @@ namespace Cranium.Lobe.Worker
             MemoryStream datastream = new MemoryStream(serialisedAcitvity);
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             Lib.Activity.Base activity = (Lib.Activity.Base)binaryFormatter.Deserialize(datastream);
+            if (!Directory.Exists(SettingsLoader.PendingWorkDirectory)) Directory.CreateDirectory(SettingsLoader.PendingWorkDirectory);
+            activity.SaveToDisk(SettingsLoader.PendingWorkDirectory+"/"+activity.GetGUID());
             lock (_PendingWork)
             {
                 _PendingWork.Add(activity);
@@ -216,6 +218,19 @@ namespace Cranium.Lobe.Worker
                 }
                 return null;
             }
+        }
+        /// <summary>
+        /// adds a peice of work to the work completed list ready to be sent to the manager
+        /// </summary>
+        /// <param name="work"></param>
+        public static void AddToCompletedWork(Lib.Activity.Base work)
+        {
+            lock (_CompletedWork)
+            {
+                _CompletedWork.Add(work);
+            }
+            if (!Directory.Exists(SettingsLoader.CompletedWorkDirectory)) Directory.CreateDirectory(SettingsLoader.CompletedWorkDirectory);
+            work.SaveToDisk(SettingsLoader.CompletedWorkDirectory+"/" + work.GetGUID());
         }
     }
 }
