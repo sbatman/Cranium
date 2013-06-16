@@ -40,11 +40,11 @@ namespace Cranium.Lib.Activity.Training
         protected Network _TargetNetwork;
         protected double[][] _WorkingDataset;
 
-        public Base()
+        protected Base()
         {
         }
 
-        public Base(SerializationInfo info, StreamingContext context)
+        protected Base(SerializationInfo info, StreamingContext context) : base (info,context)
         {
             _CurrentEpoch = info.GetInt32("_CurrentEpoch");
             _DynamicLearningRate = (DynamicVariable)info.GetValue("_DynamicLearningRate", typeof(DynamicVariable));
@@ -196,6 +196,7 @@ namespace Cranium.Lib.Activity.Training
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            base.GetObjectData(info,context);
             info.AddValue("_CurrentEpoch", _CurrentEpoch);
             info.AddValue("_DynamicLearningRate", _DynamicLearningRate, typeof(DynamicVariable));
             info.AddValue("_DynamicMomentum", _DynamicMomentum, typeof(DynamicVariable));

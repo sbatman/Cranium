@@ -13,9 +13,13 @@ namespace Cranium.Lib.Activity
 
         public Base(SerializationInfo info, StreamingContext context)
         {
+            _ActivityInstanceIdentifier =(Guid)info.GetValue("_ActivityInstanceIdentifier", typeof (Guid));
         }
 
-        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_ActivityInstanceIdentifier", _ActivityInstanceIdentifier,typeof(Guid));
+        }
 
         public virtual Guid GetGUID()
         {

@@ -74,14 +74,14 @@ namespace Cranium.Lib.Activity.Testing
         /// <summary>
         /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.Base" /> class.
         /// </summary>
-        public Base()
+        protected Base()
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.Base" /> class, for use by the serialiser.
         /// </summary>
-        public Base(SerializationInfo info, StreamingContext context)
+        protected Base(SerializationInfo info, StreamingContext context) : base (info,context)
         {
             _InputNodes = (List<Structure.Node.Base>)info.GetValue("_InputNodes", typeof(List<Structure.Node.Base>));
             _OutputNodes = (List<Structure.Node.Base>)info.GetValue("_OutputNodes", typeof(List<Structure.Node.Base>));
@@ -141,6 +141,7 @@ namespace Cranium.Lib.Activity.Testing
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            base.GetObjectData(info, context);
             info.AddValue("_InputNodes", _InputNodes, _InputNodes.GetType());
             info.AddValue("_OutputNodes", _OutputNodes, _OutputNodes.GetType());
             info.AddValue("_Recurrentlayers", _Recurrentlayers, _Recurrentlayers.GetType());
