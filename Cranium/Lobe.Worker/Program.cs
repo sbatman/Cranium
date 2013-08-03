@@ -214,7 +214,7 @@ namespace Cranium.Lobe.Worker
                 {
                     Lib.Activity.Base work=_PendingWork [0];
                     _PendingWork.RemoveAt(0);
-                    return  work
+                    return work;
                 }
                 return null;
             }

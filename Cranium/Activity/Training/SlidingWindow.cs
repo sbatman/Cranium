@@ -265,8 +265,8 @@ namespace Cranium.Lib.Activity.Training
             }
             _LastPassAverageError = error/_SequenceCount;
             Console.WriteLine(_LastPassAverageError);
-            _LogStream.WriteLine(_LastPassAverageError);
-            _LogStream.Flush();
+            if (_LogStream != null) _LogStream.WriteLine(_LastPassAverageError);
+            if (_LogStream != null) _LogStream.Flush();
             return true;
         }
 
@@ -277,7 +277,13 @@ namespace Cranium.Lib.Activity.Training
         {
             PrepareData();
             _LastPassAverageError = 0;
-            _LogStream = File.CreateText("log.txt");
+            try
+            {
+                if (_LogStream == null) _LogStream = File.CreateText("log.txt");
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>
@@ -285,7 +291,7 @@ namespace Cranium.Lib.Activity.Training
         /// </summary>
         protected override void Stopping()
         {
-            _LogStream.Close();
+            if(_LogStream!=null)_LogStream.Close();
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

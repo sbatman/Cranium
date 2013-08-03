@@ -145,12 +145,11 @@ namespace Cranium.Lib.Data.Preprocessing
                 //Need to bring the data within the -1 to 1 range for maximising the effectiveness of most non-linear activation functions present at this time
                 double scale = max;
                 if (0 - min > scale) scale = -min;
-                if (1 > scale) scale = 1;
-                if (Math.Abs(scale - 1) > 0.00001)
-                {
+              //  if (1 > scale) scale = 1;
+               
                     for (int y = 0; y < rowCount; y++) inputData.DataSet [x] [y] /= scale;
                     inputData.Scale [x] = scale;
-                }
+                
             }
         }
     }
