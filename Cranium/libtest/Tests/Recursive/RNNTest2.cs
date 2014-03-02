@@ -97,7 +97,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
 
                 for (int x = 0; x < 8; x++)
                 {
-                    foreach (Lib.Structure.Node.Base n in _ContextLayer.GetNodes()) n.SetValue(0);
+                    foreach (Structure.Node.Base n in _ContextLayer.GetNodes()) n.SetValue(0);
 
                     for (int i = 0; i < 3; i++)
                     {
@@ -128,24 +128,24 @@ namespace Cranium.Lib.Test.Tests.Recursive
         public static void BuildStructure()
         {
             _InputLayer = new Base();
-            List<Lib.Structure.Node.Base> inputLayerNodes = new List<Lib.Structure.Node.Base>();
-            for (int i = 0; i < 1; i++) inputLayerNodes.Add(new Lib.Structure.Node.Base(_InputLayer, new Tanh()));
+            List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
+            for (int i = 0; i < 1; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
             _InputLayer.SetNodes(inputLayerNodes);
 
             _HiddenLayer = new Base();
-            List<Lib.Structure.Node.Base> hiddenLayerNodes = new List<Lib.Structure.Node.Base>();
-            for (int i = 0; i < 5; i++) hiddenLayerNodes.Add(new Lib.Structure.Node.Base(_HiddenLayer, new Tanh()));
+            List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
+            for (int i = 0; i < 5; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _HiddenLayer2 = new Base();
-            List<Lib.Structure.Node.Base> hiddenLayerNodes2 = new List<Lib.Structure.Node.Base>();
-            for (int i = 0; i < 3; i++) hiddenLayerNodes2.Add(new Lib.Structure.Node.Base(_HiddenLayer, new Tanh()));
+            List<Structure.Node.Base> hiddenLayerNodes2 = new List<Structure.Node.Base>();
+            for (int i = 0; i < 3; i++) hiddenLayerNodes2.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer2.SetNodes(hiddenLayerNodes2);
 
             _ContextLayer = new RecurrentContext(2, new Tanh());
 
             _OutputLayer = new Base();
-            List<Lib.Structure.Node.Base> ouputLayerNodes = new List<Lib.Structure.Node.Base>();
+            List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
             for (int i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(ouputLayerNodes);
 

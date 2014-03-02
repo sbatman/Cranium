@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using Cranium.Lib.Activity.Testing;
+using Base = Cranium.Lib.Activity.Base;
 
 namespace Cranium.Lobe.Worker
 {
@@ -12,7 +9,7 @@ namespace Cranium.Lobe.Worker
         protected Object _LockingObject = new Object();
         protected Thread _InternalThread;
         protected bool _Running;
-        protected Lib.Activity.Base _CurrentWork;
+        protected Base _CurrentWork;
 
         public WorkerThread()
         {

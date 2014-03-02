@@ -15,10 +15,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Threading;
-using Cranium.Lib;
-using MS.Internal.Xml.XPath;
+using InsaneDev.Networking.Client;
 using InsaneDev.Networking;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -30,7 +28,7 @@ namespace Cranium.Lobe.Worker
         /// The current connection to the lobe manager, a connection is not required for work to be completed however for the manager to recieve work or
         /// for this worker lobe to get further work it will be required.
         /// </summary>
-        protected static InsaneDev.Networking.Client.Base _ConnectionToLobeManager = new InsaneDev.Networking.Client.Base();
+        protected static readonly Base _ConnectionToLobeManager = new Base();
         /// <summary>
         /// A list containing all the active worker services
         /// </summary>
@@ -59,13 +57,12 @@ namespace Cranium.Lobe.Worker
         /// <summary>
         /// States wether the system is running and when set to false acts as a kill switch
         /// </summary>
-        protected static bool _Running = false;
+        protected static bool _Running;
 
         /// <summary>
         /// Application entrypoint
         /// </summary>
-        /// <param name="args"></param>
-        private static void Main(string[] args)
+        private static void Main()
         {
             Console.WriteLine("Lobe Worker Launching");
             _Running = true;
@@ -86,7 +83,6 @@ namespace Cranium.Lobe.Worker
             }
 
             Console.WriteLine("Connecting To Manager");
-            ;
             if (!_ConnectionToLobeManager.Connect(SettingsLoader.CommsManagerIP, SettingsLoader.CommsManagerPort))
             {
                 Console.WriteLine("Unable to communicate with specified lobe manager, aborting!");
@@ -166,34 +162,34 @@ namespace Cranium.Lobe.Worker
         {
             switch (p.Type)
             {
-            case 200:
-                HandelA200Packet(p);
-                break;
-            case 301:
-                HandelA301Packet(p);
-                break;
-            case 302:
-                HandelA302Packet(p);
-                break;
+                case 200:
+                    HandelA200Packet();
+                    break;
+                case 301:
+                    HandelA301Packet();
+                    break;
+                case 302:
+                    HandelA302Packet(p);
+                    break;
             }
             p.Dispose();
         }
+
         /// <summary>
         /// Handels and incoming packet with ID 200, this is a hello packet from the lobe manager to which we repsond
         /// with the number of worker threads we ahve running
         /// </summary>
-        /// <param name="p"></param>
-        private static void HandelA200Packet(Packet p)
+        private static void HandelA200Packet()
         {
             Packet responsePacket = new Packet(201);
             responsePacket.AddInt(_ActiveWorkerServices.Count);
             _ConnectionToLobeManager.SendPacket(responsePacket);
         }
+
         /// <summary>
         /// Handels an incoming packet with ID 301, this is a No work avaliable packet
         /// </summary>
-        /// <param name="p"></param>
-        private static void HandelA301Packet(Packet p)
+        private static void HandelA301Packet()
         {
             Console.WriteLine("Servers got no work");
         }

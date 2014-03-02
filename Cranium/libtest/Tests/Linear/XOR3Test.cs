@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -104,18 +104,18 @@ namespace Cranium.Lib.Test.Tests.Linear
         private static void BuildStructure()
         {
             _InputLayer = new Base();
-            List<Lib.Structure.Node.Base> inputLayerNodes = new List<Lib.Structure.Node.Base>();
-            for (int i = 0; i < 3; i++) inputLayerNodes.Add(new Lib.Structure.Node.Base(_InputLayer, new Tanh()));
+            List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
+            for (int i = 0; i < 3; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
 
             _InputLayer.SetNodes(inputLayerNodes);
 
             _HiddenLayer = new Base();
-            List<Lib.Structure.Node.Base> hiddenLayerNodes = new List<Lib.Structure.Node.Base>();
-            for (int i = 0; i < 4; i++) hiddenLayerNodes.Add(new Lib.Structure.Node.Base(_HiddenLayer, new Tanh()));
+            List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
+            for (int i = 0; i < 4; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _OutputLayer = new Base();
-            List<Lib.Structure.Node.Base> ouputLayerNodes = new List<Lib.Structure.Node.Base>();
+            List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
             for (int i = 0; i < 3; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(ouputLayerNodes);
 
