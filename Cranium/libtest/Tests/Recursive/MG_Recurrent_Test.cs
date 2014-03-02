@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -26,7 +26,6 @@ using Cranium.Lib.Structure;
 using Cranium.Lib.Activity;
 using Cranium.Lib.Structure.ActivationFunction;
 using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
-using Cranium.Data;
 
 #endregion
 
@@ -96,12 +95,12 @@ namespace Cranium.LibTest.Tests.Recursive
             _SlidingWindowTraining.SetMomentum(0.7f);
             // The ammount of the previous weight change applied to current weight change - google if u need to know more
             _SlidingWindowTraining.SetLearningRate(0.004f);
-            // The rate at which the neural entwork learns (the more agressive this is the harded itll be for the network)			
+            // The rate at which the neural entwork learns (the more agressive this is the harded itll be for the network)
             _SlidingWindowTraining.SetDatasetReservedLength(0);
             // How many elements off the end of the dataset should not be used for training
             _SlidingWindowTraining.SetDistanceToForcastHorrison(3);
-            // How far beyond the window should be be trying to predict 
-            _SlidingWindowTraining.SetWindowWidth(12);
+            // How far beyond the window should be be trying to predict
+            _SlidingWindowTraining.SetWindowWidth(3);
             // The window of elements that should be presented before the backward pass is performed
             _SlidingWindowTraining.SetMaximumEpochs(50); // The maximum number of epochs the network can train for
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes); // Setting the nodes that are used for input
@@ -144,17 +143,17 @@ namespace Cranium.LibTest.Tests.Recursive
             Console.WriteLine(
                 Math.Round(
                     RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)
-                        [0]*100, 3));
+                    [0]*100, 3));
             Console.WriteLine("Comparing Against Random Walk 2 Step");
             Console.WriteLine(
                 Math.Round(
                     RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)
-                        [0]*100, 3));
+                    [0]*100, 3));
             Console.WriteLine("Comparing Against Random Walk 1 Step");
             Console.WriteLine(
                 Math.Round(
                     RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)
-                        [0]*100, 3));
+                    [0]*100, 3));
 
             Console.ReadKey();
         }

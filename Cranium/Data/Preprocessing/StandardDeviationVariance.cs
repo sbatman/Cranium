@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -23,7 +23,7 @@ using System.IO;
 
 namespace Cranium.Lib.Data.Preprocessing
 {
-    public struct Data_Preprocessed_StandardDeviationVariance
+    public struct DataPreprocessedStandardDeviationVariance
     {
         public double[] Average;
         public double[][] DataSet;
@@ -48,7 +48,7 @@ namespace Cranium.Lib.Data.Preprocessing
         /// <param name='fileName'>
         ///     File name.
         /// </param>
-        public static Data_Preprocessed_StandardDeviationVariance ProduceDataset(string fileName)
+        public static DataPreprocessedStandardDeviationVariance ProduceDataset(string fileName)
         {
             if (fileName.Length == 0 || !File.Exists(fileName)) throw (new Exception("Bad filename provided"));
 
@@ -67,16 +67,16 @@ namespace Cranium.Lib.Data.Preprocessing
                 for (int x = 0; x < columnCount; x++) workingDataSet [x] [i] = Double.Parse(currentLine [x]);
             }
             fileStream.Close();
-            Data_Preprocessed_StandardDeviationVariance returnResult = new Data_Preprocessed_StandardDeviationVariance
-                {
-                    DataSet = workingDataSet
-                };
+            DataPreprocessedStandardDeviationVariance returnResult = new DataPreprocessedStandardDeviationVariance
+            {
+                DataSet = workingDataSet
+            };
             ProcessData(ref returnResult);
             return returnResult;
             //	}
             //	catch ( Exception e )
             //	{
-            //	throw( new Exception ( "Data pre-processing failed :" + e.Message ) );				
+            //	throw( new Exception ( "Data pre-processing failed :" + e.Message ) );
             //	}
         }
 
@@ -89,12 +89,12 @@ namespace Cranium.Lib.Data.Preprocessing
         /// <param name='inputData'>
         ///     Input data.
         /// </param>
-        public static Data_Preprocessed_StandardDeviationVariance ProduceDataset(double[][] inputData)
+        public static DataPreprocessedStandardDeviationVariance ProduceDataset(double[][] inputData)
         {
             try
             {
-                Data_Preprocessed_StandardDeviationVariance returnResult =
-                    new Data_Preprocessed_StandardDeviationVariance {DataSet = inputData};
+                DataPreprocessedStandardDeviationVariance returnResult =
+                    new DataPreprocessedStandardDeviationVariance {DataSet = inputData};
                 ProcessData(ref returnResult);
                 return returnResult;
             }
@@ -110,7 +110,7 @@ namespace Cranium.Lib.Data.Preprocessing
         /// <param name='inputData'>
         ///     Input data.
         /// </param>
-        private static void ProcessData(ref Data_Preprocessed_StandardDeviationVariance inputData)
+        private static void ProcessData(ref DataPreprocessedStandardDeviationVariance inputData)
         {
             int colCount = inputData.DataSet.GetLength(0);
             int rowCount = inputData.DataSet [0].GetLength(0);
@@ -145,11 +145,11 @@ namespace Cranium.Lib.Data.Preprocessing
                 //Need to bring the data within the -1 to 1 range for maximising the effectiveness of most non-linear activation functions present at this time
                 double scale = max;
                 if (0 - min > scale) scale = -min;
-              //  if (1 > scale) scale = 1;
-               
-                    for (int y = 0; y < rowCount; y++) inputData.DataSet [x] [y] /= scale;
-                    inputData.Scale [x] = scale;
-                
+                //  if (1 > scale) scale = 1;
+
+                for (int y = 0; y < rowCount; y++) inputData.DataSet [x] [y] /= scale;
+                inputData.Scale [x] = scale;
+
             }
         }
     }

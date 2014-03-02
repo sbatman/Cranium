@@ -8,7 +8,7 @@ namespace Cranium.Lib.Activity
     [Serializable]
     public abstract class Base : ISerializable
     {
-        protected Guid _ActivityInstanceIdentifier = new Guid();
+        protected Guid _ActivityInstanceIdentifier;
         public Base()
         {
         }
@@ -23,7 +23,7 @@ namespace Cranium.Lib.Activity
             info.AddValue("_ActivityInstanceIdentifier", _ActivityInstanceIdentifier,typeof(Guid));
         }
 
-        public virtual Guid GetGUID()
+        public Guid GetGUID()
         {
             return _ActivityInstanceIdentifier;
         }

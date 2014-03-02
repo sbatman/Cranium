@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -115,7 +115,7 @@ namespace Cranium.Lib.Structure.Weight
         /// </param>
         public virtual void AddWeightChange(Double weightModification)
         {
-            if (Double.IsNaN(Weight) || Double.IsInfinity(weightModification)) throw (new Exception("Weight Error"));
+            //if (Double.IsNaN(Weight) || Double.IsInfinity(weightModification)) throw (new Exception("Weight Error"));
             _PendingWeightChange += weightModification;
             _PendingWeightChangeCount++;
         }
@@ -150,7 +150,7 @@ namespace Cranium.Lib.Structure.Weight
             _PastWeightChange = (_PendingWeightChange/_PendingWeightChangeCount);
             Weight += _PastWeightChange;
 
-            if (Double.IsNaN(Weight) || Double.IsInfinity(Weight)) throw (new Exception("Weight Error"));
+            //if (Double.IsNaN(Weight) || Double.IsInfinity(Weight)) throw (new Exception("Weight Error"));
             _PendingWeightChange = 0;
             _PendingWeightChangeCount = 0;
         }

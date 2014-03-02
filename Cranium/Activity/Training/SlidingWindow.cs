@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -91,7 +91,7 @@ namespace Cranium.Lib.Activity.Training
         }
 
         public SlidingWindow(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        : base(info, context)
         {
             _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
             _InputNodes = (List<Structure.Node.Base>)info.GetValue("_InputNodes", typeof(List<Structure.Node.Base>));
@@ -238,6 +238,7 @@ namespace Cranium.Lib.Activity.Training
 
             while (sequencyList.Count > 0)
             {
+
                 //This needs to be booled so it can be turned off
                 int s = sequencyList [_RND.Next(0, sequencyList.Count)];
                 sequencyList.Remove(s);
@@ -258,13 +259,13 @@ namespace Cranium.Lib.Activity.Training
 
                 _TargetNetwork.ReversePass();
 
-                //Calculate the current error				
+                //Calculate the current error
                 Double passError = _OutputNodes.OfType<Output>().Sum(output => output.GetError());
                 passError /= _OutputNodes.Count;
                 error += passError*passError;
             }
             _LastPassAverageError = error/_SequenceCount;
-            Console.WriteLine(_LastPassAverageError);
+            //  Console.WriteLine(_LastPassAverageError);
             if (_LogStream != null) _LogStream.WriteLine(_LastPassAverageError);
             if (_LogStream != null) _LogStream.Flush();
             return true;
@@ -275,14 +276,16 @@ namespace Cranium.Lib.Activity.Training
         /// </summary>
         protected override void Starting()
         {
+            //todo: some real logging would be nice
             PrepareData();
             _LastPassAverageError = 0;
             try
             {
                 if (_LogStream == null) _LogStream = File.CreateText("log.txt");
             }
-            catch
+            catch (Exception e)
             {
+
             }
         }
 

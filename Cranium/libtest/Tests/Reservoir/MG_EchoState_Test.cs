@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -29,7 +29,6 @@ using Cranium.Lib.Structure.Node;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization.Formatters;
 using System.IO;
-using Cranium.Data;
 
 #endregion
 
@@ -55,7 +54,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             //Build Network
             _TestNetworkStructure = new Network();
             BuildStructure();
-            _TestNetworkStructure.SaveToFile("testtttt.dat");
+            _TestNetworkStructure.SaveToFile("test.dat");
             _TestNetworkStructure.RandomiseWeights(1.1d);
             //PrepData
             double[][] dataSet = StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
@@ -74,15 +73,15 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
             _SlidingWindowTraining.SetRecurrentConextLayers(new List<Structure.Layer.Base>());
 
-            Lobe.Client.CommsClient lobeConnection = new Lobe.Client.CommsClient();
-            lobeConnection.ConnectToWorker("localhost", 7432);
-            lobeConnection.SendJob(_SlidingWindowTraining);
+            //  Lobe.Client.CommsClient lobeConnection = new Lobe.Client.CommsClient();
+            //   lobeConnection.ConnectToWorker("localhost", 7432);
+            //   lobeConnection.SendJob(_SlidingWindowTraining);
 
-            while (true)
-            {
-                Thread.Sleep(1000);
-                Console.WriteLine(".");
-            }
+            //   while (true)
+            //   {
+            //       Thread.Sleep(1000);
+            //       Console.WriteLine(".");
+            //   }
 
             ////////////////////////////////////////////////
             ////////////////////////////////////////////////
@@ -134,6 +133,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _InputLayer = new Structure.Layer.Base();
             _InputLayerNodes = new List<Structure.Node.Base>();
             for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Elliott()));
+
             _InputLayer.SetNodes(_InputLayerNodes);
 
             Echo_Reservoir echoLayer = new Echo_Reservoir(130, 0.4f, 0, 5, new Elliott());

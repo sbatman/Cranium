@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -68,8 +68,8 @@ namespace Cranium.Lib.Structure
             _LearningRate = info.GetDouble("_LearningRate");
             _Momenum = info.GetDouble("_Momenum");
             _LastIssuedLayerID = info.GetInt32("_LastIssuedLayerID");
-           _DetectedBottomLayers  = (List<Base>)info.GetValue("_DetectedBottomLayers", typeof(List<Base>));
-           _DetectedTopLayers = (List<Base>)info.GetValue("_DetectedTopLayers", typeof(List<Base>));
+            _DetectedBottomLayers  = (List<Base>)info.GetValue("_DetectedBottomLayers", typeof(List<Base>));
+            _DetectedTopLayers = (List<Base>)info.GetValue("_DetectedTopLayers", typeof(List<Base>));
         }
 
         /// <summary>
@@ -170,7 +170,7 @@ namespace Cranium.Lib.Structure
             Random rnd = new Random();
             foreach (
                 Weight.Base w in from l in _CurrentLayers from n in l.GetNodes() from w in n.GetFowardWeights() select w
-                ) w.SetWeight(((rnd.NextDouble()*2) - 1)*varianceFromZero);
+            ) w.SetWeight(((rnd.NextDouble()*2) - 1)*varianceFromZero);
         }
 
         /// <summary>

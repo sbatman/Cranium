@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -42,7 +42,7 @@ namespace Cranium.Lib.Structure.Node
         /// <summary>
         ///     The initial value of the node.
         /// </summary>
-        protected double _StartValue = 0.0f;
+        protected double _StartValue;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RecurrentContext" /> class.
@@ -61,7 +61,7 @@ namespace Cranium.Lib.Structure.Node
         /// </param>
         public RecurrentContext(Base sourceNode, double rateOfUpdate, Layer.Base parentLayer,
                                 ActivationFunction.Base activationFunction)
-            : base(parentLayer, activationFunction)
+        : base(parentLayer, activationFunction)
         {
             _Value = 0.5f;
             _SourceNode = sourceNode;
@@ -78,7 +78,7 @@ namespace Cranium.Lib.Structure.Node
         ///     Context.
         /// </param>
         public RecurrentContext(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        : base(info, context)
         {
             _SourceNode = (Base) info.GetValue("_SourceNode", typeof (Base));
             _RateOfUpdate = info.GetDouble("_RateOfUpdate");

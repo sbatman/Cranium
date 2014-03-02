@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -74,7 +74,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
         {
             _TestNetworkStructure = new Network();
             BuildStructure();
-            _TestNetworkStructure.RandomiseWeights(0.001d);
+            _TestNetworkStructure.RandomiseWeights(1);
             PrepData();
             int epoch = 0;
             bool Continue = true;
@@ -101,9 +101,9 @@ namespace Cranium.Lib.Test.Tests.Recursive
                     ReversePass(x);
 
                     //Stopping conditions
-                    if (x == 0 && _OutputLayer.GetNodes() [0].GetValue() > 0.05f) Continue = true;
-                    if ((x == 1 || x == 2) && _OutputLayer.GetNodes() [0].GetValue() < 0.95f) Continue = true;
-                    if (x == 3 && _OutputLayer.GetNodes() [0].GetValue() > 0.05f) Continue = true;
+                    if (x == 0 && _OutputLayer.GetNodes() [0].GetValue() > 0.01f) Continue = true;
+                    if ((x == 1 || x == 2) && _OutputLayer.GetNodes() [0].GetValue() < 0.99f) Continue = true;
+                    if (x == 3 && _OutputLayer.GetNodes() [0].GetValue() > 0.01f) Continue = true;
                     //
 
                     if (epoch%100 == 0)
@@ -129,7 +129,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
 
             _HiddenLayer = new Base();
             List<Lib.Structure.Node.Base> hiddenLayerNodes = new List<Lib.Structure.Node.Base>();
-            for (int i = 0; i < 10; i++) hiddenLayerNodes.Add(new Lib.Structure.Node.Base(_HiddenLayer, new Tanh()));
+            for (int i = 0; i < 3; i++) hiddenLayerNodes.Add(new Lib.Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _ContextLayer = new RecurrentContext(4, new Tanh());
@@ -200,7 +200,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
         {
             Output outputNode = (Output) (_OutputLayer.GetNodes() [0]);
             outputNode.SetTargetValue(_OutputData [row]);
-            _OutputLayer.ReversePass(0.06, 0.7);
+            _OutputLayer.ReversePass(0.3, 0.95);
         }
     }
 }
