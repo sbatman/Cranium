@@ -19,6 +19,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using System.Threading;
+using Cranium.Lib.Activity.Training;
 using Cranium.Lib.Data;
 using Cranium.Lib.Data.PostProcessing;
 using Cranium.Lib.Data.Preprocessing;
@@ -26,9 +27,7 @@ using Cranium.Lib.Structure;
 using Cranium.Lib.Structure.ActivationFunction;
 using Cranium.Lib.Structure.Layer;
 using Cranium.Lib.Structure.Node;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Runtime.Serialization.Formatters;
-using System.IO;
+using Cranium.Lobe.Client;
 using Base = Cranium.Lib.Structure.Node.Base;
 
 #endregion
@@ -49,16 +48,16 @@ namespace Cranium.Lib.Test.Tests.Reservoir
         {
             double[][] dataSet = StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
             List<Guid> OutstandingWork = new List<Guid>();
-            Lobe.Client.CommsClient lobeConnection = new Lobe.Client.CommsClient();
+            CommsClient lobeConnection = new CommsClient();
             lobeConnection.ConnectToManager("localhost", 17432);
             for (int x = 0; x < 20; x++)
             {
                 Network _TestNetworkStructure;
-                Activity.Training.SlidingWindow _SlidingWindowTraining;
+                SlidingWindow _SlidingWindowTraining;
                 Structure.Layer.Base _InputLayer = new Structure.Layer.Base(); ;
                 Structure.Layer.Base _OutputLayer = new Structure.Layer.Base(); ;
-                List<Structure.Node.Base> _InputLayerNodes = new List<Base>();
-                List<Structure.Node.Base> _OuputLayerNodes = new List<Base>();
+                List<Base> _InputLayerNodes = new List<Base>();
+                List<Base> _OuputLayerNodes = new List<Base>();
                 //Build Network
                 _TestNetworkStructure = new Network();
                 BuildStructure(_InputLayer, _OutputLayer, _InputLayerNodes, _OuputLayerNodes, _TestNetworkStructure);
@@ -68,7 +67,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
 
                 //Prepare training activity
-                _SlidingWindowTraining = new Activity.Training.SlidingWindow();
+                _SlidingWindowTraining = new SlidingWindow();
                 _SlidingWindowTraining.SetTargetNetwork(_TestNetworkStructure);
                 _SlidingWindowTraining.SetMomentum(0.5f);
                 _SlidingWindowTraining.SetLearningRate(0.004f);
@@ -91,7 +90,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 List<Guid> tempList = new List<Guid>(OutstandingWork);
                 foreach (Guid guid in tempList)
                 {
-                    Activity.Training.SlidingWindow work = (Activity.Training.SlidingWindow)lobeConnection.GetCompletedWork(guid);
+                    SlidingWindow work = (SlidingWindow)lobeConnection.GetCompletedWork(guid);
                     if (work == null) continue;
                     OutstandingWork.Remove(guid);
                     Console.WriteLine("Starting Testing");
@@ -131,10 +130,10 @@ namespace Cranium.Lib.Test.Tests.Reservoir
         /// <summary>
         /// Builds the structure of the neural network ready for training and testing
         /// </summary>
-        public static void BuildStructure(Structure.Layer.Base _InputLayer, Structure.Layer.Base _OutputLayer, List<Structure.Node.Base> _InputLayerNodes, List<Structure.Node.Base> _OuputLayerNodes, Network _TestNetworkStructure)
+        public static void BuildStructure(Structure.Layer.Base _InputLayer, Structure.Layer.Base _OutputLayer, List<Base> _InputLayerNodes, List<Base> _OuputLayerNodes, Network _TestNetworkStructure)
         {
 
-            for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Elliott()));
+            for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Base(_InputLayer, new Elliott()));
 
             _InputLayer.SetNodes(_InputLayerNodes);
 

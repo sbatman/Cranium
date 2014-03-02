@@ -4,10 +4,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
+using InsaneDev.Networking.Server;
+using Base = Cranium.Lib.Activity.Base;
 
 namespace Cranium.Lobe.Manager
 {
-    class ConnectedWorker : InsaneDev.Networking.Server.ClientConnection
+    class ConnectedWorker : ClientConnection
     {
         private int _AdvertisedWorkerThreadCount;
 
@@ -24,15 +26,15 @@ namespace Cranium.Lobe.Manager
             {
                 switch (p.Type)
                 {
-                case 201:
-                    HandelA201(p);
-                    break;
-                case 300:
-                    HandelA300(p);
-                    break;
-                case 400:
-                    HandelA400(p);
-                    break;
+                    case 201:
+                        HandelA201(p);
+                        break;
+                    case 300:
+                        HandelA300(p);
+                        break;
+                    case 400:
+                        HandelA400(p);
+                        break;
                 }
             }
         }
@@ -67,7 +69,7 @@ namespace Cranium.Lobe.Manager
         /// <param name="p"></param>
         protected void HandelA300(Packet p)
         {
-            Lib.Activity.Base work = Program.GetPendingJob();
+            Base work = Program.GetPendingJob();
             if (work == null)
             {
                 SendPacket(new Packet(301)); //got no work
@@ -87,11 +89,11 @@ namespace Cranium.Lobe.Manager
         protected void HandelA400(Packet p)
         {
             object[] packetObjects = p.GetObjects();
-            byte[] JobData = (byte[])packetObjects[0];
+            byte[] jobData = (byte[])packetObjects[0];
 
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            Cranium.Lib.Activity.Base Activity = (Cranium.Lib.Activity.Base)binaryFormatter.Deserialize(new MemoryStream(JobData));
-            Program.RegisterCompletedWork(Activity);
+            Base activity = (Base)binaryFormatter.Deserialize(new MemoryStream(jobData));
+            Program.RegisterCompletedWork(activity);
         }
     }
 }

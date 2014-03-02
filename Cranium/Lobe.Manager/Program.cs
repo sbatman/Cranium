@@ -2,36 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Cranium.Lib;
-using Cranium.Lib.Activity;
+using Base = InsaneDev.Networking.Server.Base;
 
 namespace Cranium.Lobe.Manager
 {
     class Program
     {
-        private static InsaneDev.Networking.Server.Base _CommsServerClient;
-        private static InsaneDev.Networking.Server.Base _CommsServerWorker;
+        private static Base _CommsServerClient;
+        private static Base _CommsServerWorker;
         private static readonly List<Lib.Activity.Base> PendingWork = new List<Lib.Activity.Base>();
         private static readonly List<Lib.Activity.Base> WorkBeingProcessed = new List<Lib.Activity.Base>();
         private static readonly List<Lib.Activity.Base> CompleteWork = new List<Lib.Activity.Base>();
         private static bool _Running;
-        static void Main(string[] args)
+        static void Main()
         {
             _Running = true;
 
             if (!SettingsLoader.LoadSettings("Settings.ini")) return;
             //Online The Comms system
             Console.WriteLine("Starting Comms Server for clients");
-            _CommsServerClient = new InsaneDev.Networking.Server.Base();
-            _CommsServerClient.Init(SettingsLoader.CommsClientLocalIP.Equals("any", System.StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsClientPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsClientLocalIP), SettingsLoader.CommsClientPort), typeof(ConnectedClient));
+            _CommsServerClient = new Base();
+            _CommsServerClient.Init(SettingsLoader.CommsClientLocalIP.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsClientPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsClientLocalIP), SettingsLoader.CommsClientPort), typeof(ConnectedClient));
             Console.WriteLine("Comms Server for clients Online at " + SettingsLoader.CommsClientLocalIP + ":" + SettingsLoader.CommsClientPort);
 
             Console.WriteLine("Starting Comms Server for workers");
-            _CommsServerWorker = new InsaneDev.Networking.Server.Base();
-            _CommsServerWorker.Init(SettingsLoader.CommsWorkerLocalIP.Equals("any", System.StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsWorkerPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsWorkerLocalIP), SettingsLoader.CommsWorkerPort), typeof(ConnectedWorker));
+            _CommsServerWorker = new Base();
+            _CommsServerWorker.Init(SettingsLoader.CommsWorkerLocalIP.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsWorkerPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsWorkerLocalIP), SettingsLoader.CommsWorkerPort), typeof(ConnectedWorker));
             Console.WriteLine("Comms Server for workers Online at " + SettingsLoader.CommsWorkerLocalIP + ":" + SettingsLoader.CommsWorkerPort);
 
             _CommsServerClient.StartListening();
