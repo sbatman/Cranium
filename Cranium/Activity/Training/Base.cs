@@ -16,16 +16,17 @@
 #region Usings
 
 using System.Threading;
-using Cranium.Structure;
+using Cranium.Lib.Structure;
 using System.Runtime.Serialization;
 using System;
+using System.Diagnostics;
 
 #endregion
 
-namespace Cranium.Activity.Training
+namespace Cranium.Lib.Activity.Training
 {
     [Serializable]
-    public abstract class Base : ISerializable
+    public abstract class Base : Activity.Base
     {
         public delegate double DynamicVariable(int epoch, double currentRMSE);
 
@@ -39,11 +40,11 @@ namespace Cranium.Activity.Training
         protected Network _TargetNetwork;
         protected double[][] _WorkingDataset;
 
-        public Base()
+        protected Base()
         {
         }
 
-        public Base(SerializationInfo info, StreamingContext context)
+        protected Base(SerializationInfo info, StreamingContext context) : base (info,context)
         {
             _CurrentEpoch = info.GetInt32("_CurrentEpoch");
             _DynamicLearningRate = (DynamicVariable)info.GetValue("_DynamicLearningRate", typeof(DynamicVariable));
@@ -60,8 +61,24 @@ namespace Cranium.Activity.Training
         public void Start()
         {
             _CurrentEpoch = 0;
+            if (_LoopThread != null)
+            {
+                Debug.Assert(_LoopThread != null, "Calling Start on a training activity that has already been started");
+                _LoopThread.Abort();
+                _LoopThread = null;
+            }
             _LoopThread = new Thread(_UpdateLoop);
             _LoopThread.Start();
+        }
+
+        public void StartSynchronous()
+        {
+            _CurrentEpoch = 0;
+            _Running = true;
+            Starting();
+            while (_Tick() && !_Stopping) _CurrentEpoch++;
+            Stopping();
+            _Running = false;
         }
 
         /// <summary>
@@ -177,8 +194,9 @@ namespace Cranium.Activity.Training
             _DynamicMomentum = function;
         }
 
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
+            base.GetObjectData(info,context);
             info.AddValue("_CurrentEpoch", _CurrentEpoch);
             info.AddValue("_DynamicLearningRate", _DynamicLearningRate, typeof(DynamicVariable));
             info.AddValue("_DynamicMomentum", _DynamicMomentum, typeof(DynamicVariable));

@@ -19,7 +19,7 @@ using System;
 
 #endregion
 
-namespace Cranium.Data.PostProcessing
+namespace Cranium.Lib.Data.PostProcessing
 {
     /// <summary>
     ///     This class contains functions for testing a dataset and a neural networks learnt knowledge of the dataset against a random walk of the dataset.

@@ -17,14 +17,14 @@
 
 using System;
 using System.Collections.Generic;
-using Cranium.Structure;
-using Cranium.Structure.ActivationFunction;
-using Cranium.Structure.Node;
-using Base = Cranium.Structure.Layer.Base;
+using Cranium.Lib.Structure;
+using Cranium.Lib.Structure.ActivationFunction;
+using Cranium.Lib.Structure.Node;
+using Base = Cranium.Lib.Structure.Layer.Base;
 
 #endregion
 
-namespace Cranium.LibTest.Tests.Linear
+namespace Cranium.Lib.Test.Tests.Linear
 {
     /// <summary>
     ///     This is a test showing a neural network that can implement the functionality of a three input xor gate
@@ -104,18 +104,18 @@ namespace Cranium.LibTest.Tests.Linear
         private static void BuildStructure()
         {
             _InputLayer = new Base();
-            List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 3; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
+            List<Lib.Structure.Node.Base> inputLayerNodes = new List<Lib.Structure.Node.Base>();
+            for (int i = 0; i < 3; i++) inputLayerNodes.Add(new Lib.Structure.Node.Base(_InputLayer, new Tanh()));
 
             _InputLayer.SetNodes(inputLayerNodes);
 
             _HiddenLayer = new Base();
-            List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 4; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
+            List<Lib.Structure.Node.Base> hiddenLayerNodes = new List<Lib.Structure.Node.Base>();
+            for (int i = 0; i < 4; i++) hiddenLayerNodes.Add(new Lib.Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _OutputLayer = new Base();
-            List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
+            List<Lib.Structure.Node.Base> ouputLayerNodes = new List<Lib.Structure.Node.Base>();
             for (int i = 0; i < 3; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(ouputLayerNodes);
 

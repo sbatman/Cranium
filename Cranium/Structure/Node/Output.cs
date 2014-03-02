@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.Node
+namespace Cranium.Lib.Structure.Node
 {
     /// <summary>
     ///     The output node functions differntly from normal nodes as its error is calcuated from the targetvalue rather than the error of foward nodes.
@@ -31,7 +31,7 @@ namespace Cranium.Structure.Node
         protected Double _TargetValue;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Node.Output" /> class.
+        ///     Initializes a new instance of the <see cref="Output" /> class.
         /// </summary>
         /// <param name='parentLayer'>
         ///     Parent layer.
@@ -45,7 +45,7 @@ namespace Cranium.Structure.Node
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Node.Output" /> class. Used by the Serializer
+        ///     Initializes a new instance of the <see cref="Output" /> class. Used by the Serializer
         /// </summary>
         /// <param name='info'>
         ///     Info.

@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.ActivationFunction
+namespace Cranium.Lib.Structure.ActivationFunction
 {
     /// <summary>
     ///     This activation function scales the input into the range of -1 to 1 which is very important for the majority
@@ -30,14 +30,14 @@ namespace Cranium.Structure.ActivationFunction
     public class Tanh : Base
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Tanh" /> class.
+        ///     Initializes a new instance of the <see cref="Tanh" /> class.
         /// </summary>
         public Tanh()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Tanh" /> class. Used by the serializer
+        ///     Initializes a new instance of the <see cref="Tanh" /> class. Used by the serializer
         /// </summary>
         /// <param name='info'>
         ///     Info.

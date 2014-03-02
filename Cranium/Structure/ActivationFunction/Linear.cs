@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.ActivationFunction
+namespace Cranium.Lib.Structure.ActivationFunction
 {
     /// <summary>
     ///     This activation function returns exactly what it is fed, this is extreamly useful fordata being fed in that has already been cooked external
@@ -30,14 +30,14 @@ namespace Cranium.Structure.ActivationFunction
     public class Linear : Base
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Linear" /> class.
+        ///     Initializes a new instance of the <see cref="Linear" /> class.
         /// </summary>
         public Linear()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Linear" /> class. Used by the Serializer.
+        ///     Initializes a new instance of the <see cref="Linear" /> class. Used by the Serializer.
         /// </summary>
         /// <param name='info'>
         ///     Info.

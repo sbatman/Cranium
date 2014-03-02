@@ -17,14 +17,14 @@
 
 using System;
 using System.Collections.Generic;
-using Cranium.Structure;
-using Cranium.Structure.ActivationFunction;
-using Cranium.Structure.Node;
-using Base = Cranium.Structure.Layer.Base;
+using Cranium.Lib.Structure;
+using Cranium.Lib.Structure.ActivationFunction;
+using Cranium.Lib.Structure.Node;
+using Base = Cranium.Lib.Structure.Layer.Base;
 
 #endregion
 
-namespace Cranium.LibTest.Tests.Linear
+namespace Cranium.Lib.Test.Tests.Linear
 {
     /// <summary>
     ///     This is a test showing a neural network that is capable if learning the functionality of a two input xor gate

@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.ActivationFunction
+namespace Cranium.Lib.Structure.ActivationFunction
 {
     /// <summary>
     ///     This activation function will return 1 when >= threshold else 0, its not recomended you use this in a backprop network
@@ -34,7 +34,7 @@ namespace Cranium.Structure.ActivationFunction
         protected double _ActivationPoint;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Step" /> class.
+        ///     Initializes a new instance of the <see cref="Step" /> class.
         /// </summary>
         /// <param name='activationPoint'>
         ///     Activation point.
@@ -45,7 +45,7 @@ namespace Cranium.Structure.ActivationFunction
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Step" /> class.
+        ///     Initializes a new instance of the <see cref="Step" /> class.
         /// </summary>
         /// <param name='info'>
         ///     Info.

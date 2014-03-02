@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.ActivationFunction
+namespace Cranium.Lib.Structure.ActivationFunction
 {
     /// <summary>
     ///     Gaussian Activation function acts as a bellcurve activation function
@@ -34,7 +34,7 @@ namespace Cranium.Structure.ActivationFunction
         protected double _Steepness;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Gaussian" /> class.
+        ///     Initializes a new instance of the <see cref="Gaussian" /> class.
         /// </summary>
         /// <param name='steepness'>
         ///     Steepness.
@@ -45,7 +45,7 @@ namespace Cranium.Structure.ActivationFunction
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Gaussian" /> class. Used by the serializer.
+        ///     Initializes a new instance of the <see cref="Gaussian" /> class. Used by the serializer.
         /// </summary>
         /// <param name='info'>
         ///     Info.
