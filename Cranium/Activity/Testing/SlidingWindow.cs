@@ -15,9 +15,9 @@
 
 #region Usings
 
-using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
-using System.Runtime.Serialization;
 using System;
+using System.Runtime.Serialization;
+using Cranium.Lib.Structure.Layer;
 
 #endregion
 
@@ -26,43 +26,6 @@ namespace Cranium.Lib.Activity.Testing
     [Serializable]
     public class SlidingWindow : Base
     {
-
-        /// <summary>
-        /// Returned results class for the SlidingWindow testing activity
-        /// </summary>
-        public class SlidingWindowTestResults : TestResults
-        {
-            public double[][] ActualOutputs;
-            public double[][] ExpectedOutputs;
-            public double[][] OutputErrors;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class.
-            /// </summary>
-            public SlidingWindowTestResults()
-            {
-            }
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class, used by the serializer.
-            /// </summary>
-            public SlidingWindowTestResults(SerializationInfo info, StreamingContext context)
-                : base(info, context)
-            {
-                ActualOutputs = (double[][])info.GetValue("ActualOutputs", ActualOutputs.GetType());
-                ExpectedOutputs = (double[][])info.GetValue("ActualOutputs", ExpectedOutputs.GetType());
-                OutputErrors = (double[][])info.GetValue("ActualOutputs", OutputErrors.GetType());
-            }
-
-            public override void GetObjectData(SerializationInfo info, StreamingContext context)
-            {
-                base.GetObjectData(info, context);
-                info.AddValue("ActualOutputs", ActualOutputs, ActualOutputs.GetType());
-                info.AddValue("ExpectedOutputs", ExpectedOutputs, ExpectedOutputs.GetType());
-                info.AddValue("OutputErrors", OutputErrors, OutputErrors.GetType());
-            }
-        }
-
         protected double[][] _ActualOutputs;
         protected int _DistanceToForcastHorrison;
         protected double[][] _ExpectedOutputs;
@@ -72,69 +35,53 @@ namespace Cranium.Lib.Activity.Testing
         protected int _SequenceCount;
         protected int _WindowWidth;
         protected double[][] _WorkingDataset;
-       
 
-        public SlidingWindow()
-        {
-        }
 
-        public SlidingWindow(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        public SlidingWindow() { }
+
+        public SlidingWindow(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _ActualOutputs = (double[][])info.GetValue("_ActualOutputs", typeof(double[][]));
+            _ActualOutputs = (double[][]) info.GetValue("_ActualOutputs", typeof (double[][]));
             _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
-            _ExpectedOutputs = (double[][])info.GetValue("_ExpectedOutputs", typeof(double[][]));
-            _InputSequences = (double[][][])info.GetValue("_InputSequences", typeof(double[][][]));
-            _OutputErrors = (double[][])info.GetValue("_OutputErrors", typeof(double[][]));
+            _ExpectedOutputs = (double[][]) info.GetValue("_ExpectedOutputs", typeof (double[][]));
+            _InputSequences = (double[][][]) info.GetValue("_InputSequences", typeof (double[][][]));
+            _OutputErrors = (double[][]) info.GetValue("_OutputErrors", typeof (double[][]));
             _PortionOfDatasetReserved = info.GetInt32("_PortionOfDatasetReserved");
             _SequenceCount = info.GetInt32("_SequenceCount");
             _WindowWidth = info.GetInt32("_WindowWidth");
-            _WorkingDataset = (double[][])info.GetValue("_WorkingDataset", typeof(double[][]));
+            _WorkingDataset = (double[][]) info.GetValue("_WorkingDataset", typeof (double[][]));
         }
 
         /// <summary>
-        /// Sets teh width of the sliding window used for testing
+        ///     Sets teh width of the sliding window used for testing
         /// </summary>
         /// <param name="windowWidth"></param>
-        public virtual void SetWindowWidth(int windowWidth)
-        {
-            _WindowWidth = windowWidth;
-        }
+        public virtual void SetWindowWidth(int windowWidth) { _WindowWidth = windowWidth; }
 
         /// <summary>
-        /// Sets the distance to prediction from the end of the presented window
+        ///     Sets the distance to prediction from the end of the presented window
         /// </summary>
         /// <param name="distance"></param>
-        public virtual void SetDistanceToForcastHorrison(int distance)
-        {
-            _DistanceToForcastHorrison = distance;
-        }
+        public virtual void SetDistanceToForcastHorrison(int distance) { _DistanceToForcastHorrison = distance; }
 
         /// <summary>
-        /// Sets the ammount of data from the end of the dataset to to be used during testing
+        ///     Sets the ammount of data from the end of the dataset to to be used during testing
         /// </summary>
         /// <param name="reservedPortion"></param>
-        public virtual void SetDatasetReservedLength(int reservedPortion)
-        {
-            _PortionOfDatasetReserved = reservedPortion;
-        }
+        public virtual void SetDatasetReservedLength(int reservedPortion) { _PortionOfDatasetReserved = reservedPortion; }
 
         /// <summary>
-        /// sets the current dataset used for this test
+        ///     sets the current dataset used for this test
         /// </summary>
         /// <param name="dataset"></param>
-        public virtual void SetWorkingDataset(double[][] dataset)
-        {
-            _WorkingDataset = dataset;
-        }
+        public virtual void SetWorkingDataset(double[][] dataset) { _WorkingDataset = dataset; }
 
         /// <summary>
-        /// Perpares any data that is required for testing
+        ///     Perpares any data that is required for testing
         /// </summary>
         public override void PrepareData()
         {
-            _SequenceCount = ((_WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved) - _WindowWidth) -
-                             _DistanceToForcastHorrison;
+            _SequenceCount = ((_WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved) - _WindowWidth) - _DistanceToForcastHorrison;
             int inputCount = _InputNodes.Count;
             int outputCount = _OutputNodes.Count;
 
@@ -165,7 +112,7 @@ namespace Cranium.Lib.Activity.Testing
         }
 
         /// <summary>
-        /// Tests the provided network
+        ///     Tests the provided network
         /// </summary>
         /// <returns>Returns acopy of the test results class (or derived class depending on class functionality)</returns>
         public override TestResults TestNetwork()
@@ -189,32 +136,60 @@ namespace Cranium.Lib.Activity.Testing
                     _ActualOutputs[s][x] = _OutputNodes[x].GetValue();
                     _OutputErrors[s][x] = _ExpectedOutputs[s][x] - _ActualOutputs[s][x];
                     errorCount++;
-                    rmse += _OutputErrors[s][x] * _OutputErrors[s][x];
+                    rmse += _OutputErrors[s][x]*_OutputErrors[s][x];
                 }
             }
             //All the sequewnces have been run through and the outputs and their erros collected
-            SlidingWindowTestResults result = new SlidingWindowTestResults
-                {
-                    ExpectedOutputs = _ExpectedOutputs,
-                    ActualOutputs = _ActualOutputs,
-                    OutputErrors = _OutputErrors,
-                    RMSE = rmse / errorCount
-                };
+            var result = new SlidingWindowTestResults {ExpectedOutputs = _ExpectedOutputs, ActualOutputs = _ActualOutputs, OutputErrors = _OutputErrors, RMSE = rmse/errorCount};
             return result;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("_ActualOutputs", _ActualOutputs, typeof(double[][]));
+            info.AddValue("_ActualOutputs", _ActualOutputs, typeof (double[][]));
             info.AddValue("_DistanceToForcastHorrison", _DistanceToForcastHorrison);
-            info.AddValue("_ExpectedOutputs", _ExpectedOutputs, typeof(double[][]));
-            info.AddValue("_InputSequences", _InputSequences, typeof(double[][][]));
-            info.AddValue("_OutputErrors", _OutputErrors, typeof(double[][]));
+            info.AddValue("_ExpectedOutputs", _ExpectedOutputs, typeof (double[][]));
+            info.AddValue("_InputSequences", _InputSequences, typeof (double[][][]));
+            info.AddValue("_OutputErrors", _OutputErrors, typeof (double[][]));
             info.AddValue("_PortionOfDatasetReserved", _PortionOfDatasetReserved);
             info.AddValue("_SequenceCount", _SequenceCount);
             info.AddValue("_WindowWidth", _WindowWidth);
-            info.AddValue("_WorkingDataset", _WorkingDataset, typeof(double[][]));
+            info.AddValue("_WorkingDataset", _WorkingDataset, typeof (double[][]));
+        }
+
+        /// <summary>
+        ///     Returned results class for the SlidingWindow testing activity
+        /// </summary>
+        public class SlidingWindowTestResults : TestResults
+        {
+            public double[][] ActualOutputs;
+            public double[][] ExpectedOutputs;
+            public double[][] OutputErrors;
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class.
+            /// </summary>
+            public SlidingWindowTestResults() { }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class,
+            ///     used by the serializer.
+            /// </summary>
+            public SlidingWindowTestResults(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+                ActualOutputs = (double[][]) info.GetValue("ActualOutputs", ActualOutputs.GetType());
+                ExpectedOutputs = (double[][]) info.GetValue("ActualOutputs", ExpectedOutputs.GetType());
+                OutputErrors = (double[][]) info.GetValue("ActualOutputs", OutputErrors.GetType());
+            }
+
+            public override void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                base.GetObjectData(info, context);
+                info.AddValue("ActualOutputs", ActualOutputs, ActualOutputs.GetType());
+                info.AddValue("ExpectedOutputs", ExpectedOutputs, ExpectedOutputs.GetType());
+                info.AddValue("OutputErrors", OutputErrors, OutputErrors.GetType());
+            }
         }
     }
 }

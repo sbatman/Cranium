@@ -23,7 +23,8 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.Node
 {
     /// <summary>
-    ///     This recursive node acts differntly from as standard node as it has a source node from which it generates its value,
+    ///     This recursive node acts differntly from as standard node as it has a source node from which it generates its
+    ///     value,
     ///     this is based on the Rate of update pased as the constructor.
     /// </summary>
     [Serializable]
@@ -59,9 +60,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public RecurrentContext(Base sourceNode, double rateOfUpdate, Layer.Base parentLayer,
-                                ActivationFunction.Base activationFunction)
-        : base(parentLayer, activationFunction)
+        public RecurrentContext(Base sourceNode, double rateOfUpdate, Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer, activationFunction)
         {
             _Value = 0.5f;
             _SourceNode = sourceNode;
@@ -77,8 +76,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public RecurrentContext(SerializationInfo info, StreamingContext context)
-        : base(info, context)
+        public RecurrentContext(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _SourceNode = (Base) info.GetValue("_SourceNode", typeof (Base));
             _RateOfUpdate = info.GetDouble("_RateOfUpdate");
@@ -88,10 +86,7 @@ namespace Cranium.Lib.Structure.Node
         /// <summary>
         ///     Update this nodes value.
         /// </summary>
-        public virtual void Update()
-        {
-            _Value = (_Value*(1 - _RateOfUpdate)) + (_SourceNode.GetValue()*_RateOfUpdate);
-        }
+        public virtual void Update() { _Value = (_Value*(1 - _RateOfUpdate)) + (_SourceNode.GetValue()*_RateOfUpdate); }
 
         /// <summary>
         ///     Sets the start value of this node.
@@ -99,10 +94,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='startValue'>
         ///     Start value.
         /// </param>
-        public virtual void SetStartValue(double startValue)
-        {
-            _StartValue = startValue;
-        }
+        public virtual void SetStartValue(double startValue) { _StartValue = startValue; }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

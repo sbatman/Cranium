@@ -28,7 +28,8 @@ using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 namespace Cranium.Lib.Test.Tests.Recursive
 {
     /// <summary>
-    ///     This test shows a neural network that can demonstate the functionality of a three input Xor gate using only one input and recursive context nodes
+    ///     This test shows a neural network that can demonstate the functionality of a three input Xor gate using only one
+    ///     input and recursive context nodes
     /// </summary>
     public static class RNNTest2
     {
@@ -101,21 +102,17 @@ namespace Cranium.Lib.Test.Tests.Recursive
 
                     for (int i = 0; i < 3; i++)
                     {
-                        _InputLayer.GetNodes() [0].SetValue(_InputData [(x*3) + i]);
+                        _InputLayer.GetNodes()[0].SetValue(_InputData[(x*3) + i]);
                         ForwardPass();
                         _ContextLayer.UpdateExtra();
                     }
                     ReversePass(x);
 
-                    if (x == 0 && _OutputLayer.GetNodes() [0].GetValue() > 0.02f) Continue = true;
-                    if (x > 0 && x < 7 && _OutputLayer.GetNodes() [0].GetValue() < 0.98f) Continue = true;
-                    if (x == 7 && _OutputLayer.GetNodes() [0].GetValue() > 0.02f) Continue = true;
+                    if (x == 0 && _OutputLayer.GetNodes()[0].GetValue() > 0.02f) Continue = true;
+                    if (x > 0 && x < 7 && _OutputLayer.GetNodes()[0].GetValue() < 0.98f) Continue = true;
+                    if (x == 7 && _OutputLayer.GetNodes()[0].GetValue() > 0.02f) Continue = true;
 
-                    if (epoch%100 == 0)
-                    {
-                        Console.WriteLine(_InputData [x*3] + "-" + _InputData [(x*3) + 1] + "-" + _InputData [(x*3) + 2] +
-                                          "  -  " + Math.Round(_OutputLayer.GetNodes() [0].GetValue(), 2));
-                    }
+                    if (epoch%100 == 0) Console.WriteLine(_InputData[x*3] + "-" + _InputData[(x*3) + 1] + "-" + _InputData[(x*3) + 2] + "  -  " + Math.Round(_OutputLayer.GetNodes()[0].GetValue(), 2));
                 }
             }
             Console.WriteLine("Training complete in " + epoch + " epochs");
@@ -128,24 +125,24 @@ namespace Cranium.Lib.Test.Tests.Recursive
         public static void BuildStructure()
         {
             _InputLayer = new Base();
-            List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
+            var inputLayerNodes = new List<Structure.Node.Base>();
             for (int i = 0; i < 1; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
             _InputLayer.SetNodes(inputLayerNodes);
 
             _HiddenLayer = new Base();
-            List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
+            var hiddenLayerNodes = new List<Structure.Node.Base>();
             for (int i = 0; i < 5; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _HiddenLayer2 = new Base();
-            List<Structure.Node.Base> hiddenLayerNodes2 = new List<Structure.Node.Base>();
+            var hiddenLayerNodes2 = new List<Structure.Node.Base>();
             for (int i = 0; i < 3; i++) hiddenLayerNodes2.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer2.SetNodes(hiddenLayerNodes2);
 
             _ContextLayer = new RecurrentContext(2, new Tanh());
 
             _OutputLayer = new Base();
-            List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
+            var ouputLayerNodes = new List<Structure.Node.Base>();
             for (int i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(ouputLayerNodes);
 
@@ -177,65 +174,63 @@ namespace Cranium.Lib.Test.Tests.Recursive
 
             int i = 0;
 
-            _InputData [i++] = 0;
-            _InputData [i++] = 0;
-            _InputData [i++] = 0;
-            _OutputData [0] = 0;
+            _InputData[i++] = 0;
+            _InputData[i++] = 0;
+            _InputData[i++] = 0;
+            _OutputData[0] = 0;
 
-            _InputData [i++] = 1;
-            _InputData [i++] = 0;
-            _InputData [i++] = 0;
-            _OutputData [1] = 1;
+            _InputData[i++] = 1;
+            _InputData[i++] = 0;
+            _InputData[i++] = 0;
+            _OutputData[1] = 1;
 
-            _InputData [i++] = 0;
-            _InputData [i++] = 1;
-            _InputData [i++] = 0;
-            _OutputData [2] = 1;
+            _InputData[i++] = 0;
+            _InputData[i++] = 1;
+            _InputData[i++] = 0;
+            _OutputData[2] = 1;
 
-            _InputData [i++] = 0;
-            _InputData [i++] = 0;
-            _InputData [i++] = 1;
-            _OutputData [3] = 1;
+            _InputData[i++] = 0;
+            _InputData[i++] = 0;
+            _InputData[i++] = 1;
+            _OutputData[3] = 1;
 
-            _InputData [i++] = 1;
-            _InputData [i++] = 0;
-            _InputData [i++] = 1;
-            _OutputData [4] = 1;
+            _InputData[i++] = 1;
+            _InputData[i++] = 0;
+            _InputData[i++] = 1;
+            _OutputData[4] = 1;
 
-            _InputData [i++] = 1;
-            _InputData [i++] = 1;
-            _InputData [i++] = 0;
-            _OutputData [5] = 1;
+            _InputData[i++] = 1;
+            _InputData[i++] = 1;
+            _InputData[i++] = 0;
+            _OutputData[5] = 1;
 
-            _InputData [i++] = 0;
-            _InputData [i++] = 1;
-            _InputData [i++] = 1;
-            _OutputData [6] = 1;
+            _InputData[i++] = 0;
+            _InputData[i++] = 1;
+            _InputData[i++] = 1;
+            _OutputData[6] = 1;
 
-            _InputData [i++] = 1;
-            _InputData [i++] = 1;
-            _InputData [i] = 1;
-            _OutputData [7] = 0;
+            _InputData[i++] = 1;
+            _InputData[i++] = 1;
+            _InputData[i] = 1;
+            _OutputData[7] = 0;
         }
 
         /// <summary>
         ///     Performs a foward pass on the neural netowork
         /// </summary>
-        public static void ForwardPass()
-        {
-            _TestNetworkStructure.FowardPass();
-        }
+        public static void ForwardPass() { _TestNetworkStructure.FowardPass(); }
 
         /// <summary>
-        ///     Performs the reverse pass on the neural network with the row of prepared training data provided and the given momentum
+        ///     Performs the reverse pass on the neural network with the row of prepared training data provided and the given
+        ///     momentum
         /// </summary>
         /// <param name='row'>
         ///     Row.
         /// </param>
         public static void ReversePass(int row)
         {
-            Output outputNode = (Output) (_OutputLayer.GetNodes() [0]);
-            outputNode.SetTargetValue(_OutputData [row]);
+            var outputNode = (Output) (_OutputLayer.GetNodes()[0]);
+            outputNode.SetTargetValue(_OutputData[row]);
             _OutputLayer.ReversePass(0.2, 0.9);
         }
     }

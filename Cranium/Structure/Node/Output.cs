@@ -23,7 +23,8 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.Node
 {
     /// <summary>
-    ///     The output node functions differntly from normal nodes as its error is calcuated from the targetvalue rather than the error of foward nodes.
+    ///     The output node functions differntly from normal nodes as its error is calcuated from the targetvalue rather than
+    ///     the error of foward nodes.
     /// </summary>
     [Serializable]
     public class Output : Base
@@ -39,10 +40,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public Output(Layer.Base parentLayer, ActivationFunction.Base activationFunction)
-            : base(parentLayer, activationFunction)
-        {
-        }
+        public Output(Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer, activationFunction) { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Output" /> class. Used by the Serializer
@@ -53,18 +51,12 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Output(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-            _TargetValue = info.GetDouble("_TargetValue");
-        }
+        public Output(SerializationInfo info, StreamingContext context) : base(info, context) { _TargetValue = info.GetDouble("_TargetValue"); }
 
         /// <summary>
         ///     Calculates the error of the node based on its distance from the target value
         /// </summary>
-        public override void CalculateError()
-        {
-            _Error = ((1 - _Value)*(1 + _Value))*(_TargetValue - _Value);
-        }
+        public override void CalculateError() { _Error = ((1 - _Value)*(1 + _Value))*(_TargetValue - _Value); }
 
         /// <summary>
         ///     Sets the target value, used for error calculation
@@ -72,10 +64,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='targetValue'>
         ///     Target value.
         /// </param>
-        public virtual void SetTargetValue(Double targetValue)
-        {
-            _TargetValue = targetValue;
-        }
+        public virtual void SetTargetValue(Double targetValue) { _TargetValue = targetValue; }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

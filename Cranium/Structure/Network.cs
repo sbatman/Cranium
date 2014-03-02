@@ -31,7 +31,8 @@ using Cranium.Lib.Structure.Layer;
 namespace Cranium.Lib.Structure
 {
     /// <summary>
-    ///     A base network class, This primarily acts as a structure container of the network and used at a later stage for a large ammount of the networks IO
+    ///     A base network class, This primarily acts as a structure container of the network and used at a later stage for a
+    ///     large ammount of the networks IO
     /// </summary>
     [Serializable]
     public class Network : IDisposable, ISerializable, IDeserializationCallback
@@ -68,8 +69,8 @@ namespace Cranium.Lib.Structure
             _LearningRate = info.GetDouble("_LearningRate");
             _Momenum = info.GetDouble("_Momenum");
             _LastIssuedLayerID = info.GetInt32("_LastIssuedLayerID");
-            _DetectedBottomLayers  = (List<Base>)info.GetValue("_DetectedBottomLayers", typeof(List<Base>));
-            _DetectedTopLayers = (List<Base>)info.GetValue("_DetectedTopLayers", typeof(List<Base>));
+            _DetectedBottomLayers = (List<Base>) info.GetValue("_DetectedBottomLayers", typeof (List<Base>));
+            _DetectedTopLayers = (List<Base>) info.GetValue("_DetectedTopLayers", typeof (List<Base>));
         }
 
         /// <summary>
@@ -121,10 +122,7 @@ namespace Cranium.Lib.Structure
         ///     Populates the current layers of the neural network with connections for the nodes
         ///     This is required to build the weightings between nodes within the network.
         /// </summary>
-        protected virtual void BuildNodeConnections()
-        {
-            foreach (Base l in _CurrentLayers) l.PopulateNodeConnections();
-        }
+        protected virtual void BuildNodeConnections() { foreach (Base l in _CurrentLayers) l.PopulateNodeConnections(); }
 
         /// <summary>
         ///     Returns a read only list of the layers in the network structure
@@ -132,10 +130,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The current layers.
         /// </returns>
-        public virtual ReadOnlyCollection<Base> GetCurrentLayers()
-        {
-            return _CurrentLayers.AsReadOnly();
-        }
+        public virtual ReadOnlyCollection<Base> GetCurrentLayers() { return _CurrentLayers.AsReadOnly(); }
 
         /// <summary>
         ///     returns a read only list of the detected top layers in the network.
@@ -143,10 +138,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The detected top layers.
         /// </returns>
-        public virtual ReadOnlyCollection<Base> GetDetectedTopLayers()
-        {
-            return _DetectedTopLayers.AsReadOnly();
-        }
+        public virtual ReadOnlyCollection<Base> GetDetectedTopLayers() { return _DetectedTopLayers.AsReadOnly(); }
 
         /// <summary>
         ///     Returns a read only list of the detected bottom layers in the network
@@ -154,10 +146,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The detected bottom layers.
         /// </returns>
-        public virtual ReadOnlyCollection<Base> GetDetectedBottomLayers()
-        {
-            return _DetectedBottomLayers.AsReadOnly();
-        }
+        public virtual ReadOnlyCollection<Base> GetDetectedBottomLayers() { return _DetectedBottomLayers.AsReadOnly(); }
 
         /// <summary>
         ///     Randomises the weights for all nodes within the network.
@@ -167,27 +156,20 @@ namespace Cranium.Lib.Structure
         /// </param>
         public virtual void RandomiseWeights(Double varianceFromZero)
         {
-            Random rnd = new Random();
-            foreach (
-                Weight.Base w in from l in _CurrentLayers from n in l.GetNodes() from w in n.GetFowardWeights() select w
-            ) w.SetWeight(((rnd.NextDouble()*2) - 1)*varianceFromZero);
+            var rnd = new Random();
+            foreach (Weight.Base w in from l in _CurrentLayers from n in l.GetNodes() from w in n.GetFowardWeights() select w) w.SetWeight(((rnd.NextDouble()*2) - 1)*varianceFromZero);
         }
 
         /// <summary>
-        ///     Performs a recursive foward pass across the network causing the update of all values of all nodes that have reverse weights.
+        ///     Performs a recursive foward pass across the network causing the update of all values of all nodes that have reverse
+        ///     weights.
         /// </summary>
-        public virtual void FowardPass()
-        {
-            foreach (Base l in  _DetectedBottomLayers) l.ForwardPass();
-        }
+        public virtual void FowardPass() { foreach (Base l in  _DetectedBottomLayers) l.ForwardPass(); }
 
         /// <summary>
         ///     Performs a recursive foward pass across the network
         /// </summary>
-        public virtual void ReversePass()
-        {
-            foreach (Base l in _DetectedTopLayers) l.ReversePass(_LearningRate, _Momenum);
-        }
+        public virtual void ReversePass() { foreach (Base l in _DetectedTopLayers) l.ReversePass(_LearningRate, _Momenum); }
 
         /// <summary>
         ///     Gets the current learning rate.
@@ -195,10 +177,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The learning rate.
         /// </returns>
-        public virtual double GetLearningRate()
-        {
-            return _LearningRate;
-        }
+        public virtual double GetLearningRate() { return _LearningRate; }
 
         /// <summary>
         ///     Gets the current momentum.
@@ -206,10 +185,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The momentum.
         /// </returns>
-        public virtual double GetMomentum()
-        {
-            return _Momenum;
-        }
+        public virtual double GetMomentum() { return _Momenum; }
 
         /// <summary>
         ///     Sets the current learning rate.
@@ -217,10 +193,7 @@ namespace Cranium.Lib.Structure
         /// <param name='newLearningRate'>
         ///     New learning rate.
         /// </param>
-        public virtual void SetLearningRate(double newLearningRate)
-        {
-            _LearningRate = newLearningRate;
-        }
+        public virtual void SetLearningRate(double newLearningRate) { _LearningRate = newLearningRate; }
 
         /// <summary>
         ///     Sets the current momentum.
@@ -228,17 +201,14 @@ namespace Cranium.Lib.Structure
         /// <param name='newMomentum'>
         ///     New momentum.
         /// </param>
-        public virtual void SetMomentum(double newMomentum)
-        {
-            _Momenum = newMomentum;
-        }
+        public virtual void SetMomentum(double newMomentum) { _Momenum = newMomentum; }
 
         public void SaveToFile(string fileName)
         {
-            BinaryFormatter formatter = new BinaryFormatter {AssemblyFormat = FormatterAssemblyStyle.Simple};
+            var formatter = new BinaryFormatter {AssemblyFormat = FormatterAssemblyStyle.Simple};
             using (FileStream atextwriter = File.Create(fileName))
             {
-                GZipStream compressionStream = new GZipStream(atextwriter, CompressionMode.Compress);
+                var compressionStream = new GZipStream(atextwriter, CompressionMode.Compress);
                 formatter.Serialize(compressionStream, this);
                 compressionStream.Close();
             }
@@ -249,8 +219,8 @@ namespace Cranium.Lib.Structure
             Network returnNetwork;
             using (FileStream loadedFile = File.OpenRead(filename))
             {
-                GZipStream compressionStream = new GZipStream(loadedFile, CompressionMode.Decompress);
-                BinaryFormatter formatter = new BinaryFormatter();
+                var compressionStream = new GZipStream(loadedFile, CompressionMode.Decompress);
+                var formatter = new BinaryFormatter();
                 returnNetwork = (Network) formatter.Deserialize(compressionStream);
                 compressionStream.Close();
             }
@@ -281,18 +251,15 @@ namespace Cranium.Lib.Structure
             info.AddValue("_LearningRate", _LearningRate);
             info.AddValue("_Momenum", _Momenum);
             info.AddValue("_LastIssuedLayerID", _LastIssuedLayerID);
-            info.AddValue("_DetectedBottomLayers", _DetectedBottomLayers, typeof(List<Base>));
-            info.AddValue("_DetectedTopLayers", _DetectedTopLayers, typeof(List<Base>));
+            info.AddValue("_DetectedBottomLayers", _DetectedBottomLayers, typeof (List<Base>));
+            info.AddValue("_DetectedTopLayers", _DetectedTopLayers, typeof (List<Base>));
         }
 
         #endregion
 
         #region IDeserializationCallback implementation
 
-        public void OnDeserialization(object sender)
-        {
-            StructureUpdate();
-        }
+        public void OnDeserialization(object sender) { StructureUpdate(); }
 
         #endregion
     }

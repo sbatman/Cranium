@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Threading;
-using Base = Cranium.Lib.Activity.Base;
+using Cranium.Lib.Activity;
 
 namespace Cranium.Lobe.Worker
 {
-    class WorkerThread
+    internal class WorkerThread
     {
-        protected Object _LockingObject = new Object();
-        protected Thread _InternalThread;
-        protected bool _Running;
         protected Base _CurrentWork;
+        protected Thread _InternalThread;
+        protected Object _LockingObject = new Object();
+        protected bool _Running;
 
         public WorkerThread()
         {
@@ -23,16 +23,13 @@ namespace Cranium.Lobe.Worker
             Console.WriteLine("Worker Thread Starting");
             while (_Running)
             {
-                if (_CurrentWork == null)
-                {
-                    _CurrentWork = Program.GetPendingWork(); //Gets pending work from the main program
-                }
+                if (_CurrentWork == null) _CurrentWork = Program.GetPendingWork(); //Gets pending work from the main program
                 else
                 {
                     Console.WriteLine("Worker service starting job " + _CurrentWork.GetGUID());
                     if (_CurrentWork is Lib.Activity.Training.Base)
                     {
-                        Lib.Activity.Training.Base trainingWork = (Lib.Activity.Training.Base)_CurrentWork;
+                        var trainingWork = (Lib.Activity.Training.Base) _CurrentWork;
                         trainingWork.StartSynchronous();
                         Program.AddToCompletedWork(trainingWork);
                     }
@@ -44,14 +41,10 @@ namespace Cranium.Lobe.Worker
             Console.WriteLine("Worker Thread Exiting");
         }
 
-        public bool IsRunning()
-        {
-            return _Running;
-        }
-        public void StopGracefully()
-        {
-            _Running = false;
-        }
+        public bool IsRunning() { return _Running; }
+
+        public void StopGracefully() { _Running = false; }
+
         public void StopForcefully()
         {
             lock (_LockingObject)

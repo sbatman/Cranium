@@ -1,23 +1,20 @@
-﻿using System.Linq;
-using InsaneDev.Networking;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
+using InsaneDev.Networking;
 using InsaneDev.Networking.Client;
 
 namespace Cranium.Lobe.Client
 {
     public class CommsClient
     {
-        protected Base _ConnectionToManager = new Base();
         protected int _CommsTimeout = 5000;
+        protected Base _ConnectionToManager = new Base();
 
-        public bool ConnectToManager(string ipAddress, int port)
-        {
-            return _ConnectionToManager.Connect(ipAddress, port);
-        }
+        public bool ConnectToManager(string ipAddress, int port) { return _ConnectionToManager.Connect(ipAddress, port); }
 
         public void DisconnectFromManager()
         {
@@ -27,12 +24,11 @@ namespace Cranium.Lobe.Client
 
         public Lib.Activity.Base GetCompletedWork(Guid jobGuid)
         {
-            if (_ConnectionToManager == null || !_ConnectionToManager.IsConnected())
-                throw new Exception("Not connected to the manager");
-            Packet p = new Packet(1100);
+            if (_ConnectionToManager == null || !_ConnectionToManager.IsConnected()) throw new Exception("Not connected to the manager");
+            var p = new Packet(1100);
             p.AddBytePacket(jobGuid.ToByteArray());
             _ConnectionToManager.SendPacket(p);
-            Stopwatch sendTime = new Stopwatch();
+            var sendTime = new Stopwatch();
             sendTime.Start();
             while (sendTime.ElapsedMilliseconds < _CommsTimeout)
             {
@@ -46,8 +42,8 @@ namespace Cranium.Lobe.Client
                                 return null;
                             case 1102:
                                 object[] packetObjects = packet.GetObjects();
-                                BinaryFormatter binaryFormatter = new BinaryFormatter();
-                                return (Lib.Activity.Base)binaryFormatter.Deserialize(new MemoryStream((byte[])packetObjects[0]));
+                                var binaryFormatter = new BinaryFormatter();
+                                return (Lib.Activity.Base) binaryFormatter.Deserialize(new MemoryStream((byte[]) packetObjects[0]));
                         }
                     }
                     Thread.Sleep(100);
@@ -59,20 +55,20 @@ namespace Cranium.Lobe.Client
         public Guid SendJob(Lib.Activity.Base activity)
         {
             if (_ConnectionToManager == null || !_ConnectionToManager.IsConnected()) throw new Exception("Not connected to the manager");
-            BinaryFormatter binaryFormatter = new BinaryFormatter();
-            MemoryStream datastream = new MemoryStream();
+            var binaryFormatter = new BinaryFormatter();
+            var datastream = new MemoryStream();
             binaryFormatter.Serialize(datastream, activity);
-            Packet p = new Packet(1000);
+            var p = new Packet(1000);
 
             p.AddBytePacket(datastream.GetBuffer());
             _ConnectionToManager.SendPacket(p);
-            Stopwatch sendTime = new Stopwatch();
+            var sendTime = new Stopwatch();
             sendTime.Start();
             while (sendTime.ElapsedMilliseconds < _CommsTimeout)
             {
                 if (_ConnectionToManager.GetPacketsToProcessCount() > 0)
                 {
-                    foreach (Guid jobGuid in from packet in _ConnectionToManager.GetPacketsToProcess() where packet.Type == 1001 select new Guid((byte[])packet.GetObjects()[0]))
+                    foreach (Guid jobGuid in from packet in _ConnectionToManager.GetPacketsToProcess() where packet.Type == 1001 select new Guid((byte[]) packet.GetObjects()[0]))
                     {
                         Console.WriteLine("Work request sucess job registered as " + jobGuid);
                         return jobGuid;

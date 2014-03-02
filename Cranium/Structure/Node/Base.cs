@@ -26,7 +26,8 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.Node
 {
     /// <summary>
-    ///     The base node class is a core part of the Neural network framework and represents a neuron that is placed within layers in the network.
+    ///     The base node class is a core part of the Neural network framework and represents a neuron that is placed within
+    ///     layers in the network.
     ///     This class can be derived to add additional functionality to a node such as adding recurive memory.
     /// </summary>
     [Serializable]
@@ -78,9 +79,10 @@ namespace Cranium.Lib.Structure.Node
         protected Double _Value;
 
         /// <summary>
-        ///     Initializes a new instance of the <see>
-        ///                                           <cref>Cranium.Structure.Node.Base</cref>
-        ///                                       </see>
+        ///     Initializes a new instance of the
+        ///     <see>
+        ///         <cref>Cranium.Structure.Node.Base</cref>
+        ///     </see>
         ///     class for use by the serializer.
         /// </summary>
         /// <param name='layer'>
@@ -96,7 +98,8 @@ namespace Cranium.Lib.Structure.Node
         }
 
         /// <summary>
-        ///     Causes the node to calucate its new value as a sum of the weights by values of reverse connected nodes and then passes this value by the Activation function assigned
+        ///     Causes the node to calucate its new value as a sum of the weights by values of reverse connected nodes and then
+        ///     passes this value by the Activation function assigned
         /// </summary>
         public virtual void CalculateValue()
         {
@@ -118,13 +121,11 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The value.
         /// </returns>
-        public virtual Double GetValue()
-        {
-            return _Value;
-        }
+        public virtual Double GetValue() { return _Value; }
 
         /// <summary>
-        ///     Bakes down the forward and reverse list of weights for optimisation sake. This is performed autmaticaly before any node functions that requires the weights
+        ///     Bakes down the forward and reverse list of weights for optimisation sake. This is performed autmaticaly before any
+        ///     node functions that requires the weights
         /// </summary>
         public virtual void BakeLists()
         {
@@ -160,10 +161,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='learningRate'>
         ///     Learning rate.
         /// </param>
-        public virtual void AdjustWeights(Double learningRate)
-        {
-            foreach (Weight.Base w in _ForwardWeights) w.AddWeightChange(_Value*w.NodeB._Error*learningRate);
-        }
+        public virtual void AdjustWeights(Double learningRate) { foreach (Weight.Base w in _ForwardWeights) w.AddWeightChange(_Value*w.NodeB._Error*learningRate); }
 
         /// <summary>
         ///     Triggers the addition of the momentum and the application of all pending weights
@@ -205,7 +203,8 @@ namespace Cranium.Lib.Structure.Node
         }
 
         /// <summary>
-        ///     Connects a second node to this one, building the correct weight and adding it to the list of weights that are updated when required
+        ///     Connects a second node to this one, building the correct weight and adding it to the list of weights that are
+        ///     updated when required
         /// </summary>
         /// <param name='nodeToConnect'>
         ///     Node to connect.
@@ -216,24 +215,23 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='startingWeight'>
         ///     Starting weight.
         /// </param>
-        public virtual void ConnectToNode(Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode,
-                                          float startingWeight)
+        public virtual void ConnectToNode(Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, float startingWeight)
         {
             Weight.Base theNewWeight;
             switch (connectionDirectionToNode)
             {
-            case Weight.Base.ConnectionDirection.Forward:
-                _TFowardWeights = null;
-                theNewWeight = new Weight.Base(this, nodeToConnect, startingWeight);
-                _ForwardWeights.Add(theNewWeight);
-                nodeToConnect._ReverseWeights.Add(theNewWeight);
-                break;
-            case Weight.Base.ConnectionDirection.Reverse:
-                _TReverseWeights = null;
-                theNewWeight = new Weight.Base(nodeToConnect, this, startingWeight);
-                _ReverseWeights.Add(theNewWeight);
-                nodeToConnect._ForwardWeights.Add(theNewWeight);
-                break;
+                case Weight.Base.ConnectionDirection.Forward:
+                    _TFowardWeights = null;
+                    theNewWeight = new Weight.Base(this, nodeToConnect, startingWeight);
+                    _ForwardWeights.Add(theNewWeight);
+                    nodeToConnect._ReverseWeights.Add(theNewWeight);
+                    break;
+                case Weight.Base.ConnectionDirection.Reverse:
+                    _TReverseWeights = null;
+                    theNewWeight = new Weight.Base(nodeToConnect, this, startingWeight);
+                    _ReverseWeights.Add(theNewWeight);
+                    nodeToConnect._ForwardWeights.Add(theNewWeight);
+                    break;
             }
         }
 
@@ -243,10 +241,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='newValue'>
         ///     New value.
         /// </param>
-        public virtual void SetValue(Double newValue)
-        {
-            _Value = newValue;
-        }
+        public virtual void SetValue(Double newValue) { _Value = newValue; }
 
         /// <summary>
         ///     Destroies all the foward and reverse weights connected to this node.
@@ -283,10 +278,7 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The I.
         /// </returns>
-        public virtual int GetID()
-        {
-            return _NodeID;
-        }
+        public virtual int GetID() { return _NodeID; }
 
         /// <summary>
         ///     Sets the current nodes ID
@@ -294,10 +286,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='newID'>
         ///     New I.
         /// </param>
-        public virtual void SetNodeID(int newID)
-        {
-            _NodeID = newID;
-        }
+        public virtual void SetNodeID(int newID) { _NodeID = newID; }
 
         #region IDisposable implementation
 
@@ -317,9 +306,10 @@ namespace Cranium.Lib.Structure.Node
         #region ISerializable implementation
 
         /// <summary>
-        ///     Initializes a new instance of the <see>
-        ///                                           <cref>Cranium.Structure.Node.Base</cref>
-        ///                                       </see>
+        ///     Initializes a new instance of the
+        ///     <see>
+        ///         <cref>Cranium.Structure.Node.Base</cref>
+        ///     </see>
         ///     class. Used by the Serializer
         /// </summary>
         /// <param name='info'>

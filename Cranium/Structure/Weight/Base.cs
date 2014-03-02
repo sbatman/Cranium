@@ -23,7 +23,8 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.Weight
 {
     /// <summary>
-    ///     This is the base weight class and acts as a standard weight between two nodes. weight changes can be applied immediatly
+    ///     This is the base weight class and acts as a standard weight between two nodes. weight changes can be applied
+    ///     immediatly
     ///     or added to a pending list and applied at a later stage.
     /// </summary>
     [Serializable]
@@ -102,10 +103,7 @@ namespace Cranium.Lib.Structure.Weight
         /// <returns>
         ///     The total change.
         /// </returns>
-        public virtual Double GetTotalChange()
-        {
-            return Weight - _InitialValue;
-        }
+        public virtual Double GetTotalChange() { return Weight - _InitialValue; }
 
         /// <summary>
         ///     Adds a pending weight change
@@ -126,10 +124,7 @@ namespace Cranium.Lib.Structure.Weight
         /// <param name='newWeight'>
         ///     New weight.
         /// </param>
-        public virtual void SetWeight(Double newWeight)
-        {
-            Weight = newWeight;
-        }
+        public virtual void SetWeight(Double newWeight) { Weight = newWeight; }
 
         /// <summary>
         ///     Gets the previous total weight change caused by ApplyPendingWeightChanges
@@ -137,10 +132,7 @@ namespace Cranium.Lib.Structure.Weight
         /// <returns>
         ///     The past weight change.
         /// </returns>
-        public virtual double GetPastWeightChange()
-        {
-            return _PastWeightChange;
-        }
+        public virtual double GetPastWeightChange() { return _PastWeightChange; }
 
         /// <summary>
         ///     Applies all pending weightchanges and clears the pending change.

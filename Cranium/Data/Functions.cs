@@ -24,7 +24,8 @@ using System.Text;
 namespace Cranium.Lib.Data
 {
     /// <summary>
-    ///     A collection of usefull functions for interacting with a loaded dataset. These include thing like prointing the double array to disk etc.
+    ///     A collection of usefull functions for interacting with a loaded dataset. These include thing like prointing the
+    ///     double array to disk etc.
     ///     This section is prone to change as new useful functions are described and as these functions are categorised.
     /// </summary>
     public static class Functions
@@ -38,10 +39,7 @@ namespace Cranium.Lib.Data
         /// <param name='fileName'>
         ///     File name.
         /// </param>
-        public static void PrintArrayToFile(IEnumerable<double> data, string fileName)
-        {
-            using (StreamWriter stream = File.CreateText(fileName)) foreach (double t in data) stream.WriteLine(t);
-        }
+        public static void PrintArrayToFile(IEnumerable<double> data, string fileName) { using (StreamWriter stream = File.CreateText(fileName)) foreach (double t in data) stream.WriteLine(t); }
 
         /// <summary>
         ///     Prints the provided multi-dimentional array to a csv file with the given filename
@@ -67,9 +65,10 @@ namespace Cranium.Lib.Data
                 }
             }
         }
+
         public static string PrintArrayToString(double[][] data)
         {
-            StringBuilder theString = new StringBuilder();
+            var theString = new StringBuilder();
 
             for (int x = 0; x < data.GetLength(0); x++)
             {

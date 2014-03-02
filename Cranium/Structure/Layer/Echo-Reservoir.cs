@@ -23,9 +23,12 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.Layer
 {
     /// <summary>
-    ///     This is an implementation of the echo reservoir found in EchoState networks. It provides a form of recursive memory as each node within the layer
-    ///     is randomly connected to a number of other nodes. When presented with data over a number of iterations this causes a RNN style memory behaviour.
-    ///     However due to the chaotic nature of the revervoirs contrcution, accuracy and learning limits of this type of network can vary heavily.
+    ///     This is an implementation of the echo reservoir found in EchoState networks. It provides a form of recursive memory
+    ///     as each node within the layer
+    ///     is randomly connected to a number of other nodes. When presented with data over a number of iterations this causes
+    ///     a RNN style memory behaviour.
+    ///     However due to the chaotic nature of the revervoirs contrcution, accuracy and learning limits of this type of
+    ///     network can vary heavily.
     ///     Further information can be sourced here http://www.scholarpedia.org/article/Echo_state_network
     /// </summary>
     [Serializable]
@@ -37,7 +40,8 @@ namespace Cranium.Lib.Structure.Layer
         protected ActivationFunction.Base _ActivationFunction;
 
         /// <summary>
-        ///     The connectivity is calculated as chances = max-min, for each chance the levelOfConnectivity is compared to a random double, if levelOfConnectivity is higher
+        ///     The connectivity is calculated as chances = max-min, for each chance the levelOfConnectivity is compared to a
+        ///     random double, if levelOfConnectivity is higher
         ///     then an additional connection is made ontop of the origional Min
         /// </summary>
         protected double _LevelOfConnectivity;
@@ -56,6 +60,7 @@ namespace Cranium.Lib.Structure.Layer
         ///     The number of nodes present in the Reservoir
         /// </summary>
         protected int _NodeCount;
+
         /// <summary>
         ///     The random used for building connections
         /// </summary>
@@ -68,7 +73,8 @@ namespace Cranium.Lib.Structure.Layer
         ///     The number of nodes in the Reservoir
         /// </param>
         /// <param name='levelOfConnectivity'>
-        ///     The connectivity is calculated as chances = max-min, for each chance the levelOfConnectivity is compared to a random double, if levelOfConnectivity is higher
+        ///     The connectivity is calculated as chances = max-min, for each chance the levelOfConnectivity is compared to a
+        ///     random double, if levelOfConnectivity is higher
         ///     then an additional connection is made ontop of the origional Min
         /// </param>
         /// <param name='minimumConnections'>
@@ -80,8 +86,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public Echo_Reservoir(int nodeCount, double levelOfConnectivity, int minimumConnections, int maximumConnections,
-                              ActivationFunction.Base activationFunction)
+        public Echo_Reservoir(int nodeCount, double levelOfConnectivity, int minimumConnections, int maximumConnections, ActivationFunction.Base activationFunction)
         {
             _NodeCount = nodeCount;
             _LevelOfConnectivity = levelOfConnectivity;
@@ -130,12 +135,13 @@ namespace Cranium.Lib.Structure.Layer
             {
                 int connections = _MinimumConnections;
                 for (int x = 0; x < _MaximumConnections - _MinimumConnections; x++) connections += _Rnd.NextDouble() > _LevelOfConnectivity ? 0 : 1;
-                for (int i = 0; i < connections; i++) node.ConnectToNode(_Nodes [_Rnd.Next(0, _Nodes.Count)], Weight.Base.ConnectionDirection.Forward, 0);
+                for (int i = 0; i < connections; i++) node.ConnectToNode(_Nodes[_Rnd.Next(0, _Nodes.Count)], Weight.Base.ConnectionDirection.Forward, 0);
             }
         }
 
         /// <summary>
-        ///     Reverses the pass, and prevents the call to recurse downwards, as the internode connections will not have their weights changed.
+        ///     Reverses the pass, and prevents the call to recurse downwards, as the internode connections will not have their
+        ///     weights changed.
         /// </summary>
         /// <param name='learningRate'>
         ///     Learning rate.
@@ -146,10 +152,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='recurseDownward'>
         ///     Recurse downward.
         /// </param>
-        public override void ReversePass(double learningRate, double momentum, bool recurseDownward = true)
-        {
-            base.ReversePass(learningRate, momentum, false);
-        }
+        public override void ReversePass(double learningRate, double momentum, bool recurseDownward = true) { base.ReversePass(learningRate, momentum, false); }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

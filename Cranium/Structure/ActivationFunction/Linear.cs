@@ -23,7 +23,8 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.ActivationFunction
 {
     /// <summary>
-    ///     This activation function returns exactly what it is fed, this is extreamly useful fordata being fed in that has already been cooked external
+    ///     This activation function returns exactly what it is fed, this is extreamly useful fordata being fed in that has
+    ///     already been cooked external
     ///     of the network. Lacking a derivative function however it is not suited for back progopgation networks.
     /// </summary>
     [Serializable]
@@ -32,9 +33,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <summary>
         ///     Initializes a new instance of the <see cref="Linear" /> class.
         /// </summary>
-        public Linear()
-        {
-        }
+        public Linear() { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Linear" /> class. Used by the Serializer.
@@ -45,9 +44,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Linear(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        public Linear(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         ///     Returns the input after running through the activation function.
@@ -55,10 +52,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     The value to pass to the activation function
         /// </param>
-        public override Double Compute(Double input)
-        {
-            return input;
-        }
+        public override Double Compute(Double input) { return input; }
 
         /// <summary>
         ///     Computes the derivative using the activation function.
@@ -69,17 +63,10 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     Input.
         /// </param>
-        public override Double ComputeDerivative(Double input)
-        {
-            return 1;
-        }
+        public override Double ComputeDerivative(Double input) { return 1; }
 
-        public override void Dispose()
-        {
-        }
+        public override void Dispose() { }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-        }
+        public override void GetObjectData(SerializationInfo info, StreamingContext context) { }
     }
 }

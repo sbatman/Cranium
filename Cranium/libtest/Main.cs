@@ -49,27 +49,27 @@ namespace Cranium.Lib.Test
             Console.Clear();
             switch (pressedKey)
             {
-            case ConsoleKey.D1:
-                XOR2Test.Run();
-                break;
-            case ConsoleKey.D2:
-                XOR3Test.Run();
-                break;
-            case ConsoleKey.D3:
-                RNNTest.Run();
-                break;
-            case ConsoleKey.D4:
-                RNNTest2.Run();
-                break;
-            case ConsoleKey.D5:
-                MG_Recurrent_Test.Run();
-                break;
-            case ConsoleKey.D6:
-                MG_EchoState_Test.Run();
-                break;
-            case ConsoleKey.D7:
-                MG_EchoState_Test_Lobe.Run();
-                break;
+                case ConsoleKey.D1:
+                    XOR2Test.Run();
+                    break;
+                case ConsoleKey.D2:
+                    XOR3Test.Run();
+                    break;
+                case ConsoleKey.D3:
+                    RNNTest.Run();
+                    break;
+                case ConsoleKey.D4:
+                    RNNTest2.Run();
+                    break;
+                case ConsoleKey.D5:
+                    MG_Recurrent_Test.Run();
+                    break;
+                case ConsoleKey.D6:
+                    MG_EchoState_Test.Run();
+                    break;
+                case ConsoleKey.D7:
+                    MG_EchoState_Test_Lobe.Run();
+                    break;
             }
         }
     }

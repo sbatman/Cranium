@@ -23,7 +23,8 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.ActivationFunction
 {
     /// <summary>
-    ///     This activation function will return 1 when >= threshold else 0, its not recomended you use this in a backprop network
+    ///     This activation function will return 1 when >= threshold else 0, its not recomended you use this in a backprop
+    ///     network
     /// </summary>
     [Serializable]
     public class Step : Base
@@ -39,10 +40,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='activationPoint'>
         ///     Activation point.
         /// </param>
-        public Step(double activationPoint)
-        {
-            _ActivationPoint = activationPoint;
-        }
+        public Step(double activationPoint) { _ActivationPoint = activationPoint; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Step" /> class.
@@ -53,10 +51,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Step(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-            _ActivationPoint = info.GetDouble("_ActivationPoint");
-        }
+        public Step(SerializationInfo info, StreamingContext context) : base(info, context) { _ActivationPoint = info.GetDouble("_ActivationPoint"); }
 
         /// <summary>
         ///     Returns the input after running through the activation function.
@@ -64,10 +59,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     The value to pass to the activation function
         /// </param>
-        public override Double Compute(Double input)
-        {
-            return input >= _ActivationPoint ? 1 : 0;
-        }
+        public override Double Compute(Double input) { return input >= _ActivationPoint ? 1 : 0; }
 
         /// <summary>
         ///     Computes the derivative using the activation function.
@@ -78,18 +70,10 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     Input.
         /// </param>
-        public override Double ComputeDerivative(Double input)
-        {
-            return 1;
-        }
+        public override Double ComputeDerivative(Double input) { return 1; }
 
-        public override void Dispose()
-        {
-        }
+        public override void Dispose() { }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("_ActivationPoint", _ActivationPoint);
-        }
+        public override void GetObjectData(SerializationInfo info, StreamingContext context) { info.AddValue("_ActivationPoint", _ActivationPoint); }
     }
 }
