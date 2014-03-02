@@ -1,14 +1,14 @@
 ﻿#region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -26,10 +26,10 @@ namespace Cranium.Lobe.Worker
 {
     internal class Program
     {
-       /// <summary>
-       /// The current connection to the lobe manager, a connection is not required for work to be completed however for the manager to recieve work or
-       /// for this worker lobe to get further work it will be required.
-       /// </summary>
+        /// <summary>
+        /// The current connection to the lobe manager, a connection is not required for work to be completed however for the manager to recieve work or
+        /// for this worker lobe to get further work it will be required.
+        /// </summary>
         protected static InsaneDev.Networking.Client.Base _ConnectionToLobeManager = new InsaneDev.Networking.Client.Base();
         /// <summary>
         /// A list containing all the active worker services
@@ -158,9 +158,15 @@ namespace Cranium.Lobe.Worker
         {
             switch (p.Type)
             {
-                case 200: HandelA200Packet(p); break;
-                case 301: HandelA200Packet(p); break;
-                case 302: HandelA200Packet(p); break;
+            case 200:
+                HandelA200Packet(p);
+                break;
+            case 301:
+                HandelA301Packet(p);
+                break;
+            case 302:
+                HandelA302Packet(p);
+                break;
             }
             p.Dispose();
         }
@@ -196,7 +202,7 @@ namespace Cranium.Lobe.Worker
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             Lib.Activity.Base activity = (Lib.Activity.Base)binaryFormatter.Deserialize(datastream);
             if (!Directory.Exists(SettingsLoader.PendingWorkDirectory)) Directory.CreateDirectory(SettingsLoader.PendingWorkDirectory);
-            activity.SaveToDisk(SettingsLoader.PendingWorkDirectory+"/"+activity.GetGUID());
+            activity.SaveToDisk(SettingsLoader.PendingWorkDirectory + "/" + activity.GetGUID());
             lock (_PendingWork)
             {
                 _PendingWork.Add(activity);
@@ -212,7 +218,7 @@ namespace Cranium.Lobe.Worker
             {
                 if (_PendingWork.Count > 0)
                 {
-                    Lib.Activity.Base work=_PendingWork [0];
+                    Lib.Activity.Base work = _PendingWork[0];
                     _PendingWork.RemoveAt(0);
                     return work;
                 }
@@ -230,7 +236,7 @@ namespace Cranium.Lobe.Worker
                 _CompletedWork.Add(work);
             }
             if (!Directory.Exists(SettingsLoader.CompletedWorkDirectory)) Directory.CreateDirectory(SettingsLoader.CompletedWorkDirectory);
-            work.SaveToDisk(SettingsLoader.CompletedWorkDirectory+"/" + work.GetGUID());
+            work.SaveToDisk(SettingsLoader.CompletedWorkDirectory + "/" + work.GetGUID());
         }
     }
 }

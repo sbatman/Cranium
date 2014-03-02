@@ -14,7 +14,7 @@ namespace Cranium.Lobe.Client
     {
         protected InsaneDev.Networking.Client.Base _ConnectionToManager = new InsaneDev.Networking.Client.Base();
 
-        public bool ConnectToWorker(string ipAddress, int port)
+        public bool ConnectToManager(string ipAddress, int port)
         {
             return _ConnectionToManager.Connect(ipAddress, port);
         }
@@ -26,7 +26,7 @@ namespace Cranium.Lobe.Client
             MemoryStream datastream = new MemoryStream();
             binaryFormatter.Serialize(datastream, activity);
             Packet p = new Packet(1000);
-            
+
             p.AddBytePacket(datastream.GetBuffer());
             _ConnectionToManager.SendPacket(p);
             Stopwatch sendTime = new Stopwatch();
@@ -46,8 +46,7 @@ namespace Cranium.Lobe.Client
                 }
                 Thread.Sleep(100);
             }
-            if (!recievedResponce) return false;
-            return true;
+            return recievedResponce;
         }
     }
 }

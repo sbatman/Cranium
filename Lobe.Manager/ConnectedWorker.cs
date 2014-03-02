@@ -12,7 +12,7 @@ namespace Cranium.Lobe.Manager
         private int _AdvertisedWorkerThreadCount;
 
         public ConnectedWorker(TcpClient incomingSocket)
-            : base(incomingSocket)
+        : base(incomingSocket)
         {
         }
 
@@ -24,8 +24,12 @@ namespace Cranium.Lobe.Manager
             {
                 switch (p.Type)
                 {
-                    case 201: HandelA201(p); break;
-                    case 300: HandelA300(p); break;
+                case 201:
+                    HandelA201(p);
+                    break;
+                case 300:
+                    HandelA300(p);
+                    break;
                 }
             }
         }
@@ -54,7 +58,7 @@ namespace Cranium.Lobe.Manager
 
         /// <summary>
         /// Handels a packet of type 300, This is a work request packet from the lobe worker, these will be recieved
-        /// regulary if the worker has no work at this stage. Having the workers poll the manager better fits the 
+        /// regulary if the worker has no work at this stage. Having the workers poll the manager better fits the
         /// parent child model and reliance pathways.
         /// </summary>
         /// <param name="p"></param>
@@ -74,7 +78,6 @@ namespace Cranium.Lobe.Manager
                 Packet responsePacket = new Packet(302);
                 responsePacket.AddBytePacket(datapackage.ToArray());
                 SendPacket(responsePacket);
-                datapackage.Dispose();
             }
         }
     }

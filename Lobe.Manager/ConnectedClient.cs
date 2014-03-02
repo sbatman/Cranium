@@ -10,7 +10,7 @@ namespace Cranium.Lobe.Manager
     class ConnectedClient : InsaneDev.Networking.Server.ClientConnection
     {
         public ConnectedClient(TcpClient incomingSocket)
-            : base(incomingSocket)
+        : base(incomingSocket)
         {
         }
 
@@ -23,14 +23,16 @@ namespace Cranium.Lobe.Manager
             {
                 switch (p.Type)
                 {
-                    case 1000:      HandelA1000(p);         break;
+                case 1000:
+                    HandelA1000(p);
+                    break;
                 }
             }
         }
 
         protected override void OnConnect()
         {
-            Console.WriteLine("New Worker Connected");
+            Console.WriteLine("New Client Connected");
             SendPacket(new Packet(200)); //Lets say hello
         }
 
@@ -51,7 +53,7 @@ namespace Cranium.Lobe.Manager
 
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             Cranium.Lib.Activity.Base Activity = (Cranium.Lib.Activity.Base)binaryFormatter.Deserialize(new MemoryStream(JobData));
-            
+
         }
     }
 }
