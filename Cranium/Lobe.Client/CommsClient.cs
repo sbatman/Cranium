@@ -19,9 +19,43 @@ namespace Cranium.Lobe.Client
             return _ConnectionToManager.Connect(ipAddress, port);
         }
 
-        public bool SendJob(Cranium.Lib.Activity.Base activity)
+        public Cranium.Lib.Activity.Base GetCompletedWork(Guid jobGuid)
         {
-            if (!_ConnectionToManager.IsConnected()) return false;
+            if (!_ConnectionToManager.IsConnected()) throw new Exception("Not connected to the manager");
+            Packet p = new Packet(1100);
+            p.AddBytePacket(jobGuid.ToByteArray());
+            _ConnectionToManager.SendPacket(p);
+            Stopwatch sendTime = new Stopwatch();
+            sendTime.Start();
+            bool recievedResponce = false;
+            while (sendTime.ElapsedMilliseconds < 5000 && !recievedResponce)
+            {
+                if (_ConnectionToManager.GetPacketsToProcessCount() > 0)
+                {
+                    foreach (Packet packet in _ConnectionToManager.GetPacketsToProcess())
+                    {
+                        if (packet.Type == 1101)
+                        {
+                            return null;
+                        }
+                        if (packet.Type == 1102)
+                        {
+                            object[] packetObjects = packet.GetObjects();
+                            byte[] JobData = (byte[])packetObjects[0];
+
+                            BinaryFormatter binaryFormatter = new BinaryFormatter();
+                            return (Cranium.Lib.Activity.Base)binaryFormatter.Deserialize(new MemoryStream(JobData));
+                        }
+                    }
+                }
+                Thread.Sleep(100);
+            }
+            return null;
+        }
+
+        public Guid SendJob(Cranium.Lib.Activity.Base activity)
+        {
+            if (!_ConnectionToManager.IsConnected()) throw new Exception("Not connected to the manager");
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             MemoryStream datastream = new MemoryStream();
             binaryFormatter.Serialize(datastream, activity);
@@ -40,13 +74,16 @@ namespace Cranium.Lobe.Client
                     {
                         if (packet.Type == 1001)
                         {
+                            Guid jobGuid = new Guid((byte[]) packet.GetObjects()[0]);
+                            Console.WriteLine("Work request sucess job registered as " + jobGuid);
                             recievedResponce = true;
+                            return jobGuid;
                         }
                     }
                 }
                 Thread.Sleep(100);
             }
-            return recievedResponce;
+            throw new Exception("Mananger unavailable or busy");
         }
     }
 }

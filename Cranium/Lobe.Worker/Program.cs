@@ -109,7 +109,15 @@ namespace Cranium.Lobe.Worker
                     {
                         if (_CompletedWork.Count > 0)
                         {
-                            //Send Work back To Manager
+                            Lib.Activity.Base job = _CompletedWork[0];
+                            _CompletedWork.RemoveAt(0);
+                            BinaryFormatter binaryFormatter = new BinaryFormatter();
+                            MemoryStream datapackage = new MemoryStream();
+                            binaryFormatter.Serialize(datapackage, job);
+
+                            Packet responsePacket = new Packet(400);
+                            responsePacket.AddBytePacket(datapackage.ToArray());
+                            _ConnectionToLobeManager.SendPacket(responsePacket);
                         }
                     }
                     lock (_PendingWork)
@@ -146,7 +154,7 @@ namespace Cranium.Lobe.Worker
                         _PacketsToBeProcessed.Clear();
                     }
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
             }
             Console.WriteLine("Lobe Worker Exiting");
         }
@@ -195,7 +203,7 @@ namespace Cranium.Lobe.Worker
         /// <param name="p"></param>
         private static void HandelA302Packet(Packet p)
         {
-
+            Console.WriteLine("Servers got work, recieved 1 job");
             object[] dataPackage = p.GetObjects();
             byte[] serialisedAcitvity = (byte[])dataPackage[0];
             MemoryStream datastream = new MemoryStream(serialisedAcitvity);

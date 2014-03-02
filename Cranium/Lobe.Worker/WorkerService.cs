@@ -17,7 +17,7 @@ namespace Cranium.Lobe.Worker
         public WorkerThread()
         {
             _Running = true;
-           _InternalThread = new Thread(LogicLoop); 
+            _InternalThread = new Thread(LogicLoop);
             _InternalThread.Start();
         }
 
@@ -32,9 +32,17 @@ namespace Cranium.Lobe.Worker
                 }
                 else
                 {
-                    //Do the work
+                    Console.WriteLine("Worker service starting job " + _CurrentWork.GetGUID());
+                    if (_CurrentWork is Lib.Activity.Training.Base)
+                    {
+                        Lib.Activity.Training.Base trainingWork = (Lib.Activity.Training.Base)_CurrentWork;
+                        trainingWork.StartSynchronous();
+                        Program.AddToCompletedWork(trainingWork);
+                    }
+                    Console.WriteLine("Worker service Completed job " + _CurrentWork.GetGUID());
+                    _CurrentWork = null;
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(1000);
             }
             Console.WriteLine("Worker Thread Exiting");
         }

@@ -19,13 +19,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Client", "Lobe.Client\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Worker", "Lobe.Worker\Lobe.Worker.csproj", "{F26E3FEE-F29B-4027-9187-A0983763A3D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Manager", "..\Lobe.Manager\Lobe.Manager.csproj", "{A1601401-0896-4016-B519-1A83FD31D337}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkBench", "..\WorkBench\WorkBench.csproj", "{3E4D0865-F3EE-48D2-AEC7-11DEF0E5A41D}"
 EndProject
 Project("{CC5FD16D-436D-48AD-A40C-5A424C6E3E79}") = "WindowsAzureDeployment", "..\WindowsAzureDeployment\WindowsAzureDeployment.ccproj", "{52494166-CC20-4E7A-A7A0-0DBF0E8E1E39}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Network Processor", "Network Processor\Network Processor.csproj", "{B5C04865-E9FF-4810-8331-C71060D9C10A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Manager", "Lobe.Manager\Lobe.Manager.csproj", "{A1601401-0896-4016-B519-1A83FD31D337}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -49,10 +49,6 @@ Global
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1601401-0896-4016-B519-1A83FD31D337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1601401-0896-4016-B519-1A83FD31D337}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1601401-0896-4016-B519-1A83FD31D337}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1601401-0896-4016-B519-1A83FD31D337}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3E4D0865-F3EE-48D2-AEC7-11DEF0E5A41D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3E4D0865-F3EE-48D2-AEC7-11DEF0E5A41D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E4D0865-F3EE-48D2-AEC7-11DEF0E5A41D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -65,6 +61,10 @@ Global
 		{B5C04865-E9FF-4810-8331-C71060D9C10A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B5C04865-E9FF-4810-8331-C71060D9C10A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B5C04865-E9FF-4810-8331-C71060D9C10A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A1601401-0896-4016-B519-1A83FD31D337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A1601401-0896-4016-B519-1A83FD31D337}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A1601401-0896-4016-B519-1A83FD31D337}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A1601401-0896-4016-B519-1A83FD31D337}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

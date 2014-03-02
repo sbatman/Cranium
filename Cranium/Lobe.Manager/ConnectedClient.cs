@@ -26,6 +26,9 @@ namespace Cranium.Lobe.Manager
                 case 1000:
                     HandelA1000(p);
                     break;
+                case 1100:
+                    HandelA1100(p);
+                    break;
                 }
             }
         }
@@ -53,7 +56,32 @@ namespace Cranium.Lobe.Manager
 
             BinaryFormatter binaryFormatter = new BinaryFormatter();
             Cranium.Lib.Activity.Base Activity = (Cranium.Lib.Activity.Base)binaryFormatter.Deserialize(new MemoryStream(JobData));
+            Activity.SetGUID(JobGUID);
 
+            Packet returnPacket = new Packet(1001);
+            returnPacket.AddBytePacket(JobGUID.ToByteArray());
+            SendPacket(returnPacket);
+            Program.AddJob(Activity);
+        }
+
+        protected void HandelA1100(Packet p)
+        {
+            Object[] dataObjects = p.GetObjects();
+            Guid jobLookupID = new Guid((byte[]) dataObjects[0]);
+            Cranium.Lib.Activity.Base activity = Program.GetCompletedJobByGUID(jobLookupID);
+            if (activity == null)
+            {
+                SendPacket(new Packet(1101));
+            }
+            else
+            {
+                Packet returnPacket = new Packet(1102);
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                MemoryStream datapackage = new MemoryStream();
+                binaryFormatter.Serialize(datapackage, activity);
+                returnPacket.AddBytePacket(datapackage.ToArray());
+                SendPacket(returnPacket);
+            }
         }
     }
 }

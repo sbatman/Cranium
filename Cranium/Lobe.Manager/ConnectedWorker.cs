@@ -30,6 +30,9 @@ namespace Cranium.Lobe.Manager
                 case 300:
                     HandelA300(p);
                     break;
+                case 400:
+                    HandelA400(p);
+                    break;
                 }
             }
         }
@@ -42,7 +45,7 @@ namespace Cranium.Lobe.Manager
 
         protected override void OnDisconnect()
         {
-
+            Console.WriteLine("Worker Disconnected");
         }
 
         /// <summary>
@@ -79,6 +82,16 @@ namespace Cranium.Lobe.Manager
                 responsePacket.AddBytePacket(datapackage.ToArray());
                 SendPacket(responsePacket);
             }
+        }
+
+        protected void HandelA400(Packet p)
+        {
+            object[] packetObjects = p.GetObjects();
+            byte[] JobData = (byte[])packetObjects[0];
+
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            Cranium.Lib.Activity.Base Activity = (Cranium.Lib.Activity.Base)binaryFormatter.Deserialize(new MemoryStream(JobData));
+            Program.RegisterCompletedWork(Activity);
         }
     }
 }
