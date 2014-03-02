@@ -87,7 +87,7 @@ namespace Cranium.Lobe.Worker
 
             Console.WriteLine("Connecting To Manager");
             ;
-            if (!_ConnectionToLobeManager.Connect(SettingsLoader.CommsLocalIP, SettingsLoader.CommsLocalPort))
+            if (!_ConnectionToLobeManager.Connect(SettingsLoader.CommsManagerIP, SettingsLoader.CommsManagerPort))
             {
                 Console.WriteLine("Unable to communicate with specified lobe manager, aborting!");
             }
@@ -98,7 +98,7 @@ namespace Cranium.Lobe.Worker
                 if (!_ConnectionToLobeManager.IsConnected())
                 {
                     Console.WriteLine("Unable to communicate with specified lobe manager, Attempting to reconnect");
-                    if (_ConnectionToLobeManager.Connect(SettingsLoader.CommsLocalIP, SettingsLoader.CommsLocalPort))
+                    if (_ConnectionToLobeManager.Connect(SettingsLoader.CommsManagerIP, SettingsLoader.CommsManagerPort))
                     {
                         Console.WriteLine("Connection Re-established");
                     }

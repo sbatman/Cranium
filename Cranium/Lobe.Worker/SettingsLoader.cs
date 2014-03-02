@@ -8,8 +8,8 @@ namespace Cranium.Lobe.Worker
     static class SettingsLoader
     {
         public static int WorkerThreadCount = -1;
-        public static string CommsLocalIP;
-        public static int CommsLocalPort;
+        public static string CommsManagerIP;
+        public static int CommsManagerPort;
         public static string CompletedWorkDirectory;
         public static string PendingWorkDirectory;
         /// <summary>
@@ -42,21 +42,21 @@ namespace Cranium.Lobe.Worker
             }
             else throw (new Exception("No WorkerThreadCount specified"));
 
-            if (dictionaryOfSettings.ContainsKey("LocalIP"))
+            if (dictionaryOfSettings.ContainsKey("ManagerIP"))
             {
-                if (dictionaryOfSettings["LocalIP"].Length ==0 ) throw (new Exception("LocalIP not correctly specified"));
-                CommsLocalIP = dictionaryOfSettings["LocalIP"];
+                if (dictionaryOfSettings["ManagerIP"].Length == 0) throw (new Exception("ManagerIP not correctly specified"));
+                CommsManagerIP = dictionaryOfSettings["ManagerIP"];
             }
-            else throw (new Exception("No LocalIP specified"));
+            else throw (new Exception("No ManagerIP specified"));
 
-            if (dictionaryOfSettings.ContainsKey("Port"))
+            if (dictionaryOfSettings.ContainsKey("ManagerPort"))
             {
                 int port;
-                if (!int.TryParse(dictionaryOfSettings["Port"], out port)) throw (new Exception("Error parsing Port"));
-                if (port < 1000 || port > 36000) throw (new Exception("Invalid Port specified, must be within 1000-36000"));
-                CommsLocalPort = port;
+                if (!int.TryParse(dictionaryOfSettings["ManagerPort"], out port)) throw (new Exception("Error parsing ManagerPort"));
+                if (port < 1000 || port > 36000) throw (new Exception("Invalid ManagerPort specified, must be within 1000-36000"));
+                CommsManagerPort = port;
             }
-            else throw (new Exception("No Port specified"));
+            else throw (new Exception("No ManagerPort specified"));
 
             if (dictionaryOfSettings.ContainsKey("CompletedWorkDirectory"))
             {
