@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.ActivationFunction
+namespace Cranium.Lib.Structure.ActivationFunction
 {
     /// <summary>
     ///     A base class for activation functions, Exstend this when implementing new activation functions
@@ -29,7 +29,7 @@ namespace Cranium.Structure.ActivationFunction
     public abstract class Base : IDisposable, ISerializable
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Base" /> class.
+        ///     Initializes a new instance of the <see cref="Base" /> class.
         /// </summary>
         protected Base()
         {

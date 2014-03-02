@@ -16,13 +16,14 @@
 #region Usings
 
 using System;
-using Cranium.LibTest.Tests.Linear;
+using Cranium.Lib.Test.Tests.Linear;
+using Cranium.Lib.Test.Tests.Recursive;
+using Cranium.Lib.Test.Tests.Reservoir;
 using Cranium.LibTest.Tests.Recursive;
-using Cranium.LibTest.Tests.Reservoir;
 
 #endregion
 
-namespace Cranium.LibTest
+namespace Cranium.Lib.Test
 {
     internal class MainClass
     {

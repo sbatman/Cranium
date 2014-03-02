@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -19,13 +19,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Cranium.Structure.Node;
-using RecurrentContext = Cranium.Structure.Layer.RecurrentContext;
+using Cranium.Lib.Structure.Node;
+using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Activity.Training
+namespace Cranium.Lib.Activity.Training
 {
     /// <summary>
     /// This training activity presents the given data as a series of windows, this type of of training activity is best suited to networks
@@ -33,7 +33,7 @@ namespace Cranium.Activity.Training
     /// presented window to the desired prediction
     /// </summary>
     [Serializable]
-    public class SlidingWindow : Base, ISerializable
+    public class SlidingWindow : Base
     {
         /// <summary>
         /// How far beyond the last presented value are we attempting to predict
@@ -91,7 +91,7 @@ namespace Cranium.Activity.Training
         }
 
         public SlidingWindow(SerializationInfo info, StreamingContext context)
-            : base(info, context)
+        : base(info, context)
         {
             _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
             _InputNodes = (List<Structure.Node.Base>)info.GetValue("_InputNodes", typeof(List<Structure.Node.Base>));
@@ -238,6 +238,7 @@ namespace Cranium.Activity.Training
 
             while (sequencyList.Count > 0)
             {
+
                 //This needs to be booled so it can be turned off
                 int s = sequencyList [_RND.Next(0, sequencyList.Count)];
                 sequencyList.Remove(s);
@@ -258,15 +259,15 @@ namespace Cranium.Activity.Training
 
                 _TargetNetwork.ReversePass();
 
-                //Calculate the current error				
+                //Calculate the current error
                 Double passError = _OutputNodes.OfType<Output>().Sum(output => output.GetError());
                 passError /= _OutputNodes.Count;
                 error += passError*passError;
             }
             _LastPassAverageError = error/_SequenceCount;
-            Console.WriteLine(_LastPassAverageError);
-            _LogStream.WriteLine(_LastPassAverageError);
-            _LogStream.Flush();
+            //  Console.WriteLine(_LastPassAverageError);
+            if (_LogStream != null) _LogStream.WriteLine(_LastPassAverageError);
+            if (_LogStream != null) _LogStream.Flush();
             return true;
         }
 
@@ -275,9 +276,17 @@ namespace Cranium.Activity.Training
         /// </summary>
         protected override void Starting()
         {
+            //todo: some real logging would be nice
             PrepareData();
             _LastPassAverageError = 0;
-            _LogStream = File.CreateText("log.txt");
+            try
+            {
+                if (_LogStream == null) _LogStream = File.CreateText("log.txt");
+            }
+            catch (Exception e)
+            {
+
+            }
         }
 
         /// <summary>
@@ -285,7 +294,7 @@ namespace Cranium.Activity.Training
         /// </summary>
         protected override void Stopping()
         {
-            _LogStream.Close();
+            if(_LogStream!=null)_LogStream.Close();
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)

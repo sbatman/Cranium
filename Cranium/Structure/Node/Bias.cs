@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.Node
+namespace Cranium.Lib.Structure.Node
 {
     /// <summary>
     ///     A Bias node retains a static value at all times and is useful in some neural network structures.
@@ -31,7 +31,7 @@ namespace Cranium.Structure.Node
         protected double _BiasValue = 1;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Node.Bias" /> class.
+        ///     Initializes a new instance of the <see cref="Bias" /> class.
         /// </summary>
         /// <param name='parentLayer'>
         ///     Parent layer.
@@ -45,7 +45,7 @@ namespace Cranium.Structure.Node
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.Node.Bias" /> class. Used by the Serializer.
+        ///     Initializes a new instance of the <see cref="Bias" /> class. Used by the Serializer.
         /// </summary>
         /// <param name='info'>
         ///     Info.

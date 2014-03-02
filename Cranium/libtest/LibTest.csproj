@@ -7,11 +7,11 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{509EEFCA-0006-4685-B217-A255BA989BD5}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>Cranium.LibTest</RootNamespace>
-    <AssemblyName>LibTest</AssemblyName>
+    <RootNamespace>Cranium.Lib.Test</RootNamespace>
+    <AssemblyName>Cranium.Lib.Test</AssemblyName>
     <Description>A library of test for the Crainium Library</Description>
     <ReleaseVersion>0.3</ReleaseVersion>
-    <StartupObject>Cranium.LibTest.MainClass</StartupObject>
+    <StartupObject>Cranium.Lib.Test.MainClass</StartupObject>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -37,7 +37,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
-    <DocumentationFile>bin\Debug\LibTest.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Cranium.Lib.Test.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -66,6 +66,10 @@
     <ProjectReference Include="..\Cranium.csproj">
       <Project>{9553B26D-5D2D-4013-82E1-4D7A24D526D8}</Project>
       <Name>Cranium</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Lobe.Client\Lobe.Client.csproj">
+      <Project>{db8195a8-0085-4866-be7a-065ced69ce4c}</Project>
+      <Name>Lobe.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

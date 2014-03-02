@@ -15,18 +15,16 @@
 
 #region Usings
 
-using System.Collections.Generic;
-using Cranium.Structure;
-using RecurrentContext = Cranium.Structure.Layer.RecurrentContext;
+using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 using System.Runtime.Serialization;
 using System;
 
 #endregion
 
-namespace Cranium.Activity.Testing
+namespace Cranium.Lib.Activity.Testing
 {
     [Serializable]
-    public class SlidingWindow : Base, ISerializable
+    public class SlidingWindow : Base
     {
 
         /// <summary>
@@ -39,16 +37,16 @@ namespace Cranium.Activity.Testing
             public double[][] OutputErrors;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class.
+            /// Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class.
             /// </summary>
             public SlidingWindowTestResults()
             {
             }
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Cranium.Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class, used by the serializer.
+            /// Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class, used by the serializer.
             /// </summary>
-            public SlidingWindowTestResults(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+            public SlidingWindowTestResults(SerializationInfo info, StreamingContext context)
                 : base(info, context)
             {
                 ActualOutputs = (double[][])info.GetValue("ActualOutputs", ActualOutputs.GetType());
@@ -56,7 +54,7 @@ namespace Cranium.Activity.Testing
                 OutputErrors = (double[][])info.GetValue("ActualOutputs", OutputErrors.GetType());
             }
 
-            public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+            public override void GetObjectData(SerializationInfo info, StreamingContext context)
             {
                 base.GetObjectData(info, context);
                 info.AddValue("ActualOutputs", ActualOutputs, ActualOutputs.GetType());
@@ -169,7 +167,6 @@ namespace Cranium.Activity.Testing
         /// <summary>
         /// Tests the provided network
         /// </summary>
-        /// <param name="network">The network that requires testing</param>
         /// <returns>Returns acopy of the test results class (or derived class depending on class functionality)</returns>
         public override TestResults TestNetwork()
         {
@@ -196,7 +193,7 @@ namespace Cranium.Activity.Testing
                 }
             }
             //All the sequewnces have been run through and the outputs and their erros collected
-            SlidingWindowTestResults result = new SlidingWindowTestResults()
+            SlidingWindowTestResults result = new SlidingWindowTestResults
                 {
                     ExpectedOutputs = _ExpectedOutputs,
                     ActualOutputs = _ActualOutputs,

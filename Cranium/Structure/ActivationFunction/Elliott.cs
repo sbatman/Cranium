@@ -20,7 +20,7 @@ using System.Runtime.Serialization;
 
 #endregion
 
-namespace Cranium.Structure.ActivationFunction
+namespace Cranium.Lib.Structure.ActivationFunction
 {
     /// <summary>
     ///     The Elliott activations functions acts as a computationaly cheaper version of tanH although with known problems with reaching the lowest
@@ -33,14 +33,14 @@ namespace Cranium.Structure.ActivationFunction
         private double _Scale = 1;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Elliott" /> class.
+        ///     Initializes a new instance of the <see cref="Elliott" /> class.
         /// </summary>
         public Elliott()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Cranium.Structure.ActivationFunction.Elliott" /> class. Used by the serializer.
+        ///     Initializes a new instance of the <see cref="Elliott" /> class. Used by the serializer.
         /// </summary>
         /// <param name='info'>
         ///     Info.
