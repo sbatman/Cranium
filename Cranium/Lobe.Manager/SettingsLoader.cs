@@ -9,9 +9,10 @@ namespace Cranium.Lobe.Manager
     {
         public static int WorkerThreadCount = -1;
         public static string CommsClientLocalIP = "";
-        public static int CommsClientPort = 0;
+        public static int CommsClientPort;
         public static string CommsWorkerLocalIP = "";
-        public static int CommsWorkerPort = 0;
+        public static int CommsWorkerPort;
+        public static TimeSpan WorkLostAfterTime = new TimeSpan(0,60,0);
 
         /// <summary>
         ///     Loads in the settings file for the lobe Manager, this will build a dictionary of variables to be used.
@@ -27,7 +28,7 @@ namespace Cranium.Lobe.Manager
                 var fileContents = new List<string>();
                 while (!settingsFile.EndOfStream) fileContents.Add(settingsFile.ReadLine());
                 foreach (var parts in
-                    fileContents.Where(line => !line.StartsWith("#")).Select(line => line.Split("=".ToCharArray())).Where(parts => parts.Length > 1)) dictionaryOfSettings.Add(parts[0], parts[1]);
+                         fileContents.Where(line => !line.StartsWith("#")).Select(line => line.Split("=".ToCharArray())).Where(parts => parts.Length > 1)) dictionaryOfSettings.Add(parts[0], parts[1]);
             }
 
             if (dictionaryOfSettings.Count == 0) throw (new Exception("No settings present in file"));
@@ -36,6 +37,14 @@ namespace Cranium.Lobe.Manager
             {
                 if (dictionaryOfSettings["ClientIP"].Length == 0) throw (new Exception("ClientIP not correctly specified"));
                 CommsClientLocalIP = dictionaryOfSettings["ClientIP"];
+            }
+
+            if (dictionaryOfSettings.ContainsKey("JobLossTimeMin"))
+            {
+                int time = 0;
+                if (!int.TryParse(dictionaryOfSettings["JobLossTimeMin"], out time)) throw (new Exception("Error parsing JobLossTimeMin"));
+                if (time < 1 || time > 1000) throw (new Exception("Invalid JobLossTimeMin specified, must be within 1 - 1000"));
+                WorkLostAfterTime = new TimeSpan(0,time,0);
             }
 
             if (dictionaryOfSettings.ContainsKey("ClientPort"))

@@ -42,7 +42,10 @@ namespace Cranium.Lobe.Manager
             SendPacket(new Packet(200)); //Lets say hello
         }
 
-        protected override void OnDisconnect() { Console.WriteLine("Worker Disconnected"); }
+        protected override void OnDisconnect()
+        {
+            Console.WriteLine("Worker Disconnected");
+        }
 
         /// <summary>
         ///     Handels a packet of type 201, This is a response to the hello packet send by the lobe manager (200)
@@ -72,7 +75,7 @@ namespace Cranium.Lobe.Manager
                 binaryFormatter.Serialize(datapackage, work);
 
                 var responsePacket = new Packet(302);
-                responsePacket.AddBytePacket(datapackage.ToArray());
+                responsePacket.AddBytePacketCompressed(datapackage.ToArray());
                 SendPacket(responsePacket);
             }
         }

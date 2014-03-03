@@ -16,9 +16,10 @@ namespace Cranium.Lobe.Worker
         {
             if (parentWorker == null) throw new ArgumentNullException("parentWorker");
             _Running = true;
+            _ParentWorker = parentWorker;
             _InternalThread = new Thread(LogicLoop);
             _InternalThread.Start();
-            _ParentWorker = parentWorker;
+
         }
 
         protected void LogicLoop()

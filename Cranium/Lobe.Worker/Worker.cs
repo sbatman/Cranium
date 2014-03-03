@@ -121,8 +121,13 @@ namespace Cranium.Lobe.Worker
                                 binaryFormatter.Serialize(datapackage, job);
 
                                 var responsePacket = new Packet(400);
-                                responsePacket.AddBytePacket(datapackage.ToArray());
+                                responsePacket.AddBytePacketCompressed(datapackage.ToArray());
                                 _ConnectionToLobeManager.SendPacket(responsePacket);
+
+                                if (File.Exists(_Settings.CompletedWorkDirectory + "/" + job.GetGUID()))
+                                {
+                                    File.Delete(_Settings.CompletedWorkDirectory + "/" + job.GetGUID());
+                                }
                             }
                         }
                         lock (_PendingWork)
@@ -157,7 +162,7 @@ namespace Cranium.Lobe.Worker
                         }
                     }
                 }
-                Thread.Sleep(1000);
+                Thread.Sleep(100);
             }
             lock (_ActiveWorkerServices)
             {

@@ -99,13 +99,16 @@ namespace Cranium.Lib.Activity.Training
         protected Int32 _WindowWidth;
 
 
-        public SlidingWindow() { _RND = new Random(); }
+        public SlidingWindow()
+        {
+            _RND = new Random();
+        }
 
         public SlidingWindow(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
             _InputNodes = (List<Structure.Node.Base>) info.GetValue("_InputNodes", typeof (List<Structure.Node.Base>));
-            _LastPassAverageError = info.GetInt32("_LastPassAverageError");
+            _LastPassAverageError = info.GetDouble("_LastPassAverageError");
             _OutputNodes = (List<Structure.Node.Base>) info.GetValue("_OutputNodes", typeof (List<Structure.Node.Base>));
             _PortionOfDatasetReserved = info.GetInt32("_PortionOfDatasetReserved");
             _RND = (Random) info.GetValue("_RND", typeof (Random));
@@ -119,7 +122,10 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='windowWidth'>
         ///     Window width.
         /// </param>
-        public virtual void SetWindowWidth(Int32 windowWidth) { _WindowWidth = windowWidth; }
+        public virtual void SetWindowWidth(Int32 windowWidth)
+        {
+            _WindowWidth = windowWidth;
+        }
 
         /// <summary>
         ///     Sets the number of intervals ahead to predict
@@ -127,7 +133,10 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='distance'>
         ///     Distance.
         /// </param>
-        public virtual void SetDistanceToForcastHorrison(Int32 distance) { _DistanceToForcastHorrison = distance; }
+        public virtual void SetDistanceToForcastHorrison(Int32 distance)
+        {
+            _DistanceToForcastHorrison = distance;
+        }
 
         /// <summary>
         ///     Sets the length of the dataset that is reserved from training.
@@ -135,7 +144,10 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='reservedPortion'>
         ///     Reserved portion.
         /// </param>
-        public virtual void SetDatasetReservedLength(Int32 reservedPortion) { _PortionOfDatasetReserved = reservedPortion; }
+        public virtual void SetDatasetReservedLength(Int32 reservedPortion)
+        {
+            _PortionOfDatasetReserved = reservedPortion;
+        }
 
         /// <summary>
         ///     Sets the input nodes.
@@ -143,7 +155,10 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='nodes'>
         ///     Nodes.
         /// </param>
-        public virtual void SetInputNodes(List<Structure.Node.Base> nodes) { _InputNodes = nodes; }
+        public virtual void SetInputNodes(List<Structure.Node.Base> nodes)
+        {
+            _InputNodes = nodes;
+        }
 
         /// <summary>
         ///     Sets the output nodes.
@@ -151,7 +166,10 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='nodes'>
         ///     Nodes.
         /// </param>
-        public virtual void SetOutputNodes(List<Structure.Node.Base> nodes) { _OutputNodes = nodes; }
+        public virtual void SetOutputNodes(List<Structure.Node.Base> nodes)
+        {
+            _OutputNodes = nodes;
+        }
 
         /// <summary>
         ///     Sets the recurrent conext layers.
@@ -159,7 +177,10 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='layers'>
         ///     Layers.
         /// </param>
-        public virtual void SetRecurrentConextLayers(List<Structure.Layer.Base> layers) { _Recurrentlayers = layers; }
+        public virtual void SetRecurrentConextLayers(List<Structure.Layer.Base> layers)
+        {
+            _Recurrentlayers = layers;
+        }
 
         /// <summary>
         ///     Sets the learning rate.
@@ -282,7 +303,10 @@ namespace Cranium.Lib.Activity.Training
         /// <summary>
         ///     Called if this instance is stopped/finished
         /// </summary>
-        protected override void Stopping() { if (_LogStream != null) _LogStream.Close(); }
+        protected override void Stopping()
+        {
+            if (_LogStream != null) _LogStream.Close();
+        }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

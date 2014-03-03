@@ -11,10 +11,13 @@ namespace Cranium.Lobe.Client
 {
     public class CommsClient
     {
-        protected int _CommsTimeout = 5000;
+        protected int _CommsTimeout = 50000;
         protected Base _ConnectionToManager = new Base();
 
-        public bool ConnectToManager(string ipAddress, int port) { return _ConnectionToManager.Connect(ipAddress, port); }
+        public bool ConnectToManager(string ipAddress, int port)
+        {
+            return _ConnectionToManager.Connect(ipAddress, port);
+        }
 
         public void DisconnectFromManager()
         {
@@ -26,7 +29,7 @@ namespace Cranium.Lobe.Client
         {
             if (_ConnectionToManager == null || !_ConnectionToManager.IsConnected()) throw new Exception("Not connected to the manager");
             var p = new Packet(1100);
-            p.AddBytePacket(jobGuid.ToByteArray());
+            p.AddBytePacketCompressed(jobGuid.ToByteArray());
             _ConnectionToManager.SendPacket(p);
             var sendTime = new Stopwatch();
             sendTime.Start();
@@ -60,7 +63,7 @@ namespace Cranium.Lobe.Client
             binaryFormatter.Serialize(datastream, activity);
             var p = new Packet(1000);
 
-            p.AddBytePacket(datastream.GetBuffer());
+            p.AddBytePacketCompressed(datastream.GetBuffer());
             _ConnectionToManager.SendPacket(p);
             var sendTime = new Stopwatch();
             sendTime.Start();
@@ -74,7 +77,7 @@ namespace Cranium.Lobe.Client
                         return jobGuid;
                     }
                 }
-                Thread.Sleep(100);
+                Thread.Sleep(1);
             }
             throw new Exception("Mananger unavailable or busy");
         }

@@ -121,7 +121,10 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The value.
         /// </returns>
-        public virtual Double GetValue() { return _Value; }
+        public virtual Double GetValue()
+        {
+            return _Value;
+        }
 
         /// <summary>
         ///     Bakes down the forward and reverse list of weights for optimisation sake. This is performed autmaticaly before any
@@ -161,7 +164,10 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='learningRate'>
         ///     Learning rate.
         /// </param>
-        public virtual void AdjustWeights(Double learningRate) { foreach (Weight.Base w in _ForwardWeights) w.AddWeightChange(_Value*w.NodeB._Error*learningRate); }
+        public virtual void AdjustWeights(Double learningRate)
+        {
+            foreach (Weight.Base w in _ForwardWeights) w.AddWeightChange(_Value*w.NodeB._Error*learningRate);
+        }
 
         /// <summary>
         ///     Triggers the addition of the momentum and the application of all pending weights
@@ -241,7 +247,10 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='newValue'>
         ///     New value.
         /// </param>
-        public virtual void SetValue(Double newValue) { _Value = newValue; }
+        public virtual void SetValue(Double newValue)
+        {
+            _Value = newValue;
+        }
 
         /// <summary>
         ///     Destroies all the foward and reverse weights connected to this node.
@@ -278,7 +287,10 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The I.
         /// </returns>
-        public virtual int GetID() { return _NodeID; }
+        public virtual int GetID()
+        {
+            return _NodeID;
+        }
 
         /// <summary>
         ///     Sets the current nodes ID
@@ -286,7 +298,10 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='newID'>
         ///     New I.
         /// </param>
-        public virtual void SetNodeID(int newID) { _NodeID = newID; }
+        public virtual void SetNodeID(int newID)
+        {
+            _NodeID = newID;
+        }
 
         #region IDisposable implementation
 
