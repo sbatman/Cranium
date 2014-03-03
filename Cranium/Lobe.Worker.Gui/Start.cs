@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Cranium.Lobe.Worker;
+using Cranium.Lobe.Worker.Gui.Properties;
 
-namespace Lobe.Worker.Gui
+namespace Cranium.Lobe.Worker.Gui
 {
     public partial class Start : Form
     {
-        private Cranium.Lobe.Worker.Worker _Worker;
+        private Worker _Worker;
         public Start()
         {
             InitializeComponent();
@@ -31,7 +31,7 @@ namespace Lobe.Worker.Gui
                 workerSettings.WorkerThreadCount = (int) ThreadCount.Value;
                 workerSettings.PendingWorkDirectory = "PendingWork";
                 workerSettings.CompletedWorkDirectory = "CompletedWork";
-                _Worker = new Cranium.Lobe.Worker.Worker();
+                _Worker = new Worker();
                 _Worker.HandelMessage += PushMessage;
                 new Task(() => _Worker.Start(workerSettings)).Start();
                 StartButton.Text = "Stop";

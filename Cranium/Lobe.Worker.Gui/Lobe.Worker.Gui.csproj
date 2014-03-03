@@ -7,8 +7,8 @@
     <ProjectGuid>{758EA3B2-931C-4AA6-9B23-646AAF6629DC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Lobe.Worker.Gui</RootNamespace>
-    <AssemblyName>Lobe.Worker.Gui</AssemblyName>
+    <RootNamespace>Cranium.Lobe.Worker.Gui</RootNamespace>
+    <AssemblyName>Cranium Lobe Worker GUI</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>true</IsWebBootstrapper>
@@ -100,6 +100,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -126,7 +127,6 @@
     <ProjectReference Include="..\Lobe.Worker\Lobe.Worker.csproj">
       <Project>{f26e3fee-f29b-4027-9187-a0983763a3d8}</Project>
       <Name>Lobe.Worker</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

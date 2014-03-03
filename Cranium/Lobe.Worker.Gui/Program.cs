@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Lobe.Worker.Gui
+namespace Cranium.Lobe.Worker.Gui
 {
     static class Program
     {

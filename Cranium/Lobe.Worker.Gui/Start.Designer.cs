@@ -1,4 +1,4 @@
-﻿namespace Lobe.Worker.Gui
+﻿namespace Cranium.Lobe.Worker.Gui
 {
     partial class Start
     {
