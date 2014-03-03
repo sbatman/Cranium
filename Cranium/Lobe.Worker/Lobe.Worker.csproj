@@ -33,9 +33,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="InsaneDev.Networking">
-      <HintPath>..\..\Libs\InsaneDev.Networking.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -46,8 +43,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
+    <Compile Include="Worker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SettingsLoader.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="WorkerService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -57,6 +55,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libs\ID-Networking\InsaneDev.Networking\InsaneDev.Networking.csproj">
+      <Project>{e627bd2d-226a-4061-bd4e-7e86cf56936d}</Project>
+      <Name>InsaneDev.Networking</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cranium.csproj">
       <Project>{9553b26d-5d2d-4013-82e1-4d7a24d526d8}</Project>
       <Name>Cranium</Name>

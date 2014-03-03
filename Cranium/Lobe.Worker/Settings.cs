@@ -5,19 +5,20 @@ using System.Linq;
 
 namespace Cranium.Lobe.Worker
 {
-    internal static class SettingsLoader
+    public class Settings
     {
-        public static int WorkerThreadCount = -1;
-        public static string CommsManagerIP;
-        public static int CommsManagerPort;
-        public static string CompletedWorkDirectory;
-        public static string PendingWorkDirectory;
+        public int WorkerThreadCount = -1;
+        public int WorkBufferCount = -1;
+        public string CommsManagerIP;
+        public int CommsManagerPort;
+        public string CompletedWorkDirectory;
+        public string PendingWorkDirectory;
 
         /// <summary>
         ///     Loads in the settings file for the worker agent, this will build a dictionary of variables to be used.
         /// </summary>
         /// <param name="fileName"></param>
-        public static bool LoadSettings(string fileName)
+        public bool LoadSettings(string fileName)
         {
             Console.WriteLine("Loading Settings from file " + fileName);
             var dictionaryOfSettings = new Dictionary<string, string>();
@@ -27,10 +28,12 @@ namespace Cranium.Lobe.Worker
                 var fileContents = new List<string>();
                 while (!settingsFile.EndOfStream) fileContents.Add(settingsFile.ReadLine());
                 foreach (var parts in
-                    fileContents.Where(line => !line.StartsWith("#")).Select(line => line.Split("=".ToCharArray())).Where(parts => parts.Length > 1)) dictionaryOfSettings.Add(parts[0], parts[1]);
+                         fileContents.Where(line => !line.StartsWith("#")).Select(line => line.Split("=".ToCharArray())).Where(parts => parts.Length > 1)) dictionaryOfSettings.Add(parts[0], parts[1]);
             }
 
             if (dictionaryOfSettings.Count == 0) throw (new Exception("No settings present in file"));
+
+
 
             if (dictionaryOfSettings.ContainsKey("WorkerThreadCount"))
             {
@@ -40,6 +43,15 @@ namespace Cranium.Lobe.Worker
                 WorkerThreadCount = count;
             }
             else throw (new Exception("No WorkerThreadCount specified"));
+
+            if (dictionaryOfSettings.ContainsKey("WorkBufferCount"))
+            {
+                int count;
+                if (!int.TryParse(dictionaryOfSettings["WorkBufferCount"], out count)) throw (new Exception("Error parsing WorkBufferCount"));
+                if (count < 1 || count > 255) throw (new Exception("Invalid WorkBufferCount specified"));
+                WorkBufferCount = count;
+            }
+            else throw (new Exception("No WorkBufferCount specified"));
 
             if (dictionaryOfSettings.ContainsKey("ManagerIP"))
             {
