@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Cranium.Lobe.Worker;
@@ -21,23 +15,34 @@ namespace Lobe.Worker.Gui
 
         private void StartButton_Click(object sender, EventArgs e)
         {
-            StartButton.Enabled = false;
-            Settings WorkerSettings = new Settings();
-            WorkerSettings.CommsManagerIP = ManangerIP.Text;
-            int port;
-            if (!int.TryParse(ManagerPort.Text, out port))
+            if (_Worker == null)
             {
-                MessageBox.Show("Manager Port Invalid");
-                return;
+                StartButton.Enabled = false;
+                Settings workerSettings = new Settings();
+                workerSettings.CommsManagerIP = ManangerIP.Text;
+                int port;
+                if (!int.TryParse(ManagerPort.Text, out port))
+                {
+                    MessageBox.Show("Manager Port Invalid");
+                    return;
+                }
+                workerSettings.CommsManagerPort = port;
+                workerSettings.WorkBufferCount = 1;
+                workerSettings.WorkerThreadCount = (int) ThreadCount.Value;
+                workerSettings.PendingWorkDirectory = "PendingWork";
+                workerSettings.CompletedWorkDirectory = "CompletedWork";
+                _Worker = new Cranium.Lobe.Worker.Worker();
+                _Worker.HandelMessage += PushMessage;
+                new Task(() => _Worker.Start(workerSettings)).Start();
+                StartButton.Text = "Stop";
+                StartButton.Enabled = true;
+                WindowState = FormWindowState.Minimized;
             }
-            WorkerSettings.CommsManagerPort = port;
-            WorkerSettings.WorkBufferCount = 1;
-            WorkerSettings.WorkerThreadCount = (int)ThreadCount.Value;
-            WorkerSettings.PendingWorkDirectory = "PendingWork";
-            WorkerSettings.CompletedWorkDirectory = "CompletedWork";
-            _Worker = new Cranium.Lobe.Worker.Worker();
-            _Worker.HandelMessage += PushMessage;
-            new Task(()=>_Worker.Start(WorkerSettings)).Start();
+            else
+            {
+                StartButton.Enabled = false;
+                Close();
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -57,15 +62,15 @@ namespace Lobe.Worker.Gui
 
         private void Start_Resize(object sender, EventArgs e)
         {
-            if (FormWindowState.Minimized == this.WindowState)
+            if (FormWindowState.Minimized == WindowState)
             {
                 notifyIcon1.Visible = true;
                 notifyIcon1.BalloonTipText = "I'm hiding down here if you need me";
                 notifyIcon1.ShowBalloonTip(400);
-                this.Hide();
+                Hide();
             }
 
-            else if (FormWindowState.Normal == this.WindowState)
+            else if (FormWindowState.Normal == WindowState)
             {
                 notifyIcon1.Visible = false;
             }
