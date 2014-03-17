@@ -11,12 +11,23 @@ namespace Cranium.Lobe.Manager
 {
     internal class ConnectedWorker : ClientConnection
     {
-        private int _AdvertisedWorkerThreadCount;
-
+        /// <summary>
+        /// How often a ping packet should be sent to ensure the worker is still there
+        /// </summary>
+        private readonly TimeSpan _PingInterval = new TimeSpan(0,0,0,5);
+        /// <summary>
+        /// The last time a ping packet was sent
+        /// </summary>
+        private DateTime _LastPing = DateTime.Now;
         public ConnectedWorker(TcpClient incomingSocket) : base(incomingSocket) { }
 
         protected override void ClientUpdateLogic()
         {
+            if (DateTime.Now - _LastPing > _PingInterval)
+            {
+                SendPacket(new Packet(9999));
+                _LastPing = DateTime.Now;
+            }
             if (GetOutStandingProcessingPacketsCount() == 0) return;
             List<Packet> packetstoProcess = GetOutStandingProcessingPackets();
             foreach (Packet p in packetstoProcess)
@@ -55,7 +66,6 @@ namespace Cranium.Lobe.Manager
         protected void HandelA201(Packet p)
         {
             object[] data = p.GetObjects();
-            _AdvertisedWorkerThreadCount = (int) data[0];
         }
 
         /// <summary>

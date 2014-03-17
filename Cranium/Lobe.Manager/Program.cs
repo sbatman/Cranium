@@ -13,9 +13,9 @@ namespace Cranium.Lobe.Manager
     {
         private static Base _CommsServerClient;
         private static Base _CommsServerWorker;
-        private static readonly List<Guid> PendingWork = new List<Guid>();
-        private static readonly List<Tuple<Lib.Activity.Base, DateTime>> WorkBeingProcessed = new List<Tuple<Lib.Activity.Base, DateTime>>();
-        private static readonly List<Guid> CompleteWork = new List<Guid>();
+        private static readonly List<Guid> _PendingWork = new List<Guid>();
+        private static readonly List<Tuple<Lib.Activity.Base, DateTime>> _WorkBeingProcessed = new List<Tuple<Lib.Activity.Base, DateTime>>();
+        private static readonly List<Guid> _CompleteWork = new List<Guid>();
         private static bool _Running;
 
         private static void Main()
@@ -34,18 +34,42 @@ namespace Cranium.Lobe.Manager
             _CommsServerWorker.Init(SettingsLoader.CommsWorkerLocalIP.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsWorkerPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsWorkerLocalIP), SettingsLoader.CommsWorkerPort), typeof(ConnectedWorker));
             Console.WriteLine("Comms Server for workers Online at " + SettingsLoader.CommsWorkerLocalIP + ":" + SettingsLoader.CommsWorkerPort);
 
+            Console.WriteLine("Loading Pending Work");
+            if (Directory.Exists("Pending"))
+            {
+                string[] files = Directory.GetFiles("Pending");
+                Console.WriteLine("Possible "+files.Length+" jobs found, loading ..");
+                foreach (string file in files)
+                {
+                    try
+                    {
+                        FileStream stream = File.OpenRead(file );
+                        var binaryFormatter = new BinaryFormatter();
+                        Lib.Activity.Base work = (Lib.Activity.Base) binaryFormatter.Deserialize(stream);
+                        stream.Close();
+                        _PendingWork.Add(work.GetGUID());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+
+            Console.WriteLine("Loading Pending Completed");
+
             _CommsServerClient.StartListening();
             _CommsServerWorker.StartListening();
 
             while (_Running)
             {
-                Console.Title = "Pending:" + PendingWork.Count + " Processing:" + WorkBeingProcessed.Count + " Complete:" + CompleteWork.Count;
-                lock (WorkBeingProcessed)
+                Console.Title = "Pending:" + _PendingWork.Count + " Processing:" + _WorkBeingProcessed.Count + " Complete:" + _CompleteWork.Count;
+                lock (_WorkBeingProcessed)
                 {
-                    List<Tuple<Lib.Activity.Base, DateTime>> lostwork = WorkBeingProcessed.Where(A => DateTime.Now - A.Item2 > SettingsLoader.WorkLostAfterTime).ToList();
+                    List<Tuple<Lib.Activity.Base, DateTime>> lostwork = _WorkBeingProcessed.Where(a => DateTime.Now - a.Item2 > SettingsLoader.WorkLostAfterTime).ToList();
                     foreach (Tuple<Lib.Activity.Base, DateTime> tuple in lostwork)
                     {
-                        WorkBeingProcessed.Remove(tuple);
+                        _WorkBeingProcessed.Remove(tuple);
                         AddJob(tuple.Item1);
                         Console.WriteLine("Job lost Reschedualing " + tuple.Item1.GetGUID());
                     }
@@ -57,9 +81,9 @@ namespace Cranium.Lobe.Manager
 
         public static void AddJob(Lib.Activity.Base work)
         {
-            lock (PendingWork)
+            lock (_PendingWork)
             {
-                PendingWork.Add(work.GetGUID());
+                _PendingWork.Add(work.GetGUID());
                 var binaryFormatter = new BinaryFormatter();
                 if (!Directory.Exists("Pending")) Directory.CreateDirectory("Pending");
                 FileStream stream = File.Create("Pending/" + work.GetGUID() + ".dat");
@@ -74,38 +98,35 @@ namespace Cranium.Lobe.Manager
         /// <returns>A piece of pending work or null</returns>
         public static Lib.Activity.Base GetPendingJob()
         {
-            lock (PendingWork)
+            lock (_PendingWork)
             {
-                if (PendingWork.Count > 0)
-                {
-                    if (!Directory.Exists("Pending")) Directory.CreateDirectory("Pending");
-                    FileStream stream = File.OpenRead("Pending/" + PendingWork[0] + ".dat");
-                    var binaryFormatter = new BinaryFormatter();
-                    Lib.Activity.Base work = (Lib.Activity.Base)binaryFormatter.Deserialize(stream);
-                    stream.Close();
-                    File.Delete("Pending/" + PendingWork[0] + ".dat");
-                    PendingWork.RemoveAt(0);
-                    lock (WorkBeingProcessed) WorkBeingProcessed.Add(new Tuple<Lib.Activity.Base, DateTime>(work, DateTime.Now));
-                    return work;
-                }
-                return null;
+                if (_PendingWork.Count <= 0) return null;
+                if (!Directory.Exists("Pending")) Directory.CreateDirectory("Pending");
+                FileStream stream = File.OpenRead("Pending/" + _PendingWork[0] + ".dat");
+                var binaryFormatter = new BinaryFormatter();
+                Lib.Activity.Base work = (Lib.Activity.Base)binaryFormatter.Deserialize(stream);
+                stream.Close();
+                File.Delete("Pending/" + _PendingWork[0] + ".dat");
+                _PendingWork.RemoveAt(0);
+                lock (_WorkBeingProcessed) _WorkBeingProcessed.Add(new Tuple<Lib.Activity.Base, DateTime>(work, DateTime.Now));
+                return work;
             }
         }
 
         public static void RegisterCompletedWork(Lib.Activity.Base completedWork)
         {
-            lock (CompleteWork)
+            lock (_CompleteWork)
             {
-                lock (WorkBeingProcessed)
+                lock (_WorkBeingProcessed)
                 {
-                    if (WorkBeingProcessed.Count(a => a.Item1.GetGUID() == completedWork.GetGUID()) <= 0) return;
-                    CompleteWork.Add(completedWork.GetGUID());
+                    if (_WorkBeingProcessed.Count(a => a.Item1.GetGUID() == completedWork.GetGUID()) <= 0) return;
+                    _CompleteWork.Add(completedWork.GetGUID());
                     var binaryFormatter = new BinaryFormatter();
                     if (!Directory.Exists("Completed")) Directory.CreateDirectory("Completed");
                     FileStream stream = File.Create("Completed/" + completedWork.GetGUID() + ".dat");
                     binaryFormatter.Serialize(stream, completedWork);
                     stream.Close();
-                    WorkBeingProcessed.RemoveAll(a => a.Item1.GetGUID() == completedWork.GetGUID());
+                    _WorkBeingProcessed.RemoveAll(a => a.Item1.GetGUID() == completedWork.GetGUID());
                     Console.WriteLine("Completed Job Registered " + completedWork.GetGUID());
                 }
             }
@@ -113,13 +134,13 @@ namespace Cranium.Lobe.Manager
 
         public static Lib.Activity.Base GetCompletedJobByGUID(Guid jobGuid)
         {
-            lock (CompleteWork)
+            lock (_CompleteWork)
             {
-                if (!CompleteWork.Contains(jobGuid))
+                if (!_CompleteWork.Contains(jobGuid))
                 {
-                    if(File.Exists("Completed/" + jobGuid + ".dat"))CompleteWork.Add(jobGuid);
+                    if(File.Exists("Completed/" + jobGuid + ".dat"))_CompleteWork.Add(jobGuid);
                 }
-                if (CompleteWork.Contains(jobGuid))
+                if (_CompleteWork.Contains(jobGuid))
                 {
                     FileStream stream = File.OpenRead("Completed/" + jobGuid + ".dat");
                     var binaryFormatter = new BinaryFormatter();
@@ -127,10 +148,7 @@ namespace Cranium.Lobe.Manager
                     stream.Close();
                     return work;
                 }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
         }
     }

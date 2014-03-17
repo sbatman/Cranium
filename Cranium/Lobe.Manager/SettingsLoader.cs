@@ -7,7 +7,6 @@ namespace Cranium.Lobe.Manager
 {
     internal static class SettingsLoader
     {
-        public static int WorkerThreadCount = -1;
         public static string CommsClientLocalIP = "";
         public static int CommsClientPort;
         public static string CommsWorkerLocalIP = "";

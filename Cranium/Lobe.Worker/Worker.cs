@@ -153,6 +153,7 @@ namespace Cranium.Lobe.Worker
                             {
                                 //Disconnect as it seems the manager isnt there , this will cause an attempted reconnect above
                                 _ConnectionToLobeManager.Disconnect();
+
                             }
                         }
                         lock (_PacketsToBeProcessed)
