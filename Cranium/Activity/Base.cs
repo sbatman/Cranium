@@ -12,13 +12,25 @@ namespace Cranium.Lib.Activity
 
         public Base() { }
 
-        public Base(SerializationInfo info, StreamingContext context) { _ActivityInstanceIdentifier = (Guid) info.GetValue("_ActivityInstanceIdentifier", typeof (Guid)); }
+        public Base(SerializationInfo info, StreamingContext context)
+        {
+            _ActivityInstanceIdentifier = (Guid) info.GetValue("_ActivityInstanceIdentifier", typeof (Guid));
+        }
 
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context) { info.AddValue("_ActivityInstanceIdentifier", _ActivityInstanceIdentifier, typeof (Guid)); }
+        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_ActivityInstanceIdentifier", _ActivityInstanceIdentifier, typeof (Guid));
+        }
 
-        public Guid GetGUID() { return _ActivityInstanceIdentifier; }
+        public Guid GetGUID()
+        {
+            return _ActivityInstanceIdentifier;
+        }
 
-        public virtual void SetGUID(Guid newGuid) { _ActivityInstanceIdentifier = newGuid; }
+        public virtual void SetGUID(Guid newGuid)
+        {
+            _ActivityInstanceIdentifier = newGuid;
+        }
 
         public virtual void SaveToDisk(string filename)
         {

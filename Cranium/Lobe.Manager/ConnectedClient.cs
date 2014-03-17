@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -11,7 +12,8 @@ namespace Cranium.Lobe.Manager
 {
     internal class ConnectedClient : ClientConnection
     {
-        public ConnectedClient(TcpClient incomingSocket) : base(incomingSocket)
+        public ConnectedClient(TcpClient incomingSocket)
+        : base(incomingSocket)
         {
             _ClientUpdateInterval = new TimeSpan(0, 0, 0, 0, 1);
         }
@@ -33,12 +35,14 @@ namespace Cranium.Lobe.Manager
                         break;
                 }
             }
+
         }
 
         protected override void OnConnect()
         {
             Console.WriteLine("New Client Connected");
             SendPacket(new Packet(200)); //Lets say hello
+
         }
 
         protected override void OnDisconnect() { }
@@ -51,10 +55,10 @@ namespace Cranium.Lobe.Manager
         {
             object[] packetObjects = p.GetObjects();
             Guid jobGUID = Guid.NewGuid();
-            var jobData = (byte[]) packetObjects[0];
+            var jobData = (byte[])packetObjects[0];
 
             var binaryFormatter = new BinaryFormatter();
-            var activity = (Base) binaryFormatter.Deserialize(new MemoryStream(jobData));
+            var activity = (Base)binaryFormatter.Deserialize(new MemoryStream(jobData));
             activity.SetGUID(jobGUID);
 
             var returnPacket = new Packet(1001);
@@ -66,7 +70,7 @@ namespace Cranium.Lobe.Manager
         protected void HandelA1100(Packet p)
         {
             Object[] dataObjects = p.GetObjects();
-            var jobLookupID = new Guid((byte[]) dataObjects[0]);
+            var jobLookupID = new Guid((byte[])dataObjects[0]);
             Base activity = Program.GetCompletedJobByGUID(jobLookupID);
             if (activity == null) SendPacket(new Packet(1101));
             else

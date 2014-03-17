@@ -277,9 +277,10 @@ namespace Cranium.Lobe.Worker
             lock (_CompletedWork)
             {
                 _CompletedWork.Add(work);
+                if (!Directory.Exists(_Settings.CompletedWorkDirectory)) Directory.CreateDirectory(_Settings.CompletedWorkDirectory);
+                work.SaveToDisk(_Settings.CompletedWorkDirectory + "/" + work.GetGUID());
             }
-            if (!Directory.Exists(_Settings.CompletedWorkDirectory)) Directory.CreateDirectory(_Settings.CompletedWorkDirectory);
-            work.SaveToDisk(_Settings.CompletedWorkDirectory + "/" + work.GetGUID());
+
         }
 
         public void Dispose()

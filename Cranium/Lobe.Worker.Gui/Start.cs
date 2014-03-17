@@ -55,9 +55,9 @@ namespace Cranium.Lobe.Worker.Gui
 
         public void PushMessage(string message)
         {
-            notifyIcon1.Visible = true;
-            notifyIcon1.BalloonTipText = message;
-            notifyIcon1.ShowBalloonTip(300);
+            //notifyIcon1.Visible = true;
+            //notifyIcon1.BalloonTipText = message;
+            //notifyIcon1.ShowBalloonTip(300);
         }
 
         private void Start_Resize(object sender, EventArgs e)
