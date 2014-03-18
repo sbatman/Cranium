@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using InsaneDev.Networking;
@@ -49,7 +50,7 @@ namespace Cranium.Lobe.Manager
 
         protected override void OnConnect()
         {
-            Console.WriteLine("New Worker Connected");
+            Console.WriteLine("New Worker Connected from " + ((IPEndPoint)(_AttachedSocket.Client.RemoteEndPoint)).Address);
             SendPacket(new Packet(200)); //Lets say hello
         }
 

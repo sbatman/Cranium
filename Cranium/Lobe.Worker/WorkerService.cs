@@ -1,10 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using Cranium.Lib.Activity;
 
 namespace Cranium.Lobe.Worker
 {
-    public  class WorkerThread
+    public class WorkerThread
     {
         protected Base _CurrentWork;
         protected Thread _InternalThread;
@@ -17,6 +18,7 @@ namespace Cranium.Lobe.Worker
             if (parentWorker == null) throw new ArgumentNullException("parentWorker");
             _Running = true;
             _ParentWorker = parentWorker;
+            _ParentWorker.IncrementCurrentThreads();
             _InternalThread = new Thread(LogicLoop);
             _InternalThread.Start();
 
@@ -24,23 +26,41 @@ namespace Cranium.Lobe.Worker
 
         protected void LogicLoop()
         {
-            while (_Running)
+
+            try
             {
-                if (_CurrentWork == null) _CurrentWork = _ParentWorker.GetPendingWork(); //Gets pending work from the main program
-                else
+                while (_Running)
                 {
-                    _ParentWorker.AnnounceStatus("Worker service starting job " + _CurrentWork.GetGUID());
-                    if (_CurrentWork is Lib.Activity.Training.Base)
+                    if (_CurrentWork == null)
                     {
-                        var trainingWork = (Lib.Activity.Training.Base) _CurrentWork;
-                        trainingWork.StartSynchronous();
-                        _ParentWorker.AddToCompletedWork(trainingWork);
+                        if (_ParentWorker.ThreadCountCheck())
+                        {
+                            _Running = false;
+                            break;
+                        }
+                        _CurrentWork = _ParentWorker.GetPendingWork(); //Gets pending work from the main program
                     }
-                    _ParentWorker.AnnounceStatus("Worker service Completed job " + _CurrentWork.GetGUID());
-                    _CurrentWork = null;
+                    else
+                    {
+                        _ParentWorker.AnnounceStatus("Worker service starting job " + _CurrentWork.GetGUID());
+                        if (_CurrentWork is Lib.Activity.Training.Base)
+                        {
+                            var trainingWork = (Lib.Activity.Training.Base) _CurrentWork;
+                            trainingWork.StartSynchronous();
+                            _ParentWorker.AddToCompletedWork(trainingWork);
+                        }
+                        _ParentWorker.AnnounceStatus("Worker service Completed job " + _CurrentWork.GetGUID());
+                        _CurrentWork = null;
+                    }
+                    Thread.Sleep(1000);
                 }
-                Thread.Sleep(1000);
             }
+            catch(Exception e)
+            {
+                _ParentWorker.AnnounceStatus("Worker exception");
+                _ParentWorker.AnnounceStatus(e.ToString());
+            }
+            _ParentWorker.DecrementCurrentThreads();
         }
 
         public bool IsRunning()

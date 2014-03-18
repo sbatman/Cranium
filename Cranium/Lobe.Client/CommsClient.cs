@@ -87,7 +87,7 @@ namespace Cranium.Lobe.Client
                     {
                         foreach (Guid jobGuid in from packet in _ConnectionToManager.GetPacketsToProcess() where packet.Type == 1001 select new Guid((byte[]) packet.GetObjects()[0]))
                         {
-                            Console.WriteLine("Work request sucess job registered as " + jobGuid);
+
                             return jobGuid;
                         }
                     }

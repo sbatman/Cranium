@@ -38,14 +38,14 @@ namespace Cranium.Lobe.Manager
             if (Directory.Exists("Pending"))
             {
                 string[] files = Directory.GetFiles("Pending");
-                Console.WriteLine("Possible "+files.Length+" jobs found, loading ..");
+                Console.WriteLine("Possible " + files.Length + " jobs found, loading ..");
                 foreach (string file in files)
                 {
                     try
                     {
-                        FileStream stream = File.OpenRead(file );
+                        FileStream stream = File.OpenRead(file);
                         var binaryFormatter = new BinaryFormatter();
-                        Lib.Activity.Base work = (Lib.Activity.Base) binaryFormatter.Deserialize(stream);
+                        Lib.Activity.Base work = (Lib.Activity.Base)binaryFormatter.Deserialize(stream);
                         stream.Close();
                         _PendingWork.Add(work.GetGUID());
                     }
@@ -106,7 +106,7 @@ namespace Cranium.Lobe.Manager
                 var binaryFormatter = new BinaryFormatter();
                 Lib.Activity.Base work = (Lib.Activity.Base)binaryFormatter.Deserialize(stream);
                 stream.Close();
-                File.Delete("Pending/" + _PendingWork[0] + ".dat");
+
                 _PendingWork.RemoveAt(0);
                 lock (_WorkBeingProcessed) _WorkBeingProcessed.Add(new Tuple<Lib.Activity.Base, DateTime>(work, DateTime.Now));
                 return work;
@@ -123,6 +123,7 @@ namespace Cranium.Lobe.Manager
                     _CompleteWork.Add(completedWork.GetGUID());
                     var binaryFormatter = new BinaryFormatter();
                     if (!Directory.Exists("Completed")) Directory.CreateDirectory("Completed");
+                    if (File.Exists("Pending/" + completedWork.GetGUID() + ".dat")) File.Delete("Pending/" + completedWork.GetGUID() + ".dat");
                     FileStream stream = File.Create("Completed/" + completedWork.GetGUID() + ".dat");
                     binaryFormatter.Serialize(stream, completedWork);
                     stream.Close();
@@ -138,7 +139,7 @@ namespace Cranium.Lobe.Manager
             {
                 if (!_CompleteWork.Contains(jobGuid))
                 {
-                    if(File.Exists("Completed/" + jobGuid + ".dat"))_CompleteWork.Add(jobGuid);
+                    if (File.Exists("Completed/" + jobGuid + ".dat")) _CompleteWork.Add(jobGuid);
                 }
                 if (_CompleteWork.Contains(jobGuid))
                 {

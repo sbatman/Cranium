@@ -15,7 +15,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using InsaneDev.Networking;
@@ -27,6 +29,10 @@ namespace Cranium.Lobe.Worker
     {
         public delegate void MessageCallBack(String s);
 
+        private long _CompletedJobs = 0;
+        private int TargetThreads;
+        private int CurrentThreads;
+
         /// <summary>
         ///     The current connection to the lobe manager, a connection is not required for work to be completed however for the
         ///     manager to recieve work or
@@ -37,7 +43,7 @@ namespace Cranium.Lobe.Worker
         /// <summary>
         ///     A list containing all the active worker services
         /// </summary>
-        protected readonly List<WorkerThread> _ActiveWorkerServices = new List<WorkerThread>();
+        protected List<WorkerThread> _ActiveWorkerServices = new List<WorkerThread>();
 
         /// <summary>
         ///     A list of all the current pending work that needs to be processed. This will commonly contain
@@ -89,20 +95,25 @@ namespace Cranium.Lobe.Worker
             AnnounceStatus("Lobe Worker Launching");
             _Running = true;
             _TimeOfLastManagerComms = DateTime.Now;
-
+            TargetThreads = _Settings.WorkerThreadCount;
 
             //Prepare the worker threads
             AnnounceStatus("Preparing Workers");
-            for (int i = 0; i < _Settings.WorkerThreadCount; i++) _ActiveWorkerServices.Add(new WorkerThread(this));
+            for (int i = 0; i < TargetThreads; i++) _ActiveWorkerServices.Add(new WorkerThread(this));
 
             AnnounceStatus("Connecting To Manager");
             if (!_ConnectionToLobeManager.Connect(_Settings.CommsManagerIP, _Settings.CommsManagerPort)) AnnounceStatus("Unable to communicate with specified lobe manager, aborting!");
 
             AnnounceStatus("Lobe Worker Online");
-            while (_Running)
+            while (_Running || _ActiveWorkerServices.Count>0)
             {
                 lock (this)
                 {
+                    _ActiveWorkerServices = _ActiveWorkerServices.Where(a => a.IsRunning()).ToList();
+                    if (CurrentThreads < TargetThreads && _Running)
+                    {
+                        _ActiveWorkerServices.Add(new WorkerThread(this));
+                    }
                     if (!_ConnectionToLobeManager.IsConnected())
                     {
                         AnnounceStatus("Unable to communicate with specified lobe manager, Attempting to reconnect");
@@ -119,7 +130,7 @@ namespace Cranium.Lobe.Worker
                                 var binaryFormatter = new BinaryFormatter();
                                 var datapackage = new MemoryStream();
                                 binaryFormatter.Serialize(datapackage, job);
-
+                                _CompletedJobs++;
                                 var responsePacket = new Packet(400);
                                 responsePacket.AddBytePacketCompressed(datapackage.ToArray());
                                 _ConnectionToLobeManager.SendPacket(responsePacket);
@@ -132,7 +143,7 @@ namespace Cranium.Lobe.Worker
                         }
                         lock (_PendingWork)
                         {
-                            if (_PendingWork.Count < _Settings.WorkBufferCount)
+                            if (_PendingWork.Count < _Settings.WorkBufferCount && _Running)
                             {
                                 var p = new Packet(300); //Generate a work request packet
                                 _ConnectionToLobeManager.SendPacket(p);
@@ -176,6 +187,10 @@ namespace Cranium.Lobe.Worker
             Dispose();
         }
 
+        public void KillWorkers()
+        {
+            lock (this) foreach (WorkerThread thread in _ActiveWorkerServices) thread.StopForcefully();
+        }
 
         public void Stop()
         {
@@ -317,5 +332,49 @@ namespace Cranium.Lobe.Worker
         {
             lock (this) return _CompletedWork.Count;
         }
+
+        public long GetCompletedJobCount()
+        {
+            lock (this) return _CompletedJobs;
+        }
+
+        public void IncrementCurrentThreads()
+        {
+            lock (this) CurrentThreads++;
+        }
+
+        public void DecrementCurrentThreads()
+        {
+            lock (this) CurrentThreads--;
+        }
+
+        public bool ThreadCountCheck()
+        {
+            lock (this) return CurrentThreads > TargetThreads;
+        }
+
+
+        public void SetCoreUsage(int cores, int max)
+        {
+            lock (this)
+            {
+                TargetThreads = cores;
+                long AffinityMask = 0;
+                for (int x = (max - cores); x < max; x++)
+                {
+                    AffinityMask |= (1 << x);
+                }
+                Process Proc = Process.GetCurrentProcess();
+                foreach (ProcessThread thread in Proc.Threads)
+                {
+                    if (thread.Id == AppDomain.GetCurrentThreadId())
+                    {
+                        continue;
+                    }
+                    thread.ProcessorAffinity = (IntPtr)AffinityMask;
+                }
+            }
+        }
+
     }
 }
