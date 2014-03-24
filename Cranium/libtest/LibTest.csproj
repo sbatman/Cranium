@@ -64,6 +64,7 @@
     <Compile Include="Tests\Recursive\RNNTest2.cs" />
     <Compile Include="Tests\Recursive\MG_Recurrent_Test.cs" />
     <Compile Include="Tests\Reservoir\MG_EchoState_Test.cs" />
+    <Compile Include="Tests\Reservoir\EchoState_Test_Sin_Generator.cs" />
     <Compile Include="Tests\Reservoir\MG_EchoState_Test_Lobe.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

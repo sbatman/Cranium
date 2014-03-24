@@ -109,10 +109,16 @@ namespace Cranium.Lib.Structure.Node
             if (_TReverseWeights.Length == 0) return;
 
             _Value = 0;
-
-            foreach (Weight.Base w in _TReverseWeights) _Value += w.NodeA._Value*w.Weight;
-
+            if (double.IsNaN(_Value) || double.IsInfinity(_Value)) Debugger.Break();
+            foreach (Weight.Base w in _TReverseWeights)
+            {
+                if (double.IsNaN(w.Weight) || double.IsInfinity(w.Weight)) Debugger.Break();
+                _Value += w.NodeA._Value*w.Weight;
+                if (double.IsNaN(_Value) || double.IsInfinity(_Value)) Debugger.Break();
+            }
+            if (double.IsNaN(_Value) || double.IsInfinity(_Value)) Debugger.Break();
             _Value = _ActivationFunction.Compute(_Value);
+            if (_Value > 1 || _Value<-1||double.IsNaN(_Value) || double.IsInfinity(_Value)) Debugger.Break();
         }
 
         /// <summary>
@@ -123,6 +129,7 @@ namespace Cranium.Lib.Structure.Node
         /// </returns>
         public virtual Double GetValue()
         {
+            if(double.IsNaN(_Value)|| double.IsInfinity(_Value))Debugger.Break();
             return _Value;
         }
 
@@ -153,8 +160,17 @@ namespace Cranium.Lib.Structure.Node
         /// </summary>
         public virtual void CalculateError()
         {
-            Double tempError = _TFowardWeights.Sum(w => w.Weight*w.NodeB.GetError());
+            Double tempError = 0;
+            int count = 0;
+            foreach (Weight.Base w in _TFowardWeights)
+            {
+                count++;
+                tempError += w.Weight*w.NodeB.GetError();
+                if (double.IsNaN(tempError) || double.IsInfinity(tempError)) Debugger.Break();
+            }
+            tempError /= count;
             _Error = _ActivationFunction.ComputeDerivative(_Value)*tempError;
+
             // if (Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw (new Exception("Weight Error"));
         }
 
@@ -249,6 +265,7 @@ namespace Cranium.Lib.Structure.Node
         /// </param>
         public virtual void SetValue(Double newValue)
         {
+            if (double.IsNaN(newValue) || double.IsInfinity(newValue)) Debugger.Break();
             _Value = newValue;
         }
 

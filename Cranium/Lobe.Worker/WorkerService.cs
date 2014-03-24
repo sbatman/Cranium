@@ -52,7 +52,7 @@ namespace Cranium.Lobe.Worker
                         _ParentWorker.AnnounceStatus("Worker service Completed job " + _CurrentWork.GetGUID());
                         _CurrentWork = null;
                     }
-                    Thread.Sleep(1000);
+                    Thread.Sleep(100);
                 }
             }
             catch(Exception e)
@@ -60,6 +60,7 @@ namespace Cranium.Lobe.Worker
                 _ParentWorker.AnnounceStatus("Worker exception");
                 _ParentWorker.AnnounceStatus(e.ToString());
             }
+            _Running = false;
             _ParentWorker.DecrementCurrentThreads();
         }
 

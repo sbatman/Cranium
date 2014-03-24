@@ -65,8 +65,8 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _SlidingWindowTraining.SetLearningRate(0.004f);
             _SlidingWindowTraining.SetDatasetReservedLength(0);
             _SlidingWindowTraining.SetDistanceToForcastHorrison(3);
-            _SlidingWindowTraining.SetWindowWidth(12);
-            _SlidingWindowTraining.SetMaximumEpochs(300);
+            _SlidingWindowTraining.SetWindowWidth(6);
+            _SlidingWindowTraining.SetMaximumEpochs(5);
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
@@ -88,7 +88,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             slidingWindowTesting.SetOutputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedTopLayers()[0].GetNodes().ToList());
             slidingWindowTesting.SetRecurrentConextLayers(new List<Base>());
             slidingWindowTesting.SetWorkingDataset(dataSet);
-            slidingWindowTesting.SetWindowWidth(12);
+            slidingWindowTesting.SetWindowWidth(6);
             slidingWindowTesting.SetDistanceToForcastHorrison(3);
             slidingWindowTesting.SetTargetNetwork(_SlidingWindowTraining.GetTargetNetwork());
 

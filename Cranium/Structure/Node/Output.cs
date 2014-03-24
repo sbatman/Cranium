@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -51,12 +51,20 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Output(SerializationInfo info, StreamingContext context) : base(info, context) { _TargetValue = info.GetDouble("_TargetValue"); }
+        public Output(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _TargetValue = info.GetDouble("_TargetValue");
+        }
 
         /// <summary>
         ///     Calculates the error of the node based on its distance from the target value
         /// </summary>
-        public override void CalculateError() { _Error = ((1 - _Value)*(1 + _Value))*(_TargetValue - _Value); }
+        public override void CalculateError()
+        {
+            _Error = ((1 - _Value)*(1 + _Value))*(_TargetValue - _Value);
+            if(double.IsNaN(_Error))System.Diagnostics.Debugger.Break();
+            if (_Error > 2 || _Error < -2) System.Diagnostics.Debugger.Break();
+        }
 
         /// <summary>
         ///     Sets the target value, used for error calculation
@@ -64,7 +72,10 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='targetValue'>
         ///     Target value.
         /// </param>
-        public virtual void SetTargetValue(Double targetValue) { _TargetValue = targetValue; }
+        public virtual void SetTargetValue(Double targetValue)
+        {
+            _TargetValue = targetValue;
+        }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
