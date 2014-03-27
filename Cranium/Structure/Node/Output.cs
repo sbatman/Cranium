@@ -62,8 +62,6 @@ namespace Cranium.Lib.Structure.Node
         public override void CalculateError()
         {
             _Error = ((1 - _Value)*(1 + _Value))*(_TargetValue - _Value);
-            if(double.IsNaN(_Error))System.Diagnostics.Debugger.Break();
-            if (_Error > 2 || _Error < -2) System.Diagnostics.Debugger.Break();
         }
 
         /// <summary>

@@ -104,21 +104,21 @@ namespace Cranium.Lib.Structure.Node
         public virtual void CalculateValue()
         {
             if (_TFowardWeights == null || _TReverseWeights == null) BakeLists();
-
-            Debug.Assert(_TReverseWeights != null, "_TReverseWeights != null");
             if (_TReverseWeights.Length == 0) return;
-
             _Value = 0;
+            if (_Value > 1 || _Value < -1) Debugger.Break();
             if (double.IsNaN(_Value) || double.IsInfinity(_Value)) Debugger.Break();
             foreach (Weight.Base w in _TReverseWeights)
             {
-                if (double.IsNaN(w.Weight) || double.IsInfinity(w.Weight)) Debugger.Break();
                 _Value += w.NodeA._Value*w.Weight;
+
                 if (double.IsNaN(_Value) || double.IsInfinity(_Value)) Debugger.Break();
             }
-            if (double.IsNaN(_Value) || double.IsInfinity(_Value)) Debugger.Break();
+            double k = _Value;
             _Value = _ActivationFunction.Compute(_Value);
-            if (_Value > 1 || _Value<-1||double.IsNaN(_Value) || double.IsInfinity(_Value)) Debugger.Break();
+            if (_Value > 1 || _Value < -1) Debugger.Break();
+            if (double.IsNaN(_Value) || double.IsInfinity(_Value)) Debugger.Break();
+
         }
 
         /// <summary>
@@ -166,12 +166,12 @@ namespace Cranium.Lib.Structure.Node
             {
                 count++;
                 tempError += w.Weight*w.NodeB.GetError();
-                if (double.IsNaN(tempError) || double.IsInfinity(tempError)) Debugger.Break();
+                if (Double.IsInfinity(tempError) || double.IsNaN(tempError)) Debugger.Break();
             }
             tempError /= count;
+            if (Double.IsInfinity(_Value) || double.IsNaN(_Value)) Debugger.Break();
             _Error = _ActivationFunction.ComputeDerivative(_Value)*tempError;
-
-            // if (Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw (new Exception("Weight Error"));
+            if (Double.IsInfinity(_Error) || double.IsNaN(_Error)) Debugger.Break();
         }
 
         /// <summary>

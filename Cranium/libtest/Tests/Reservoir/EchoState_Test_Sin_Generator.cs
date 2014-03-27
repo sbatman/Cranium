@@ -80,7 +80,8 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                     int s = sequencyList[_RND.Next(0, sequencyList.Count)];
                     sequencyList.Remove(s);
 
-                    foreach (Structure.Layer.Base layer in _TargetNetwork.GetCurrentLayers()) foreach (Structure.Node.Base node in layer.GetNodes()) node.SetValue(0);
+
+                    foreach (Structure.Node.Base node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
                     for (int i = 0; i < _WindowWidth; i++)
                     {
@@ -127,7 +128,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
         private static AdaptedSlidingWindowTraining _SlidingWindowTraining;
         private static Base _InputLayer;
         private static Base _OutputLayer;
-        private static Cranium.Lib.Structure.Layer.RecurrentContext _RecurrentLayer;
+        private static RecurrentContext _RecurrentLayer;
         private static List<Structure.Node.Base> _InputLayerNodes;
         private static List<Structure.Node.Base> _OuputLayerNodes;
 
@@ -139,19 +140,19 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             //Build Network
             _TestNetworkStructure = new Network();
             BuildStructure();
-            _TestNetworkStructure.RandomiseWeights(0.005d);
+            _TestNetworkStructure.RandomiseWeights(1.0f);
             //PrepData
-            double[][] dataSet = BuildDataSet(8000);
+            double[][] dataSet = BuildDataSet(4000);
 
             //Prepare training activity
             _SlidingWindowTraining = new AdaptedSlidingWindowTraining();
             _SlidingWindowTraining.SetTargetNetwork(_TestNetworkStructure);
-            _SlidingWindowTraining.SetMomentum(0.9f);
-            _SlidingWindowTraining.SetLearningRate(0.04f);
+            _SlidingWindowTraining.SetMomentum(0.90f);
+            _SlidingWindowTraining.SetLearningRate(0.3f);
             _SlidingWindowTraining.SetDatasetReservedLength(0);
             _SlidingWindowTraining.SetDistanceToForcastHorrison(0);
-            _SlidingWindowTraining.SetWindowWidth(12);
-            _SlidingWindowTraining.SetMaximumEpochs(100);
+            _SlidingWindowTraining.SetWindowWidth(6);
+            _SlidingWindowTraining.SetMaximumEpochs(400);
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
@@ -171,15 +172,15 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
 
             Console.WriteLine("Starting Testing");
-
+            foreach (Structure.Node.Base node in _TestNetworkStructure.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
             double[] input = new double[1000];
             double[] output = new double[1000];
-            float frequency = 0;
+            float frequency = 0.5f;
             for (int x = 0; x < 1000; x++)
             {
                 if (x%100 == 0) frequency = ((float)new Random().NextDouble()*0.5f) + 0.25f;
-                input[x] = frequency;
+                //    input[x] = frequency;
                 _InputLayerNodes[0].SetValue(frequency);
                 _TestNetworkStructure.FowardPass();
                 _RecurrentLayer.UpdateExtra();
@@ -203,9 +204,12 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _InputLayer = new Base();
             _InputLayerNodes = new List<Structure.Node.Base>();
             for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Elliott()));
+            Bias b = new Bias(_InputLayer, new Elliott());
+            b.SetValue(1);
+            _InputLayerNodes.Add(b);
             _InputLayer.SetNodes(_InputLayerNodes);
 
-            var echoLayer = new Echo_Reservoir(40, 0.4f, 1, 5, new Elliott());
+            var echoLayer = new Echo_Reservoir(10, 0.1f, 1, 5, new Elliott());
 
             _OutputLayer = new Base();
             _OuputLayerNodes = new List<Structure.Node.Base>();
@@ -239,8 +243,8 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             double input = 0;
             for (int x = 0; x < Sets; x++)
             {
-                if (x%600 == 0) input = (rnd.NextDouble()*0.5f)+0.25f;
-                double output = Math.Sin((x*0.05f)*input);
+                if (x%200 == 0) input = (rnd.NextDouble()*0.5f)+0.25f;
+                double output = Math.Sin((x*0.2f)*input);
                 data[0][x] = input;
                 data[1][x] = output;
             }
