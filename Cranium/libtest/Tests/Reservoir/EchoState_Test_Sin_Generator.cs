@@ -141,7 +141,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _SlidingWindowTraining.SetLearningRate(0.002f);
             _SlidingWindowTraining.SetDatasetReservedLength(0);
             _SlidingWindowTraining.SetDistanceToForcastHorrison(0);
-            _SlidingWindowTraining.SetWindowWidth(250);
+            _SlidingWindowTraining.SetWindowWidth(800);
             _SlidingWindowTraining.SetMaximumEpochs(1200);
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
@@ -196,7 +196,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
             _InputLayer.SetNodes(_InputLayerNodes);
 
-            var echoLayer = new Echo_Reservoir(300, 0.8f, 0, 2, new Tanh());
+            var echoLayer = new Echo_Reservoir(400, 0.5f, 0, 5, new Tanh());
 
             _OutputLayer = new Base();
             _OuputLayerNodes = new List<Structure.Node.Base>();
@@ -229,9 +229,10 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             for (int i = 0; i < 2; i++)data[i] = new double[Sets];
             Random rnd = new Random();
             double input = 0;
+            float step = 5.0f / (Sets/200);
             for (int x = 0; x < Sets; x++)
             {
-                if (x%200 == 0) input = (rnd.NextDouble()*0.5f)+0.25f;
+                if (x % 200 == 0) input = (step * (x / 200)) + 0.25f;
                 double output = Math.Sin((x * 0.1f * input));
                 data[0][x] = input;
                 data[1][x] = output;
