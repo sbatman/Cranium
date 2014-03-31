@@ -102,9 +102,9 @@ namespace Cranium.LibTest.Tests.Recursive
             // How many elements off the end of the dataset should not be used for training
             _SlidingWindowTraining.SetDistanceToForcastHorrison(3);
             // How far beyond the window should be be trying to predict
-            _SlidingWindowTraining.SetWindowWidth(3);
+            _SlidingWindowTraining.SetWindowWidth(12);
             // The window of elements that should be presented before the backward pass is performed
-            _SlidingWindowTraining.SetMaximumEpochs(50); // The maximum number of epochs the network can train for
+            _SlidingWindowTraining.SetMaximumEpochs(300); // The maximum number of epochs the network can train for
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes); // Setting the nodes that are used for input
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes); // Setting the nodes that are generating output
             _SlidingWindowTraining.SetWorkingDataset(dataSet); // Setting the working dataset for the training phase
@@ -160,13 +160,19 @@ namespace Cranium.LibTest.Tests.Recursive
             _InputLayer = new Base();
             _InputLayerNodes = new List<Lib.Structure.Node.Base>();
             for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Lib.Structure.Node.Base(_InputLayer, new Tanh()));
+
+
             _InputLayer.SetNodes(_InputLayerNodes);
 
             // Hidden layer construction
             _HiddenLayer = new Base();
             var hiddenLayerNodes = new List<Lib.Structure.Node.Base>();
-            for (int i = 0; i < 10; i++) hiddenLayerNodes.Add(new Lib.Structure.Node.Base(_HiddenLayer, new Tanh()));
+            for (int i = 0; i < 20; i++) hiddenLayerNodes.Add(new Lib.Structure.Node.Base(_HiddenLayer, new Tanh()));
+            Bias b = new Bias(_InputLayer, new Tanh());
+            b.SetValue(1);
+            hiddenLayerNodes.Add(b);
             _HiddenLayer.SetNodes(hiddenLayerNodes);
+
 
             // Conext layer construction
             _ContextLayer = new RecurrentContext(6, new Tanh());
@@ -208,6 +214,9 @@ namespace Cranium.LibTest.Tests.Recursive
         /// <param name='y'>
         ///     Y.
         /// </param>
-        public static double DynamicLearningRate(int x, double y) { return 0.004f; }
+        public static double DynamicLearningRate(int x, double y)
+        {
+            return 0.004f;
+        }
     }
 }

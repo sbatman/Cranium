@@ -63,7 +63,7 @@ namespace Cranium.Lib.Structure.Node
         /// </param>
         public RecurrentContext(Base sourceNode, double rateOfUpdate, Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer, activationFunction)
         {
-            _Value = 0.5f;
+            _Value = 0.0f;
             _SourceNode = sourceNode;
             _RateOfUpdate = rateOfUpdate;
         }
@@ -90,8 +90,6 @@ namespace Cranium.Lib.Structure.Node
         public virtual void Update()
         {
             _Value = (_Value*(1 - _RateOfUpdate)) + (_SourceNode.GetValue()*_RateOfUpdate);
-            if (double.IsNaN(_Value) || Double.IsInfinity(_Value)) Debugger.Break();
-            if (double.IsNaN(_SourceNode.GetValue()) || Double.IsInfinity(_SourceNode.GetValue())) Debugger.Break();
         }
 
         /// <summary>

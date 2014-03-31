@@ -117,10 +117,7 @@ namespace Cranium.Lib.Structure.Weight
         /// </param>
         public virtual void AddWeightChange(Double weightModification)
         {
-            //if (Double.IsNaN(Weight) || Double.IsInfinity(weightModification)) throw (new Exception("Weight Error"));
-            if (Double.IsInfinity(weightModification) || double.IsNaN(weightModification)) Debugger.Break();
             _PendingWeightChange += weightModification;
-            if (Double.IsInfinity(_PendingWeightChange) || double.IsNaN(_PendingWeightChange)) Debugger.Break();
             _PendingWeightChangeCount++;
         }
 
@@ -133,7 +130,6 @@ namespace Cranium.Lib.Structure.Weight
         public virtual void SetWeight(Double newWeight)
         {
             Weight = newWeight;
-            if(Double.IsInfinity(Weight)|| double.IsNaN(Weight))Debugger.Break();
         }
 
         /// <summary>
@@ -156,15 +152,11 @@ namespace Cranium.Lib.Structure.Weight
             {
                 _PastWeightChange = (_PendingWeightChange/_PendingWeightChangeCount);
                 Weight += _PastWeightChange;
-                if (Double.IsInfinity(Weight) || double.IsNaN(Weight)) Debugger.Break();
-
             }
             else
             {
                 _PastWeightChange = 0;
             }
-
-            //if (Double.IsNaN(Weight) || Double.IsInfinity(Weight)) throw (new Exception("Weight Error"));
             _PendingWeightChange = 0;
             _PendingWeightChangeCount = 0;
         }

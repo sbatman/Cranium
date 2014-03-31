@@ -261,7 +261,7 @@ namespace Cranium.Lib.Activity.Training
                 int s = sequencyList[_RND.Next(0, sequencyList.Count)];
                 sequencyList.Remove(s);
 
-                foreach (Structure.Layer.Base layer in _TargetNetwork.GetCurrentLayers()) foreach (Structure.Node.Base node in layer.GetNodes()) node.SetValue(0);
+                foreach (Structure.Node.Base node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
                 for (int i = 0; i < _WindowWidth; i++)
                 {

@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -87,7 +87,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The nodes.
         /// </returns>
-        public virtual ReadOnlyCollection<Node.Base> GetNodes() { return _Nodes.AsReadOnly(); }
+        public virtual ReadOnlyCollection<Node.Base> GetNodes()
+        {
+            return _Nodes.AsReadOnly();
+        }
 
         /// <summary>
         ///     Returns the number of nodes present in the layer.
@@ -95,7 +98,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The node count.
         /// </returns>
-        public virtual int GetNodeCount() { return _Nodes.Count; }
+        public virtual int GetNodeCount()
+        {
+            return _Nodes.Count;
+        }
 
         /// <summary>
         ///     Adds a layer to the list of layers that are connected forward
@@ -115,7 +121,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The forward connected layers.
         /// </returns>
-        public virtual List<Base> GetForwardConnectedLayers() { return _ForwardConnectedLayers; }
+        public virtual List<Base> GetForwardConnectedLayers()
+        {
+            return _ForwardConnectedLayers;
+        }
 
         /// <summary>
         ///     Adds a layer to the list of layers that are connected reverse.
@@ -135,7 +144,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The forward connected layers.
         /// </returns>
-        public virtual List<Base> GetReverseConnectedLayers() { return _ReverseConnectedLayers; }
+        public virtual List<Base> GetReverseConnectedLayers()
+        {
+            return _ReverseConnectedLayers;
+        }
 
         /// <summary>
         ///     Uses the current forward and reverse layers to populate the node connections (aka building weights)
@@ -149,7 +161,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     Removes all connections on this layers nodes (useful if deleting or modifiying the layer
         /// </summary>
-        public virtual void PurgeNodeConnections() { foreach (Node.Base n in _Nodes) n.DestroyAllConnections(); }
+        public virtual void PurgeNodeConnections()
+        {
+            foreach (Node.Base n in _Nodes) n.DestroyAllConnections();
+        }
 
         /// <summary>
         ///     Triggers a calculate value call on all nodes withint he layer and then recursively calls this function on all
@@ -187,7 +202,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The ID
         /// </returns>
-        public virtual int GetID() { return _LayerID; }
+        public virtual int GetID()
+        {
+            return _LayerID;
+        }
 
         /// <summary>
         ///     Sets the ID of the layer
@@ -195,7 +213,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='id'>
         ///     Identifier.
         /// </param>
-        public virtual void SetID(int id) { _LayerID = id; }
+        public virtual void SetID(int id)
+        {
+            _LayerID = id;
+        }
 
         /// <summary>
         ///     Updates any extra logic required, This is used when pre/post epoc logic needs to run on the layer
