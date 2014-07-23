@@ -55,8 +55,8 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 {
                     for (int j = 0; j < _WindowWidth; j++)
                     {
-                        _InputSequences[i, j, 0] = _WorkingDataset[0][(i*_SequenceCount) + j];
-                        _ExpectedOutputs[i, j, 0] = _WorkingDataset[1][(i * _SequenceCount) + j];
+                        _InputSequences[i, j, 0] = _WorkingDataset[0][(i * _WindowWidth) + j];
+                        _ExpectedOutputs[i, j, 0] = _WorkingDataset[1][(i * _WindowWidth) + j];
                     }
                 }
             }
@@ -74,10 +74,12 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
                 for (int s = 0; s < _SequenceCount; s++) sequencyList.Add(s);
 
+
+
                 while (sequencyList.Count > 0)
                 {
                     //This needs to be booled so it can be turned off
-                    int s = sequencyList[_RND.Next(0, sequencyList.Count)];
+                    int s = sequencyList[_RND.Next(0,sequencyList.Count)];
                     sequencyList.Remove(s);
 
 
@@ -95,10 +97,23 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                             if (output != null) output.SetTargetValue(_ExpectedOutputs[s, i, x]);
                             //       Console.Write(" --- :" + _ExpectedOutputs[s, i, 0]);
                         }
-                        _TargetNetwork.ReversePass();
-                        _Recurrentlayers[0].GetNodes()[0].SetValue(_ExpectedOutputs[s, i, 0]);
+
+                        if (i >= 75)  _TargetNetwork.ReversePass();
+
+                        if (_CurrentEpoch <250)
+                        {
+                            for (int x = 0; x < _OutputNodes.Count; x++)
+                            {
+                                var output = _OutputNodes[x] as Output;
+                                if (output != null) output.SetValue(_ExpectedOutputs[s, i, x]);
+                                //       Console.Write(" --- :" + _ExpectedOutputs[s, i, 0]);
+                            }
+                        }
+                        _RecurrentLayer.UpdateExtra();
                         //    Console.WriteLine(" " + _Recurrentlayers[0].GetNodes()[0].GetValue());
                     }
+
+
 
                     //Calculate the current error
                     Double passError = _OutputNodes.OfType<Output>().Sum(output => output.GetError());
@@ -130,19 +145,19 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             //Build Network
             _TestNetworkStructure = new Network();
             BuildStructure();
-            _TestNetworkStructure.RandomiseWeights(1.0f);
+            _TestNetworkStructure.RandomiseWeights(0.5f);
             //PrepData
-            double[][] dataSet = BuildDataSet(8000);
+            double[][] dataSet = BuildDataSet(3000);
 
             //Prepare training activity
             _SlidingWindowTraining = new AdaptedSlidingWindowTraining();
             _SlidingWindowTraining.SetTargetNetwork(_TestNetworkStructure);
-            _SlidingWindowTraining.SetMomentum(0.95f);
-            _SlidingWindowTraining.SetLearningRate(0.002f);
+            _SlidingWindowTraining.SetMomentum(0.8f);
+            _SlidingWindowTraining.SetLearningRate(0.05f);
             _SlidingWindowTraining.SetDatasetReservedLength(0);
             _SlidingWindowTraining.SetDistanceToForcastHorrison(0);
-            _SlidingWindowTraining.SetWindowWidth(800);
-            _SlidingWindowTraining.SetMaximumEpochs(1200);
+            _SlidingWindowTraining.SetWindowWidth(300);
+            _SlidingWindowTraining.SetMaximumEpochs(1000);
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
@@ -164,12 +179,12 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             Console.WriteLine("Starting Testing");
             foreach (Structure.Node.Base node in _TestNetworkStructure.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
-            double[] input = new double[4000];
-            double[] output = new double[4000];
+            double[] input = new double[1000];
+            double[] output = new double[1000];
             float frequency = 0.5f;
-            for (int x = 0; x < 4000; x++)
+            for (int x = 0; x < 1000; x++)
             {
-                if (x%100 == 0) frequency = ((float)new Random().NextDouble()*0.5f) + 0.25f;
+                if (x%100 == 0) frequency = 0.5f;
                 //    input[x] = frequency;
                 _InputLayerNodes[0].SetValue(frequency);
                 _TestNetworkStructure.FowardPass();
@@ -196,14 +211,14 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
             _InputLayer.SetNodes(_InputLayerNodes);
 
-            var echoLayer = new Echo_Reservoir(400, 0.5f, 0, 5, new Tanh());
+            var echoLayer = new Echo_Reservoir(50, 0.4f, 0, 30, new Tanh());
 
             _OutputLayer = new Base();
             _OuputLayerNodes = new List<Structure.Node.Base>();
             for (int i = 0; i < 1; i++) _OuputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(_OuputLayerNodes);
 
-            _RecurrentLayer = new Structure.Layer.RecurrentContext(1, new Tanh());
+            _RecurrentLayer = new Structure.Layer.RecurrentContext(2, new Tanh());
             _RecurrentLayer.AddSourceNodes(_OuputLayerNodes);
 
             _InputLayer.ConnectFowardLayer(echoLayer);
@@ -229,11 +244,9 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             for (int i = 0; i < 2; i++)data[i] = new double[Sets];
             Random rnd = new Random();
             double input = 0;
-            float step = 5.0f / (Sets/200);
             for (int x = 0; x < Sets; x++)
             {
-                if (x % 200 == 0) input = (step * (x / 200)) + 0.25f;
-                double output = Math.Sin((x * 0.1f * input));
+                double output = Math.Sin((x * 0.05f))*0.5f;
                 data[0][x] = input;
                 data[1][x] = output;
             }
