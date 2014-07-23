@@ -104,15 +104,17 @@ namespace Cranium.Lib.Structure.Node
         public virtual void CalculateValue()
         {
             if (_TFowardWeights == null || _TReverseWeights == null) BakeLists();
-
-            Debug.Assert(_TReverseWeights != null, "_TReverseWeights != null");
             if (_TReverseWeights.Length == 0) return;
-
             _Value = 0;
-
-            foreach (Weight.Base w in _TReverseWeights) _Value += w.NodeA._Value*w.Weight;
-
+            if (_Value > 1 || _Value < -1) Debugger.Break();
+            foreach (Weight.Base w in _TReverseWeights)
+            {
+                _Value += w.NodeA._Value*w.Weight;
+            }
+            double k = _Value;
             _Value = _ActivationFunction.Compute(_Value);
+            if (_Value > 1 || _Value < -1) Debugger.Break();
+
         }
 
         /// <summary>
@@ -153,9 +155,15 @@ namespace Cranium.Lib.Structure.Node
         /// </summary>
         public virtual void CalculateError()
         {
-            Double tempError = _TFowardWeights.Sum(w => w.Weight*w.NodeB.GetError());
+            Double tempError = 0;
+            int count = 0;
+            foreach (Weight.Base w in _TFowardWeights)
+            {
+                count++;
+                tempError += w.Weight*w.NodeB.GetError();
+            }
+            tempError /= count;
             _Error = _ActivationFunction.ComputeDerivative(_Value)*tempError;
-            // if (Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw (new Exception("Weight Error"));
         }
 
         /// <summary>
@@ -179,7 +187,7 @@ namespace Cranium.Lib.Structure.Node
         {
             foreach (Weight.Base w in _ForwardWeights)
             {
-                w.SetWeight(w.Weight + (w.GetPastWeightChange()*momentum));
+                w.SetWeight(w.Weight + (w.GetPastWeightChange() * momentum));
                 w.ApplyPendingWeightChanges();
             }
         }
@@ -192,7 +200,6 @@ namespace Cranium.Lib.Structure.Node
         /// </returns>
         public virtual Double GetError()
         {
-            //if (Double.IsNaN(_Error) || Double.IsInfinity(_Error)) throw (new Exception("Weight Error"));
             return _Error;
         }
 

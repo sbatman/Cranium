@@ -44,6 +44,7 @@
     <Compile Include="Activity\Testing\Base.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Structure\Layer\Base.cs" />
+    <Compile Include="Structure\Layer\Recurrent-Context.cs" />
     <Compile Include="Structure\Node\Base.cs" />
     <Compile Include="Structure\Weight\Base.cs" />
     <Compile Include="Structure\Network.cs" />
@@ -53,7 +54,6 @@
     <Compile Include="Structure\Node\Output.cs" />
     <Compile Include="Structure\Node\Bias.cs" />
     <Compile Include="Structure\ActivationFunction\Step.cs" />
-    <Compile Include="Structure\Layer\Recurrent-Context.cs" />
     <Compile Include="Structure\Node\RecurrentContext.cs" />
     <Compile Include="Activity\Training\Base.cs" />
     <Compile Include="Activity\Training\SlidingWindow.cs" />

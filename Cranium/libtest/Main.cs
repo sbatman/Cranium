@@ -44,6 +44,7 @@ namespace Cranium.Lib.Test
             Console.WriteLine("5 -  MG Recurrent Test");
             Console.WriteLine("6 -  MG Echo State Test");
             Console.WriteLine("7 -  MG Echo State Test on Lobe");
+            Console.WriteLine("8 -  Echo State Sin Generator Test");
 
             ConsoleKey pressedKey = Console.ReadKey().Key;
             Console.Clear();
@@ -69,6 +70,9 @@ namespace Cranium.Lib.Test
                     break;
                 case ConsoleKey.D7:
                     MG_EchoState_Test_Lobe.Run();
+                    break;
+                case ConsoleKey.D8:
+                    EchoState_Test_Sin_Generator.Run();
                     break;
             }
         }

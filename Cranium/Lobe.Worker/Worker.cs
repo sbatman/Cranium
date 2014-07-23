@@ -79,6 +79,8 @@ namespace Cranium.Lobe.Worker
 
         protected Settings _Settings = new Settings();
 
+        protected bool _CanRequestWork;
+
         public event MessageCallBack HandelMessage;
 
         public void AnnounceStatus(string msg)
@@ -92,6 +94,7 @@ namespace Cranium.Lobe.Worker
         public void Start(Settings settings)
         {
             _Settings = settings;
+            _CanRequestWork = true;
             AnnounceStatus("Lobe Worker Launching");
             _Running = true;
             _TimeOfLastManagerComms = DateTime.Now;
@@ -118,6 +121,7 @@ namespace Cranium.Lobe.Worker
                     {
                         AnnounceStatus("Unable to communicate with specified lobe manager, Attempting to reconnect");
                         if (_ConnectionToLobeManager.Connect(_Settings.CommsManagerIP, _Settings.CommsManagerPort)) AnnounceStatus("Connection Re-established");
+                        _CanRequestWork = true;
                     }
                     else
                     {
@@ -143,10 +147,11 @@ namespace Cranium.Lobe.Worker
                         }
                         lock (_PendingWork)
                         {
-                            if (_PendingWork.Count < _Settings.WorkBufferCount && _Running)
+                            if (_PendingWork.Count < _Settings.WorkBufferCount && _Running && _CanRequestWork)
                             {
                                 var p = new Packet(300); //Generate a work request packet
                                 _ConnectionToLobeManager.SendPacket(p);
+                                _CanRequestWork = false;
                             }
                         }
                         lock (_ConnectionToLobeManager)
@@ -211,7 +216,7 @@ namespace Cranium.Lobe.Worker
         /// <param name="p"></param>
         private void HandelIncomingPacket(Packet p)
         {
-            switch (p.Type)
+            switch (p._Type)
             {
                 case 200:
                     HandelA200Packet();
@@ -252,6 +257,7 @@ namespace Cranium.Lobe.Worker
         private void HandelA302Packet(Packet p)
         {
             AnnounceStatus("Recieved Job");
+            _CanRequestWork = true;
             object[] dataPackage = p.GetObjects();
             var serialisedAcitvity = (byte[])dataPackage[0];
             var datastream = new MemoryStream(serialisedAcitvity);

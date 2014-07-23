@@ -33,7 +33,7 @@ namespace Cranium.Lobe.Manager
             List<Packet> packetstoProcess = GetOutStandingProcessingPackets();
             foreach (Packet p in packetstoProcess)
             {
-                switch (p.Type)
+                switch (p._Type)
                 {
                     case 201:
                         HandelA201(p);

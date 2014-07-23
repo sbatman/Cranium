@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -68,7 +68,7 @@ namespace Cranium.Lib.Test.Tests.Linear
         {
             _TestNetworkStructure = new Network();
             BuildStructure();
-            _TestNetworkStructure.RandomiseWeights(0.4d);
+            _TestNetworkStructure.RandomiseWeights(0.9d);
             PrepData();
             int epoch = 0;
             bool Continue = true;
@@ -108,7 +108,7 @@ namespace Cranium.Lib.Test.Tests.Linear
 
             _HiddenLayer = new Base();
             var hiddenLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 4; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
+            for (int i = 0; i < 3; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _OutputLayer = new Base();
@@ -166,7 +166,10 @@ namespace Cranium.Lib.Test.Tests.Linear
         /// <summary>
         ///     Performs the foward pass on the network
         /// </summary>
-        private static void ForwardPass() { _TestNetworkStructure.FowardPass(); }
+        private static void ForwardPass()
+        {
+            _TestNetworkStructure.FowardPass();
+        }
 
         /// <summary>
         ///     Performs the reverse pass ont he network with the given row of prepared training data and the given weight momentum
@@ -178,7 +181,7 @@ namespace Cranium.Lib.Test.Tests.Linear
         {
             var outputNode = (Output) (_OutputLayer.GetNodes()[0]);
             outputNode.SetTargetValue(_OutputData[row]);
-            _OutputLayer.ReversePass(0.3, 0.0);
+            _OutputLayer.ReversePass(0.6, 0.1);
         }
     }
 }

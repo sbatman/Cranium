@@ -16,6 +16,7 @@
 #region Usings
 
 using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 #endregion
@@ -103,7 +104,10 @@ namespace Cranium.Lib.Structure.Weight
         /// <returns>
         ///     The total change.
         /// </returns>
-        public virtual Double GetTotalChange() { return Weight - _InitialValue; }
+        public virtual Double GetTotalChange()
+        {
+            return Weight - _InitialValue;
+        }
 
         /// <summary>
         ///     Adds a pending weight change
@@ -113,7 +117,6 @@ namespace Cranium.Lib.Structure.Weight
         /// </param>
         public virtual void AddWeightChange(Double weightModification)
         {
-            //if (Double.IsNaN(Weight) || Double.IsInfinity(weightModification)) throw (new Exception("Weight Error"));
             _PendingWeightChange += weightModification;
             _PendingWeightChangeCount++;
         }
@@ -124,7 +127,10 @@ namespace Cranium.Lib.Structure.Weight
         /// <param name='newWeight'>
         ///     New weight.
         /// </param>
-        public virtual void SetWeight(Double newWeight) { Weight = newWeight; }
+        public virtual void SetWeight(Double newWeight)
+        {
+            Weight = newWeight;
+        }
 
         /// <summary>
         ///     Gets the previous total weight change caused by ApplyPendingWeightChanges
@@ -132,17 +138,25 @@ namespace Cranium.Lib.Structure.Weight
         /// <returns>
         ///     The past weight change.
         /// </returns>
-        public virtual double GetPastWeightChange() { return _PastWeightChange; }
+        public virtual double GetPastWeightChange()
+        {
+            return _PastWeightChange;
+        }
 
         /// <summary>
         ///     Applies all pending weightchanges and clears the pending change.
         /// </summary>
         public virtual void ApplyPendingWeightChanges()
         {
-            _PastWeightChange = (_PendingWeightChange/_PendingWeightChangeCount);
-            Weight += _PastWeightChange;
-
-            //if (Double.IsNaN(Weight) || Double.IsInfinity(Weight)) throw (new Exception("Weight Error"));
+            if (_PendingWeightChangeCount >= 1)
+            {
+                _PastWeightChange = (_PendingWeightChange/_PendingWeightChangeCount);
+                Weight += _PastWeightChange;
+            }
+            else
+            {
+                _PastWeightChange = 0;
+            }
             _PendingWeightChange = 0;
             _PendingWeightChangeCount = 0;
         }

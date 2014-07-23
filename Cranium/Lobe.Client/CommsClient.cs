@@ -46,7 +46,7 @@ namespace Cranium.Lobe.Client
                     {
                         foreach (Packet packet in _ConnectionToManager.GetPacketsToProcess())
                         {
-                            switch (packet.Type)
+                            switch (packet._Type)
                             {
                                 case 1101:
                                     return null;
@@ -85,7 +85,7 @@ namespace Cranium.Lobe.Client
                 {
                     if (_ConnectionToManager.GetPacketsToProcessCount() > 0)
                     {
-                        foreach (Guid jobGuid in from packet in _ConnectionToManager.GetPacketsToProcess() where packet.Type == 1001 select new Guid((byte[]) packet.GetObjects()[0]))
+                        foreach (Guid jobGuid in from packet in _ConnectionToManager.GetPacketsToProcess() where packet._Type == 1001 select new Guid((byte[]) packet.GetObjects()[0]))
                         {
 
                             return jobGuid;

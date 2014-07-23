@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -56,25 +56,37 @@ namespace Cranium.Lib.Activity.Testing
         ///     Sets teh width of the sliding window used for testing
         /// </summary>
         /// <param name="windowWidth"></param>
-        public virtual void SetWindowWidth(int windowWidth) { _WindowWidth = windowWidth; }
+        public virtual void SetWindowWidth(int windowWidth)
+        {
+            _WindowWidth = windowWidth;
+        }
 
         /// <summary>
         ///     Sets the distance to prediction from the end of the presented window
         /// </summary>
         /// <param name="distance"></param>
-        public virtual void SetDistanceToForcastHorrison(int distance) { _DistanceToForcastHorrison = distance; }
+        public virtual void SetDistanceToForcastHorrison(int distance)
+        {
+            _DistanceToForcastHorrison = distance;
+        }
 
         /// <summary>
         ///     Sets the ammount of data from the end of the dataset to to be used during testing
         /// </summary>
         /// <param name="reservedPortion"></param>
-        public virtual void SetDatasetReservedLength(int reservedPortion) { _PortionOfDatasetReserved = reservedPortion; }
+        public virtual void SetDatasetReservedLength(int reservedPortion)
+        {
+            _PortionOfDatasetReserved = reservedPortion;
+        }
 
         /// <summary>
         ///     sets the current dataset used for this test
         /// </summary>
         /// <param name="dataset"></param>
-        public virtual void SetWorkingDataset(double[][] dataset) { _WorkingDataset = dataset; }
+        public virtual void SetWorkingDataset(double[][] dataset)
+        {
+            _WorkingDataset = dataset;
+        }
 
         /// <summary>
         ///     Perpares any data that is required for testing

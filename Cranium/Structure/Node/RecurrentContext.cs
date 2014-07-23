@@ -16,6 +16,7 @@
 #region Usings
 
 using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 
 #endregion
@@ -62,7 +63,7 @@ namespace Cranium.Lib.Structure.Node
         /// </param>
         public RecurrentContext(Base sourceNode, double rateOfUpdate, Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer, activationFunction)
         {
-            _Value = 0.5f;
+            _Value = 0.0f;
             _SourceNode = sourceNode;
             _RateOfUpdate = rateOfUpdate;
         }
@@ -86,7 +87,10 @@ namespace Cranium.Lib.Structure.Node
         /// <summary>
         ///     Update this nodes value.
         /// </summary>
-        public virtual void Update() { _Value = (_Value*(1 - _RateOfUpdate)) + (_SourceNode.GetValue()*_RateOfUpdate); }
+        public virtual void Update()
+        {
+            _Value = (_Value*(1 - _RateOfUpdate)) + (_SourceNode.GetValue()*_RateOfUpdate);
+        }
 
         /// <summary>
         ///     Sets the start value of this node.
@@ -94,7 +98,10 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='startValue'>
         ///     Start value.
         /// </param>
-        public virtual void SetStartValue(double startValue) { _StartValue = startValue; }
+        public virtual void SetStartValue(double startValue)
+        {
+            _StartValue = startValue;
+        }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -102,6 +109,11 @@ namespace Cranium.Lib.Structure.Node
             info.AddValue("_SourceNode", _SourceNode, _SourceNode.GetType());
             info.AddValue("_RateOfUpdate", _RateOfUpdate);
             info.AddValue("_StartValue", _StartValue);
+        }
+
+        public virtual void OverrideRateOfUpdate(double newValue)
+        {
+            _RateOfUpdate = newValue;
         }
     }
 }

@@ -68,7 +68,7 @@ namespace Cranium.Lib.Test.Tests.Linear
         {
             _TestNetworkStructure = new Network();
             BuildStructure();
-            _TestNetworkStructure.RandomiseWeights(0.01d);
+            _TestNetworkStructure.RandomiseWeights(0.3d);
             PrepData();
             int epoch = 0;
             bool Continue = true;
@@ -195,7 +195,10 @@ namespace Cranium.Lib.Test.Tests.Linear
         /// <summary>
         ///     Performs the foward pass on the network
         /// </summary>
-        private static void ForwardPass() { _TestNetworkStructure.FowardPass(); }
+        private static void ForwardPass()
+        {
+            _TestNetworkStructure.FowardPass();
+        }
 
         /// <summary>
         ///     Performs the reverse pass ont he network with the given row of prepared training data and the given weight momentum
@@ -206,7 +209,7 @@ namespace Cranium.Lib.Test.Tests.Linear
         private static void ReversePass(int row)
         {
             ((Output) _OutputLayer.GetNodes()[0]).SetTargetValue(_OutputData[row]);
-            _OutputLayer.ReversePass(0.1, 0.0);
+            _OutputLayer.ReversePass(0.3, 0.9);
         }
     }
 }

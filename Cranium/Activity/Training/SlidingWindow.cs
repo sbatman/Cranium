@@ -43,7 +43,7 @@ namespace Cranium.Lib.Activity.Training
         protected Int32 _DistanceToForcastHorrison;
 
         /// <summary>
-        ///     The outputs that are exspected
+        ///     The outputs that are expected
         /// </summary>
         protected Double[,] _ExpectedOutputs;
 
@@ -98,6 +98,7 @@ namespace Cranium.Lib.Activity.Training
         /// </summary>
         protected Int32 _WindowWidth;
 
+        protected bool _SetOuputToTarget;
 
         public SlidingWindow()
         {
@@ -114,6 +115,11 @@ namespace Cranium.Lib.Activity.Training
             _RND = (Random) info.GetValue("_RND", typeof (Random));
             _Recurrentlayers = (List<Structure.Layer.Base>) info.GetValue("_Recurrentlayers", typeof (List<Structure.Layer.Base>));
             _WindowWidth = info.GetInt32("_WindowWidth");
+        }
+
+        public virtual void SetOutputToTarget(bool state)
+        {
+            _SetOuputToTarget = state;
         }
 
         /// <summary>
@@ -255,7 +261,7 @@ namespace Cranium.Lib.Activity.Training
                 int s = sequencyList[_RND.Next(0, sequencyList.Count)];
                 sequencyList.Remove(s);
 
-                foreach (Structure.Layer.Base layer in _TargetNetwork.GetCurrentLayers()) foreach (Structure.Node.Base node in layer.GetNodes()) node.SetValue(0);
+                foreach (Structure.Node.Base node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
                 for (int i = 0; i < _WindowWidth; i++)
                 {
@@ -271,13 +277,22 @@ namespace Cranium.Lib.Activity.Training
 
                 _TargetNetwork.ReversePass();
 
+                if (_SetOuputToTarget)
+                {
+                    for (int x = 0; x < _OutputNodes.Count; x++)
+                    {
+                        var output = _OutputNodes[x] as Output;
+                        if (output != null) output.SetValue(_ExpectedOutputs[s, x]);
+                    }
+                }
+
                 //Calculate the current error
                 Double passError = _OutputNodes.OfType<Output>().Sum(output => output.GetError());
                 passError /= _OutputNodes.Count;
                 error += passError*passError;
             }
             _LastPassAverageError = error/_SequenceCount;
-            //  Console.WriteLine(_LastPassAverageError);
+            Console.WriteLine(_LastPassAverageError);
             if (_LogStream != null) _LogStream.WriteLine(_LastPassAverageError);
             if (_LogStream != null) _LogStream.Flush();
             return true;
