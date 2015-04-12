@@ -11,6 +11,7 @@ namespace Cranium.Lobe.Worker
         {
             using (Worker w = new Worker())
             {
+                Environment.SetEnvironmentVariable("MONO_REFLECTION_SERIALIZER", "yes");
                 w.HandelMessage += Console.WriteLine;
                 w.Start();
             }

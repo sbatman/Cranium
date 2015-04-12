@@ -21,9 +21,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Worker", "Lobe.Worker\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Manager", "Lobe.Manager\Lobe.Manager.csproj", "{A1601401-0896-4016-B519-1A83FD31D337}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{52B662AB-DBC3-4B1B-8A4A-73F74F74400B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sbatman.Networking", "..\Libs\ID-Networking\DotNet-Mono\Sbatman.Networking.csproj", "{E627BD2D-226A-4061-BD4E-7E86CF56936D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3DC415D9-7742-40BC-95D0-8BAEC9A5C775}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,10 +54,6 @@ Global
 		{A1601401-0896-4016-B519-1A83FD31D337}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1601401-0896-4016-B519-1A83FD31D337}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1601401-0896-4016-B519-1A83FD31D337}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E627BD2D-226A-4061-BD4E-7E86CF56936D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E627BD2D-226A-4061-BD4E-7E86CF56936D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E627BD2D-226A-4061-BD4E-7E86CF56936D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E627BD2D-226A-4061-BD4E-7E86CF56936D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,7 +65,6 @@ Global
 		{DB8195A8-0085-4866-BE7A-065CED69CE4C} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
 		{A1601401-0896-4016-B519-1A83FD31D337} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
-		{E627BD2D-226A-4061-BD4E-7E86CF56936D} = {52B662AB-DBC3-4B1B-8A4A-73F74F74400B}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = libtest\LibTest.csproj

@@ -22,6 +22,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using Sbatman.Networking;
 using Sbatman.Networking.Client;
+using Sbatman.Serialize;
 
 namespace Cranium.Lobe.Worker
 {
@@ -248,6 +249,7 @@ namespace Cranium.Lobe.Worker
         private void HandelA301Packet()
         {
             Console.WriteLine("Servers got no work");
+            _CanRequestWork = true;
         }
 
         /// <summary>

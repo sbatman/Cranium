@@ -6,6 +6,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using Sbatman.Networking;
 using Sbatman.Networking.Client;
+using Sbatman.Serialize;
 
 namespace Cranium.Lobe.Client
 {

@@ -7,6 +7,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Sbatman.Networking;
 using Sbatman.Networking.Server;
 using Base = Cranium.Lib.Activity.Base;
+using Sbatman.Serialize;
 
 namespace Cranium.Lobe.Manager
 {

@@ -53,7 +53,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             //Build Network
             _TestNetworkStructure = new Network();
             BuildStructure();
-            _TestNetworkStructure.SaveToFile("testtttt.dat");
+            _TestNetworkStructure.SaveToFile("test.dat");
             _TestNetworkStructure.RandomiseWeights(1.1d);
             //PrepData
             double[][] dataSet = StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
@@ -63,10 +63,10 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _SlidingWindowTraining.SetTargetNetwork(_TestNetworkStructure);
             _SlidingWindowTraining.SetMomentum(0.5f);
             _SlidingWindowTraining.SetLearningRate(0.004f);
-            _SlidingWindowTraining.SetDatasetReservedLength(0);
+            _SlidingWindowTraining.SetDatasetReservedLength(120);
             _SlidingWindowTraining.SetDistanceToForcastHorrison(3);
-            _SlidingWindowTraining.SetWindowWidth(6);
-            _SlidingWindowTraining.SetMaximumEpochs(5);
+            _SlidingWindowTraining.SetWindowWidth(12);
+            _SlidingWindowTraining.SetMaximumEpochs(1000);
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
