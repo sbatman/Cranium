@@ -95,6 +95,22 @@ namespace Cranium.Lib.Structure.Layer
             _ActivationFunction = activationFunction;
         }
 
+
+        public virtual Int32 GetMimumConnections()
+        {
+            return _MinimumConnections;
+        }
+
+        public virtual Int32 GetMaximumConnections()
+        {
+            return _MaximumConnections;
+        }
+
+        public virtual double GetLevelOfConnectivity()
+        {
+            return _LevelOfConnectivity;
+        }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="Echo_Reservoir" /> class. Used by the Serialiszer
         /// </summary>

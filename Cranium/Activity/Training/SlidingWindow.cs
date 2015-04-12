@@ -133,6 +133,11 @@ namespace Cranium.Lib.Activity.Training
             _WindowWidth = windowWidth;
         }
 
+        public virtual Int32 GetWindowWidth()
+        {
+            return _WindowWidth;
+        }
+
         /// <summary>
         ///     Sets the number of intervals ahead to predict
         /// </summary>
@@ -142,6 +147,11 @@ namespace Cranium.Lib.Activity.Training
         public virtual void SetDistanceToForcastHorrison(Int32 distance)
         {
             _DistanceToForcastHorrison = distance;
+        }
+
+        public virtual Int32 GetDistanceToForcastHorrison()
+        {
+            return _DistanceToForcastHorrison;
         }
 
         /// <summary>

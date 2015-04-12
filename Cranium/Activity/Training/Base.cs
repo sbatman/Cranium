@@ -117,6 +117,11 @@ namespace Cranium.Lib.Activity.Training
         /// </param>
         public virtual void SetMaximumEpochs(int epochs) { _MaxEpochs = epochs; }
 
+        public virtual Int32 GetMaximumEpcohs()
+        {
+            return _MaxEpochs;
+        }
+
         /// <summary>
         ///     Stop this training activity.
         /// </summary>
