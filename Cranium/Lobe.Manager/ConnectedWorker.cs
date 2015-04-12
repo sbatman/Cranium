@@ -4,8 +4,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
-using InsaneDev.Networking;
-using InsaneDev.Networking.Server;
+using Sbatman.Networking;
+using Sbatman.Networking.Server;
 using Base = Cranium.Lib.Activity.Base;
 
 namespace Cranium.Lobe.Manager
@@ -33,7 +33,7 @@ namespace Cranium.Lobe.Manager
             List<Packet> packetstoProcess = GetOutStandingProcessingPackets();
             foreach (Packet p in packetstoProcess)
             {
-                switch (p._Type)
+                switch (p.Type)
                 {
                     case 201:
                         HandelA201(p);
@@ -99,6 +99,11 @@ namespace Cranium.Lobe.Manager
             var binaryFormatter = new BinaryFormatter();
             var activity = (Base) binaryFormatter.Deserialize(new MemoryStream(jobData));
             Program.RegisterCompletedWork(activity);
+        }
+
+        protected override void HandelException(Exception e)
+        {
+           
         }
     }
 }

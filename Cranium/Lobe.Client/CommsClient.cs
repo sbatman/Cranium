@@ -4,15 +4,15 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using InsaneDev.Networking;
-using InsaneDev.Networking.Client;
+using Sbatman.Networking;
+using Sbatman.Networking.Client;
 
 namespace Cranium.Lobe.Client
 {
     public class CommsClient
     {
         protected int _CommsTimeout = 50000;
-        protected Base _ConnectionToManager = new Base();
+        protected BaseClient _ConnectionToManager = new BaseClient();
         protected string _IPAddress;
         protected int _Port;
 
@@ -46,7 +46,7 @@ namespace Cranium.Lobe.Client
                     {
                         foreach (Packet packet in _ConnectionToManager.GetPacketsToProcess())
                         {
-                            switch (packet._Type)
+                            switch (packet.Type)
                             {
                                 case 1101:
                                     return null;
@@ -85,7 +85,7 @@ namespace Cranium.Lobe.Client
                 {
                     if (_ConnectionToManager.GetPacketsToProcessCount() > 0)
                     {
-                        foreach (Guid jobGuid in from packet in _ConnectionToManager.GetPacketsToProcess() where packet._Type == 1001 select new Guid((byte[]) packet.GetObjects()[0]))
+                        foreach (Guid jobGuid in from packet in _ConnectionToManager.GetPacketsToProcess() where packet.Type == 1001 select new Guid((byte[]) packet.GetObjects()[0]))
                         {
 
                             return jobGuid;

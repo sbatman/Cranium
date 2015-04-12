@@ -60,9 +60,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Libs\ID-Networking\InsaneDev.Networking\InsaneDev.Networking.csproj">
+    <ProjectReference Include="..\..\Libs\ID-Networking\DotNet-Mono\Sbatman.Networking.csproj">
       <Project>{e627bd2d-226a-4061-bd4e-7e86cf56936d}</Project>
-      <Name>InsaneDev.Networking</Name>
+      <Name>Sbatman.Networking</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cranium.csproj">
       <Project>{9553b26d-5d2d-4013-82e1-4d7a24d526d8}</Project>

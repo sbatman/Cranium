@@ -5,14 +5,15 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using InsaneDev.Networking.Server;
+using Sbatman.Networking.Server;
+using Sbatman.Networking.Client;
 
 namespace Cranium.Lobe.Manager
 {
     internal class Program
     {
-        private static Base _CommsServerClient;
-        private static Base _CommsServerWorker;
+        private static BaseServer _CommsServerClient;
+        private static BaseServer _CommsServerWorker;
         private static readonly List<Guid> _PendingWork = new List<Guid>();
         private static readonly List<Tuple<Lib.Activity.Base, DateTime>> _WorkBeingProcessed = new List<Tuple<Lib.Activity.Base, DateTime>>();
         private static readonly List<Guid> _CompleteWork = new List<Guid>();
@@ -25,12 +26,12 @@ namespace Cranium.Lobe.Manager
             if (!SettingsLoader.LoadSettings("Settings.ini")) return;
             //Online The Comms system
             Console.WriteLine("Starting Comms Server for clients");
-            _CommsServerClient = new Base();
+            _CommsServerClient = new BaseServer();
             _CommsServerClient.Init(SettingsLoader.CommsClientLocalIP.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsClientPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsClientLocalIP), SettingsLoader.CommsClientPort), typeof(ConnectedClient));
             Console.WriteLine("Comms Server for clients Online at " + SettingsLoader.CommsClientLocalIP + ":" + SettingsLoader.CommsClientPort);
 
             Console.WriteLine("Starting Comms Server for workers");
-            _CommsServerWorker = new Base();
+            _CommsServerWorker = new BaseServer();
             _CommsServerWorker.Init(SettingsLoader.CommsWorkerLocalIP.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsWorkerPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsWorkerLocalIP), SettingsLoader.CommsWorkerPort), typeof(ConnectedWorker));
             Console.WriteLine("Comms Server for workers Online at " + SettingsLoader.CommsWorkerLocalIP + ":" + SettingsLoader.CommsWorkerPort);
 

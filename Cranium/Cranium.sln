@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cranium", "Cranium.csproj", "{9553B26D-5D2D-4013-82E1-4D7A24D526D8}"
 EndProject
@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Manager", "Lobe.Manage
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dependencies", "Dependencies", "{52B662AB-DBC3-4B1B-8A4A-73F74F74400B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InsaneDev.Networking", "..\Libs\ID-Networking\InsaneDev.Networking\InsaneDev.Networking.csproj", "{E627BD2D-226A-4061-BD4E-7E86CF56936D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sbatman.Networking", "..\Libs\ID-Networking\DotNet-Mono\Sbatman.Networking.csproj", "{E627BD2D-226A-4061-BD4E-7E86CF56936D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

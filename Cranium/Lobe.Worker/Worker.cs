@@ -20,8 +20,8 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using InsaneDev.Networking;
-using InsaneDev.Networking.Client;
+using Sbatman.Networking;
+using Sbatman.Networking.Client;
 
 namespace Cranium.Lobe.Worker
 {
@@ -38,7 +38,7 @@ namespace Cranium.Lobe.Worker
         ///     manager to recieve work or
         ///     for this worker lobe to get further work it will be required.
         /// </summary>
-        protected readonly Base _ConnectionToLobeManager = new Base();
+        protected readonly BaseClient _ConnectionToLobeManager = new BaseClient();
 
         /// <summary>
         ///     A list containing all the active worker services
@@ -216,7 +216,7 @@ namespace Cranium.Lobe.Worker
         /// <param name="p"></param>
         private void HandelIncomingPacket(Packet p)
         {
-            switch (p._Type)
+            switch (p.Type)
             {
                 case 200:
                     HandelA200Packet();
@@ -238,7 +238,7 @@ namespace Cranium.Lobe.Worker
         private void HandelA200Packet()
         {
             var responsePacket = new Packet(201);
-            responsePacket.AddInt(_ActiveWorkerServices.Count);
+            responsePacket.AddInt32(_ActiveWorkerServices.Count);
             _ConnectionToLobeManager.SendPacket(responsePacket);
         }
 

@@ -4,8 +4,8 @@ using System.Data;
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
-using InsaneDev.Networking;
-using InsaneDev.Networking.Server;
+using Sbatman.Networking;
+using Sbatman.Networking.Server;
 using Base = Cranium.Lib.Activity.Base;
 
 namespace Cranium.Lobe.Manager
@@ -25,7 +25,7 @@ namespace Cranium.Lobe.Manager
             List<Packet> packetstoProcess = GetOutStandingProcessingPackets();
             foreach (Packet p in packetstoProcess)
             {
-                switch (p._Type)
+                switch (p.Type)
                 {
                     case 1000:
                         HandelA1000(p);
@@ -82,6 +82,11 @@ namespace Cranium.Lobe.Manager
                 returnPacket.AddBytePacketCompressed(datapackage.ToArray());
                 SendPacket(returnPacket);
             }
+        }
+
+        protected override void HandelException(Exception e)
+        {
+  
         }
     }
 }
