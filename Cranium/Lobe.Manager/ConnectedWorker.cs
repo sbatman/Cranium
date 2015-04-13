@@ -21,7 +21,7 @@ namespace Cranium.Lobe.Manager
         /// The last time a ping packet was sent
         /// </summary>
         private DateTime _LastPing = DateTime.Now;
-        public ConnectedWorker(TcpClient incomingSocket) : base(incomingSocket) { }
+        public ConnectedWorker(TcpClient incomingSocket) : base(incomingSocket, 40960) { }
 
         protected override void ClientUpdateLogic()
         {

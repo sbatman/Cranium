@@ -14,7 +14,7 @@
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>ddddf799</NuGetPackageImportStamp>
+    <NuGetPackageImportStamp>53d83da7</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -41,12 +41,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Sbatman.Networking, Version=0.11.4.2046, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Sbatman.Networking, Version=0.11.6.2054, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Sbatman.Networking.0.11.4.2046\lib\net45\Sbatman.Networking.dll</HintPath>
+      <HintPath>..\packages\Sbatman.Networking.0.11.6.2054\lib\net45\Sbatman.Networking.dll</HintPath>
     </Reference>
     <Reference Include="Sbatman.Serialize">
-      <HintPath>..\packages\Sbatman.Serialize.0.3.0.2039\lib\portable-net45+win+wpa81+wp80\Sbatman.Serialize.dll</HintPath>
+      <HintPath>..\packages\Sbatman.Serialize.0.3.1.1234\lib\portable-net45+win+wpa81+wp80\Sbatman.Serialize.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

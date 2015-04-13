@@ -160,6 +160,11 @@ namespace Cranium.Lib.Structure
             foreach (Weight.Base w in from l in _CurrentLayers from n in l.GetNodes() from w in n.GetFowardWeights() select w) w.SetWeight(((rnd.NextDouble()*2) - 1)*varianceFromZero);
         }
 
+        public virtual Int32 GetWeightCount()
+        {
+            return _CurrentLayers.Sum(a => a.GetNodes().Sum(b => b.GetFowardWeights().Length));
+        }
+
         /// <summary>
         ///     Performs a recursive foward pass across the network causing the update of all values of all nodes that have reverse
         ///     weights.

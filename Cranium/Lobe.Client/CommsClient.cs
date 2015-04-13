@@ -21,7 +21,7 @@ namespace Cranium.Lobe.Client
         {
             _IPAddress = ipAddress;
             _Port = port;
-            return _ConnectionToManager.Connect(ipAddress, port);
+            return _ConnectionToManager.Connect(ipAddress, port, 5000000);
         }
 
         public void DisconnectFromManager()
@@ -61,7 +61,7 @@ namespace Cranium.Lobe.Client
                     }
                 }
                 if (_ConnectionToManager.IsConnected())_ConnectionToManager.Disconnect();
-                _ConnectionToManager.Connect(_IPAddress, _Port);
+                _ConnectionToManager.Connect(_IPAddress, _Port, 5000000);
             }
             return null;
         }
@@ -95,7 +95,7 @@ namespace Cranium.Lobe.Client
                     Thread.Sleep(1);
                 }
                 if (_ConnectionToManager.IsConnected()) _ConnectionToManager.Disconnect();
-                _ConnectionToManager.Connect(_IPAddress, _Port);
+                _ConnectionToManager.Connect(_IPAddress, _Port, 5000000);
             }
             throw new Exception("Mananger unavailable or busy");
         }

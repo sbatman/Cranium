@@ -14,9 +14,10 @@ namespace Cranium.Lobe.Manager
     internal class ConnectedClient : ClientConnection
     {
         public ConnectedClient(TcpClient incomingSocket)
-        : base(incomingSocket)
+        : base(incomingSocket,40960)
         {
             _ClientUpdateInterval = new TimeSpan(0, 0, 0, 0, 1);
+            
         }
 
         protected override void ClientUpdateLogic()
@@ -58,14 +59,24 @@ namespace Cranium.Lobe.Manager
             Guid jobGUID = Guid.NewGuid();
             var jobData = (byte[])packetObjects[0];
 
-            var binaryFormatter = new BinaryFormatter();
-            var activity = (Base)binaryFormatter.Deserialize(new MemoryStream(jobData));
-            activity.SetGUID(jobGUID);
+
+            Base activity = null;
+            try
+            {
+                var binaryFormatter = new BinaryFormatter();
+                activity = (Base) binaryFormatter.Deserialize(new MemoryStream(jobData));
+                activity.SetGUID(jobGUID);
+         
 
             var returnPacket = new Packet(1001);
             returnPacket.AddBytePacketCompressed(jobGUID.ToByteArray());
             SendPacket(returnPacket);
             Program.AddJob(activity);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
         }
 
         protected void HandelA1100(Packet p)
