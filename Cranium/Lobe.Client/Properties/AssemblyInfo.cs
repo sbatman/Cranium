@@ -27,9 +27,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Cranium.Lobe.Client")]
 [assembly: AssemblyDescription("A Lightweight Neural Network Framework for C#")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("InsaneDev.co.uk")]
+[assembly: AssemblyCompany("sbatman.com")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("InsaneDev.co.uk")]
+[assembly: AssemblyCopyright("sbatman.com")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -54,4 +54,4 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("0.12.1")]

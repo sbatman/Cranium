@@ -253,7 +253,7 @@ namespace Cranium.Lobe.Worker
         /// </summary>
         private void HandelA200Packet()
         {
-            Packet responsePacket = new Packet((Int16)201);
+            Packet responsePacket = new Packet(201);
             responsePacket.Add((Int32)_ActiveWorkerServices.Count);
             _ConnectionToLobeManager.SendPacket(responsePacket);
         }
