@@ -25,9 +25,9 @@ using System.Reflection;
 [assembly: AssemblyTitle("Cranium Lib Test")]
 [assembly: AssemblyDescription("A Lightweight Neural Network Framework for C#")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("InsaneDev.co.uk")]
+[assembly: AssemblyCompany("sbatman.com")]
 [assembly: AssemblyProduct("")]
-[assembly: AssemblyCopyright("InsaneDev.co.uk")]
+[assembly: AssemblyCopyright("sbatman.com")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

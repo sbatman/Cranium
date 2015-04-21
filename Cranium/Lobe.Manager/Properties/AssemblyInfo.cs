@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Cranium.Lobe.Manager")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("InsaneDev.co.uk")]
+[assembly: AssemblyCompany("sbatman.com")]
 [assembly: AssemblyProduct("Lobe.Manager")]
-[assembly: AssemblyCopyright("InsaneDev.co.uk")]
+[assembly: AssemblyCopyright("sbatman.com")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -35,5 +35,5 @@ using System.Runtime.InteropServices;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 
-[assembly: AssemblyVersion("1.0.0")]
-[assembly: AssemblyFileVersion("1.0.0")]
+[assembly: AssemblyVersion("0.12.1")]
+[assembly: AssemblyFileVersion("0.12.1")]
