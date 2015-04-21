@@ -40,9 +40,9 @@ namespace Cranium.Lib.Structure
         protected List<Base> _CurrentLayers = new List<Base>();
         protected List<Base> _DetectedBottomLayers = new List<Base>();
         protected List<Base> _DetectedTopLayers = new List<Base>();
-        protected int _LastIssuedLayerID;
-        protected double _LearningRate;
-        protected double _Momenum;
+        protected Int32 _LastIssuedLayerID;
+        protected Double _LearningRate;
+        protected Double _Momenum;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Network" /> class.
@@ -156,7 +156,7 @@ namespace Cranium.Lib.Structure
         /// </param>
         public virtual void RandomiseWeights(Double varianceFromZero)
         {
-            var rnd = new Random();
+            Random rnd = new Random();
             foreach (Weight.Base w in from l in _CurrentLayers from n in l.GetNodes() from w in n.GetFowardWeights() select w) w.SetWeight(((rnd.NextDouble()*2) - 1)*varianceFromZero);
         }
 
@@ -182,7 +182,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The learning rate.
         /// </returns>
-        public virtual double GetLearningRate() { return _LearningRate; }
+        public virtual Double GetLearningRate() { return _LearningRate; }
 
         /// <summary>
         ///     Gets the current momentum.
@@ -190,7 +190,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The momentum.
         /// </returns>
-        public virtual double GetMomentum() { return _Momenum; }
+        public virtual Double GetMomentum() { return _Momenum; }
 
         /// <summary>
         ///     Sets the current learning rate.
@@ -198,7 +198,7 @@ namespace Cranium.Lib.Structure
         /// <param name='newLearningRate'>
         ///     New learning rate.
         /// </param>
-        public virtual void SetLearningRate(double newLearningRate) { _LearningRate = newLearningRate; }
+        public virtual void SetLearningRate(Double newLearningRate) { _LearningRate = newLearningRate; }
 
         /// <summary>
         ///     Sets the current momentum.
@@ -206,26 +206,26 @@ namespace Cranium.Lib.Structure
         /// <param name='newMomentum'>
         ///     New momentum.
         /// </param>
-        public virtual void SetMomentum(double newMomentum) { _Momenum = newMomentum; }
+        public virtual void SetMomentum(Double newMomentum) { _Momenum = newMomentum; }
 
-        public void SaveToFile(string fileName)
+        public void SaveToFile(String fileName)
         {
-            var formatter = new BinaryFormatter {AssemblyFormat = FormatterAssemblyStyle.Simple};
+            BinaryFormatter formatter = new BinaryFormatter {AssemblyFormat = FormatterAssemblyStyle.Simple};
             using (FileStream atextwriter = File.Create(fileName))
             {
-                var compressionStream = new GZipStream(atextwriter, CompressionMode.Compress);
+                GZipStream compressionStream = new GZipStream(atextwriter, CompressionMode.Compress);
                 formatter.Serialize(compressionStream, this);
                 compressionStream.Close();
             }
         }
 
-        public static Network LoadFromFile(string filename)
+        public static Network LoadFromFile(String filename)
         {
             Network returnNetwork;
             using (FileStream loadedFile = File.OpenRead(filename))
             {
-                var compressionStream = new GZipStream(loadedFile, CompressionMode.Decompress);
-                var formatter = new BinaryFormatter();
+                GZipStream compressionStream = new GZipStream(loadedFile, CompressionMode.Decompress);
+                BinaryFormatter formatter = new BinaryFormatter();
                 returnNetwork = (Network) formatter.Deserialize(compressionStream);
                 compressionStream.Close();
             }
@@ -264,7 +264,7 @@ namespace Cranium.Lib.Structure
 
         #region IDeserializationCallback implementation
 
-        public void OnDeserialization(object sender) { StructureUpdate(); }
+        public void OnDeserialization(Object sender) { StructureUpdate(); }
 
         #endregion
     }

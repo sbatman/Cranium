@@ -31,7 +31,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <summary>
         ///     The steepness of the bellcurve.
         /// </summary>
-        protected double _Steepness;
+        protected Double _Steepness;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Gaussian" /> class.
@@ -54,7 +54,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
 
         #region implemented abstract members of Cranium.Structure.ActivationFunction.Base
 
-        public override double Compute(double input) { return Math.Exp(-Math.Pow(_Steepness*input, 2.0d)); }
+        public override Double Compute(Double input) { return Math.Exp(-Math.Pow(_Steepness*input, 2.0d)); }
 
         /// <summary>
         ///     Computes the derivative using the activation function.
@@ -65,7 +65,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     Input.
         /// </param>
-        public override double ComputeDerivative(double input) { return -2*input*_Steepness*Compute(input)*input; }
+        public override Double ComputeDerivative(Double input) { return -2*input*_Steepness*Compute(input)*input; }
 
         public override void Dispose() { }
 

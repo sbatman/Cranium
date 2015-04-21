@@ -53,7 +53,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// </param>
         public override Double Compute(Double input)
         {
-            double temp = Math.Exp(input*2.0);
+            Double temp = Math.Exp(input*2.0);
             return (temp - 1.0)/(temp + 1.0);
         }
 

@@ -15,6 +15,7 @@
 
 #region Usings
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -39,7 +40,7 @@ namespace Cranium.Lib.Data
         /// <param name='fileName'>
         ///     File name.
         /// </param>
-        public static void PrintArrayToFile(IEnumerable<double> data, string fileName) { using (StreamWriter stream = File.CreateText(fileName)) foreach (double t in data) stream.WriteLine(t); }
+        public static void PrintArrayToFile(IEnumerable<Double> data, String fileName) { using (StreamWriter stream = File.CreateText(fileName)) foreach (Double t in data) stream.WriteLine(t); }
 
         /// <summary>
         ///     Prints the provided multi-dimentional array to a csv file with the given filename
@@ -50,13 +51,13 @@ namespace Cranium.Lib.Data
         /// <param name='fileName'>
         ///     File name.
         /// </param>
-        public static void PrintArrayToFile(double[][] data, string fileName)
+        public static void PrintArrayToFile(Double[][] data, String fileName)
         {
             using (StreamWriter stream = File.CreateText(fileName))
             {
-                for (int x = 0; x < data.GetLength(0); x++)
+                for (Int32 x = 0; x < data.GetLength(0); x++)
                 {
-                    for (int y = 0; y < data[x].GetLength(0); y++)
+                    for (Int32 y = 0; y < data[x].GetLength(0); y++)
                     {
                         if (y + 1 < data[x].GetLength(0)) stream.Write(data[x][y] + ",");
                         else stream.Write(data[x][y]);
@@ -66,13 +67,13 @@ namespace Cranium.Lib.Data
             }
         }
 
-        public static string PrintArrayToString(double[][] data)
+        public static String PrintArrayToString(Double[][] data)
         {
-            var theString = new StringBuilder();
+            StringBuilder theString = new StringBuilder();
 
-            for (int x = 0; x < data.GetLength(0); x++)
+            for (Int32 x = 0; x < data.GetLength(0); x++)
             {
-                for (int y = 0; y < data[x].GetLength(0); y++)
+                for (Int32 y = 0; y < data[x].GetLength(0); y++)
                 {
                     if (y + 1 < data[x].GetLength(0)) theString.Append(data[x][y] + ",");
                     else theString.Append(data[x][y]);

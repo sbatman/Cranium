@@ -16,7 +16,6 @@
 #region Usings
 
 using System;
-using System.Diagnostics;
 using System.Runtime.Serialization;
 
 #endregion
@@ -36,8 +35,8 @@ namespace Cranium.Lib.Structure.Weight
         /// </summary>
         public enum ConnectionDirection
         {
-            Reverse,
-            Forward
+            REVERSE,
+            FORWARD
         };
 
         /// <summary>
@@ -138,7 +137,7 @@ namespace Cranium.Lib.Structure.Weight
         /// <returns>
         ///     The past weight change.
         /// </returns>
-        public virtual double GetPastWeightChange()
+        public virtual Double GetPastWeightChange()
         {
             return _PastWeightChange;
         }

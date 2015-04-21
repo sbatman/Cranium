@@ -33,7 +33,7 @@ namespace Cranium.Lib.Test
         /// <param name='args'>
         ///     The command-line arguments.
         /// </param>
-        public static void Main(string[] args)
+        public static void Main(String[] args)
         {
             Console.WriteLine("Which test would you like to run");
             Console.WriteLine("-------------------------------------------------");
@@ -51,28 +51,28 @@ namespace Cranium.Lib.Test
             switch (pressedKey)
             {
                 case ConsoleKey.D1:
-                    XOR2Test.Run();
+                    Xor2Test.Run();
                     break;
                 case ConsoleKey.D2:
-                    XOR3Test.Run();
+                    Xor3Test.Run();
                     break;
                 case ConsoleKey.D3:
-                    RNNTest.Run();
+                    RnnTest.Run();
                     break;
                 case ConsoleKey.D4:
-                    RNNTest2.Run();
+                    RnnTest2.Run();
                     break;
                 case ConsoleKey.D5:
-                    MG_Recurrent_Test.Run();
+                    MgRecurrentTest.Run();
                     break;
                 case ConsoleKey.D6:
-                    MG_EchoState_Test.Run();
+                    MgEchoStateTest.Run();
                     break;
                 case ConsoleKey.D7:
-                    MG_EchoState_Test_Lobe.Run();
+                    MgEchoStateTestLobe.Run();
                     break;
                 case ConsoleKey.D8:
-                    EchoState_Test_Sin_Generator.Run();
+                    EchoStateTestSinGenerator.Run();
                     break;
             }
         }

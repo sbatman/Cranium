@@ -56,11 +56,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Sbatman.Networking">
-      <HintPath>..\packages\Sbatman.Networking.0.11.6.2054\lib\net45\Sbatman.Networking.dll</HintPath>
+      <HintPath>..\packages\Sbatman.Networking.0.13.0.2320\lib\net45\Sbatman.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="Sbatman.Serialize">
-      <HintPath>..\packages\Sbatman.Serialize.0.3.1.1234\lib\portable-net45+win+wpa81+wp80\Sbatman.Serialize.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Sbatman.Serialize, Version=0.4.2.1525, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Sbatman.Serialize.0.4.2.1525\lib\portable-net45+win+wpa81+wp80\Sbatman.Serialize.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.IO.Compression" />

@@ -28,7 +28,7 @@ namespace Cranium.Lib.Structure.Node
     [Serializable]
     public class Bias : Base
     {
-        protected double _BiasValue = 1;
+        protected Double _BiasValue = 1;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Bias" /> class.
@@ -66,7 +66,7 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The error.
         /// </returns>
-        public override double GetError() { return 0; }
+        public override Double GetError() { return 0; }
 
         /// <summary>
         ///     Sets the new static value of this node
@@ -74,7 +74,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='newValue'>
         ///     New value.
         /// </param>
-        public override void SetValue(double newValue) { _BiasValue = newValue; }
+        public override void SetValue(Double newValue) { _BiasValue = newValue; }
 
         /// <summary>
         ///     Connects a second node to this one, building the correct weight and adding it to the list of weights that are
@@ -89,9 +89,9 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='startingWeight'>
         ///     Starting weight.
         /// </param>
-        public override void ConnectToNode(Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, float startingWeight)
+        public override void ConnectToNode(Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, Single startingWeight)
         {
-            if (connectionDirectionToNode == Weight.Base.ConnectionDirection.Reverse) return;
+            if (connectionDirectionToNode == Weight.Base.ConnectionDirection.REVERSE) return;
             base.ConnectToNode(nodeToConnect, connectionDirectionToNode, startingWeight);
         }
 

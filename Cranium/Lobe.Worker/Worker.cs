@@ -20,7 +20,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using Sbatman.Networking;
+using Cranium.Lib.Activity;
 using Sbatman.Networking.Client;
 using Sbatman.Serialize;
 
@@ -30,9 +30,9 @@ namespace Cranium.Lobe.Worker
     {
         public delegate void MessageCallBack(String s);
 
-        private long _CompletedJobs = 0;
-        private int TargetThreads;
-        private int CurrentThreads;
+        private Int64 _CompletedJobs;
+        private Int32 _TargetThreads;
+        private Int32 _CurrentThreads;
 
         /// <summary>
         ///     The current connection to the lobe manager, a connection is not required for work to be completed however for the
@@ -50,12 +50,12 @@ namespace Cranium.Lobe.Worker
         ///     A list of all the current pending work that needs to be processed. This will commonly contain
         ///     only one pending job unless settings are changed to specify otherwise.
         /// </summary>
-        protected readonly List<Lib.Activity.Base> _PendingWork = new List<Lib.Activity.Base>();
+        protected readonly List<Base> _PendingWork = new List<Base>();
 
         /// <summary>
         ///     This is a list of completed jobs, these will need ot be uploaded to the lobe manager when possible
         /// </summary>
-        protected readonly List<Lib.Activity.Base> _CompletedWork = new List<Lib.Activity.Base>();
+        protected readonly List<Base> _CompletedWork = new List<Base>();
 
         /// <summary>
         ///     This is a list of packets recieved from the lobe manager that needs to be processed when possible
@@ -76,15 +76,15 @@ namespace Cranium.Lobe.Worker
         /// <summary>
         ///     States wether the system is running and when set to false acts as a kill switch
         /// </summary>
-        protected bool _Running;
+        protected Boolean _Running;
 
         protected Settings _Settings = new Settings();
 
-        protected bool _CanRequestWork;
+        protected Boolean _CanRequestWork;
 
         public event MessageCallBack HandelMessage;
 
-        public void AnnounceStatus(string msg)
+        public void AnnounceStatus(String msg)
         {
             lock (this)
             {
@@ -99,29 +99,38 @@ namespace Cranium.Lobe.Worker
             AnnounceStatus("Lobe Worker Launching");
             _Running = true;
             _TimeOfLastManagerComms = DateTime.Now;
-            TargetThreads = _Settings.WorkerThreadCount;
+            _TargetThreads = _Settings.WorkerThreadCount;
 
             //Prepare the worker threads
             AnnounceStatus("Preparing Workers");
-            for (int i = 0; i < TargetThreads; i++) _ActiveWorkerServices.Add(new WorkerThread(this));
+            for (Int32 i = 0; i < _TargetThreads; i++)
+            {
+                lock (_ActiveWorkerServices)
+                {
+                    _ActiveWorkerServices.Add(new WorkerThread(this));
+                }
+            }
 
             AnnounceStatus("Connecting To Manager");
-            if (!_ConnectionToLobeManager.Connect(_Settings.CommsManagerIP, _Settings.CommsManagerPort, 500000)) AnnounceStatus("Unable to communicate with specified lobe manager, aborting!");
+            lock (_PacketsToBeProcessed)
+            {
+                if (!_ConnectionToLobeManager.Connect(_Settings.CommsManagerIp, _Settings.CommsManagerPort, 500000)) AnnounceStatus("Unable to communicate with specified lobe manager, aborting!");
+            }
 
             AnnounceStatus("Lobe Worker Online");
-            while (_Running || _ActiveWorkerServices.Count>0)
+            while (_Running || _ActiveWorkerServices.Count > 0)
             {
                 lock (this)
                 {
                     _ActiveWorkerServices = _ActiveWorkerServices.Where(a => a.IsRunning()).ToList();
-                    if (CurrentThreads < TargetThreads && _Running)
+                    if (_CurrentThreads < _TargetThreads && _Running)
                     {
                         _ActiveWorkerServices.Add(new WorkerThread(this));
                     }
                     if (!_ConnectionToLobeManager.IsConnected())
                     {
                         AnnounceStatus("Unable to communicate with specified lobe manager, Attempting to reconnect");
-                        if (_ConnectionToLobeManager.Connect(_Settings.CommsManagerIP, _Settings.CommsManagerPort, 500000)) AnnounceStatus("Connection Re-established");
+                        if (_ConnectionToLobeManager.Connect(_Settings.CommsManagerIp, _Settings.CommsManagerPort, 500000)) AnnounceStatus("Connection Re-established");
                         _CanRequestWork = true;
                     }
                     else
@@ -130,19 +139,25 @@ namespace Cranium.Lobe.Worker
                         {
                             if (_CompletedWork.Count > 0)
                             {
-                                Lib.Activity.Base job = _CompletedWork[0];
-                                _CompletedWork.RemoveAt(0);
-                                var binaryFormatter = new BinaryFormatter();
-                                var datapackage = new MemoryStream();
-                                binaryFormatter.Serialize(datapackage, job);
-                                _CompletedJobs++;
-                                var responsePacket = new Packet(400);
-                                responsePacket.AddBytePacketCompressed(datapackage.ToArray());
-                                _ConnectionToLobeManager.SendPacket(responsePacket);
-
-                                if (File.Exists(_Settings.CompletedWorkDirectory + "/" + job.GetGUID()))
+                                using (Base job = _CompletedWork[0])
                                 {
-                                    File.Delete(_Settings.CompletedWorkDirectory + "/" + job.GetGUID());
+                                    _CompletedWork.RemoveAt(0);
+                                    BinaryFormatter binaryFormatter = new BinaryFormatter();
+
+                                    using (MemoryStream datapackage = new MemoryStream())
+                                    {
+                                        binaryFormatter.Serialize(datapackage, job);
+                                        _CompletedJobs++;
+                                        Packet responsePacket = new Packet(400);
+                                        responsePacket.Add(datapackage.ToArray(), true);
+                                        _ConnectionToLobeManager.SendPacket(responsePacket);
+
+                                        if (File.Exists(String.Format("{0}/{1}", _Settings.CompletedWorkDirectory, job.GetGuid())))
+                                        {
+                                            File.Delete(String.Format("{0}/{1}", _Settings.CompletedWorkDirectory, job.GetGuid()));
+                                        }
+
+                                    }
                                 }
                             }
                         }
@@ -150,7 +165,7 @@ namespace Cranium.Lobe.Worker
                         {
                             if (_PendingWork.Count < _Settings.WorkBufferCount && _Running && _CanRequestWork)
                             {
-                                var p = new Packet(300); //Generate a work request packet
+                                Packet p = new Packet(300); //Generate a work request packet
                                 _ConnectionToLobeManager.SendPacket(p);
                                 _CanRequestWork = false;
                             }
@@ -184,9 +199,9 @@ namespace Cranium.Lobe.Worker
             }
             lock (_ActiveWorkerServices)
             {
-                foreach (var aWS in _ActiveWorkerServices)
+                foreach (WorkerThread aWs in _ActiveWorkerServices)
                 {
-                    aWS.StopGracefully();
+                    aWs.StopGracefully();
                 }
             }
             AnnounceStatus("Lobe Worker Exiting");
@@ -238,8 +253,8 @@ namespace Cranium.Lobe.Worker
         /// </summary>
         private void HandelA200Packet()
         {
-            var responsePacket = new Packet(201);
-            responsePacket.AddInt32(_ActiveWorkerServices.Count);
+            Packet responsePacket = new Packet((Int16)201);
+            responsePacket.Add((Int32)_ActiveWorkerServices.Count);
             _ConnectionToLobeManager.SendPacket(responsePacket);
         }
 
@@ -260,13 +275,16 @@ namespace Cranium.Lobe.Worker
         {
             AnnounceStatus("Recieved Job");
             _CanRequestWork = true;
-            object[] dataPackage = p.GetObjects();
-            var serialisedAcitvity = (byte[])dataPackage[0];
-            var datastream = new MemoryStream(serialisedAcitvity);
-            var binaryFormatter = new BinaryFormatter();
-            var activity = (Lib.Activity.Base)binaryFormatter.Deserialize(datastream);
+            Object[] dataPackage = p.GetObjects();
+            Byte[] serialisedAcitvity = (Byte[])dataPackage[0];
+            Base activity;
+            using (MemoryStream datastream = new MemoryStream(serialisedAcitvity))
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                activity = (Base)binaryFormatter.Deserialize(datastream);
+            }
             if (!Directory.Exists(_Settings.PendingWorkDirectory)) Directory.CreateDirectory(_Settings.PendingWorkDirectory);
-            activity.SaveToDisk(_Settings.PendingWorkDirectory + "/" + activity.GetGUID());
+            activity.SaveToDisk(_Settings.PendingWorkDirectory + "/" + activity.GetGuid());
             lock (_PendingWork)
             {
                 _PendingWork.Add(activity);
@@ -278,17 +296,14 @@ namespace Cranium.Lobe.Worker
         ///     avaliable.
         /// </summary>
         /// <returns></returns>
-        public Lib.Activity.Base GetPendingWork()
+        public Base GetPendingWork()
         {
             lock (_PendingWork)
             {
-                if (_PendingWork.Count > 0)
-                {
-                    Lib.Activity.Base work = _PendingWork[0];
-                    _PendingWork.RemoveAt(0);
-                    return work;
-                }
-                return null;
+                if (_PendingWork.Count <= 0) return null;
+                Base work = _PendingWork[0];
+                _PendingWork.RemoveAt(0);
+                return work;
             }
         }
 
@@ -296,13 +311,13 @@ namespace Cranium.Lobe.Worker
         ///     adds a peice of work to the work completed list ready to be sent to the manager
         /// </summary>
         /// <param name="work"></param>
-        public void AddToCompletedWork(Lib.Activity.Base work)
+        public void AddToCompletedWork(Base work)
         {
             lock (_CompletedWork)
             {
                 _CompletedWork.Add(work);
                 if (!Directory.Exists(_Settings.CompletedWorkDirectory)) Directory.CreateDirectory(_Settings.CompletedWorkDirectory);
-                work.SaveToDisk(_Settings.CompletedWorkDirectory + "/" + work.GetGUID());
+                work.SaveToDisk(_Settings.CompletedWorkDirectory + "/" + work.GetGuid());
             }
 
         }
@@ -316,70 +331,66 @@ namespace Cranium.Lobe.Worker
             _PacketsToBeProcessed.Clear();
         }
 
-        public bool IsRunning()
+        public Boolean IsRunning()
         {
             lock (this) return _Running;
         }
 
-        public bool isConnectedToManager()
+        public Boolean IsConnectedToManager()
         {
             lock (this) return _ConnectionToLobeManager.IsConnected();
         }
 
-        public int GetWorkerThreadCount()
+        public Int32 GetWorkerThreadCount()
         {
             lock (this) return _ActiveWorkerServices.Count;
         }
 
-        public int GetPendingWorkCount()
+        public Int32 GetPendingWorkCount()
         {
             lock (this) return _PendingWork.Count;
         }
 
-        public int GetWorkCompletedCount()
+        public Int32 GetWorkCompletedCount()
         {
             lock (this) return _CompletedWork.Count;
         }
 
-        public long GetCompletedJobCount()
+        public Int64 GetCompletedJobCount()
         {
             lock (this) return _CompletedJobs;
         }
 
         public void IncrementCurrentThreads()
         {
-            lock (this) CurrentThreads++;
+            lock (this) _CurrentThreads++;
         }
 
         public void DecrementCurrentThreads()
         {
-            lock (this) CurrentThreads--;
+            lock (this) _CurrentThreads--;
         }
 
-        public bool ThreadCountCheck()
+        public Boolean ThreadCountCheck()
         {
-            lock (this) return CurrentThreads > TargetThreads;
+            lock (this) return _CurrentThreads > _TargetThreads;
         }
 
 
-        public void SetCoreUsage(int cores, int max)
+        public void SetCoreUsage(Int32 cores, Int32 max)
         {
             lock (this)
             {
-                TargetThreads = cores;
-                long AffinityMask = 0;
-                for (int x = (max - cores); x < max; x++)
+                _TargetThreads = cores;
+                Int64 affinityMask = 0;
+                for (Int32 x = (max - cores); x < max; x++)
                 {
-                    AffinityMask |= (1 << x);
+                    affinityMask |= (1 << x);
                 }
-                Process Proc = Process.GetCurrentProcess();
-                foreach (ProcessThread thread in Proc.Threads)
+                Process proc = Process.GetCurrentProcess();
+                foreach (ProcessThread thread in proc.Threads.Cast<ProcessThread>().Where(thread => thread.Id != Thread.CurrentThread.ManagedThreadId))
                 {
-                    if (thread.Id == AppDomain.GetCurrentThreadId())
-                    {
-                        continue;
-                    }
-                    thread.ProcessorAffinity = (IntPtr)AffinityMask;
+                    thread.ProcessorAffinity = (IntPtr)affinityMask;
                 }
             }
         }

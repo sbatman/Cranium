@@ -7,27 +7,27 @@ namespace Cranium.Lobe.Worker
 {
     public class Settings
     {
-        public int WorkerThreadCount = -1;
-        public int WorkBufferCount = -1;
-        public string CommsManagerIP;
-        public int CommsManagerPort;
-        public string CompletedWorkDirectory;
-        public string PendingWorkDirectory;
+        public Int32 WorkerThreadCount = -1;
+        public Int32 WorkBufferCount = -1;
+        public String CommsManagerIp;
+        public Int32 CommsManagerPort;
+        public String CompletedWorkDirectory;
+        public String PendingWorkDirectory;
 
         /// <summary>
         ///     Loads in the settings file for the worker agent, this will build a dictionary of variables to be used.
         /// </summary>
         /// <param name="fileName"></param>
-        public bool LoadSettings(string fileName)
+        public Boolean LoadSettings(String fileName)
         {
             Console.WriteLine("Loading Settings from file " + fileName);
-            var dictionaryOfSettings = new Dictionary<string, string>();
+            Dictionary<String, String> dictionaryOfSettings = new Dictionary<String, String>();
             if (!File.Exists(fileName)) throw (new Exception("Settings file " + fileName + " not found"));
             using (StreamReader settingsFile = File.OpenText(fileName))
             {
-                var fileContents = new List<string>();
+                List<String> fileContents = new List<String>();
                 while (!settingsFile.EndOfStream) fileContents.Add(settingsFile.ReadLine());
-                foreach (var parts in
+                foreach (String[] parts in
                          fileContents.Where(line => !line.StartsWith("#")).Select(line => line.Split("=".ToCharArray())).Where(parts => parts.Length > 1)) dictionaryOfSettings.Add(parts[0], parts[1]);
             }
 
@@ -37,8 +37,8 @@ namespace Cranium.Lobe.Worker
 
             if (dictionaryOfSettings.ContainsKey("WorkerThreadCount"))
             {
-                int count;
-                if (!int.TryParse(dictionaryOfSettings["WorkerThreadCount"], out count)) throw (new Exception("Error parsing WorkerThreadCount"));
+                Int32 count;
+                if (!Int32.TryParse(dictionaryOfSettings["WorkerThreadCount"], out count)) throw (new Exception("Error parsing WorkerThreadCount"));
                 if (count < 1 || count > 255) throw (new Exception("Invalid WorkerThreadCount specified"));
                 WorkerThreadCount = count;
             }
@@ -46,8 +46,8 @@ namespace Cranium.Lobe.Worker
 
             if (dictionaryOfSettings.ContainsKey("WorkBufferCount"))
             {
-                int count;
-                if (!int.TryParse(dictionaryOfSettings["WorkBufferCount"], out count)) throw (new Exception("Error parsing WorkBufferCount"));
+                Int32 count;
+                if (!Int32.TryParse(dictionaryOfSettings["WorkBufferCount"], out count)) throw (new Exception("Error parsing WorkBufferCount"));
                 if (count < 1 || count > 255) throw (new Exception("Invalid WorkBufferCount specified"));
                 WorkBufferCount = count;
             }
@@ -56,14 +56,14 @@ namespace Cranium.Lobe.Worker
             if (dictionaryOfSettings.ContainsKey("ManagerIP"))
             {
                 if (dictionaryOfSettings["ManagerIP"].Length == 0) throw (new Exception("ManagerIP not correctly specified"));
-                CommsManagerIP = dictionaryOfSettings["ManagerIP"];
+                CommsManagerIp = dictionaryOfSettings["ManagerIP"];
             }
             else throw (new Exception("No ManagerIP specified"));
 
             if (dictionaryOfSettings.ContainsKey("ManagerPort"))
             {
-                int port;
-                if (!int.TryParse(dictionaryOfSettings["ManagerPort"], out port)) throw (new Exception("Error parsing ManagerPort"));
+                Int32 port;
+                if (!Int32.TryParse(dictionaryOfSettings["ManagerPort"], out port)) throw (new Exception("Error parsing ManagerPort"));
                 if (port < 1000 || port > 36000) throw (new Exception("Invalid ManagerPort specified, must be within 1000-36000"));
                 CommsManagerPort = port;
             }

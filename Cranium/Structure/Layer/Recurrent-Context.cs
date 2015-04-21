@@ -40,7 +40,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     How many context nodes should be created per source node
         /// </summary>
-        protected int _LevelOfContext = 1;
+        protected Int32 _LevelOfContext = 1;
 
         /// <summary>
         ///     The source ndoes used when building the recurrent context
@@ -56,7 +56,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='activationFunction'>
         ///     Activation function to be used for the context nodes.
         /// </param>
-        public RecurrentContext(int levelOfContext, ActivationFunction.Base activationFunction)
+        public RecurrentContext(Int32 levelOfContext, ActivationFunction.Base activationFunction)
         {
             _ActivationFunction = activationFunction;
             _SourceNodes = new List<Node.Base>();
@@ -94,8 +94,8 @@ namespace Cranium.Lib.Structure.Layer
         /// </summary>
         public virtual void BuildNodeBank()
         {
-            double step = 1d/_LevelOfContext;
-            for (int x = 0; x < _LevelOfContext; x++) foreach (Node.Base n in _SourceNodes) _Nodes.Add(new Node.RecurrentContext(n, step*x, this, _ActivationFunction));
+            Double step = 1d/_LevelOfContext;
+            for (Int32 x = 0; x < _LevelOfContext; x++) foreach (Node.Base n in _SourceNodes) _Nodes.Add(new Node.RecurrentContext(n, step*x, this, _ActivationFunction));
         }
 
         /// <summary>

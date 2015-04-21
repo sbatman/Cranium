@@ -32,7 +32,7 @@ namespace Cranium.Lib.Structure.Layer
     ///     Further information can be sourced here http://www.scholarpedia.org/article/Echo_state_network
     /// </summary>
     [Serializable]
-    public class Echo_Reservoir : Base
+    public class EchoReservoir : Base
     {
         /// <summary>
         ///     The Activation to use for all the nodes created within the Reservoir
@@ -44,22 +44,22 @@ namespace Cranium.Lib.Structure.Layer
         ///     random double, if levelOfConnectivity is higher
         ///     then an additional connection is made ontop of the origional Min
         /// </summary>
-        protected double _LevelOfConnectivity;
+        protected Double _LevelOfConnectivity;
 
         /// <summary>
         ///     The Maximum connections per node
         /// </summary>
-        protected int _MaximumConnections;
+        protected Int32 _MaximumConnections;
 
         /// <summary>
         ///     The minimum connections per node.
         /// </summary>
-        protected int _MinimumConnections;
+        protected Int32 _MinimumConnections;
 
         /// <summary>
         ///     The number of nodes present in the Reservoir
         /// </summary>
-        protected int _NodeCount;
+        protected Int32 _NodeCount;
 
         /// <summary>
         ///     The random used for building connections
@@ -67,7 +67,7 @@ namespace Cranium.Lib.Structure.Layer
         protected Random _Rnd = new Random();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Echo_Reservoir" /> class.
+        ///     Initializes a new instance of the <see cref="EchoReservoir" /> class.
         /// </summary>
         /// <param name='nodeCount'>
         ///     The number of nodes in the Reservoir
@@ -86,7 +86,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public Echo_Reservoir(int nodeCount, double levelOfConnectivity, int minimumConnections, int maximumConnections, ActivationFunction.Base activationFunction)
+        public EchoReservoir(Int32 nodeCount, Double levelOfConnectivity, Int32 minimumConnections, Int32 maximumConnections, ActivationFunction.Base activationFunction)
         {
             _NodeCount = nodeCount;
             _LevelOfConnectivity = levelOfConnectivity;
@@ -106,13 +106,13 @@ namespace Cranium.Lib.Structure.Layer
             return _MaximumConnections;
         }
 
-        public virtual double GetLevelOfConnectivity()
+        public virtual Double GetLevelOfConnectivity()
         {
             return _LevelOfConnectivity;
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Echo_Reservoir" /> class. Used by the Serialiszer
+        ///     Initializes a new instance of the <see cref="EchoReservoir" /> class. Used by the Serialiszer
         /// </summary>
         /// <param name='info'>
         ///     Info.
@@ -120,7 +120,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Echo_Reservoir(SerializationInfo info, StreamingContext context) : base(info, context)
+        public EchoReservoir(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _NodeCount = info.GetInt32("_NodeCount");
             _LevelOfConnectivity = info.GetDouble("_LevelOfConnectivity");
@@ -137,8 +137,8 @@ namespace Cranium.Lib.Structure.Layer
         {
             PurgeNodeConnections();
             BuildNodeBank();
-            foreach (Base l in _ForwardConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.Forward, 0);
-            foreach (Base l in _ReverseConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.Reverse, 0);
+            foreach (Base l in _ForwardConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.FORWARD, 0);
+            foreach (Base l in _ReverseConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.REVERSE, 0);
         }
 
         /// <summary>
@@ -146,12 +146,12 @@ namespace Cranium.Lib.Structure.Layer
         /// </summary>
         public virtual void BuildNodeBank()
         {
-            for (int x = 0; x < _NodeCount; x++) _Nodes.Add(new Node.Base(this, _ActivationFunction));
+            for (Int32 x = 0; x < _NodeCount; x++) _Nodes.Add(new Node.Base(this, _ActivationFunction));
             foreach (Node.Base node in _Nodes)
             {
-                int connections = _MinimumConnections;
-                for (int x = 0; x < _MaximumConnections - _MinimumConnections; x++) connections += _Rnd.NextDouble() > _LevelOfConnectivity ? 0 : 1;
-                for (int i = 0; i < connections; i++) node.ConnectToNode(_Nodes[_Rnd.Next(0, _Nodes.Count)], Weight.Base.ConnectionDirection.Forward, 0);
+                Int32 connections = _MinimumConnections;
+                for (Int32 x = 0; x < _MaximumConnections - _MinimumConnections; x++) connections += _Rnd.NextDouble() > _LevelOfConnectivity ? 0 : 1;
+                for (Int32 i = 0; i < connections; i++) node.ConnectToNode(_Nodes[_Rnd.Next(0, _Nodes.Count)], Weight.Base.ConnectionDirection.FORWARD, 0);
             }
         }
 
@@ -168,7 +168,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='recurseDownward'>
         ///     Recurse downward.
         /// </param>
-        public override void ReversePass(double learningRate, double momentum, bool recurseDownward = true) { base.ReversePass(learningRate, momentum, false); }
+        public override void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true) { base.ReversePass(learningRate, momentum, false); }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

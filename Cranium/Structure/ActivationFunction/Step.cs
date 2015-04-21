@@ -32,7 +32,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <summary>
         ///     The Point at which the value must be at or above to for the activation function to return one else zero
         /// </summary>
-        protected double _ActivationPoint;
+        protected Double _ActivationPoint;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Step" /> class.
@@ -40,7 +40,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='activationPoint'>
         ///     Activation point.
         /// </param>
-        public Step(double activationPoint) { _ActivationPoint = activationPoint; }
+        public Step(Double activationPoint) { _ActivationPoint = activationPoint; }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Step" /> class.

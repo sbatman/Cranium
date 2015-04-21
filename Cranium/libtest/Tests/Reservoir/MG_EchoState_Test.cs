@@ -36,7 +36,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
     /// <summary>
     ///     This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
     /// </summary>
-    public static class MG_EchoState_Test
+    public static class MgEchoStateTest
     {
         private static Network _TestNetworkStructure;
         private static SlidingWindow _SlidingWindowTraining;
@@ -56,7 +56,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _TestNetworkStructure.SaveToFile("test.dat");
             _TestNetworkStructure.RandomiseWeights(1.1d);
             //PrepData
-            double[][] dataSet = StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
+            Double[][] dataSet = StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
 
             //Prepare training activity
             _SlidingWindowTraining = new SlidingWindow();
@@ -82,7 +82,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
             Console.WriteLine("Starting Testing");
 
-            var slidingWindowTesting = new Activity.Testing.SlidingWindow();
+            Activity.Testing.SlidingWindow slidingWindowTesting = new Activity.Testing.SlidingWindow();
             slidingWindowTesting.SetDatasetReservedLength(0);
             slidingWindowTesting.SetInputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedBottomLayers()[0].GetNodes().ToList());
             slidingWindowTesting.SetOutputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedTopLayers()[0].GetNodes().ToList());
@@ -92,9 +92,9 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             slidingWindowTesting.SetDistanceToForcastHorrison(3);
             slidingWindowTesting.SetTargetNetwork(_SlidingWindowTraining.GetTargetNetwork());
 
-            var result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
+            Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
 
-            Console.WriteLine(result.RMSE);
+            Console.WriteLine(result.Rmse);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
             Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
             Console.WriteLine("Complete Testing");
@@ -115,14 +115,14 @@ namespace Cranium.Lib.Test.Tests.Reservoir
         {
             _InputLayer = new Base();
             _InputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Elliott()));
+            for (Int32 i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Elliott()));
             _InputLayer.SetNodes(_InputLayerNodes);
 
-            var echoLayer = new Echo_Reservoir(130, 0.4f, 0, 5, new Elliott());
+            EchoReservoir echoLayer = new EchoReservoir(130, 0.4f, 0, 5, new Elliott());
 
             _OutputLayer = new Base();
             _OuputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++) _OuputLayerNodes.Add(new Output(_OutputLayer, new Elliott()));
+            for (Int32 i = 0; i < 1; i++) _OuputLayerNodes.Add(new Output(_OutputLayer, new Elliott()));
             _OutputLayer.SetNodes(_OuputLayerNodes);
 
             _InputLayer.ConnectFowardLayer(echoLayer);

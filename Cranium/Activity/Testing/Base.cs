@@ -41,12 +41,13 @@ namespace Cranium.Lib.Activity.Testing
         /// <summary>
         ///     Initializes a new instance of the <see cref="Activity.Testing.Base" /> class, for use by the serialiser.
         /// </summary>
-        protected Base(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected Base(SerializationInfo info, StreamingContext context)
+            : base(info, context)
         {
-            _InputNodes = (List<Structure.Node.Base>) info.GetValue("_InputNodes", typeof (List<Structure.Node.Base>));
-            _OutputNodes = (List<Structure.Node.Base>) info.GetValue("_OutputNodes", typeof (List<Structure.Node.Base>));
-            _Recurrentlayers = (List<Structure.Layer.Base>) info.GetValue("_Recurrentlayers", typeof (List<Structure.Layer.Base>));
-            _TargetNetwork = (Network) info.GetValue("_TargetNetwork", typeof (Network));
+            _InputNodes = (List<Structure.Node.Base>)info.GetValue("_InputNodes", typeof(List<Structure.Node.Base>));
+            _OutputNodes = (List<Structure.Node.Base>)info.GetValue("_OutputNodes", typeof(List<Structure.Node.Base>));
+            _Recurrentlayers = (List<Structure.Layer.Base>)info.GetValue("_Recurrentlayers", typeof(List<Structure.Layer.Base>));
+            _TargetNetwork = (Network)info.GetValue("_TargetNetwork", typeof(Network));
         }
 
         /// <summary>
@@ -100,7 +101,7 @@ namespace Cranium.Lib.Activity.Testing
             info.AddValue("_InputNodes", _InputNodes, _InputNodes.GetType());
             info.AddValue("_OutputNodes", _OutputNodes, _OutputNodes.GetType());
             info.AddValue("_Recurrentlayers", _Recurrentlayers, _Recurrentlayers.GetType());
-            info.AddValue("_TargetNetwork", _TargetNetwork, typeof (Network));
+            info.AddValue("_TargetNetwork", _TargetNetwork, typeof(Network));
         }
 
         /// <summary>
@@ -109,7 +110,7 @@ namespace Cranium.Lib.Activity.Testing
         [Serializable]
         public class TestResults : ISerializable
         {
-            public double RMSE;
+            public Double Rmse;
 
             /// <summary>
             ///     Initializes a new instance of the
@@ -127,9 +128,19 @@ namespace Cranium.Lib.Activity.Testing
             ///     </see>
             ///     class, for use by the serialiser.
             /// </summary>
-            public TestResults(SerializationInfo info, StreamingContext context) { RMSE = info.GetDouble("RMSE"); }
+            public TestResults(SerializationInfo info, StreamingContext context) { Rmse = info.GetDouble("RMSE"); }
 
-            public virtual void GetObjectData(SerializationInfo info, StreamingContext context) { info.AddValue("RMSE", RMSE); }
+            public virtual void GetObjectData(SerializationInfo info, StreamingContext context) { info.AddValue("RMSE", Rmse); }
+        }
+
+        public override void Dispose()
+        {
+            if (_InputNodes != null) _InputNodes.Clear();
+            if (_OutputNodes != null) _OutputNodes.Clear();
+            if (_Recurrentlayers != null) _Recurrentlayers.Clear();
+            if (_TargetNetwork != null) _TargetNetwork.Dispose();
+
+            base.Dispose();
         }
     }
 }

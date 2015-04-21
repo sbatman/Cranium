@@ -18,7 +18,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
 
 #endregion
@@ -51,7 +50,7 @@ namespace Cranium.Lib.Structure.Node
         /// <summary>
         ///     The Nodes current ID.
         /// </summary>
-        protected int _NodeID;
+        protected Int32 _NodeID;
 
         /// <summary>
         ///     The parent layer.
@@ -111,7 +110,7 @@ namespace Cranium.Lib.Structure.Node
             {
                 _Value += w.NodeA._Value*w.Weight;
             }
-            double k = _Value;
+            Double k = _Value;
             _Value = _ActivationFunction.Compute(_Value);
             if (_Value > 1 || _Value < -1) Debugger.Break();
 
@@ -156,7 +155,7 @@ namespace Cranium.Lib.Structure.Node
         public virtual void CalculateError()
         {
             Double tempError = 0;
-            int count = 0;
+            Int32 count = 0;
             foreach (Weight.Base w in _TFowardWeights)
             {
                 count++;
@@ -183,7 +182,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='momentum'>
         ///     Momentum.
         /// </param>
-        public virtual void UpdateWeights(double momentum)
+        public virtual void UpdateWeights(Double momentum)
         {
             foreach (Weight.Base w in _ForwardWeights)
             {
@@ -228,18 +227,18 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='startingWeight'>
         ///     Starting weight.
         /// </param>
-        public virtual void ConnectToNode(Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, float startingWeight)
+        public virtual void ConnectToNode(Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, Single startingWeight)
         {
             Weight.Base theNewWeight;
             switch (connectionDirectionToNode)
             {
-                case Weight.Base.ConnectionDirection.Forward:
+                case Weight.Base.ConnectionDirection.FORWARD:
                     _TFowardWeights = null;
                     theNewWeight = new Weight.Base(this, nodeToConnect, startingWeight);
                     _ForwardWeights.Add(theNewWeight);
                     nodeToConnect._ReverseWeights.Add(theNewWeight);
                     break;
-                case Weight.Base.ConnectionDirection.Reverse:
+                case Weight.Base.ConnectionDirection.REVERSE:
                     _TReverseWeights = null;
                     theNewWeight = new Weight.Base(nodeToConnect, this, startingWeight);
                     _ReverseWeights.Add(theNewWeight);
@@ -294,7 +293,7 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The I.
         /// </returns>
-        public virtual int GetID()
+        public virtual Int32 GetID()
         {
             return _NodeID;
         }
@@ -305,7 +304,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='newID'>
         ///     New I.
         /// </param>
-        public virtual void SetNodeID(int newID)
+        public virtual void SetNodeID(Int32 newID)
         {
             _NodeID = newID;
         }

@@ -29,7 +29,7 @@ namespace Cranium.Lib.Test.Tests.Linear
     /// <summary>
     ///     This is a test showing a neural network that is capable if learning the functionality of a two input xor gate
     /// </summary>
-    public static class XOR2Test
+    public static class Xor2Test
     {
         /// <summary>
         ///     The network structure to test.
@@ -70,8 +70,8 @@ namespace Cranium.Lib.Test.Tests.Linear
             BuildStructure();
             _TestNetworkStructure.RandomiseWeights(0.9d);
             PrepData();
-            int epoch = 0;
-            bool Continue = true;
+            Int32 epoch = 0;
+            Boolean Continue = true;
             while (Continue)
             {
                 Continue = false;
@@ -79,7 +79,7 @@ namespace Cranium.Lib.Test.Tests.Linear
                 Console.Clear();
                 Console.WriteLine("XOR2Test");
 
-                for (int x = 0; x < 4; x++)
+                for (Int32 x = 0; x < 4; x++)
                 {
                     PresentData(x);
                     ForwardPass();
@@ -101,19 +101,19 @@ namespace Cranium.Lib.Test.Tests.Linear
         private static void BuildStructure()
         {
             _InputLayer = new Base();
-            var inputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 2; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
+            List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
+            for (Int32 i = 0; i < 2; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
 
             _InputLayer.SetNodes(inputLayerNodes);
 
             _HiddenLayer = new Base();
-            var hiddenLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 3; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
+            List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
+            for (Int32 i = 0; i < 3; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _OutputLayer = new Base();
-            var ouputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
+            List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
+            for (Int32 i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(ouputLayerNodes);
 
             _InputLayer.ConnectFowardLayer(_HiddenLayer);
@@ -157,7 +157,7 @@ namespace Cranium.Lib.Test.Tests.Linear
         /// <param name='row'>
         ///     Row.
         /// </param>
-        private static void PresentData(int row)
+        private static void PresentData(Int32 row)
         {
             _InputLayer.GetNodes()[0].SetValue(_InputData[(row*2)]);
             _InputLayer.GetNodes()[1].SetValue(_InputData[(row*2) + 1]);
@@ -177,9 +177,9 @@ namespace Cranium.Lib.Test.Tests.Linear
         /// <param name='row'>
         ///     Row.
         /// </param>
-        private static void ReversePass(int row)
+        private static void ReversePass(Int32 row)
         {
-            var outputNode = (Output) (_OutputLayer.GetNodes()[0]);
+            Output outputNode = (Output) (_OutputLayer.GetNodes()[0]);
             outputNode.SetTargetValue(_OutputData[row]);
             _OutputLayer.ReversePass(0.6, 0.1);
         }

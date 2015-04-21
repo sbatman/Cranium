@@ -28,17 +28,17 @@ namespace Cranium.Lib.Activity.Training
     [Serializable]
     public abstract class Base : Activity.Base
     {
-        public delegate double DynamicVariable(int epoch, double currentRMSE);
+        public delegate Double DynamicVariable(Int32 epoch, Double currentRmse);
 
-        protected int _CurrentEpoch;
+        protected Int32 _CurrentEpoch;
         protected DynamicVariable _DynamicLearningRate;
         protected DynamicVariable _DynamicMomentum;
         private Thread _LoopThread;
-        protected int _MaxEpochs;
-        private bool _Running;
-        private bool _Stopping;
+        protected Int32 _MaxEpochs;
+        private Boolean _Running;
+        private Boolean _Stopping;
         protected Network _TargetNetwork;
-        protected double[][] _WorkingDataset;
+        protected Double[][] _WorkingDataset;
 
         protected Base() { }
 
@@ -49,7 +49,7 @@ namespace Cranium.Lib.Activity.Training
             _DynamicMomentum = (DynamicVariable) info.GetValue("_DynamicMomentum", typeof (DynamicVariable));
             _MaxEpochs = info.GetInt32("_MaxEpochs");
             _TargetNetwork = (Network) info.GetValue("_TargetNetwork", typeof (Network));
-            _WorkingDataset = (double[][]) info.GetValue("_WorkingDataset", typeof (double[][]));
+            _WorkingDataset = (Double[][]) info.GetValue("_WorkingDataset", typeof (Double[][]));
         }
 
 
@@ -99,7 +99,7 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='workingDataset'>
         ///     Working dataset.
         /// </param>
-        public virtual void SetWorkingDataset(double[][] workingDataset) { _WorkingDataset = workingDataset; }
+        public virtual void SetWorkingDataset(Double[][] workingDataset) { _WorkingDataset = workingDataset; }
 
         /// <summary>
         ///     Determines whether this training activity is running.
@@ -107,7 +107,7 @@ namespace Cranium.Lib.Activity.Training
         /// <returns>
         ///     <c>true</c> if this instance is running; otherwise, <c>false</c>.
         /// </returns>
-        public bool IsRunning() { return _Running; }
+        public Boolean IsRunning() { return _Running; }
 
         /// <summary>
         ///     Sets the maximum epochs.
@@ -115,7 +115,7 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='epochs'>
         ///     Epochs.
         /// </param>
-        public virtual void SetMaximumEpochs(int epochs) { _MaxEpochs = epochs; }
+        public virtual void SetMaximumEpochs(Int32 epochs) { _MaxEpochs = epochs; }
 
         public virtual Int32 GetMaximumEpcohs()
         {
@@ -134,7 +134,7 @@ namespace Cranium.Lib.Activity.Training
         /// <returns>
         ///     The tick.
         /// </returns>
-        protected abstract bool _Tick();
+        protected abstract Boolean _Tick();
 
         /// <summary>
         ///     Called as this training instance starts
@@ -183,6 +183,16 @@ namespace Cranium.Lib.Activity.Training
             info.AddValue("_MaxEpochs", _MaxEpochs);
             info.AddValue("_TargetNetwork", _TargetNetwork, _TargetNetwork.GetType());
             info.AddValue("_WorkingDataset", _WorkingDataset, _WorkingDataset.GetType());
+        }
+
+        public override void Dispose()
+        {
+            if (_TargetNetwork!=null)_TargetNetwork.Dispose();
+            _DynamicLearningRate = null;
+            _DynamicMomentum = null;
+            if (_LoopThread != null) _LoopThread.Abort(); 
+            
+            base.Dispose();
         }
     }
 }

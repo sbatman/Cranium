@@ -1,15 +1,15 @@
-﻿using Sbatman.Serialize;
-using System;
+﻿using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
+using Sbatman.Serialize;
 
 namespace Cranium.Lib.Activity
 {
     [Serializable]
-    public abstract class Base : ISerializable
+    public abstract class Base : ISerializable ,IDisposable
     {
-        private const UInt16 _PACKETIDENTIFIER=585;
+        private const UInt16 PACKETIDENTIFIER=585;
         protected Guid _ActivityInstanceIdentifier;
 
         public Base() { }
@@ -21,8 +21,8 @@ namespace Cranium.Lib.Activity
 
         public Base(Packet p)
         {
-            if (p.Type != _PACKETIDENTIFIER) throw new Exception("Inforrect packet identifer");
-            _ActivityInstanceIdentifier = new Guid((byte[])p.GetObjects()[0]);
+            if (p.Type != PACKETIDENTIFIER) throw new Exception("Inforrect packet identifer");
+            _ActivityInstanceIdentifier = new Guid((Byte[])p.GetObjects()[0]);
             p.Dispose();
         }
 
@@ -33,31 +33,36 @@ namespace Cranium.Lib.Activity
 
         public virtual Packet ToPacket()
         {
-            Packet p = new Packet(_PACKETIDENTIFIER);
-            p.AddBytePacket(_ActivityInstanceIdentifier.ToByteArray());
+            Packet p = new Packet(PACKETIDENTIFIER);
+            p.Add(_ActivityInstanceIdentifier.ToByteArray(),true);
             return p;
         }
 
-        public Guid GetGUID()
+        public Guid GetGuid()
         {
             return _ActivityInstanceIdentifier;
         }
 
-        public virtual void SetGUID(Guid newGuid)
+        public virtual void SetGuid(Guid newGuid)
         {
             _ActivityInstanceIdentifier = newGuid;
         }
 
-        public virtual void SaveToDisk(string filename)
+        public virtual void SaveToDisk(String filename)
         {
-            var binaryFormatter = new BinaryFormatter();
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
             using (FileStream dataFile = File.Create(filename)) binaryFormatter.Serialize(dataFile, this);
         }
 
-        public static Base LoadFromDisk(string filename)
+        public static Base LoadFromDisk(String filename)
         {
-            var binaryFormatter = new BinaryFormatter();
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
             using (FileStream dataFile = File.Open(filename, FileMode.Open)) return (Base) binaryFormatter.Deserialize(dataFile);
+        }
+
+        public virtual void Dispose()
+        {
+           
         }
     }
 }

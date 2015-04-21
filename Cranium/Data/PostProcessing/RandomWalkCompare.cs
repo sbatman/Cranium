@@ -49,18 +49,18 @@ namespace Cranium.Lib.Data.PostProcessing
         /// <param name='distanceOffsetOfRandomWalk'>
         ///     Distance offset of random walk.
         /// </param>
-        public static double CalculateError(double[] expectedValues, double[] actualValues, int distanceOffsetOfRandomWalk)
+        public static Double CalculateError(Double[] expectedValues, Double[] actualValues, Int32 distanceOffsetOfRandomWalk)
         {
-            var randomWalkValues = new double[expectedValues.Length];
-            for (int x = distanceOffsetOfRandomWalk; x < expectedValues.Length; x++) randomWalkValues[x] = expectedValues[x - distanceOffsetOfRandomWalk];
+            Double[] randomWalkValues = new Double[expectedValues.Length];
+            for (Int32 x = distanceOffsetOfRandomWalk; x < expectedValues.Length; x++) randomWalkValues[x] = expectedValues[x - distanceOffsetOfRandomWalk];
 
-            var randomWalkErrors = new double[expectedValues.Length - distanceOffsetOfRandomWalk];
-            var actualErrors = new double[expectedValues.Length - distanceOffsetOfRandomWalk];
+            Double[] randomWalkErrors = new Double[expectedValues.Length - distanceOffsetOfRandomWalk];
+            Double[] actualErrors = new Double[expectedValues.Length - distanceOffsetOfRandomWalk];
 
-            double totalRandomWalkError = 0;
-            double totalActualError = 0;
+            Double totalRandomWalkError = 0;
+            Double totalActualError = 0;
 
-            for (int x = distanceOffsetOfRandomWalk; x < expectedValues.Length; x++)
+            for (Int32 x = distanceOffsetOfRandomWalk; x < expectedValues.Length; x++)
             {
                 randomWalkErrors[x - distanceOffsetOfRandomWalk] = Math.Pow(randomWalkValues[x] - expectedValues[x], 2);
                 totalRandomWalkError += randomWalkErrors[x - distanceOffsetOfRandomWalk];
@@ -68,21 +68,21 @@ namespace Cranium.Lib.Data.PostProcessing
                 totalActualError += actualErrors[x - distanceOffsetOfRandomWalk];
             }
 
-            double avgRandomWalkError = totalRandomWalkError/(expectedValues.Length - distanceOffsetOfRandomWalk);
-            double avgActualError = totalActualError/(expectedValues.Length - distanceOffsetOfRandomWalk);
+            Double avgRandomWalkError = totalRandomWalkError/(expectedValues.Length - distanceOffsetOfRandomWalk);
+            Double avgActualError = totalActualError/(expectedValues.Length - distanceOffsetOfRandomWalk);
 
             return (avgActualError - avgRandomWalkError)/avgRandomWalkError;
         }
 
-        public static double[] CalculateError(double[][] expectedValues, double[][] actualValues, int distanceOffsetOfRandomWalk)
+        public static Double[] CalculateError(Double[][] expectedValues, Double[][] actualValues, Int32 distanceOffsetOfRandomWalk)
         {
-            int comparisonSets = expectedValues[0].GetLength(0);
-            var results = new double[comparisonSets];
-            for (int i = 0; i < comparisonSets; i++)
+            Int32 comparisonSets = expectedValues[0].GetLength(0);
+            Double[] results = new Double[comparisonSets];
+            for (Int32 i = 0; i < comparisonSets; i++)
             {
-                var expected = new double[expectedValues.Length];
-                var actual = new double[expectedValues.Length];
-                for (int x = 0; x < expectedValues.Length; x++)
+                Double[] expected = new Double[expectedValues.Length];
+                Double[] actual = new Double[expectedValues.Length];
+                for (Int32 x = 0; x < expectedValues.Length; x++)
                 {
                     expected[x] = expectedValues[x][i];
                     actual[x] = actualValues[x][i];

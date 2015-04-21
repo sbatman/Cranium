@@ -4,9 +4,8 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
-using Sbatman.Networking;
+using Cranium.Lib.Activity;
 using Sbatman.Networking.Server;
-using Base = Cranium.Lib.Activity.Base;
 using Sbatman.Serialize;
 
 namespace Cranium.Lobe.Manager
@@ -67,7 +66,7 @@ namespace Cranium.Lobe.Manager
         /// <param name="p"></param>
         protected void HandelA201(Packet p)
         {
-            object[] data = p.GetObjects();
+            Object[] data = p.GetObjects();
         }
 
         /// <summary>
@@ -82,23 +81,23 @@ namespace Cranium.Lobe.Manager
             if (work == null) SendPacket(new Packet(301)); //got no work
             else
             {
-                var binaryFormatter = new BinaryFormatter();
-                var datapackage = new MemoryStream();
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                MemoryStream datapackage = new MemoryStream();
                 binaryFormatter.Serialize(datapackage, work);
 
-                var responsePacket = new Packet(302);
-                responsePacket.AddBytePacketCompressed(datapackage.ToArray());
+                Packet responsePacket = new Packet(302);
+                responsePacket.Add(datapackage.ToArray(),true);
                 SendPacket(responsePacket);
             }
         }
 
         protected void HandelA400(Packet p)
         {
-            object[] packetObjects = p.GetObjects();
-            var jobData = (byte[]) packetObjects[0];
+            Object[] packetObjects = p.GetObjects();
+            Byte[] jobData = (Byte[]) packetObjects[0];
 
-            var binaryFormatter = new BinaryFormatter();
-            var activity = (Base) binaryFormatter.Deserialize(new MemoryStream(jobData));
+            BinaryFormatter binaryFormatter = new BinaryFormatter();
+            Base activity = (Base) binaryFormatter.Deserialize(new MemoryStream(jobData));
             Program.RegisterCompletedWork(activity);
         }
 

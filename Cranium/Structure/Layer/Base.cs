@@ -41,12 +41,12 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     The ID of the layer
         /// </summary>
-        protected int _LayerID = -1;
+        protected Int32 _LayerID = -1;
 
         /// <summary>
         ///     The ID of the next node to be added to the layer
         /// </summary>
-        protected int _NextNodeID;
+        protected Int32 _NextNodeID;
 
         /// <summary>
         ///     The Nodes within the layer
@@ -98,7 +98,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The node count.
         /// </returns>
-        public virtual int GetNodeCount()
+        public virtual Int32 GetNodeCount()
         {
             return _Nodes.Count;
         }
@@ -155,7 +155,7 @@ namespace Cranium.Lib.Structure.Layer
         public virtual void PopulateNodeConnections()
         {
             PurgeNodeConnections();
-            foreach (Base l in _ForwardConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.Forward, 0);
+            foreach (Base l in _ForwardConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.FORWARD, 0);
         }
 
         /// <summary>
@@ -188,7 +188,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='recurseDownward'>
         ///     Recurse downward, if set to false this well not call ReversePass on any layers below this one.
         /// </param>
-        public virtual void ReversePass(double learningRate, double momentum, bool recurseDownward = true)
+        public virtual void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true)
         {
             foreach (Node.Base n in _Nodes) n.CalculateError();
             foreach (Node.Base n in _Nodes) n.AdjustWeights(learningRate);
@@ -202,7 +202,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The ID
         /// </returns>
-        public virtual int GetID()
+        public virtual Int32 GetID()
         {
             return _LayerID;
         }
@@ -213,7 +213,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='id'>
         ///     Identifier.
         /// </param>
-        public virtual void SetID(int id)
+        public virtual void SetID(Int32 id)
         {
             _LayerID = id;
         }
@@ -232,7 +232,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='id'>
         ///     Identifier.
         /// </param>
-        public virtual Node.Base GetNodeByID(int id)
+        public virtual Node.Base GetNodeByID(Int32 id)
         {
             //look for a node with matching ID if we can find it return it else return null
             foreach (Node.Base n in _Nodes) if (n.GetID() == id) return n;

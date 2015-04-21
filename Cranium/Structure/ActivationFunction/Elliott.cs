@@ -32,7 +32,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
     [Serializable]
     public class Elliott : Base
     {
-        private readonly double _Scale = 1;
+        private readonly Double _Scale = 1;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Elliott" /> class.
@@ -58,7 +58,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     The value to pass to the activation function
         /// </param>
-        public override double Compute(double input) { return (input*_Scale)/(1 + Math.Abs(input*_Scale)); }
+        public override Double Compute(Double input) { return (input*_Scale)/(1 + Math.Abs(input*_Scale)); }
 
         /// <summary>
         ///     Computes the derivative using the activation function.
@@ -69,7 +69,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     Input.
         /// </param>
-        public override double ComputeDerivative(double input) { return _Scale/(Math.Pow((1.0d + Math.Abs(input*_Scale)), 2)); }
+        public override Double ComputeDerivative(Double input) { return _Scale/(Math.Pow((1.0d + Math.Abs(input*_Scale)), 2)); }
 
         public override void Dispose() { }
 

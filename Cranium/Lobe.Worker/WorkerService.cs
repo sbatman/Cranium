@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Threading;
 using Cranium.Lib.Activity;
 
@@ -10,7 +9,7 @@ namespace Cranium.Lobe.Worker
         protected Base _CurrentWork;
         protected Thread _InternalThread;
         protected Object _LockingObject = new Object();
-        protected bool _Running;
+        protected Boolean _Running;
         protected Worker _ParentWorker;
 
         public WorkerThread(Worker parentWorker)
@@ -42,14 +41,15 @@ namespace Cranium.Lobe.Worker
                     }
                     else
                     {
-                        _ParentWorker.AnnounceStatus("Worker service starting job " + _CurrentWork.GetGUID());
-                        if (_CurrentWork is Lib.Activity.Training.Base)
+                        _ParentWorker.AnnounceStatus("Worker service starting job " + _CurrentWork.GetGuid());
+                        Lib.Activity.Training.Base work = _CurrentWork as Lib.Activity.Training.Base;
+                        if (work != null)
                         {
-                            var trainingWork = (Lib.Activity.Training.Base) _CurrentWork;
+                            Lib.Activity.Training.Base trainingWork = work;
                             trainingWork.StartSynchronous();
                             _ParentWorker.AddToCompletedWork(trainingWork);
                         }
-                        _ParentWorker.AnnounceStatus("Worker service Completed job " + _CurrentWork.GetGUID());
+                        _ParentWorker.AnnounceStatus("Worker service Completed job " + _CurrentWork.GetGuid());
                         _CurrentWork = null;
                     }
                     Thread.Sleep(100);
@@ -64,7 +64,7 @@ namespace Cranium.Lobe.Worker
             _ParentWorker.DecrementCurrentThreads();
         }
 
-        public bool IsRunning()
+        public Boolean IsRunning()
         {
             return _Running;
         }

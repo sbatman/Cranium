@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
-using Sbatman.Networking;
+using Cranium.Lib.Activity;
 using Sbatman.Networking.Server;
-using Base = Cranium.Lib.Activity.Base;
 using Sbatman.Serialize;
 
 namespace Cranium.Lobe.Manager
@@ -55,21 +53,21 @@ namespace Cranium.Lobe.Manager
         /// <param name="p"></param>
         protected void HandelA1000(Packet p)
         {
-            object[] packetObjects = p.GetObjects();
-            Guid jobGUID = Guid.NewGuid();
-            var jobData = (byte[])packetObjects[0];
+            Object[] packetObjects = p.GetObjects();
+            Guid jobGuid = Guid.NewGuid();
+            Byte[] jobData = (Byte[])packetObjects[0];
 
 
             Base activity = null;
             try
             {
-                var binaryFormatter = new BinaryFormatter();
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
                 activity = (Base) binaryFormatter.Deserialize(new MemoryStream(jobData));
-                activity.SetGUID(jobGUID);
+                activity.SetGuid(jobGuid);
          
 
-            var returnPacket = new Packet(1001);
-            returnPacket.AddBytePacketCompressed(jobGUID.ToByteArray());
+            Packet returnPacket = new Packet(1001);
+            returnPacket.Add(jobGuid.ToByteArray(),true);
             SendPacket(returnPacket);
             Program.AddJob(activity);
             }
@@ -82,16 +80,16 @@ namespace Cranium.Lobe.Manager
         protected void HandelA1100(Packet p)
         {
             Object[] dataObjects = p.GetObjects();
-            var jobLookupID = new Guid((byte[])dataObjects[0]);
-            Base activity = Program.GetCompletedJobByGUID(jobLookupID);
+            Guid jobLookupID = new Guid((Byte[])dataObjects[0]);
+            Base activity = Program.GetCompletedJobByGuid(jobLookupID);
             if (activity == null) SendPacket(new Packet(1101));
             else
             {
-                var returnPacket = new Packet(1102);
-                var binaryFormatter = new BinaryFormatter();
-                var datapackage = new MemoryStream();
+                Packet returnPacket = new Packet(1102);
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                MemoryStream datapackage = new MemoryStream();
                 binaryFormatter.Serialize(datapackage, activity);
-                returnPacket.AddBytePacketCompressed(datapackage.ToArray());
+                returnPacket.Add(datapackage.ToArray(),true);
                 SendPacket(returnPacket);
             }
         }
