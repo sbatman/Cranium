@@ -23,7 +23,8 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.Weight
 {
     /// <summary>
-    ///     This is the base weight class and acts as a standard weight between two nodes. weight changes can be applied immediatly
+    ///     This is the base weight class and acts as a standard weight between two nodes. weight changes can be applied
+    ///     immediatly
     ///     or added to a pending list and applied at a later stage.
     /// </summary>
     [Serializable]
@@ -34,8 +35,8 @@ namespace Cranium.Lib.Structure.Weight
         /// </summary>
         public enum ConnectionDirection
         {
-            Reverse,
-            Forward
+            REVERSE,
+            FORWARD
         };
 
         /// <summary>
@@ -115,7 +116,6 @@ namespace Cranium.Lib.Structure.Weight
         /// </param>
         public virtual void AddWeightChange(Double weightModification)
         {
-            //if (Double.IsNaN(Weight) || Double.IsInfinity(weightModification)) throw (new Exception("Weight Error"));
             _PendingWeightChange += weightModification;
             _PendingWeightChangeCount++;
         }
@@ -137,7 +137,7 @@ namespace Cranium.Lib.Structure.Weight
         /// <returns>
         ///     The past weight change.
         /// </returns>
-        public virtual double GetPastWeightChange()
+        public virtual Double GetPastWeightChange()
         {
             return _PastWeightChange;
         }
@@ -147,10 +147,15 @@ namespace Cranium.Lib.Structure.Weight
         /// </summary>
         public virtual void ApplyPendingWeightChanges()
         {
-            _PastWeightChange = (_PendingWeightChange/_PendingWeightChangeCount);
-            Weight += _PastWeightChange;
-
-            //if (Double.IsNaN(Weight) || Double.IsInfinity(Weight)) throw (new Exception("Weight Error"));
+            if (_PendingWeightChangeCount >= 1)
+            {
+                _PastWeightChange = (_PendingWeightChange/_PendingWeightChangeCount);
+                Weight += _PastWeightChange;
+            }
+            else
+            {
+                _PastWeightChange = 0;
+            }
             _PendingWeightChange = 0;
             _PendingWeightChangeCount = 0;
         }

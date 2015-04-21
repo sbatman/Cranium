@@ -28,9 +28,10 @@ using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 namespace Cranium.Lib.Test.Tests.Recursive
 {
     /// <summary>
-    ///     This test shows a neural network that can demonstate the functionality of an 2 input Xor gate using only one input and recursive context nodes
+    ///     This test shows a neural network that can demonstate the functionality of an 2 input Xor gate using only one input
+    ///     and recursive context nodes
     /// </summary>
-    public static class RNNTest
+    public static class RnnTest
     {
         /// <summary>
         ///     The network structure to test.
@@ -76,8 +77,8 @@ namespace Cranium.Lib.Test.Tests.Recursive
             BuildStructure();
             _TestNetworkStructure.RandomiseWeights(1);
             PrepData();
-            int epoch = 0;
-            bool Continue = true;
+            Int32 epoch = 0;
+            Boolean Continue = true;
             while (Continue)
             {
                 Continue = false;
@@ -89,28 +90,24 @@ namespace Cranium.Lib.Test.Tests.Recursive
                     Console.Clear();
                     Console.WriteLine("RNNTest - Stopping conditions are in the code");
                 }
-                for (int x = 0; x < 4; x++)
+                for (Int32 x = 0; x < 4; x++)
                 {
                     foreach (Structure.Node.Base n in _ContextLayer.GetNodes()) n.SetValue(0);
-                    for (int i = 0; i < 2; i++)
+                    for (Int32 i = 0; i < 2; i++)
                     {
-                        _InputLayer.GetNodes() [0].SetValue(_InputData [(x*2) + i]);
+                        _InputLayer.GetNodes()[0].SetValue(_InputData[(x*2) + i]);
                         ForwardPass();
                         _ContextLayer.UpdateExtra();
                     }
                     ReversePass(x);
 
                     //Stopping conditions
-                    if (x == 0 && _OutputLayer.GetNodes() [0].GetValue() > 0.01f) Continue = true;
-                    if ((x == 1 || x == 2) && _OutputLayer.GetNodes() [0].GetValue() < 0.99f) Continue = true;
-                    if (x == 3 && _OutputLayer.GetNodes() [0].GetValue() > 0.01f) Continue = true;
+                    if (x == 0 && _OutputLayer.GetNodes()[0].GetValue() > 0.01f) Continue = true;
+                    if ((x == 1 || x == 2) && _OutputLayer.GetNodes()[0].GetValue() < 0.99f) Continue = true;
+                    if (x == 3 && _OutputLayer.GetNodes()[0].GetValue() > 0.01f) Continue = true;
                     //
 
-                    if (epoch%100 == 0)
-                    {
-                        Console.WriteLine(_InputData [x*2] + "-" + _InputData [(x*2) + 1] + "  -  " +
-                                          Math.Round(_OutputLayer.GetNodes() [0].GetValue(), 3));
-                    }
+                    if (epoch%100 == 0) Console.WriteLine(_InputData[x*2] + "-" + _InputData[(x*2) + 1] + "  -  " + Math.Round(_OutputLayer.GetNodes()[0].GetValue(), 3));
                 }
             }
             Console.WriteLine("Training complete in " + epoch + " epochs");
@@ -124,19 +121,19 @@ namespace Cranium.Lib.Test.Tests.Recursive
         {
             _InputLayer = new Base();
             List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
+            for (Int32 i = 0; i < 1; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
             _InputLayer.SetNodes(inputLayerNodes);
 
             _HiddenLayer = new Base();
             List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 3; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
+            for (Int32 i = 0; i < 3; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
             _ContextLayer = new RecurrentContext(4, new Tanh());
 
             _OutputLayer = new Base();
             List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
-            for (int i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
+            for (Int32 i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
             _OutputLayer.SetNodes(ouputLayerNodes);
 
             _ContextLayer.AddSourceNodes(inputLayerNodes);
@@ -162,44 +159,42 @@ namespace Cranium.Lib.Test.Tests.Recursive
             _InputData = new Int32[8];
             _OutputData = new Int32[4];
 
-            int i = 0;
-            int o = 0;
+            Int32 i = 0;
+            Int32 o = 0;
 
-            _InputData [i++] = 0;
-            _InputData [i++] = 0;
-            _OutputData [o++] = 0;
+            _InputData[i++] = 0;
+            _InputData[i++] = 0;
+            _OutputData[o++] = 0;
 
-            _InputData [i++] = 1;
-            _InputData [i++] = 0;
-            _OutputData [o++] = 1;
+            _InputData[i++] = 1;
+            _InputData[i++] = 0;
+            _OutputData[o++] = 1;
 
-            _InputData [i++] = 0;
-            _InputData [i++] = 1;
-            _OutputData [o++] = 1;
+            _InputData[i++] = 0;
+            _InputData[i++] = 1;
+            _OutputData[o++] = 1;
 
-            _InputData [i++] = 1;
-            _InputData [i] = 1;
-            _OutputData [o] = 0;
+            _InputData[i++] = 1;
+            _InputData[i] = 1;
+            _OutputData[o] = 0;
         }
 
         /// <summary>
         ///     Performs the foward pass on the neural network
         /// </summary>
-        public static void ForwardPass()
-        {
-            _TestNetworkStructure.FowardPass();
-        }
+        public static void ForwardPass() { _TestNetworkStructure.FowardPass(); }
 
         /// <summary>
-        ///     Performs the reverse pass on the neural network with the row of prepared training data provided and the given momentum
+        ///     Performs the reverse pass on the neural network with the row of prepared training data provided and the given
+        ///     momentum
         /// </summary>
         /// <param name='row'>
         ///     Row.
         /// </param>
-        public static void ReversePass(int row)
+        public static void ReversePass(Int32 row)
         {
-            Output outputNode = (Output) (_OutputLayer.GetNodes() [0]);
-            outputNode.SetTargetValue(_OutputData [row]);
+            Output outputNode = (Output) (_OutputLayer.GetNodes()[0]);
+            outputNode.SetTargetValue(_OutputData[row]);
             _OutputLayer.ReversePass(0.3, 0.95);
         }
     }

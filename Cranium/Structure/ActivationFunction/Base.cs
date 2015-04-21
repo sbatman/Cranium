@@ -31,9 +31,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base" /> class.
         /// </summary>
-        protected Base()
-        {
-        }
+        protected Base() { }
 
         /// <summary>
         ///     Returns the input after running through the activation function.
@@ -62,9 +60,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
 
         #region ISerializable implementation
 
-        public Base(SerializationInfo info, StreamingContext context)
-        {
-        }
+        public Base(SerializationInfo info, StreamingContext context) { }
 
         public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 

@@ -16,8 +16,8 @@
 #region Usings
 
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Cranium.Lib.Activity.Training;
 using Cranium.Lib.Data;
@@ -28,95 +28,94 @@ using Cranium.Lib.Structure.ActivationFunction;
 using Cranium.Lib.Structure.Layer;
 using Cranium.Lib.Structure.Node;
 using Cranium.Lobe.Client;
-using Base = Cranium.Lib.Structure.Node.Base;
+using Base = Cranium.Lib.Structure.Layer.Base;
 
 #endregion
 
 namespace Cranium.Lib.Test.Tests.Reservoir
 {
     /// <summary>
-    /// This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
+    ///     This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
     /// </summary>
-    public static class MG_EchoState_Test_Lobe
+    public static class MgEchoStateTestLobe
     {
-
-
         /// <summary>
         ///     Run this instance.
         /// </summary>
         public static void Run()
         {
-            double[][] dataSet = StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
-            List<Guid> OutstandingWork = new List<Guid>();
+            Double[][] dataSet = StandardDeviationVariance.ProduceDataset("TestData/Mackey-Glass-Pure.csv").DataSet;
+            List<Guid> outstandingWork = new List<Guid>();
             CommsClient lobeConnection = new CommsClient();
             lobeConnection.ConnectToManager("localhost", 17432);
-            for (int x = 0; x < 20; x++)
+            for (Int32 x = 0; x < 20; x++)
             {
-                Network _TestNetworkStructure;
-                SlidingWindow _SlidingWindowTraining;
-                Structure.Layer.Base _InputLayer = new Structure.Layer.Base(); ;
-                Structure.Layer.Base _OutputLayer = new Structure.Layer.Base(); ;
-                List<Base> _InputLayerNodes = new List<Base>();
-                List<Base> _OuputLayerNodes = new List<Base>();
+                Network testNetworkStructure;
+                SlidingWindow slidingWindowTraining;
+                Base inputLayer = new Base();
+                ;
+                Base outputLayer = new Base();
+                ;
+                List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
+                List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
                 //Build Network
-                _TestNetworkStructure = new Network();
-                BuildStructure(_InputLayer, _OutputLayer, _InputLayerNodes, _OuputLayerNodes, _TestNetworkStructure);
-                _TestNetworkStructure.SaveToFile("test.dat");
-                _TestNetworkStructure.RandomiseWeights(1.1d);
+                testNetworkStructure = new Network();
+                BuildStructure(inputLayer, outputLayer, inputLayerNodes, ouputLayerNodes, testNetworkStructure);
+                testNetworkStructure.SaveToFile("test.dat");
+                testNetworkStructure.RandomiseWeights(1.1d);
                 //PrepData
 
 
                 //Prepare training activity
-                _SlidingWindowTraining = new SlidingWindow();
-                _SlidingWindowTraining.SetTargetNetwork(_TestNetworkStructure);
-                _SlidingWindowTraining.SetMomentum(0.5f);
-                _SlidingWindowTraining.SetLearningRate(0.004f);
-                _SlidingWindowTraining.SetDatasetReservedLength(0);
-                _SlidingWindowTraining.SetDistanceToForcastHorrison(3);
-                _SlidingWindowTraining.SetWindowWidth(12);
-                _SlidingWindowTraining.SetMaximumEpochs(100);
-                _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
-                _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
-                _SlidingWindowTraining.SetWorkingDataset(dataSet);
-                _SlidingWindowTraining.SetRecurrentConextLayers(new List<Structure.Layer.Base>());
+                slidingWindowTraining = new SlidingWindow();
+                slidingWindowTraining.SetTargetNetwork(testNetworkStructure);
+                slidingWindowTraining.SetMomentum(0.5f);
+                slidingWindowTraining.SetLearningRate(0.004f);
+                slidingWindowTraining.SetDatasetReservedLength(0);
+                slidingWindowTraining.SetDistanceToForcastHorrison(3);
+                slidingWindowTraining.SetWindowWidth(12);
+                slidingWindowTraining.SetMaximumEpochs(100);
+                slidingWindowTraining.SetInputNodes(inputLayerNodes);
+                slidingWindowTraining.SetOutputNodes(ouputLayerNodes);
+                slidingWindowTraining.SetWorkingDataset(dataSet);
+                slidingWindowTraining.SetRecurrentConextLayers(new List<Base>());
 
 
-                OutstandingWork.Add(lobeConnection.SendJob(_SlidingWindowTraining));
-
+                outstandingWork.Add(lobeConnection.SendJob(slidingWindowTraining));
             }
-            while (OutstandingWork.Count > 0)
+            while (outstandingWork.Count > 0)
             {
                 Thread.Sleep(1000);
-                List<Guid> tempList = new List<Guid>(OutstandingWork);
+                List<Guid> tempList = new List<Guid>(outstandingWork);
                 foreach (Guid guid in tempList)
                 {
-                    SlidingWindow work = (SlidingWindow)lobeConnection.GetCompletedWork(guid);
+                    SlidingWindow work = (SlidingWindow) lobeConnection.GetCompletedWork(guid);
                     if (work == null) continue;
-                    OutstandingWork.Remove(guid);
+                    outstandingWork.Remove(guid);
                     Console.WriteLine("Starting Testing");
 
                     Activity.Testing.SlidingWindow slidingWindowTesting = new Activity.Testing.SlidingWindow();
                     slidingWindowTesting.SetDatasetReservedLength(0);
                     slidingWindowTesting.SetInputNodes(work.GetTargetNetwork().GetDetectedBottomLayers()[0].GetNodes().ToList());
                     slidingWindowTesting.SetOutputNodes(work.GetTargetNetwork().GetDetectedTopLayers()[0].GetNodes().ToList());
-                    slidingWindowTesting.SetRecurrentConextLayers(new List<Structure.Layer.Base>());
+                    slidingWindowTesting.SetRecurrentConextLayers(new List<Base>());
                     slidingWindowTesting.SetWorkingDataset(dataSet);
                     slidingWindowTesting.SetWindowWidth(12);
                     slidingWindowTesting.SetDistanceToForcastHorrison(3);
                     slidingWindowTesting.SetTargetNetwork(work.GetTargetNetwork());
 
-                    Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults)slidingWindowTesting.TestNetwork();
+                    Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
 
-                    Console.WriteLine(result.RMSE);
+                    Console.WriteLine(result.Rmse);
                     Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
                     Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
                     Console.WriteLine("Complete Testing");
                     Console.WriteLine("Comparing Against Random Walk 3 Step");
-                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)[0] * 100, 3));
+                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)[0]*100, 3));
                     Console.WriteLine("Comparing Against Random Walk 2 Step");
-                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0] * 100, 3));
+                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0]*100, 3));
                     Console.WriteLine("Comparing Against Random Walk 1 Step");
-                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0] * 100, 3));
+                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0]*100, 3));
                 }
             }
 
@@ -124,33 +123,31 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             ////////////////////////////////////////////////
             Console.WriteLine("all Jobs Done");
             Console.ReadKey();
-
         }
 
         /// <summary>
-        /// Builds the structure of the neural network ready for training and testing
+        ///     Builds the structure of the neural network ready for training and testing
         /// </summary>
-        public static void BuildStructure(Structure.Layer.Base _InputLayer, Structure.Layer.Base _OutputLayer, List<Base> _InputLayerNodes, List<Base> _OuputLayerNodes, Network _TestNetworkStructure)
+        public static void BuildStructure(Base inputLayer, Base outputLayer, List<Structure.Node.Base> inputLayerNodes, List<Structure.Node.Base> ouputLayerNodes, Network testNetworkStructure)
         {
+            for (Int32 i = 0; i < 1; i++) inputLayerNodes.Add(new Structure.Node.Base(inputLayer, new Elliott()));
 
-            for (int i = 0; i < 1; i++) _InputLayerNodes.Add(new Base(_InputLayer, new Elliott()));
+            inputLayer.SetNodes(inputLayerNodes);
 
-            _InputLayer.SetNodes(_InputLayerNodes);
-
-            Echo_Reservoir echoLayer = new Echo_Reservoir(130, 0.4f, 0, 5, new Elliott());
+            EchoReservoir echoLayer = new EchoReservoir(130, 0.4f, 0, 5, new Elliott());
 
 
-            for (int i = 0; i < 1; i++) _OuputLayerNodes.Add(new Output(_OutputLayer, new Elliott()));
-            _OutputLayer.SetNodes(_OuputLayerNodes);
+            for (Int32 i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(outputLayer, new Elliott()));
+            outputLayer.SetNodes(ouputLayerNodes);
 
-            _InputLayer.ConnectFowardLayer(echoLayer);
-            echoLayer.ConnectFowardLayer(_OutputLayer);
+            inputLayer.ConnectFowardLayer(echoLayer);
+            echoLayer.ConnectFowardLayer(outputLayer);
 
-            _TestNetworkStructure.AddLayer(_InputLayer);
-            _TestNetworkStructure.AddLayer(echoLayer);
-            _TestNetworkStructure.AddLayer(_OutputLayer);
+            testNetworkStructure.AddLayer(inputLayer);
+            testNetworkStructure.AddLayer(echoLayer);
+            testNetworkStructure.AddLayer(outputLayer);
 
-            foreach (Structure.Layer.Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
+            foreach (Base layer in testNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
         }
     }
 }

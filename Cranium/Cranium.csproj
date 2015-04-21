@@ -11,6 +11,11 @@
     <AssemblyName>Cranium.Lib</AssemblyName>
     <Description>A Lightweight Neural Network Famework for C#</Description>
     <ReleaseVersion>0.3</ReleaseVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <NuGetPackageImportStamp>b0a11899</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +27,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -30,16 +36,23 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Sbatman.Serialize, Version=0.4.2.1525, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>packages\Sbatman.Serialize.0.4.2.1525\lib\portable-net45+win+wpa81+wp80\Sbatman.Serialize.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.IO.Compression" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activity\Base.cs" />
     <Compile Include="Activity\Testing\Base.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Structure\Layer\Base.cs" />
+    <Compile Include="Structure\Layer\Recurrent-Context.cs" />
     <Compile Include="Structure\Node\Base.cs" />
     <Compile Include="Structure\Weight\Base.cs" />
     <Compile Include="Structure\Network.cs" />
@@ -49,7 +62,6 @@
     <Compile Include="Structure\Node\Output.cs" />
     <Compile Include="Structure\Node\Bias.cs" />
     <Compile Include="Structure\ActivationFunction\Step.cs" />
-    <Compile Include="Structure\Layer\Recurrent-Context.cs" />
     <Compile Include="Structure\Node\RecurrentContext.cs" />
     <Compile Include="Activity\Training\Base.cs" />
     <Compile Include="Activity\Training\SlidingWindow.cs" />
@@ -60,6 +72,9 @@
     <Compile Include="Data\PostProcessing\RandomWalkCompare.cs" />
     <Compile Include="Structure\ActivationFunction\Elliott.cs" />
     <Compile Include="Structure\ActivationFunction\Gausian.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
@@ -72,5 +87,6 @@
       </Properties>
     </MonoDevelop>
   </ProjectExtensions>
-  <ItemGroup />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Import Project="packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
 </Project>

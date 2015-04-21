@@ -1,87 +1,156 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
-using Base = InsaneDev.Networking.Server.Base;
+using Cranium.Lib.Activity;
+using Sbatman.Networking.Server;
 
 namespace Cranium.Lobe.Manager
 {
-    class Program
+    internal class Program
     {
-        private static Base _CommsServerClient;
-        private static Base _CommsServerWorker;
-        private static readonly List<Lib.Activity.Base> PendingWork = new List<Lib.Activity.Base>();
-        private static readonly List<Lib.Activity.Base> WorkBeingProcessed = new List<Lib.Activity.Base>();
-        private static readonly List<Lib.Activity.Base> CompleteWork = new List<Lib.Activity.Base>();
-        private static bool _Running;
-        static void Main()
+        private static BaseServer _CommsServerClient;
+        private static BaseServer _CommsServerWorker;
+        private static readonly List<Guid> _PendingWork = new List<Guid>();
+        private static readonly List<Tuple<Base, DateTime>> _WorkBeingProcessed = new List<Tuple<Base, DateTime>>();
+        private static readonly List<Guid> _CompleteWork = new List<Guid>();
+        private static Boolean _Running;
+
+        private static void Main()
         {
             _Running = true;
 
             if (!SettingsLoader.LoadSettings("Settings.ini")) return;
             //Online The Comms system
             Console.WriteLine("Starting Comms Server for clients");
-            _CommsServerClient = new Base();
-            _CommsServerClient.Init(SettingsLoader.CommsClientLocalIP.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsClientPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsClientLocalIP), SettingsLoader.CommsClientPort), typeof(ConnectedClient));
-            Console.WriteLine("Comms Server for clients Online at " + SettingsLoader.CommsClientLocalIP + ":" + SettingsLoader.CommsClientPort);
+            _CommsServerClient = new BaseServer();
+            _CommsServerClient.Init(SettingsLoader.CommsClientLocalIp.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsClientPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsClientLocalIp), SettingsLoader.CommsClientPort), typeof(ConnectedClient));
+            Console.WriteLine("Comms Server for clients Online at " + SettingsLoader.CommsClientLocalIp + ":" + SettingsLoader.CommsClientPort);
 
             Console.WriteLine("Starting Comms Server for workers");
-            _CommsServerWorker = new Base();
-            _CommsServerWorker.Init(SettingsLoader.CommsWorkerLocalIP.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsWorkerPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsWorkerLocalIP), SettingsLoader.CommsWorkerPort), typeof(ConnectedWorker));
-            Console.WriteLine("Comms Server for workers Online at " + SettingsLoader.CommsWorkerLocalIP + ":" + SettingsLoader.CommsWorkerPort);
+            _CommsServerWorker = new BaseServer();
+            _CommsServerWorker.Init(SettingsLoader.CommsWorkerLocalIp.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsWorkerPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsWorkerLocalIp), SettingsLoader.CommsWorkerPort), typeof(ConnectedWorker));
+            Console.WriteLine("Comms Server for workers Online at " + SettingsLoader.CommsWorkerLocalIp + ":" + SettingsLoader.CommsWorkerPort);
+
+            Console.WriteLine("Loading Pending Work");
+            if (Directory.Exists("Pending"))
+            {
+                String[] files = Directory.GetFiles("Pending");
+                Console.WriteLine("Possible " + files.Length + " jobs found, loading ..");
+                foreach (String file in files)
+                {
+                    try
+                    {
+                        FileStream stream = File.OpenRead(file);
+                        BinaryFormatter binaryFormatter = new BinaryFormatter();
+                        Base work = (Base)binaryFormatter.Deserialize(stream);
+                        stream.Close();
+                        _PendingWork.Add(work.GetGuid());
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                    }
+                }
+            }
+
+            Console.WriteLine("Loading Pending Completed");
 
             _CommsServerClient.StartListening();
             _CommsServerWorker.StartListening();
 
             while (_Running)
             {
-                Thread.Sleep(200);
+                Console.Title = "Pending:" + _PendingWork.Count + " Processing:" + _WorkBeingProcessed.Count + " Complete:" + _CompleteWork.Count;
+                lock (_WorkBeingProcessed)
+                {
+                    List<Tuple<Base, DateTime>> lostwork = _WorkBeingProcessed.Where(a => DateTime.Now - a.Item2 > SettingsLoader.WorkLostAfterTime).ToList();
+                    foreach (Tuple<Base, DateTime> tuple in lostwork)
+                    {
+                        _WorkBeingProcessed.Remove(tuple);
+                        AddJob(tuple.Item1);
+                        Console.WriteLine("Job lost Reschedualing " + tuple.Item1.GetGuid());
+                    }
+                }
+                Thread.Sleep(500);
+
             }
         }
 
-        public static void AddJob(Lib.Activity.Base work)
+        public static void AddJob(Base work)
         {
-            lock (PendingWork)
+            lock (_PendingWork)
             {
-                PendingWork.Add(work);
+                _PendingWork.Add(work.GetGuid());
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                if (!Directory.Exists("Pending")) Directory.CreateDirectory("Pending");
+                FileStream stream = File.Create("Pending/" + work.GetGuid() + ".dat");
+                binaryFormatter.Serialize(stream, work);
+                stream.Close();
             }
         }
 
         /// <summary>
-        /// Gets a single piece of pending work, if the there is none this will return null
+        ///     Gets a single piece of pending work, if the there is none this will return null
         /// </summary>
         /// <returns>A piece of pending work or null</returns>
-        public static Lib.Activity.Base GetPendingJob()
+        public static Base GetPendingJob()
         {
-            lock (PendingWork)
+            lock (_PendingWork)
             {
-                if (PendingWork.Count > 0)
+                if (_PendingWork.Count <= 0) return null;
+                if (!Directory.Exists("Pending")) Directory.CreateDirectory("Pending");
+                FileStream stream = File.OpenRead("Pending/" + _PendingWork[0] + ".dat");
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                Base work = (Base)binaryFormatter.Deserialize(stream);
+                stream.Close();
+
+                _PendingWork.RemoveAt(0);
+                lock (_WorkBeingProcessed) _WorkBeingProcessed.Add(new Tuple<Base, DateTime>(work, DateTime.Now));
+                return work;
+            }
+        }
+
+        public static void RegisterCompletedWork(Base completedWork)
+        {
+            lock (_CompleteWork)
+            {
+                lock (_WorkBeingProcessed)
                 {
-                    Lib.Activity.Base work = PendingWork[0];
-                    PendingWork.RemoveAt(0);
-                    lock (WorkBeingProcessed) WorkBeingProcessed.Add(work);
+                    if (_WorkBeingProcessed.Count(a => a.Item1.GetGuid() == completedWork.GetGuid()) <= 0) return;
+                    _CompleteWork.Add(completedWork.GetGuid());
+                    BinaryFormatter binaryFormatter = new BinaryFormatter();
+                    if (!Directory.Exists("Completed")) Directory.CreateDirectory("Completed");
+                    if (File.Exists("Pending/" + completedWork.GetGuid() + ".dat")) File.Delete("Pending/" + completedWork.GetGuid() + ".dat");
+                    FileStream stream = File.Create("Completed/" + completedWork.GetGuid() + ".dat");
+                    binaryFormatter.Serialize(stream, completedWork);
+                    stream.Close();
+                    _WorkBeingProcessed.RemoveAll(a => a.Item1.GetGuid() == completedWork.GetGuid());
+                    Console.WriteLine("Completed Job Registered " + completedWork.GetGuid());
+                }
+            }
+        }
+
+        public static Base GetCompletedJobByGuid(Guid jobGuid)
+        {
+            lock (_CompleteWork)
+            {
+                if (!_CompleteWork.Contains(jobGuid))
+                {
+                    if (File.Exists("Completed/" + jobGuid + ".dat")) _CompleteWork.Add(jobGuid);
+                }
+                if (_CompleteWork.Contains(jobGuid))
+                {
+                    FileStream stream = File.OpenRead("Completed/" + jobGuid + ".dat");
+                    BinaryFormatter binaryFormatter = new BinaryFormatter();
+                    Base work = (Base)binaryFormatter.Deserialize(stream);
+                    stream.Close();
                     return work;
                 }
                 return null;
-            }
-        }
-
-        public static void RegisterCompletedWork(Lib.Activity.Base completedWork)
-        {
-            lock (CompleteWork)
-            {
-                CompleteWork.Add(completedWork);
-                lock (WorkBeingProcessed) WorkBeingProcessed.Remove(completedWork);
-                Console.WriteLine("Completed Job Registered " + completedWork.GetGUID());
-            }
-        }
-
-        public static Lib.Activity.Base GetCompletedJobByGUID(Guid jobGuid)
-        {
-            lock (CompleteWork)
-            {
-                return CompleteWork.FirstOrDefault(job => job.GetGUID() == jobGuid);
             }
         }
     }

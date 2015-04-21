@@ -1,14 +1,14 @@
 #region info
 
 // //////////////////////
-//  
+//
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-// 
+//
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
+//
 // //////////////////////
 
 #endregion
@@ -25,8 +25,10 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.Layer
 {
     /// <summary>
-    ///     This is the base Layer structure of the Neural Network, It is used to house collections of nodes and provide the linking structure of these nodes with other groups of nodes.
-    ///     The layer class also provides some of the basic functionality for back and foward propogation. This class can be overriden to add additional functionality to a layer.
+    ///     This is the base Layer structure of the Neural Network, It is used to house collections of nodes and provide the
+    ///     linking structure of these nodes with other groups of nodes.
+    ///     The layer class also provides some of the basic functionality for back and foward propogation. This class can be
+    ///     overriden to add additional functionality to a layer.
     /// </summary>
     [Serializable]
     public class Base : IDisposable, ISerializable
@@ -39,12 +41,12 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     The ID of the layer
         /// </summary>
-        protected int _LayerID = -1;
+        protected Int32 _LayerID = -1;
 
         /// <summary>
         ///     The ID of the next node to be added to the layer
         /// </summary>
-        protected int _NextNodeID;
+        protected Int32 _NextNodeID;
 
         /// <summary>
         ///     The Nodes within the layer
@@ -59,9 +61,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     Initializes a new instance of the <see cref="Base" /> class.
         /// </summary>
-        public Base()
-        {
-        }
+        public Base() { }
 
         /// <summary>
         ///     Sets the nodes that are present in this layer, the previous list of nodes is purged.
@@ -98,7 +98,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The node count.
         /// </returns>
-        public virtual int GetNodeCount()
+        public virtual Int32 GetNodeCount()
         {
             return _Nodes.Count;
         }
@@ -155,7 +155,7 @@ namespace Cranium.Lib.Structure.Layer
         public virtual void PopulateNodeConnections()
         {
             PurgeNodeConnections();
-            foreach (Base l in _ForwardConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.Forward, 0);
+            foreach (Base l in _ForwardConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.FORWARD, 0);
         }
 
         /// <summary>
@@ -167,7 +167,8 @@ namespace Cranium.Lib.Structure.Layer
         }
 
         /// <summary>
-        ///     Triggers a calculate value call on all nodes withint he layer and then recursively calls this function on all foward connected layers.
+        ///     Triggers a calculate value call on all nodes withint he layer and then recursively calls this function on all
+        ///     foward connected layers.
         /// </summary>
         public virtual void ForwardPass()
         {
@@ -187,7 +188,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='recurseDownward'>
         ///     Recurse downward, if set to false this well not call ReversePass on any layers below this one.
         /// </param>
-        public virtual void ReversePass(double learningRate, double momentum, bool recurseDownward = true)
+        public virtual void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true)
         {
             foreach (Node.Base n in _Nodes) n.CalculateError();
             foreach (Node.Base n in _Nodes) n.AdjustWeights(learningRate);
@@ -201,7 +202,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The ID
         /// </returns>
-        public virtual int GetID()
+        public virtual Int32 GetID()
         {
             return _LayerID;
         }
@@ -212,7 +213,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='id'>
         ///     Identifier.
         /// </param>
-        public virtual void SetID(int id)
+        public virtual void SetID(Int32 id)
         {
             _LayerID = id;
         }
@@ -220,9 +221,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     Updates any extra logic required, This is used when pre/post epoc logic needs to run on the layer
         /// </summary>
-        public virtual void UpdateExtra()
-        {
-        }
+        public virtual void UpdateExtra() { }
 
         /// <summary>
         ///     Gets a node within the layer by ID
@@ -233,7 +232,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='id'>
         ///     Identifier.
         /// </param>
-        public virtual Node.Base GetNodeByID(int id)
+        public virtual Node.Base GetNodeByID(Int32 id)
         {
             //look for a node with matching ID if we can find it return it else return null
             foreach (Node.Base n in _Nodes) if (n.GetID() == id) return n;

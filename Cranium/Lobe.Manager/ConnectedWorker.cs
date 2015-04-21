@@ -1,25 +1,34 @@
-﻿using InsaneDev.Networking;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Net.Sockets;
 using System.Runtime.Serialization.Formatters.Binary;
-using InsaneDev.Networking.Server;
-using Base = Cranium.Lib.Activity.Base;
+using Cranium.Lib.Activity;
+using Sbatman.Networking.Server;
+using Sbatman.Serialize;
 
 namespace Cranium.Lobe.Manager
 {
-    class ConnectedWorker : ClientConnection
+    internal class ConnectedWorker : ClientConnection
     {
-        private int _AdvertisedWorkerThreadCount;
-
-        public ConnectedWorker(TcpClient incomingSocket)
-        : base(incomingSocket)
-        {
-        }
+        /// <summary>
+        /// How often a ping packet should be sent to ensure the worker is still there
+        /// </summary>
+        private readonly TimeSpan _PingInterval = new TimeSpan(0,0,0,5);
+        /// <summary>
+        /// The last time a ping packet was sent
+        /// </summary>
+        private DateTime _LastPing = DateTime.Now;
+        public ConnectedWorker(TcpClient incomingSocket) : base(incomingSocket, 40960) { }
 
         protected override void ClientUpdateLogic()
         {
+            if (DateTime.Now - _LastPing > _PingInterval)
+            {
+                SendPacket(new Packet(9999));
+                _LastPing = DateTime.Now;
+            }
             if (GetOutStandingProcessingPacketsCount() == 0) return;
             List<Packet> packetstoProcess = GetOutStandingProcessingPackets();
             foreach (Packet p in packetstoProcess)
@@ -41,7 +50,7 @@ namespace Cranium.Lobe.Manager
 
         protected override void OnConnect()
         {
-            Console.WriteLine("New Worker Connected");
+            Console.WriteLine("New Worker Connected from " + ((IPEndPoint)(_AttachedSocket.Client.RemoteEndPoint)).Address);
             SendPacket(new Packet(200)); //Lets say hello
         }
 
@@ -51,29 +60,25 @@ namespace Cranium.Lobe.Manager
         }
 
         /// <summary>
-        /// Handels a packet of type 201, This is a response to the hello packet send by the lobe manager (200)
-        /// and contains the current number of worker threads registered to that worker.
+        ///     Handels a packet of type 201, This is a response to the hello packet send by the lobe manager (200)
+        ///     and contains the current number of worker threads registered to that worker.
         /// </summary>
         /// <param name="p"></param>
         protected void HandelA201(Packet p)
         {
-            object[] data = p.GetObjects();
-            _AdvertisedWorkerThreadCount = (int)data[0];
+            Object[] data = p.GetObjects();
         }
 
         /// <summary>
-        /// Handels a packet of type 300, This is a work request packet from the lobe worker, these will be recieved
-        /// regulary if the worker has no work at this stage. Having the workers poll the manager better fits the
-        /// parent child model and reliance pathways.
+        ///     Handels a packet of type 300, This is a work request packet from the lobe worker, these will be recieved
+        ///     regulary if the worker has no work at this stage. Having the workers poll the manager better fits the
+        ///     parent child model and reliance pathways.
         /// </summary>
         /// <param name="p"></param>
         protected void HandelA300(Packet p)
         {
             Base work = Program.GetPendingJob();
-            if (work == null)
-            {
-                SendPacket(new Packet(301)); //got no work
-            }
+            if (work == null) SendPacket(new Packet(301)); //got no work
             else
             {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
@@ -81,19 +86,24 @@ namespace Cranium.Lobe.Manager
                 binaryFormatter.Serialize(datapackage, work);
 
                 Packet responsePacket = new Packet(302);
-                responsePacket.AddBytePacket(datapackage.ToArray());
+                responsePacket.Add(datapackage.ToArray(),true);
                 SendPacket(responsePacket);
             }
         }
 
         protected void HandelA400(Packet p)
         {
-            object[] packetObjects = p.GetObjects();
-            byte[] jobData = (byte[])packetObjects[0];
+            Object[] packetObjects = p.GetObjects();
+            Byte[] jobData = (Byte[]) packetObjects[0];
 
             BinaryFormatter binaryFormatter = new BinaryFormatter();
-            Base activity = (Base)binaryFormatter.Deserialize(new MemoryStream(jobData));
+            Base activity = (Base) binaryFormatter.Deserialize(new MemoryStream(jobData));
             Program.RegisterCompletedWork(activity);
+        }
+
+        protected override void HandelException(Exception e)
+        {
+           
         }
     }
 }

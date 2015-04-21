@@ -28,7 +28,7 @@ namespace Cranium.Lib.Structure.Node
     [Serializable]
     public class Bias : Base
     {
-        protected double _BiasValue = 1;
+        protected Double _BiasValue = 1;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Bias" /> class.
@@ -39,10 +39,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public Bias(Layer.Base parentLayer, ActivationFunction.Base activationFunction)
-            : base(parentLayer, activationFunction)
-        {
-        }
+        public Bias(Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer, activationFunction) { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Bias" /> class. Used by the Serializer.
@@ -53,10 +50,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Bias(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-            _BiasValue = info.GetDouble("_BiasValue");
-        }
+        public Bias(SerializationInfo info, StreamingContext context) : base(info, context) { _BiasValue = info.GetDouble("_BiasValue"); }
 
         /// <summary>
         ///     Returns the static value of the node
@@ -64,10 +58,7 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The value.
         /// </returns>
-        public override Double GetValue()
-        {
-            return _BiasValue;
-        }
+        public override Double GetValue() { return _BiasValue; }
 
         /// <summary>
         ///     Returns the error of the node, which in the case of the bias node is always 0
@@ -75,10 +66,7 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The error.
         /// </returns>
-        public override double GetError()
-        {
-            return 0;
-        }
+        public override Double GetError() { return 0; }
 
         /// <summary>
         ///     Sets the new static value of this node
@@ -86,13 +74,11 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='newValue'>
         ///     New value.
         /// </param>
-        public override void SetValue(double newValue)
-        {
-            _BiasValue = newValue;
-        }
+        public override void SetValue(Double newValue) { _BiasValue = newValue; }
 
         /// <summary>
-        ///     Connects a second node to this one, building the correct weight and adding it to the list of weights that are updated when required
+        ///     Connects a second node to this one, building the correct weight and adding it to the list of weights that are
+        ///     updated when required
         /// </summary>
         /// <param name='nodeToConnect'>
         ///     Node to connect.
@@ -103,10 +89,9 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='startingWeight'>
         ///     Starting weight.
         /// </param>
-        public override void ConnectToNode(Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode,
-                                           float startingWeight)
+        public override void ConnectToNode(Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, Single startingWeight)
         {
-            if (connectionDirectionToNode == Weight.Base.ConnectionDirection.Reverse) return;
+            if (connectionDirectionToNode == Weight.Base.ConnectionDirection.REVERSE) return;
             base.ConnectToNode(nodeToConnect, connectionDirectionToNode, startingWeight);
         }
 

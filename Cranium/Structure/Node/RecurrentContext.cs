@@ -23,7 +23,8 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.Node
 {
     /// <summary>
-    ///     This recursive node acts differntly from as standard node as it has a source node from which it generates its value,
+    ///     This recursive node acts differntly from as standard node as it has a source node from which it generates its
+    ///     value,
     ///     this is based on the Rate of update pased as the constructor.
     /// </summary>
     [Serializable]
@@ -32,7 +33,7 @@ namespace Cranium.Lib.Structure.Node
         /// <summary>
         ///     The the persentage of the source nodes value that is used in calcualate the nodes new value
         /// </summary>
-        protected double _RateOfUpdate;
+        protected Double _RateOfUpdate;
 
         /// <summary>
         ///     The node which this node uses to calculate its value
@@ -42,7 +43,7 @@ namespace Cranium.Lib.Structure.Node
         /// <summary>
         ///     The initial value of the node.
         /// </summary>
-        protected double _StartValue;
+        protected Double _StartValue;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RecurrentContext" /> class.
@@ -59,11 +60,9 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public RecurrentContext(Base sourceNode, double rateOfUpdate, Layer.Base parentLayer,
-                                ActivationFunction.Base activationFunction)
-        : base(parentLayer, activationFunction)
+        public RecurrentContext(Base sourceNode, Double rateOfUpdate, Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer, activationFunction)
         {
-            _Value = 0.5f;
+            _Value = 0.0f;
             _SourceNode = sourceNode;
             _RateOfUpdate = rateOfUpdate;
         }
@@ -77,8 +76,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public RecurrentContext(SerializationInfo info, StreamingContext context)
-        : base(info, context)
+        public RecurrentContext(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _SourceNode = (Base) info.GetValue("_SourceNode", typeof (Base));
             _RateOfUpdate = info.GetDouble("_RateOfUpdate");
@@ -99,7 +97,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='startValue'>
         ///     Start value.
         /// </param>
-        public virtual void SetStartValue(double startValue)
+        public virtual void SetStartValue(Double startValue)
         {
             _StartValue = startValue;
         }
@@ -110,6 +108,11 @@ namespace Cranium.Lib.Structure.Node
             info.AddValue("_SourceNode", _SourceNode, _SourceNode.GetType());
             info.AddValue("_RateOfUpdate", _RateOfUpdate);
             info.AddValue("_StartValue", _StartValue);
+        }
+
+        public virtual void OverrideRateOfUpdate(Double newValue)
+        {
+            _RateOfUpdate = newValue;
         }
     }
 }

@@ -32,9 +32,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <summary>
         ///     Initializes a new instance of the <see cref="Tanh" /> class.
         /// </summary>
-        public Tanh()
-        {
-        }
+        public Tanh() { }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Tanh" /> class. Used by the serializer
@@ -45,9 +43,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Tanh(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        public Tanh(SerializationInfo info, StreamingContext context) : base(info, context) { }
 
         /// <summary>
         ///     Returns the input after running through the activation function.
@@ -57,7 +53,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// </param>
         public override Double Compute(Double input)
         {
-            double temp = Math.Exp(input*2.0);
+            Double temp = Math.Exp(input*2.0);
             return (temp - 1.0)/(temp + 1.0);
         }
 
@@ -70,17 +66,10 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     Input.
         /// </param>
-        public override Double ComputeDerivative(Double input)
-        {
-            return 1 - Math.Pow((input), 2);
-        }
+        public override Double ComputeDerivative(Double input) { return 1 - Math.Pow((input), 2); }
 
-        public override void Dispose()
-        {
-        }
+        public override void Dispose() { }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-        }
+        public override void GetObjectData(SerializationInfo info, StreamingContext context) { }
     }
 }

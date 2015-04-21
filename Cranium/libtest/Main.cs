@@ -33,7 +33,7 @@ namespace Cranium.Lib.Test
         /// <param name='args'>
         ///     The command-line arguments.
         /// </param>
-        public static void Main(string[] args)
+        public static void Main(String[] args)
         {
             Console.WriteLine("Which test would you like to run");
             Console.WriteLine("-------------------------------------------------");
@@ -44,32 +44,36 @@ namespace Cranium.Lib.Test
             Console.WriteLine("5 -  MG Recurrent Test");
             Console.WriteLine("6 -  MG Echo State Test");
             Console.WriteLine("7 -  MG Echo State Test on Lobe");
+            Console.WriteLine("8 -  Echo State Sin Generator Test");
 
             ConsoleKey pressedKey = Console.ReadKey().Key;
             Console.Clear();
             switch (pressedKey)
             {
-            case ConsoleKey.D1:
-                XOR2Test.Run();
-                break;
-            case ConsoleKey.D2:
-                XOR3Test.Run();
-                break;
-            case ConsoleKey.D3:
-                RNNTest.Run();
-                break;
-            case ConsoleKey.D4:
-                RNNTest2.Run();
-                break;
-            case ConsoleKey.D5:
-                MG_Recurrent_Test.Run();
-                break;
-            case ConsoleKey.D6:
-                MG_EchoState_Test.Run();
-                break;
-            case ConsoleKey.D7:
-                MG_EchoState_Test_Lobe.Run();
-                break;
+                case ConsoleKey.D1:
+                    Xor2Test.Run();
+                    break;
+                case ConsoleKey.D2:
+                    Xor3Test.Run();
+                    break;
+                case ConsoleKey.D3:
+                    RnnTest.Run();
+                    break;
+                case ConsoleKey.D4:
+                    RnnTest2.Run();
+                    break;
+                case ConsoleKey.D5:
+                    MgRecurrentTest.Run();
+                    break;
+                case ConsoleKey.D6:
+                    MgEchoStateTest.Run();
+                    break;
+                case ConsoleKey.D7:
+                    MgEchoStateTestLobe.Run();
+                    break;
+                case ConsoleKey.D8:
+                    EchoStateTestSinGenerator.Run();
+                    break;
             }
         }
     }
