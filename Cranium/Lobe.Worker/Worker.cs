@@ -114,7 +114,7 @@ namespace Cranium.Lobe.Worker
             AnnounceStatus("Connecting To Manager");
             lock (_PacketsToBeProcessed)
             {
-                if (!_ConnectionToLobeManager.Connect(_Settings.CommsManagerIp, _Settings.CommsManagerPort, 500000)) AnnounceStatus("Unable to communicate with specified lobe manager, aborting!");
+                if (!_ConnectionToLobeManager.Connect(_Settings.CommsManagerIp, _Settings.CommsManagerPort, 20480 * 1024)) AnnounceStatus("Unable to communicate with specified lobe manager, aborting!");
             }
 
             AnnounceStatus("Lobe Worker Online");
@@ -129,8 +129,10 @@ namespace Cranium.Lobe.Worker
                     }
                     if (!_ConnectionToLobeManager.IsConnected())
                     {
+                        String error = _ConnectionToLobeManager.GetError();
+                        if (!string.IsNullOrEmpty(error)) Console.WriteLine("Net Error " + error);
                         AnnounceStatus("Unable to communicate with specified lobe manager, Attempting to reconnect");
-                        if (_ConnectionToLobeManager.Connect(_Settings.CommsManagerIp, _Settings.CommsManagerPort, 500000)) AnnounceStatus("Connection Re-established");
+                        if (_ConnectionToLobeManager.Connect(_Settings.CommsManagerIp, _Settings.CommsManagerPort, 20480 * 1024)) AnnounceStatus("Connection Re-established");
                         _CanRequestWork = true;
                     }
                     else
@@ -254,7 +256,7 @@ namespace Cranium.Lobe.Worker
         private void HandelA200Packet()
         {
             Packet responsePacket = new Packet(201);
-            responsePacket.Add((Int32)_ActiveWorkerServices.Count);
+            responsePacket.Add(_ActiveWorkerServices.Count);
             _ConnectionToLobeManager.SendPacket(responsePacket);
         }
 

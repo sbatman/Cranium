@@ -12,7 +12,7 @@ namespace Cranium.Lobe.Manager
     internal class ConnectedClient : ClientConnection
     {
         public ConnectedClient(TcpClient incomingSocket)
-        : base(incomingSocket,40960)
+            : base(incomingSocket, 20480)
         {
             _ClientUpdateInterval = new TimeSpan(0, 0, 0, 0, 1);
             
