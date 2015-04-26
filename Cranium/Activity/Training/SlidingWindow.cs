@@ -313,7 +313,7 @@ namespace Cranium.Lib.Activity.Training
                 error += passError * passError;
             }
             _LastPassAverageError = error / _SequenceCount;
-            Console.WriteLine(_LastPassAverageError);
+           // Console.WriteLine(_LastPassAverageError);
             if (_LogStream != null) _LogStream.WriteLine(_LastPassAverageError);
             if (_LogStream != null) _LogStream.Flush();
             return true;
