@@ -60,7 +60,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
 
         #region ISerializable implementation
 
-        public Base(SerializationInfo info, StreamingContext context) { }
+	    protected Base(SerializationInfo info, StreamingContext context) { }
 
         public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 

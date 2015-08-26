@@ -18,6 +18,7 @@
 
 using Cranium.Lib.Structure.Layer;
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 
 #endregion Usings
@@ -131,22 +132,25 @@ namespace Cranium.Lib.Activity.Testing
             Double rmse = 0;
             for (Int32 s = 0; s < _SequenceCount; s++)
             {
-                foreach (Structure.Layer.Base layer in _TargetNetwork.GetCurrentLayers()) foreach (Structure.Node.Base node in layer.GetNodes()) node.SetValue(0);
+                foreach (Structure.Node.Base node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes()))node.SetValue(0);
                 for (Int32 i = 0; i < _WindowWidth; i++)
                 {
                     for (Int32 x = 0; x < _InputNodes.Count; x++) _InputNodes[x].SetValue(_InputSequences[s][i][x]);
                     _TargetNetwork.FowardPass();
-                    if (_Recurrentlayers != null) foreach (RecurrentContext layer in _Recurrentlayers) layer.UpdateExtra();
+
+	                if (_Recurrentlayers == null) continue;
+
+	                foreach (RecurrentContext rc in _Recurrentlayers.Cast<RecurrentContext>()) rc.UpdateExtra();
                 }
                 for (Int32 x = 0; x < _OutputNodes.Count; x++)
                 {
                     _ActualOutputs[s][x] = _OutputNodes[x].GetValue();
-                    if (s + _DistanceToForcastHorrison < _SequenceCount)
-                    {
-                        _OutputErrors[s][x] = _ExpectedOutputs[s][x] - _ActualOutputs[s][x];
-                        errorCount++;
-                        rmse += _OutputErrors[s][x] * _OutputErrors[s][x];
-                    }                   
+
+	                if (s + _DistanceToForcastHorrison >= _SequenceCount) continue;
+
+	                _OutputErrors[s][x] = _ExpectedOutputs[s][x] - _ActualOutputs[s][x];
+	                errorCount++;
+	                rmse += _OutputErrors[s][x] * _OutputErrors[s][x];
                 }
             }
             //All the sequewnces have been run through and the outputs and their erros collected

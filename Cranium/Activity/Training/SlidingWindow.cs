@@ -288,7 +288,7 @@ namespace Cranium.Lib.Activity.Training
                 {
                     for (Int32 x = 0; x < _InputNodes.Count; x++) _InputNodes[x].SetValue(_InputSequences[s, i, x]);
                     _TargetNetwork.FowardPass();
-                    foreach (RecurrentContext layer in _Recurrentlayers) layer.UpdateExtra();
+                    foreach (RecurrentContext layer in _Recurrentlayers.Cast<RecurrentContext>()) layer.UpdateExtra();
                 }
                 for (Int32 x = 0; x < _OutputNodes.Count; x++)
                 {
@@ -327,13 +327,13 @@ namespace Cranium.Lib.Activity.Training
             //todo: some real logging would be nice
             PrepareData();
             _LastPassAverageError = 0;
-            try
-            {
-                if (_LogStream == null) _LogStream = File.CreateText("log.txt");
-            }
-            catch (Exception e)
-            {
-            }
+			//try
+			//{
+			//	if (_LogStream == null) _LogStream = File.CreateText("log.txt");
+			//}
+			//catch (Exception e)
+			//{
+			//}
         }
 
         /// <summary>

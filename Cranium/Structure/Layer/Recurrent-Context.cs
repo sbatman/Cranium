@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 
 #endregion
@@ -40,7 +41,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     How many context nodes should be created per source node
         /// </summary>
-        protected Int32 _LevelOfContext = 1;
+        protected Int32 _LevelOfContext;
 
         /// <summary>
         ///     The source ndoes used when building the recurrent context
@@ -109,7 +110,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     Performs any extra update required on child nodes
         /// </summary>
-        public override void UpdateExtra() { foreach (Node.RecurrentContext n in _Nodes) n.Update(); }
+        public override void UpdateExtra() { foreach (Node.RecurrentContext n in _Nodes.Cast<Node.RecurrentContext>()) n.Update(); }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

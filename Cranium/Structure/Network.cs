@@ -50,7 +50,6 @@ namespace Cranium.Lib.Structure
         public Network()
         {
             _LearningRate = 0;
-            _CurrentLayers = new List<Base>();
         }
 
         /// <summary>

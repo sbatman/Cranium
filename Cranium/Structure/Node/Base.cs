@@ -103,17 +103,16 @@ namespace Cranium.Lib.Structure.Node
         public virtual void CalculateValue()
         {
             if (_TFowardWeights == null || _TReverseWeights == null) BakeLists();
-            if (_TReverseWeights.Length == 0) return;
-            _Value = 0;
-            if (_Value > 1 || _Value < -1) Debugger.Break();
-            foreach (Weight.Base w in _TReverseWeights)
-            {
-                _Value += w.NodeA._Value * w.Weight;
-            }
-            Double k = _Value;
-            _Value = _ActivationFunction.Compute(_Value);
-            if (_Value > 1 || _Value < -1) Debugger.Break();
-
+	        if (_TReverseWeights == null) return;
+	        if (_TReverseWeights.Length == 0) return;
+	        _Value = 0;
+	        if (_Value > 1 || _Value < -1) Debugger.Break();
+	        foreach (Weight.Base w in _TReverseWeights)
+	        {
+		        _Value += w.NodeA._Value*w.Weight;
+	        }
+	        _Value = _ActivationFunction.Compute(_Value);
+	        if (_Value > 1 || _Value < -1) Debugger.Break();
         }
 
         /// <summary>

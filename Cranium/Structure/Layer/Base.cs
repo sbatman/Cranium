@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Serialization;
 
 #endregion
@@ -234,12 +235,11 @@ namespace Cranium.Lib.Structure.Layer
         /// </param>
         public virtual Node.Base GetNodeByID(Int32 id)
         {
-            //look for a node with matching ID if we can find it return it else return null
-            foreach (Node.Base n in _Nodes) if (n.GetID() == id) return n;
-            return null;
+	        //look for a node with matching ID if we can find it return it else return null
+	        return _Nodes.FirstOrDefault(n => n.GetID() == id);
         }
 
-        #region IDisposable implementation
+	    #region IDisposable implementation
 
         public void Dispose()
         {
