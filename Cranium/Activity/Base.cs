@@ -12,14 +12,14 @@ namespace Cranium.Lib.Activity
         private const UInt16 PACKETIDENTIFIER=585;
         protected Guid _ActivityInstanceIdentifier;
 
-        public Base() { }
+	    protected Base() { }
 
-        public Base(SerializationInfo info, StreamingContext context)
+	    protected Base(SerializationInfo info, StreamingContext context)
         {
             _ActivityInstanceIdentifier = (Guid) info.GetValue("_ActivityInstanceIdentifier", typeof (Guid));
         }
 
-        public Base(Packet p)
+	    protected Base(Packet p)
         {
             if (p.Type != PACKETIDENTIFIER) throw new Exception("Inforrect packet identifer");
             _ActivityInstanceIdentifier = new Guid((Byte[])p.GetObjects()[0]);
