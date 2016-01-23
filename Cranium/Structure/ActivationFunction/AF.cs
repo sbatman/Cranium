@@ -23,28 +23,15 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.ActivationFunction
 {
     /// <summary>
-    ///     This activation function returns exactly what it is fed, this is extreamly useful fordata being fed in that has
-    ///     already been cooked external
-    ///     of the network. Lacking a derivative function however it is not suited for back progopgation networks.
+    ///     A base class for activation functions, Exstend this when implementing new activation functions
     /// </summary>
     [Serializable]
-    public class Linear : Base
+    public abstract class AF : IDisposable, ISerializable
     {
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Linear" /> class.
+        ///     Initializes a new instance of the <see cref="AF" /> class.
         /// </summary>
-        public Linear() { }
-
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Linear" /> class. Used by the Serializer.
-        /// </summary>
-        /// <param name='info'>
-        ///     Info.
-        /// </param>
-        /// <param name='context'>
-        ///     Context.
-        /// </param>
-        public Linear(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        protected AF() { }
 
         /// <summary>
         ///     Returns the input after running through the activation function.
@@ -52,7 +39,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     The value to pass to the activation function
         /// </param>
-        public override Double Compute(Double input) { return input; }
+        public abstract Double Compute(Double input);
 
         /// <summary>
         ///     Computes the derivative using the activation function.
@@ -63,10 +50,20 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     Input.
         /// </param>
-        public override Double ComputeDerivative(Double input) { return 1; }
+        public abstract Double ComputeDerivative(Double input);
 
-        public override void Dispose() { }
+        #region IDisposable implementation
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context) { }
+        public abstract void Dispose();
+
+        #endregion
+
+        #region ISerializable implementation
+
+        public AF(SerializationInfo info, StreamingContext context) { }
+
+        public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
+
+        #endregion
     }
 }

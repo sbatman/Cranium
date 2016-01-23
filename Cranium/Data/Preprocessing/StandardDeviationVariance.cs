@@ -61,12 +61,12 @@ namespace Cranium.Lib.Data.Preprocessing
 
             List<String> data = new List<String>();
             while (!fileStream.EndOfStream) data.Add(fileStream.ReadLine());
-            Int32 columnCount = data[0].Split(new[] {(Char) 44}).Length;
+            Int32 columnCount = data[0].Split((Char) 44).Length;
             Double[][] workingDataSet = new Double[columnCount][];
             for (Int32 i = 0; i < columnCount; i++) workingDataSet[i] = new Double[data.Count];
             for (Int32 i = 0; i < data.Count; i++)
             {
-                String[] currentLine = data[i].Split(new[] {(Char) 44});
+                String[] currentLine = data[i].Split((Char) 44);
                 for (Int32 x = 0; x < columnCount; x++) workingDataSet[x][i] = Double.Parse(currentLine[x]);
             }
             fileStream.Close();

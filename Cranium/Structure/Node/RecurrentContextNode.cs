@@ -17,6 +17,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using Cranium.Lib.Structure.ActivationFunction;
 
 #endregion
 
@@ -28,7 +29,7 @@ namespace Cranium.Lib.Structure.Node
     ///     this is based on the Rate of update pased as the constructor.
     /// </summary>
     [Serializable]
-    public class RecurrentContext : Base
+    public class RecurrentContextNode : BaseNode
     {
         /// <summary>
         ///     The the persentage of the source nodes value that is used in calcualate the nodes new value
@@ -38,7 +39,7 @@ namespace Cranium.Lib.Structure.Node
         /// <summary>
         ///     The node which this node uses to calculate its value
         /// </summary>
-        protected Base _SourceNode;
+        protected BaseNode _SourceNode;
 
         /// <summary>
         ///     The initial value of the node.
@@ -46,7 +47,7 @@ namespace Cranium.Lib.Structure.Node
         protected Double _StartValue;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RecurrentContext" /> class.
+        ///     Initializes a new instance of the <see cref="RecurrentContextNode" /> class.
         /// </summary>
         /// <param name='sourceNode'>
         ///     Source node.
@@ -60,7 +61,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public RecurrentContext(Base sourceNode, Double rateOfUpdate, Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer, activationFunction)
+        public RecurrentContextNode(BaseNode sourceNode, Double rateOfUpdate, Layer.Layer parentLayer, AF activationFunction) : base(parentLayer, activationFunction)
         {
             _Value = 0.0f;
             _SourceNode = sourceNode;
@@ -68,7 +69,7 @@ namespace Cranium.Lib.Structure.Node
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="RecurrentContext" /> class. Used by the Serializer.
+        ///     Initializes a new instance of the <see cref="RecurrentContextNode" /> class. Used by the Serializer.
         /// </summary>
         /// <param name='info'>
         ///     Info.
@@ -76,9 +77,9 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public RecurrentContext(SerializationInfo info, StreamingContext context) : base(info, context)
+        public RecurrentContextNode(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _SourceNode = (Base) info.GetValue("_SourceNode", typeof (Base));
+            _SourceNode = (BaseNode) info.GetValue("_SourceNode", typeof (BaseNode));
             _RateOfUpdate = info.GetDouble("_RateOfUpdate");
             _StartValue = info.GetDouble("_StartValue");
         }

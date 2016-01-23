@@ -20,8 +20,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
+using Cranium.Lib.Structure.Layer;
 using Cranium.Lib.Structure.Node;
-using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 
 #endregion
 
@@ -50,7 +50,7 @@ namespace Cranium.Lib.Activity.Training
         /// <summary>
         ///     A collection of the current input nodes
         /// </summary>
-        protected List<Structure.Node.Base> _InputNodes;
+        protected List<BaseNode> _InputNodes;
 
         /// <summary>
         ///     Thre sequences of inputs to be presented during training
@@ -70,7 +70,7 @@ namespace Cranium.Lib.Activity.Training
         /// <summary>
         ///     A collection of the current output nodes
         /// </summary>
-        protected List<Structure.Node.Base> _OutputNodes;
+        protected List<BaseNode> _OutputNodes;
 
         /// <summary>
         ///     Th number of data entries to not use when building the trainign dataset, this allows testing and training against
@@ -81,12 +81,12 @@ namespace Cranium.Lib.Activity.Training
         /// <summary>
         ///     The RND used during the netowrk setup when required
         /// </summary>
-        protected Random _RND;
+        protected Random _Rnd;
 
         /// <summary>
         ///     Any recurrent layers that are present in the network structure
         /// </summary>
-        protected List<Structure.Layer.Base> _Recurrentlayers;
+        protected List<Layer> _Recurrentlayers;
 
         /// <summary>
         ///     The number of sequences that weill be tested
@@ -102,19 +102,19 @@ namespace Cranium.Lib.Activity.Training
 
         public SlidingWindow()
         {
-            _RND = new Random();
+            _Rnd = new Random();
         }
 
         public SlidingWindow(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
             _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
-            _InputNodes = (List<Structure.Node.Base>)info.GetValue("_InputNodes", typeof(List<Structure.Node.Base>));
+            _InputNodes = (List<BaseNode>)info.GetValue("_InputNodes", typeof(List<BaseNode>));
             _LastPassAverageError = info.GetDouble("_LastPassAverageError");
-            _OutputNodes = (List<Structure.Node.Base>)info.GetValue("_OutputNodes", typeof(List<Structure.Node.Base>));
+            _OutputNodes = (List<BaseNode>)info.GetValue("_OutputNodes", typeof(List<BaseNode>));
             _PortionOfDatasetReserved = info.GetInt32("_PortionOfDatasetReserved");
-            _RND = (Random)info.GetValue("_RND", typeof(Random));
-            _Recurrentlayers = (List<Structure.Layer.Base>)info.GetValue("_Recurrentlayers", typeof(List<Structure.Layer.Base>));
+            _Rnd = (Random)info.GetValue("_RND", typeof(Random));
+            _Recurrentlayers = (List<Layer>)info.GetValue("_Recurrentlayers", typeof(List<Layer>));
             _WindowWidth = info.GetInt32("_WindowWidth");
         }
 
@@ -172,7 +172,7 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='nodes'>
         ///     Nodes.
         /// </param>
-        public virtual void SetInputNodes(List<Structure.Node.Base> nodes)
+        public virtual void SetInputNodes(List<BaseNode> nodes)
         {
             _InputNodes = nodes;
         }
@@ -183,7 +183,7 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='nodes'>
         ///     Nodes.
         /// </param>
-        public virtual void SetOutputNodes(List<Structure.Node.Base> nodes)
+        public virtual void SetOutputNodes(List<BaseNode> nodes)
         {
             _OutputNodes = nodes;
         }
@@ -194,7 +194,7 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='layers'>
         ///     Layers.
         /// </param>
-        public virtual void SetRecurrentConextLayers(List<Structure.Layer.Base> layers)
+        public virtual void SetRecurrentConextLayers(List<Layer> layers)
         {
             _Recurrentlayers = layers;
         }
@@ -245,11 +245,11 @@ namespace Cranium.Lib.Activity.Training
 
         public override void Dispose()
         {
-            if (_InputNodes != null) _InputNodes.Clear();
-            if (_LogStream != null) _LogStream.Dispose();
-            if (_OutputNodes != null) _OutputNodes.Clear();
-            if (_Recurrentlayers != null) _Recurrentlayers.Clear();
-            _RND = null;
+            _InputNodes?.Clear();
+            _LogStream?.Dispose();
+            _OutputNodes?.Clear();
+            _Recurrentlayers?.Clear();
+            _Rnd = null;
             base.Dispose();
         }
 
@@ -264,13 +264,13 @@ namespace Cranium.Lib.Activity.Training
         /// </returns>
         protected override Boolean _Tick()
         {
-            if (_CurrentEpoch >= _MaxEpochs) return false;
+            if (CurrentEpoch >= _MaxEpochs) return false;
             Double error = 0;
 
             // if the Dynamic Learning Rate delegate is set call it
-            if (_DynamicLearningRate != null) _TargetNetwork.SetLearningRate(_DynamicLearningRate(_CurrentEpoch, _LastPassAverageError));
+            if (_DynamicLearningRate != null) _TargetNetwork.SetLearningRate(_DynamicLearningRate(CurrentEpoch, _LastPassAverageError));
             // if the Dynamic Momentum delegate is set call it
-            if (_DynamicMomentum != null) _TargetNetwork.SetMomentum(_DynamicMomentum(_CurrentEpoch, _LastPassAverageError));
+            if (_DynamicMomentum != null) _TargetNetwork.SetMomentum(_DynamicMomentum(CurrentEpoch, _LastPassAverageError));
 
             List<Int32> sequencyList = new List<Int32>(_SequenceCount);
 
@@ -279,21 +279,22 @@ namespace Cranium.Lib.Activity.Training
             while (sequencyList.Count > 0)
             {
                 //This needs to be booled so it can be turned off
-                Int32 s = sequencyList[_RND.Next(0, sequencyList.Count)];
+                Int32 s = sequencyList[_Rnd.Next(0, sequencyList.Count)];
                 sequencyList.Remove(s);
 
-                foreach (Structure.Node.Base node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
+                foreach (BaseNode node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
                 for (Int32 i = 0; i < _WindowWidth; i++)
                 {
                     for (Int32 x = 0; x < _InputNodes.Count; x++) _InputNodes[x].SetValue(_InputSequences[s, i, x]);
                     _TargetNetwork.FowardPass();
-                    foreach (RecurrentContext layer in _Recurrentlayers) layer.UpdateExtra();
+
+                    foreach (RecurrentContext layer in _Recurrentlayers.Cast<RecurrentContext>()) layer.UpdateExtra();
                 }
                 for (Int32 x = 0; x < _OutputNodes.Count; x++)
                 {
-                    Output output = _OutputNodes[x] as Output;
-                    if (output != null) output.SetTargetValue(_ExpectedOutputs[s, x]);
+                    OutputNode output = _OutputNodes[x] as OutputNode;
+                    output?.SetTargetValue(_ExpectedOutputs[s, x]);
                 }
 
                 _TargetNetwork.ReversePass();
@@ -302,20 +303,20 @@ namespace Cranium.Lib.Activity.Training
                 {
                     for (Int32 x = 0; x < _OutputNodes.Count; x++)
                     {
-                        Output output = _OutputNodes[x] as Output;
-                        if (output != null) output.SetValue(_ExpectedOutputs[s, x]);
+                        OutputNode output = _OutputNodes[x] as OutputNode;
+                        output?.SetValue(_ExpectedOutputs[s, x]);
                     }
                 }
 
                 //Calculate the current error
-                Double passError = _OutputNodes.OfType<Output>().Sum(output => output.GetError());
+                Double passError = _OutputNodes.OfType<OutputNode>().Sum(output => output.GetError());
                 passError /= _OutputNodes.Count;
                 error += passError * passError;
             }
             _LastPassAverageError = error / _SequenceCount;
            // Console.WriteLine(_LastPassAverageError);
-            if (_LogStream != null) _LogStream.WriteLine(_LastPassAverageError);
-            if (_LogStream != null) _LogStream.Flush();
+            _LogStream?.WriteLine(_LastPassAverageError);
+            _LogStream?.Flush();
             return true;
         }
 
@@ -327,13 +328,7 @@ namespace Cranium.Lib.Activity.Training
             //todo: some real logging would be nice
             PrepareData();
             _LastPassAverageError = 0;
-            try
-            {
-                if (_LogStream == null) _LogStream = File.CreateText("log.txt");
-            }
-            catch (Exception e)
-            {
-            }
+
         }
 
         /// <summary>
@@ -341,19 +336,19 @@ namespace Cranium.Lib.Activity.Training
         /// </summary>
         protected override void Stopping()
         {
-            if (_LogStream != null) _LogStream.Close();
+            _LogStream?.Close();
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
             info.AddValue("_DistanceToForcastHorrison", _DistanceToForcastHorrison);
-            info.AddValue("_InputNodes", _InputNodes, typeof(List<Structure.Node.Base>));
+            info.AddValue("_InputNodes", _InputNodes, typeof(List<BaseNode>));
             info.AddValue("_LastPassAverageError", _LastPassAverageError);
-            info.AddValue("_OutputNodes", _OutputNodes, typeof(List<Structure.Node.Base>));
+            info.AddValue("_OutputNodes", _OutputNodes, typeof(List<BaseNode>));
             info.AddValue("_PortionOfDatasetReserved", _PortionOfDatasetReserved);
-            info.AddValue("_RND", _RND, typeof(Random));
-            info.AddValue("_Recurrentlayers", _Recurrentlayers, typeof(List<Structure.Layer.Base>));
+            info.AddValue("_RND", _Rnd, typeof(Random));
+            info.AddValue("_Recurrentlayers", _Recurrentlayers, typeof(List<Layer>));
             info.AddValue("_WindowWidth", _WindowWidth);
         }
 

@@ -17,6 +17,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using Cranium.Lib.Structure.ActivationFunction;
 
 #endregion
 
@@ -27,12 +28,12 @@ namespace Cranium.Lib.Structure.Node
     ///     the error of foward nodes.
     /// </summary>
     [Serializable]
-    public class Output : Base
+    public class OutputNode : BaseNode
     {
         protected Double _TargetValue;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Output" /> class.
+        ///     Initializes a new instance of the <see cref="OutputNode" /> class.
         /// </summary>
         /// <param name='parentLayer'>
         ///     Parent layer.
@@ -40,10 +41,10 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public Output(Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer, activationFunction) { }
+        public OutputNode(Layer.Layer parentLayer, AF activationFunction) : base(parentLayer, activationFunction) { }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Output" /> class. Used by the Serializer
+        ///     Initializes a new instance of the <see cref="OutputNode" /> class. Used by the Serializer
         /// </summary>
         /// <param name='info'>
         ///     Info.
@@ -51,7 +52,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Output(SerializationInfo info, StreamingContext context) : base(info, context)
+        public OutputNode(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _TargetValue = info.GetDouble("_TargetValue");
         }
@@ -61,7 +62,7 @@ namespace Cranium.Lib.Structure.Node
         /// </summary>
         public override void CalculateError()
         {
-            _Error = ((1 - _Value)*(1 + _Value))*(_TargetValue - _Value);
+            _Error = (_TargetValue - _Value);
         }
 
         /// <summary>

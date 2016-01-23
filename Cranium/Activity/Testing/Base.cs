@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure;
+using Cranium.Lib.Structure.Layer;
+using Cranium.Lib.Structure.Node;
 
 namespace Cranium.Lib.Activity.Testing
 {
@@ -16,17 +18,17 @@ namespace Cranium.Lib.Activity.Testing
         /// <summary>
         ///     The current input nodes that has been assigned for use during this test
         /// </summary>
-        protected List<Structure.Node.Base> _InputNodes;
+        protected List<BaseNode> _InputNodes;
 
         /// <summary>
         ///     The current output nodes that has been assigned for use during this test
         /// </summary>
-        protected List<Structure.Node.Base> _OutputNodes;
+        protected List<BaseNode> _OutputNodes;
 
         /// <summary>
         ///     The current Recurrent layers that has been assigned for use during this test
         /// </summary>
-        protected List<Structure.Layer.Base> _Recurrentlayers;
+        protected List<Layer> _Recurrentlayers;
 
         /// <summary>
         ///     The network that requires testing
@@ -44,9 +46,9 @@ namespace Cranium.Lib.Activity.Testing
         protected Base(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            _InputNodes = (List<Structure.Node.Base>)info.GetValue("_InputNodes", typeof(List<Structure.Node.Base>));
-            _OutputNodes = (List<Structure.Node.Base>)info.GetValue("_OutputNodes", typeof(List<Structure.Node.Base>));
-            _Recurrentlayers = (List<Structure.Layer.Base>)info.GetValue("_Recurrentlayers", typeof(List<Structure.Layer.Base>));
+            _InputNodes = (List<BaseNode>)info.GetValue("_InputNodes", typeof(List<BaseNode>));
+            _OutputNodes = (List<BaseNode>)info.GetValue("_OutputNodes", typeof(List<BaseNode>));
+            _Recurrentlayers = (List<Layer>)info.GetValue("_Recurrentlayers", typeof(List<Layer>));
             _TargetNetwork = (Network)info.GetValue("_TargetNetwork", typeof(Network));
         }
 
@@ -56,7 +58,7 @@ namespace Cranium.Lib.Activity.Testing
         /// <param name='nodes'>
         ///     Nodes.
         /// </param>
-        public virtual void SetInputNodes(List<Structure.Node.Base> nodes) { _InputNodes = nodes; }
+        public virtual void SetInputNodes(List<BaseNode> nodes) { _InputNodes = nodes; }
 
         /// <summary>
         ///     Sets the output nodes.
@@ -64,13 +66,13 @@ namespace Cranium.Lib.Activity.Testing
         /// <param name='nodes'>
         ///     Nodes.
         /// </param>
-        public virtual void SetOutputNodes(List<Structure.Node.Base> nodes) { _OutputNodes = nodes; }
+        public virtual void SetOutputNodes(List<BaseNode> nodes) { _OutputNodes = nodes; }
 
         /// <summary>
         ///     Sets the current layers that require additional update logic during testing
         /// </summary>
         /// <param name="layers"></param>
-        public virtual void SetRecurrentConextLayers(List<Structure.Layer.Base> layers) { _Recurrentlayers = layers; }
+        public virtual void SetRecurrentConextLayers(List<Layer> layers) { _Recurrentlayers = layers; }
 
         /// <summary>
         ///     Sets the current target network for the testing activity, this must be set before testNetwork is called

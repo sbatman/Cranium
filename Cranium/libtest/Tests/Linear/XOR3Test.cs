@@ -19,8 +19,8 @@ using System;
 using System.Collections.Generic;
 using Cranium.Lib.Structure;
 using Cranium.Lib.Structure.ActivationFunction;
+using Cranium.Lib.Structure.Layer;
 using Cranium.Lib.Structure.Node;
-using Base = Cranium.Lib.Structure.Layer.Base;
 
 #endregion
 
@@ -39,17 +39,17 @@ namespace Cranium.Lib.Test.Tests.Linear
         /// <summary>
         ///     The current input layer of the neural network structure that is being tested
         /// </summary>
-        private static Base _InputLayer;
+        private static Layer _InputLayer;
 
         /// <summary>
         ///     The current hidden layer of the neural network structure that is being tested
         /// </summary>
-        private static Base _HiddenLayer;
+        private static Layer _HiddenLayer;
 
         /// <summary>
         ///     The _ output layer of the neural network structure that is being tested
         /// </summary>
-        private static Base _OutputLayer;
+        private static Layer _OutputLayer;
 
         /// <summary>
         ///     The Input data to be presented to the network during the foward pass
@@ -101,20 +101,20 @@ namespace Cranium.Lib.Test.Tests.Linear
         /// </summary>
         private static void BuildStructure()
         {
-            _InputLayer = new Base();
-            List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
-            for (Int32 i = 0; i < 3; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
+            _InputLayer = new Layer();
+            List<BaseNode> inputLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 3; i++) inputLayerNodes.Add(new BaseNode(_InputLayer, new TanhAF()));
 
             _InputLayer.SetNodes(inputLayerNodes);
 
-            _HiddenLayer = new Base();
-            List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
-            for (Int32 i = 0; i < 4; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
+            _HiddenLayer = new Layer();
+            List<BaseNode> hiddenLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 4; i++) hiddenLayerNodes.Add(new BaseNode(_HiddenLayer, new TanhAF()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
-            _OutputLayer = new Base();
-            List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
-            for (Int32 i = 0; i < 3; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
+            _OutputLayer = new Layer();
+            List<BaseNode> ouputLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 3; i++) ouputLayerNodes.Add(new OutputNode(_OutputLayer, new TanhAF()));
             _OutputLayer.SetNodes(ouputLayerNodes);
 
             _InputLayer.ConnectFowardLayer(_HiddenLayer);
@@ -124,7 +124,7 @@ namespace Cranium.Lib.Test.Tests.Linear
             _TestNetworkStructure.AddLayer(_HiddenLayer);
             _TestNetworkStructure.AddLayer(_OutputLayer);
 
-            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
+            foreach (Layer layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
         }
 
         /// <summary>
@@ -208,7 +208,7 @@ namespace Cranium.Lib.Test.Tests.Linear
         /// </param>
         private static void ReversePass(Int32 row)
         {
-            ((Output) _OutputLayer.GetNodes()[0]).SetTargetValue(_OutputData[row]);
+            ((OutputNode) _OutputLayer.GetNodes()[0]).SetTargetValue(_OutputData[row]);
             _OutputLayer.ReversePass(0.3, 0.9);
         }
     }

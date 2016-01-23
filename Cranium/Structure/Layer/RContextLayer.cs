@@ -18,6 +18,8 @@
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using Cranium.Lib.Structure.ActivationFunction;
+using Cranium.Lib.Structure.Node;
 
 #endregion
 
@@ -30,12 +32,12 @@ namespace Cranium.Lib.Structure.Layer
     ///     The white paper can be found here http://www.aaai.org/Papers/AAAI/1994/AAAI94-135.pdf
     /// </summary>
     [Serializable]
-    public class RecurrentContext : Base
+    public class RecurrentContext : Layer
     {
         /// <summary>
         ///     The Activation function that should be used for all nodes within the layer
         /// </summary>
-        protected ActivationFunction.Base _ActivationFunction;
+        protected AF _ActivationFunction;
 
         /// <summary>
         ///     How many context nodes should be created per source node
@@ -45,7 +47,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     The source ndoes used when building the recurrent context
         /// </summary>
-        protected List<Node.Base> _SourceNodes;
+        protected List<BaseNode> _SourceNodes;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="RecurrentContext" /> class.
@@ -56,10 +58,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='activationFunction'>
         ///     Activation function to be used for the context nodes.
         /// </param>
-        public RecurrentContext(Int32 levelOfContext, ActivationFunction.Base activationFunction)
+        public RecurrentContext(Int32 levelOfContext, AF activationFunction)
         {
             _ActivationFunction = activationFunction;
-            _SourceNodes = new List<Node.Base>();
+            _SourceNodes = new List<BaseNode>();
             _LevelOfContext = levelOfContext;
         }
 
@@ -74,9 +76,9 @@ namespace Cranium.Lib.Structure.Layer
         /// </param>
         public RecurrentContext(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _SourceNodes = (List<Node.Base>) info.GetValue("_SourceNodes", typeof (List<Node.Base>));
+            _SourceNodes = (List<BaseNode>) info.GetValue("_SourceNodes", typeof (List<BaseNode>));
             _LevelOfContext = info.GetInt32("_LevelOfContext");
-            _ActivationFunction = (ActivationFunction.Base) info.GetValue("_ActivationFunction", typeof (ActivationFunction.Base));
+            _ActivationFunction = (AF) info.GetValue("_ActivationFunction", typeof (AF));
         }
 
         /// <summary>
@@ -95,7 +97,7 @@ namespace Cranium.Lib.Structure.Layer
         public virtual void BuildNodeBank()
         {
             Double step = 1d/_LevelOfContext;
-            for (Int32 x = 0; x < _LevelOfContext; x++) foreach (Node.Base n in _SourceNodes) _Nodes.Add(new Node.RecurrentContext(n, step*x, this, _ActivationFunction));
+            for (Int32 x = 0; x < _LevelOfContext; x++) foreach (BaseNode n in _SourceNodes) _Nodes.Add(new RecurrentContextNode(n, step*x, this, _ActivationFunction));
         }
 
         /// <summary>
@@ -104,12 +106,12 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='nodes'>
         ///     Nodes.
         /// </param>
-        public virtual void AddSourceNodes(List<Node.Base> nodes) { _SourceNodes.AddRange(nodes); }
+        public virtual void AddSourceNodes(List<BaseNode> nodes) { _SourceNodes.AddRange(nodes); }
 
         /// <summary>
         ///     Performs any extra update required on child nodes
         /// </summary>
-        public override void UpdateExtra() { foreach (Node.RecurrentContext n in _Nodes) n.Update(); }
+        public override void UpdateExtra() { foreach (RecurrentContextNode n in _Nodes) n.Update(); }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

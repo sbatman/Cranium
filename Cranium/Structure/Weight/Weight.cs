@@ -17,18 +17,19 @@
 
 using System;
 using System.Runtime.Serialization;
+using Cranium.Lib.Structure.Node;
 
 #endregion
 
 namespace Cranium.Lib.Structure.Weight
 {
     /// <summary>
-    ///     This is the base weight class and acts as a standard weight between two nodes. weight changes can be applied
+    ///     This is the base Value class and acts as a standard Value between two nodes. Value changes can be applied
     ///     immediatly
     ///     or added to a pending list and applied at a later stage.
     /// </summary>
     [Serializable]
-    public class Base : IDisposable, ISerializable
+    public class Weight : IDisposable, ISerializable
     {
         /// <summary>
         ///     Connection direction. Either foward or reverse, Added for code readability
@@ -37,45 +38,45 @@ namespace Cranium.Lib.Structure.Weight
         {
             REVERSE,
             FORWARD
-        };
+        }
 
         /// <summary>
         ///     Node a, this should be the reverse node
         /// </summary>
-        public Node.Base NodeA;
+        public BaseNode NodeA;
 
         /// <summary>
         ///     Node b, this should be the forward node
         /// </summary>
-        public Node.Base NodeB;
+        public BaseNode NodeB;
 
         /// <summary>
-        ///     The current weight
+        ///     The current Value
         /// </summary>
-        public Double Weight;
+        public Double Value;
 
         /// <summary>
-        ///     The initial value of the weight
+        ///     The initial value of the Value
         /// </summary>
         protected Double _InitialValue;
 
         /// <summary>
-        ///     The last total weight change
+        ///     The last total Value change
         /// </summary>
         protected Double _PastWeightChange;
 
         /// <summary>
-        ///     The total pending weight change before count devision
+        ///     The total pending Value change before count devision
         /// </summary>
         protected Double _PendingWeightChange;
 
         /// <summary>
-        ///     The number of pending weight changes
+        ///     The number of pending Value changes
         /// </summary>
         protected Double _PendingWeightChangeCount;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Base" /> class.
+        ///     Initializes a new instance of the <see cref="Structure.Weight.Weight" /> class.
         /// </summary>
         /// <param name='nodeA'>
         ///     Node a.
@@ -83,36 +84,36 @@ namespace Cranium.Lib.Structure.Weight
         /// <param name='nodeB'>
         ///     Node b.
         /// </param>
-        /// <param name='weight'>
-        ///     Initial Weight.
+        /// <param name='value'>
+        ///     Initial Value.
         /// </param>
-        public Base(Node.Base nodeA, Node.Base nodeB, Double weight)
+        public Weight(BaseNode nodeA, BaseNode nodeB, Double value)
         {
             NodeA = nodeA;
             NodeB = nodeB;
-            Weight = weight;
-            _InitialValue = weight;
+            Value = value;
+            _InitialValue = value;
             _PendingWeightChange = 0;
             _PendingWeightChangeCount = 0;
             _PastWeightChange = 0;
         }
 
         /// <summary>
-        ///     Gets the total change from the initial value the weight was set with.
+        ///     Gets the total change from the initial value the Value was set with.
         /// </summary>
         /// <returns>
         ///     The total change.
         /// </returns>
         public virtual Double GetTotalChange()
         {
-            return Weight - _InitialValue;
+            return Value - _InitialValue;
         }
 
         /// <summary>
-        ///     Adds a pending weight change
+        ///     Adds a pending Value change
         /// </summary>
         /// <param name='weightModification'>
-        ///     Weight modification.
+        ///     Value modification.
         /// </param>
         public virtual void AddWeightChange(Double weightModification)
         {
@@ -121,21 +122,21 @@ namespace Cranium.Lib.Structure.Weight
         }
 
         /// <summary>
-        ///     Sets the current weight.
+        ///     Sets the current Value.
         /// </summary>
         /// <param name='newWeight'>
-        ///     New weight.
+        ///     New Value.
         /// </param>
         public virtual void SetWeight(Double newWeight)
         {
-            Weight = newWeight;
+            Value = newWeight;
         }
 
         /// <summary>
-        ///     Gets the previous total weight change caused by ApplyPendingWeightChanges
+        ///     Gets the previous total Value change caused by ApplyPendingWeightChanges
         /// </summary>
         /// <returns>
-        ///     The past weight change.
+        ///     The past Value change.
         /// </returns>
         public virtual Double GetPastWeightChange()
         {
@@ -150,7 +151,7 @@ namespace Cranium.Lib.Structure.Weight
             if (_PendingWeightChangeCount >= 1)
             {
                 _PastWeightChange = (_PendingWeightChange/_PendingWeightChangeCount);
-                Weight += _PastWeightChange;
+                Value += _PastWeightChange;
             }
             else
             {
@@ -161,7 +162,7 @@ namespace Cranium.Lib.Structure.Weight
         }
 
         /// <summary>
-        ///     Clears the pending weight changes.
+        ///     Clears the pending Value changes.
         /// </summary>
         public virtual void ClearPendingWeightChanges()
         {
@@ -182,7 +183,7 @@ namespace Cranium.Lib.Structure.Weight
         #region ISerializable implementation
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Base" /> class. Used by the Serializer
+        ///     Initializes a new instance of the <see cref="Structure.Weight.Weight" /> class. Used by the Serializer
         /// </summary>
         /// <param name='info'>
         ///     Info.
@@ -190,11 +191,11 @@ namespace Cranium.Lib.Structure.Weight
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Base(SerializationInfo info, StreamingContext context)
+        public Weight(SerializationInfo info, StreamingContext context)
         {
-            NodeA = (Node.Base) info.GetValue("NodeA", typeof (Node.Base));
-            NodeB = (Node.Base) info.GetValue("NodeB", typeof (Node.Base));
-            Weight = info.GetDouble("Weight");
+            NodeA = (BaseNode) info.GetValue("NodeA", typeof (BaseNode));
+            NodeB = (BaseNode) info.GetValue("NodeB", typeof (BaseNode));
+            Value = info.GetDouble("Value");
             _InitialValue = info.GetDouble("_InitialValue");
             _PendingWeightChange = info.GetDouble("_PendingWeightChange");
             _PendingWeightChangeCount = info.GetDouble("_PendingWeightChangeCount");
@@ -205,7 +206,7 @@ namespace Cranium.Lib.Structure.Weight
         {
             info.AddValue("NodeA", NodeA, NodeA.GetType());
             info.AddValue("NodeB", NodeB, NodeB.GetType());
-            info.AddValue("Weight", Weight);
+            info.AddValue("Value", Value);
             info.AddValue("_InitialValue", _InitialValue);
             info.AddValue("_PendingWeightChange", _PendingWeightChange);
             info.AddValue("_PendingWeightChangeCount", _PendingWeightChangeCount);

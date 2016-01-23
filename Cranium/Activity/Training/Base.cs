@@ -30,7 +30,7 @@ namespace Cranium.Lib.Activity.Training
     {
         public delegate Double DynamicVariable(Int32 epoch, Double currentRmse);
 
-        protected Int32 _CurrentEpoch;
+        private Int32 _CurrentEpoch;
         protected DynamicVariable _DynamicLearningRate;
         protected DynamicVariable _DynamicMomentum;
         private Thread _LoopThread;
@@ -39,6 +39,8 @@ namespace Cranium.Lib.Activity.Training
         private Boolean _Stopping;
         protected Network _TargetNetwork;
         protected Double[][] _WorkingDataset;
+        protected ReaderWriterLockSlim _Lock = new ReaderWriterLockSlim();
+
 
         protected Base() { }
 
@@ -52,6 +54,39 @@ namespace Cranium.Lib.Activity.Training
             _WorkingDataset = (Double[][]) info.GetValue("_WorkingDataset", typeof (Double[][]));
         }
 
+        public Int32 CurrentEpoch
+        {
+            get
+            {
+                _Lock.EnterReadLock();
+                Int32 returnValue = _CurrentEpoch;
+                _Lock.ExitReadLock();
+                return returnValue;
+            }
+        }
+
+        /// <summary>
+        ///     Determines whether this training activity is running.
+        /// </summary>
+        /// <returns>
+        ///     <c>true</c> if this instance is running; otherwise, <c>false</c>.
+        /// </returns>
+        public Boolean Running
+        {
+            get
+            {
+                _Lock.EnterReadLock();
+                Boolean returnValue = _Running;
+                _Lock.ExitReadLock();
+                return returnValue;
+            }
+            protected set
+            {
+                _Lock.EnterWriteLock();
+                _Running = value;
+                _Lock.ExitWriteLock();
+            }
+        }
 
         /// <summary>
         ///     Start this training activity (launched in a sperate thread).
@@ -72,11 +107,19 @@ namespace Cranium.Lib.Activity.Training
         public void StartSynchronous()
         {
             _CurrentEpoch = 0;
-            _Running = true;
+
+            Running = true;
+
             Starting();
-            while (_Tick() && !_Stopping) _CurrentEpoch++;
+            while (_Tick() && !_Stopping)
+            {
+                _Lock.EnterWriteLock();
+                _CurrentEpoch++;
+                _Lock.ExitWriteLock();
+            }
             Stopping();
-            _Running = false;
+
+            Running = false;
         }
 
         /// <summary>
@@ -101,15 +144,7 @@ namespace Cranium.Lib.Activity.Training
         /// </param>
         public virtual void SetWorkingDataset(Double[][] workingDataset) { _WorkingDataset = workingDataset; }
 
-        /// <summary>
-        ///     Determines whether this training activity is running.
-        /// </summary>
-        /// <returns>
-        ///     <c>true</c> if this instance is running; otherwise, <c>false</c>.
-        /// </returns>
-        public Boolean IsRunning() { return _Running; }
-
-        /// <summary>
+     /// <summary>
         ///     Sets the maximum epochs.
         /// </summary>
         /// <param name='epochs'>
@@ -151,11 +186,11 @@ namespace Cranium.Lib.Activity.Training
         /// </summary>
         private void _UpdateLoop()
         {
-            _Running = true;
+            Running = true;
             Starting();
             while (_Tick() && !_Stopping) _CurrentEpoch++;
             Stopping();
-            _Running = false;
+            Running = false;
         }
 
         /// <summary>
@@ -187,11 +222,11 @@ namespace Cranium.Lib.Activity.Training
 
         public override void Dispose()
         {
-            if (_TargetNetwork!=null)_TargetNetwork.Dispose();
+            _TargetNetwork?.Dispose();
             _DynamicLearningRate = null;
             _DynamicMomentum = null;
-            if (_LoopThread != null) _LoopThread.Abort(); 
-            
+            _LoopThread?.Abort();
+
             base.Dispose();
         }
     }

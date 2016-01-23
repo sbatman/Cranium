@@ -17,6 +17,7 @@
 
 using System;
 using System.Runtime.Serialization;
+using Cranium.Lib.Structure.ActivationFunction;
 
 #endregion
 
@@ -26,12 +27,12 @@ namespace Cranium.Lib.Structure.Node
     ///     A Bias node retains a static value at all times and is useful in some neural network structures.
     /// </summary>
     [Serializable]
-    public class Bias : Base
+    public class BiasNode : BaseNode
     {
         protected Double _BiasValue = 1;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Bias" /> class.
+        ///     Initializes a new instance of the <see cref="BiasNode" /> class.
         /// </summary>
         /// <param name='parentLayer'>
         ///     Parent layer.
@@ -39,10 +40,10 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public Bias(Layer.Base parentLayer, ActivationFunction.Base activationFunction) : base(parentLayer, activationFunction) { }
+        public BiasNode(Layer.Layer parentLayer, AF activationFunction) : base(parentLayer, activationFunction) { }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Bias" /> class. Used by the Serializer.
+        ///     Initializes a new instance of the <see cref="BiasNode" /> class. Used by the Serializer.
         /// </summary>
         /// <param name='info'>
         ///     Info.
@@ -50,7 +51,7 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Bias(SerializationInfo info, StreamingContext context) : base(info, context) { _BiasValue = info.GetDouble("_BiasValue"); }
+        public BiasNode(SerializationInfo info, StreamingContext context) : base(info, context) { _BiasValue = info.GetDouble("_BiasValue"); }
 
         /// <summary>
         ///     Returns the static value of the node
@@ -89,9 +90,9 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='startingWeight'>
         ///     Starting weight.
         /// </param>
-        public override void ConnectToNode(Base nodeToConnect, Weight.Base.ConnectionDirection connectionDirectionToNode, Single startingWeight)
+        public override void ConnectToNode(BaseNode nodeToConnect, Weight.Weight.ConnectionDirection connectionDirectionToNode, Single startingWeight)
         {
-            if (connectionDirectionToNode == Weight.Base.ConnectionDirection.REVERSE) return;
+            if (connectionDirectionToNode == Weight.Weight.ConnectionDirection.REVERSE) return;
             base.ConnectToNode(nodeToConnect, connectionDirectionToNode, startingWeight);
         }
 

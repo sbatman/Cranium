@@ -24,9 +24,8 @@ using Cranium.Lib.Data.PostProcessing;
 using Cranium.Lib.Data.Preprocessing;
 using Cranium.Lib.Structure;
 using Cranium.Lib.Structure.ActivationFunction;
+using Cranium.Lib.Structure.Layer;
 using Cranium.Lib.Structure.Node;
-using Base = Cranium.Lib.Structure.Layer.Base;
-using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 
 #endregion
 
@@ -52,12 +51,12 @@ namespace Cranium.LibTest.Tests.Recursive
         /// <summary>
         ///     The input layer of the nerual network
         /// </summary>
-        private static Base _InputLayer;
+        private static Layer _InputLayer;
 
         /// <summary>
         ///     The hidden layer of the nerual network.
         /// </summary>
-        private static Base _HiddenLayer;
+        private static Layer _HiddenLayer;
 
         /// <summary>
         ///     The recurvie context layer of the nerual network
@@ -67,17 +66,17 @@ namespace Cranium.LibTest.Tests.Recursive
         /// <summary>
         ///     The output layer of the neural network
         /// </summary>
-        private static Base _OutputLayer;
+        private static Layer _OutputLayer;
 
         /// <summary>
         ///     A list of the input nodes present in this neural network structure
         /// </summary>
-        private static List<Lib.Structure.Node.Base> _InputLayerNodes;
+        private static List<BaseNode> _InputLayerNodes;
 
         /// <summary>
         ///     A list of the output nodes present in the neural network structure
         /// </summary>
-        private static List<Lib.Structure.Node.Base> _OuputLayerNodes;
+        private static List<BaseNode> _OuputLayerNodes;
 
         /// <summary>
         ///     Run this instance.
@@ -111,7 +110,7 @@ namespace Cranium.LibTest.Tests.Recursive
             _SlidingWindowTraining.SetDynamicLearningRateDelegate(DynamicLearningRate);
 
             // Sets the contect layers that are used as part of the training (have to updates)
-            List<Base> contextLayers = new List<Base> {_ContextLayer};
+            List<Layer> contextLayers = new List<Layer> {_ContextLayer};
             _SlidingWindowTraining.SetRecurrentConextLayers(contextLayers);
 
             ////////////////////////////////////////////////
@@ -120,7 +119,7 @@ namespace Cranium.LibTest.Tests.Recursive
             Console.WriteLine("Starting Training");
             _SlidingWindowTraining.Start();
             Thread.Sleep(1000);
-            while (_SlidingWindowTraining.IsRunning()) Thread.Sleep(20);
+            while (_SlidingWindowTraining.Running) Thread.Sleep(20);
 
             ////////////////////////////////////////////////
             ////////////////////////////////////////////////
@@ -157,30 +156,30 @@ namespace Cranium.LibTest.Tests.Recursive
         public static void BuildStructure()
         {
             // Input layer construction
-            _InputLayer = new Base();
-            _InputLayerNodes = new List<Lib.Structure.Node.Base>();
-            for (Int32 i = 0; i < 1; i++) _InputLayerNodes.Add(new Lib.Structure.Node.Base(_InputLayer, new Tanh()));
+            _InputLayer = new Layer();
+            _InputLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 1; i++) _InputLayerNodes.Add(new BaseNode(_InputLayer, new TanhAF()));
 
 
             _InputLayer.SetNodes(_InputLayerNodes);
 
             // Hidden layer construction
-            _HiddenLayer = new Base();
-            List<Lib.Structure.Node.Base> hiddenLayerNodes = new List<Lib.Structure.Node.Base>();
-            for (Int32 i = 0; i < 20; i++) hiddenLayerNodes.Add(new Lib.Structure.Node.Base(_HiddenLayer, new Tanh()));
-            Bias b = new Bias(_InputLayer, new Tanh());
+            _HiddenLayer = new Layer();
+            List<BaseNode> hiddenLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 20; i++) hiddenLayerNodes.Add(new BaseNode(_HiddenLayer, new TanhAF()));
+            BiasNode b = new BiasNode(_InputLayer, new TanhAF());
             b.SetValue(1);
             hiddenLayerNodes.Add(b);
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
 
             // Conext layer construction
-            _ContextLayer = new RecurrentContext(6, new Tanh());
+            _ContextLayer = new RecurrentContext(6, new TanhAF());
 
             //Output layer construction
-            _OutputLayer = new Base();
-            _OuputLayerNodes = new List<Lib.Structure.Node.Base>();
-            for (Int32 i = 0; i < 1; i++) _OuputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
+            _OutputLayer = new Layer();
+            _OuputLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 1; i++) _OuputLayerNodes.Add(new OutputNode(_OutputLayer, new TanhAF()));
             _OutputLayer.SetNodes(_OuputLayerNodes);
 
             // Add the nodes of the output and hidden layers to the context layer (so it generates context codes)
@@ -199,7 +198,7 @@ namespace Cranium.LibTest.Tests.Recursive
             _TestNetworkStructure.AddLayer(_OutputLayer);
 
             // Generate all the node to node links
-            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
+            foreach (Layer layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
         }
 
         /// <summary>

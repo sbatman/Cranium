@@ -19,9 +19,8 @@ using System;
 using System.Collections.Generic;
 using Cranium.Lib.Structure;
 using Cranium.Lib.Structure.ActivationFunction;
+using Cranium.Lib.Structure.Layer;
 using Cranium.Lib.Structure.Node;
-using Base = Cranium.Lib.Structure.Layer.Base;
-using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 
 #endregion
 
@@ -41,12 +40,12 @@ namespace Cranium.Lib.Test.Tests.Recursive
         /// <summary>
         ///     The current input layer of the neural network structure that is being tested
         /// </summary>
-        private static Base _InputLayer;
+        private static Layer _InputLayer;
 
         /// <summary>
         ///     The current hidden layer of the neural network structure that is being tested
         /// </summary>
-        private static Base _HiddenLayer;
+        private static Layer _HiddenLayer;
 
         /// <summary>
         ///     The recursive context layer used in this neural network structure.
@@ -56,7 +55,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
         /// <summary>
         ///     The _ output layer of the neural network structure that is being tested
         /// </summary>
-        private static Base _OutputLayer;
+        private static Layer _OutputLayer;
 
         /// <summary>
         ///     The Input data to be presented to the network during the foward pass
@@ -92,7 +91,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
                 }
                 for (Int32 x = 0; x < 4; x++)
                 {
-                    foreach (Structure.Node.Base n in _ContextLayer.GetNodes()) n.SetValue(0);
+                    foreach (BaseNode n in _ContextLayer.GetNodes()) n.SetValue(0);
                     for (Int32 i = 0; i < 2; i++)
                     {
                         _InputLayer.GetNodes()[0].SetValue(_InputData[(x*2) + i]);
@@ -119,21 +118,21 @@ namespace Cranium.Lib.Test.Tests.Recursive
         /// </summary>
         public static void BuildStructure()
         {
-            _InputLayer = new Base();
-            List<Structure.Node.Base> inputLayerNodes = new List<Structure.Node.Base>();
-            for (Int32 i = 0; i < 1; i++) inputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
+            _InputLayer = new Layer();
+            List<BaseNode> inputLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 1; i++) inputLayerNodes.Add(new BaseNode(_InputLayer, new TanhAF()));
             _InputLayer.SetNodes(inputLayerNodes);
 
-            _HiddenLayer = new Base();
-            List<Structure.Node.Base> hiddenLayerNodes = new List<Structure.Node.Base>();
-            for (Int32 i = 0; i < 3; i++) hiddenLayerNodes.Add(new Structure.Node.Base(_HiddenLayer, new Tanh()));
+            _HiddenLayer = new Layer();
+            List<BaseNode> hiddenLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 3; i++) hiddenLayerNodes.Add(new BaseNode(_HiddenLayer, new TanhAF()));
             _HiddenLayer.SetNodes(hiddenLayerNodes);
 
-            _ContextLayer = new RecurrentContext(4, new Tanh());
+            _ContextLayer = new RecurrentContext(4, new TanhAF());
 
-            _OutputLayer = new Base();
-            List<Structure.Node.Base> ouputLayerNodes = new List<Structure.Node.Base>();
-            for (Int32 i = 0; i < 1; i++) ouputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
+            _OutputLayer = new Layer();
+            List<BaseNode> ouputLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 1; i++) ouputLayerNodes.Add(new OutputNode(_OutputLayer, new TanhAF()));
             _OutputLayer.SetNodes(ouputLayerNodes);
 
             _ContextLayer.AddSourceNodes(inputLayerNodes);
@@ -148,7 +147,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
             _TestNetworkStructure.AddLayer(_ContextLayer);
             _TestNetworkStructure.AddLayer(_OutputLayer);
 
-            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
+            foreach (Layer layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
         }
 
         /// <summary>
@@ -193,7 +192,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
         /// </param>
         public static void ReversePass(Int32 row)
         {
-            Output outputNode = (Output) (_OutputLayer.GetNodes()[0]);
+            OutputNode outputNode = (OutputNode) (_OutputLayer.GetNodes()[0]);
             outputNode.SetTargetValue(_OutputData[row]);
             _OutputLayer.ReversePass(0.3, 0.95);
         }

@@ -23,24 +23,27 @@ using System.Runtime.Serialization;
 namespace Cranium.Lib.Structure.ActivationFunction
 {
     /// <summary>
-    ///     The Elliott activations functions acts as a computationaly cheaper version of tanH although with known problems
-    ///     with reaching the lowest
-    ///     errors and becoming trapped in local minima. This activation function is good for prototyping network structures,
-    ///     however in many cases
-    ///     it should not be used for practival implementations of networks. http://drum.lib.umd.edu/handle/1903/5355
+    ///     This activation function will return 1 when >= threshold else 0, its not recomended you use this in a backprop
+    ///     network
     /// </summary>
     [Serializable]
-    public class Elliott : Base
+    public class StepAF : AF
     {
-        private readonly Double _Scale = 1;
-
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Elliott" /> class.
+        ///     The Point at which the value must be at or above to for the activation function to return one else zero
         /// </summary>
-        public Elliott() { }
+        protected Double _ActivationPoint;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Elliott" /> class. Used by the serializer.
+        ///     Initializes a new instance of the <see cref="StepAF" /> class.
+        /// </summary>
+        /// <param name='activationPoint'>
+        ///     Activation point.
+        /// </param>
+        public StepAF(Double activationPoint) { _ActivationPoint = activationPoint; }
+
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="StepAF" /> class.
         /// </summary>
         /// <param name='info'>
         ///     Info.
@@ -48,9 +51,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Elliott(SerializationInfo info, StreamingContext context) : base(info, context) { _Scale = info.GetDouble("_Scale"); }
-
-        #region implemented abstract members of Cranium.Structure.ActivationFunction.Base
+        public StepAF(SerializationInfo info, StreamingContext context) : base(info, context) { _ActivationPoint = info.GetDouble("_ActivationPoint"); }
 
         /// <summary>
         ///     Returns the input after running through the activation function.
@@ -58,7 +59,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     The value to pass to the activation function
         /// </param>
-        public override Double Compute(Double input) { return (input*_Scale)/(1 + Math.Abs(input*_Scale)); }
+        public override Double Compute(Double input) { return input >= _ActivationPoint ? 1 : 0; }
 
         /// <summary>
         ///     Computes the derivative using the activation function.
@@ -69,12 +70,10 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     Input.
         /// </param>
-        public override Double ComputeDerivative(Double input) { return _Scale/(Math.Pow((1.0d + Math.Abs(input*_Scale)), 2)); }
+        public override Double ComputeDerivative(Double input) { return 1; }
 
         public override void Dispose() { }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context) { info.AddValue("_Scale", _Scale); }
-
-        #endregion
+        public override void GetObjectData(SerializationInfo info, StreamingContext context) { info.AddValue("_ActivationPoint", _ActivationPoint); }
     }
 }

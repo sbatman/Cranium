@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using Cranium.Lib.Structure.Node;
 
 #endregion
 
@@ -31,12 +32,12 @@ namespace Cranium.Lib.Structure.Layer
     ///     overriden to add additional functionality to a layer.
     /// </summary>
     [Serializable]
-    public class Base : IDisposable, ISerializable
+    public class Layer : IDisposable, ISerializable
     {
         /// <summary>
         ///     The Layers that this layer connects to
         /// </summary>
-        protected List<Base> _ForwardConnectedLayers = new List<Base>();
+        protected List<Layer> _ForwardConnectedLayers = new List<Layer>();
 
         /// <summary>
         ///     The ID of the layer
@@ -51,17 +52,17 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     The Nodes within the layer
         /// </summary>
-        protected List<Node.Base> _Nodes = new List<Node.Base>();
+        protected List<BaseNode> _Nodes = new List<BaseNode>();
 
         /// <summary>
         ///     The Layers that are connected to this layer
         /// </summary>
-        protected List<Base> _ReverseConnectedLayers = new List<Base>();
+        protected List<Layer> _ReverseConnectedLayers = new List<Layer>();
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Base" /> class.
+        ///     Initializes a new instance of the <see cref="Layer" /> class.
         /// </summary>
-        public Base() { }
+        public Layer() { }
 
         /// <summary>
         ///     Sets the nodes that are present in this layer, the previous list of nodes is purged.
@@ -69,12 +70,12 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='nodes'>
         ///     Nodes.
         /// </param>
-        public virtual void SetNodes(List<Node.Base> nodes)
+        public virtual void SetNodes(List<BaseNode> nodes)
         {
             _Nodes.Clear();
             _Nodes = null;
             _Nodes = nodes;
-            foreach (Node.Base t in _Nodes)
+            foreach (BaseNode t in _Nodes)
             {
                 t.SetNodeID(_NextNodeID);
                 _NextNodeID++;
@@ -87,7 +88,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The nodes.
         /// </returns>
-        public virtual ReadOnlyCollection<Node.Base> GetNodes()
+        public virtual ReadOnlyCollection<BaseNode> GetNodes()
         {
             return _Nodes.AsReadOnly();
         }
@@ -109,7 +110,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='layer'>
         ///     Layer.
         /// </param>
-        public virtual void ConnectFowardLayer(Base layer)
+        public virtual void ConnectFowardLayer(Layer layer)
         {
             _ForwardConnectedLayers.Add(layer);
             layer._ReverseConnectedLayers.Add(this);
@@ -121,7 +122,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The forward connected layers.
         /// </returns>
-        public virtual List<Base> GetForwardConnectedLayers()
+        public virtual List<Layer> GetForwardConnectedLayers()
         {
             return _ForwardConnectedLayers;
         }
@@ -132,7 +133,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='layer'>
         ///     Layer.
         /// </param>
-        public virtual void ConnectReverseLayer(Base layer)
+        public virtual void ConnectReverseLayer(Layer layer)
         {
             _ReverseConnectedLayers.Add(layer);
             layer._ForwardConnectedLayers.Add(this);
@@ -144,7 +145,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <returns>
         ///     The forward connected layers.
         /// </returns>
-        public virtual List<Base> GetReverseConnectedLayers()
+        public virtual List<Layer> GetReverseConnectedLayers()
         {
             return _ReverseConnectedLayers;
         }
@@ -155,7 +156,7 @@ namespace Cranium.Lib.Structure.Layer
         public virtual void PopulateNodeConnections()
         {
             PurgeNodeConnections();
-            foreach (Base l in _ForwardConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.FORWARD, 0);
+            foreach (Layer l in _ForwardConnectedLayers) foreach (BaseNode n in _Nodes) foreach (BaseNode fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Weight.ConnectionDirection.FORWARD, 0);
         }
 
         /// <summary>
@@ -163,7 +164,7 @@ namespace Cranium.Lib.Structure.Layer
         /// </summary>
         public virtual void PurgeNodeConnections()
         {
-            foreach (Node.Base n in _Nodes) n.DestroyAllConnections();
+            foreach (BaseNode n in _Nodes) n.DestroyAllConnections();
         }
 
         /// <summary>
@@ -172,8 +173,8 @@ namespace Cranium.Lib.Structure.Layer
         /// </summary>
         public virtual void ForwardPass()
         {
-            foreach (Node.Base n in _Nodes) n.CalculateValue();
-            foreach (Base l in _ForwardConnectedLayers) l.ForwardPass();
+            foreach (BaseNode n in _Nodes) n.CalculateValue();
+            foreach (Layer l in _ForwardConnectedLayers) l.ForwardPass();
         }
 
         /// <summary>
@@ -190,10 +191,10 @@ namespace Cranium.Lib.Structure.Layer
         /// </param>
         public virtual void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true)
         {
-            foreach (Node.Base n in _Nodes) n.CalculateError();
-            foreach (Node.Base n in _Nodes) n.AdjustWeights(learningRate);
-            foreach (Node.Base n in _Nodes) n.UpdateWeights(momentum);
-            if (recurseDownward) foreach (Base l in _ReverseConnectedLayers) l.ReversePass(learningRate, momentum);
+            foreach (BaseNode n in _Nodes) n.CalculateError();
+            foreach (BaseNode n in _Nodes) n.AdjustWeights(learningRate);
+            foreach (BaseNode n in _Nodes) n.UpdateWeights(momentum);
+            if (recurseDownward) foreach (Layer l in _ReverseConnectedLayers) l.ReversePass(learningRate, momentum);
         }
 
         /// <summary>
@@ -232,10 +233,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='id'>
         ///     Identifier.
         /// </param>
-        public virtual Node.Base GetNodeByID(Int32 id)
+        public virtual BaseNode GetNodeByID(Int32 id)
         {
             //look for a node with matching ID if we can find it return it else return null
-            foreach (Node.Base n in _Nodes) if (n.GetID() == id) return n;
+            foreach (BaseNode n in _Nodes) if (n.GetID() == id) return n;
             return null;
         }
 
@@ -248,7 +249,7 @@ namespace Cranium.Lib.Structure.Layer
             _ReverseConnectedLayers = null;
             _ForwardConnectedLayers.Clear();
             _ForwardConnectedLayers = null;
-            foreach (Node.Base n in _Nodes) n.Dispose();
+            foreach (BaseNode n in _Nodes) n.Dispose();
             _Nodes.Clear();
             _Nodes = null;
         }
@@ -258,7 +259,7 @@ namespace Cranium.Lib.Structure.Layer
         #region ISerializable implementation
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Base" /> class. Used by the Serializer.
+        ///     Initializes a new instance of the <see cref="Layer" /> class. Used by the Serializer.
         /// </summary>
         /// <param name='info'>
         ///     Info.
@@ -266,20 +267,20 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Base(SerializationInfo info, StreamingContext context)
+        public Layer(SerializationInfo info, StreamingContext context)
         {
-            _Nodes = (List<Node.Base>) info.GetValue("_Nodes", typeof (List<Node.Base>));
+            _Nodes = (List<BaseNode>) info.GetValue("_Nodes", typeof (List<BaseNode>));
             _LayerID = info.GetInt32("_LayerID");
             _NextNodeID = info.GetInt32("_NextNodeID");
-            _ForwardConnectedLayers = (List<Base>) info.GetValue("_ForwardConnectedLayers", typeof (List<Base>));
-            _ReverseConnectedLayers = (List<Base>) info.GetValue("_ReverseConnectedLayers", typeof (List<Base>));
+            _ForwardConnectedLayers = (List<Layer>) info.GetValue("_ForwardConnectedLayers", typeof (List<Layer>));
+            _ReverseConnectedLayers = (List<Layer>) info.GetValue("_ReverseConnectedLayers", typeof (List<Layer>));
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_Nodes", _Nodes, _Nodes.GetType());
-            info.AddValue("_ForwardConnectedLayers", _ForwardConnectedLayers, typeof (List<Base>));
-            info.AddValue("_ReverseConnectedLayers", _ReverseConnectedLayers, typeof (List<Base>));
+            info.AddValue("_ForwardConnectedLayers", _ForwardConnectedLayers, typeof (List<Layer>));
+            info.AddValue("_ReverseConnectedLayers", _ReverseConnectedLayers, typeof (List<Layer>));
             info.AddValue("_LayerID", _LayerID);
             info.AddValue("_NextNodeID", _NextNodeID);
         }

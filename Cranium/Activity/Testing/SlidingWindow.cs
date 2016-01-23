@@ -18,6 +18,7 @@
 using System;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.Layer;
+using Cranium.Lib.Structure.Node;
 
 #endregion
 
@@ -136,7 +137,7 @@ namespace Cranium.Lib.Activity.Testing
             Double rmse = 0;
             for (Int32 s = 0; s < _SequenceCount; s++)
             {
-                foreach (Structure.Layer.Base layer in _TargetNetwork.GetCurrentLayers()) foreach (Structure.Node.Base node in layer.GetNodes()) node.SetValue(0);
+                foreach (Layer layer in _TargetNetwork.GetCurrentLayers()) foreach (BaseNode node in layer.GetNodes()) node.SetValue(0);
                 for (Int32 i = 0; i < _WindowWidth; i++)
                 {
                     for (Int32 x = 0; x < _InputNodes.Count; x++) _InputNodes[x].SetValue(_InputSequences[s][i][x]);

@@ -25,8 +25,6 @@ using Cranium.Lib.Structure;
 using Cranium.Lib.Structure.ActivationFunction;
 using Cranium.Lib.Structure.Layer;
 using Cranium.Lib.Structure.Node;
-using Base = Cranium.Lib.Structure.Layer.Base;
-using RecurrentContext = Cranium.Lib.Structure.Layer.RecurrentContext;
 
 #endregion
 
@@ -59,13 +57,13 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             }
             protected override Boolean _Tick()
             {
-                if (_CurrentEpoch >= _MaxEpochs) return false;
+                if (CurrentEpoch >= _MaxEpochs) return false;
                 Double error = 0;
 
                 // if the Dynamic Learning Rate delegate is set call it
-                if (_DynamicLearningRate != null) _TargetNetwork.SetLearningRate(_DynamicLearningRate(_CurrentEpoch, _LastPassAverageError));
+                if (_DynamicLearningRate != null) _TargetNetwork.SetLearningRate(_DynamicLearningRate(CurrentEpoch, _LastPassAverageError));
                 // if the Dynamic Momentum delegate is set call it
-                if (_DynamicMomentum != null) _TargetNetwork.SetMomentum(_DynamicMomentum(_CurrentEpoch, _LastPassAverageError));
+                if (_DynamicMomentum != null) _TargetNetwork.SetMomentum(_DynamicMomentum(CurrentEpoch, _LastPassAverageError));
 
                 List<Int32> sequencyList = new List<Int32>(_SequenceCount);
 
@@ -76,11 +74,11 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 while (sequencyList.Count > 0)
                 {
                     //This needs to be booled so it can be turned off
-                    Int32 s = sequencyList[_RND.Next(0,sequencyList.Count)];
+                    Int32 s = sequencyList[_Rnd.Next(0, sequencyList.Count)];
                     sequencyList.Remove(s);
 
 
-                    foreach (Structure.Node.Base node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
+                    foreach (BaseNode node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
                     for (Int32 i = 0; i < _WindowWidth; i++)
                     {
@@ -90,19 +88,19 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
                         for (Int32 x = 0; x < _OutputNodes.Count; x++)
                         {
-                            Output output = _OutputNodes[x] as Output;
-                            if (output != null) output.SetTargetValue(ExpectedOutputs[s, i, x]);
+                            OutputNode output = _OutputNodes[x] as OutputNode;
+                            output?.SetTargetValue(ExpectedOutputs[s, i, x]);
                             //       Console.Write(" --- :" + _ExpectedOutputs[s, i, 0]);
                         }
 
-                        if (i >= 75)  _TargetNetwork.ReversePass();
+                        if (i >= 75) _TargetNetwork.ReversePass();
 
-                        if (_CurrentEpoch <250)
+                        if (CurrentEpoch < 250)
                         {
                             for (Int32 x = 0; x < _OutputNodes.Count; x++)
                             {
-                                Output output = _OutputNodes[x] as Output;
-                                if (output != null) output.SetValue(ExpectedOutputs[s, i, x]);
+                                OutputNode output = _OutputNodes[x] as OutputNode;
+                                output?.SetValue(ExpectedOutputs[s, i, x]);
                                 //       Console.Write(" --- :" + _ExpectedOutputs[s, i, 0]);
                             }
                         }
@@ -113,14 +111,14 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
 
                     //Calculate the current error
-                    Double passError = _OutputNodes.OfType<Output>().Sum(output => output.GetError());
+                    Double passError = _OutputNodes.OfType<OutputNode>().Sum(output => output.GetError());
                     passError /= _OutputNodes.Count;
                     error += passError * passError;
                 }
                 _LastPassAverageError = error / _SequenceCount;
                 Console.WriteLine(_LastPassAverageError);
-                if (_LogStream != null) _LogStream.WriteLine(_LastPassAverageError);
-                if (_LogStream != null) _LogStream.Flush();
+                _LogStream?.WriteLine(_LastPassAverageError);
+                _LogStream?.Flush();
                 return true;
             }
         }
@@ -128,11 +126,11 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
         private static Network _TestNetworkStructure;
         private static AdaptedSlidingWindowTraining _SlidingWindowTraining;
-        private static Base _InputLayer;
-        private static Base _OutputLayer;
+        private static Layer _InputLayer;
+        private static Layer _OutputLayer;
         private static RecurrentContext _RecurrentLayer;
-        private static List<Structure.Node.Base> _InputLayerNodes;
-        private static List<Structure.Node.Base> _OuputLayerNodes;
+        private static List<BaseNode> _InputLayerNodes;
+        private static List<BaseNode> _OuputLayerNodes;
 
         /// <summary>
         ///     Run this instance.
@@ -159,7 +157,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
             _SlidingWindowTraining.SetOutputToTarget(false);
-            _SlidingWindowTraining.SetRecurrentConextLayers(new List<Base>()
+            _SlidingWindowTraining.SetRecurrentConextLayers(new List<Layer>
             {
                 _RecurrentLayer
             });
@@ -168,20 +166,20 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             Console.WriteLine("Starting Training");
             _SlidingWindowTraining.Start();
             Thread.Sleep(1000);
-            while (_SlidingWindowTraining.IsRunning()) Thread.Sleep(20);
+            while (_SlidingWindowTraining.Running) Thread.Sleep(20);
 
             Console.WriteLine("Complete Training");
 
 
             Console.WriteLine("Starting Testing");
-            foreach (Structure.Node.Base node in _TestNetworkStructure.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
+            foreach (BaseNode node in _TestNetworkStructure.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
             Double[] input = new Double[1000];
             Double[] output = new Double[1000];
             Single frequency = 0.5f;
             for (Int32 x = 0; x < 1000; x++)
             {
-                if (x%100 == 0) frequency = 0.5f;
+                if (x % 100 == 0) frequency = 0.5f;
                 //    input[x] = frequency;
                 _InputLayerNodes[0].SetValue(frequency);
                 _TestNetworkStructure.FowardPass();
@@ -203,19 +201,19 @@ namespace Cranium.Lib.Test.Tests.Reservoir
         /// </summary>
         public static void BuildStructure()
         {
-            _InputLayer = new Base();
-            _InputLayerNodes = new List<Structure.Node.Base>();
-            for (Int32 i = 0; i < 1; i++) _InputLayerNodes.Add(new Structure.Node.Base(_InputLayer, new Tanh()));
+            _InputLayer = new Layer();
+            _InputLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 1; i++) _InputLayerNodes.Add(new BaseNode(_InputLayer, new TanhAF()));
             _InputLayer.SetNodes(_InputLayerNodes);
 
-            EchoReservoir echoLayer = new EchoReservoir(50, 0.4f, 0, 30, new Tanh());
+            EchoReservoir echoLayer = new EchoReservoir(50, 0.4f, 0, 30, new TanhAF());
 
-            _OutputLayer = new Base();
-            _OuputLayerNodes = new List<Structure.Node.Base>();
-            for (Int32 i = 0; i < 1; i++) _OuputLayerNodes.Add(new Output(_OutputLayer, new Tanh()));
+            _OutputLayer = new Layer();
+            _OuputLayerNodes = new List<BaseNode>();
+            for (Int32 i = 0; i < 1; i++) _OuputLayerNodes.Add(new OutputNode(_OutputLayer, new TanhAF()));
             _OutputLayer.SetNodes(_OuputLayerNodes);
 
-            _RecurrentLayer = new RecurrentContext(2, new Tanh());
+            _RecurrentLayer = new RecurrentContext(2, new TanhAF());
             _RecurrentLayer.AddSourceNodes(_OuputLayerNodes);
 
             _InputLayer.ConnectFowardLayer(echoLayer);
@@ -229,8 +227,8 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _TestNetworkStructure.AddLayer(_OutputLayer);
 
 
-            foreach (Base layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
-            ((Structure.Node.RecurrentContext)_RecurrentLayer.GetNodes()[0]).OverrideRateOfUpdate(1);
+            foreach (Layer layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
+            ((RecurrentContextNode)_RecurrentLayer.GetNodes()[0]).OverrideRateOfUpdate(1);
 
         }
 
@@ -238,13 +236,11 @@ namespace Cranium.Lib.Test.Tests.Reservoir
         {
 
             Double[][] data = new Double[2][];
-            for (Int32 i = 0; i < 2; i++)data[i] = new Double[sets];
-            Random rnd = new Random();
-            Double input = 0;
+            for (Int32 i = 0; i < 2; i++) data[i] = new Double[sets];
             for (Int32 x = 0; x < sets; x++)
             {
-                Double output = Math.Sin((x * 0.05f))*0.5f;
-                data[0][x] = input;
+                Double output = Math.Sin((x * 0.05f)) * 0.5f;
+                data[0][x] = 0;
                 data[1][x] = output;
             }
             return data;

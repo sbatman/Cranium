@@ -17,6 +17,8 @@
 
 using System;
 using System.Runtime.Serialization;
+using Cranium.Lib.Structure.ActivationFunction;
+using Cranium.Lib.Structure.Node;
 
 #endregion
 
@@ -32,12 +34,12 @@ namespace Cranium.Lib.Structure.Layer
     ///     Further information can be sourced here http://www.scholarpedia.org/article/Echo_state_network
     /// </summary>
     [Serializable]
-    public class EchoReservoir : Base
+    public class EchoReservoir : Layer
     {
         /// <summary>
         ///     The Activation to use for all the nodes created within the Reservoir
         /// </summary>
-        protected ActivationFunction.Base _ActivationFunction;
+        protected AF _ActivationFunction;
 
         /// <summary>
         ///     The connectivity is calculated as chances = max-min, for each chance the levelOfConnectivity is compared to a
@@ -86,7 +88,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public EchoReservoir(Int32 nodeCount, Double levelOfConnectivity, Int32 minimumConnections, Int32 maximumConnections, ActivationFunction.Base activationFunction)
+        public EchoReservoir(Int32 nodeCount, Double levelOfConnectivity, Int32 minimumConnections, Int32 maximumConnections, AF activationFunction)
         {
             _NodeCount = nodeCount;
             _LevelOfConnectivity = levelOfConnectivity;
@@ -126,7 +128,7 @@ namespace Cranium.Lib.Structure.Layer
             _LevelOfConnectivity = info.GetDouble("_LevelOfConnectivity");
             _MinimumConnections = info.GetInt32("_MinimumConnections");
             _MaximumConnections = info.GetInt32("_MaximumConnections");
-            _ActivationFunction = (ActivationFunction.Base) info.GetValue("_ActivationFunction", typeof (ActivationFunction.Base));
+            _ActivationFunction = (AF) info.GetValue("_ActivationFunction", typeof (AF));
             _Rnd = (Random) info.GetValue("_Rnd", typeof (Random));
         }
 
@@ -137,8 +139,8 @@ namespace Cranium.Lib.Structure.Layer
         {
             PurgeNodeConnections();
             BuildNodeBank();
-            foreach (Base l in _ForwardConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.FORWARD, 0);
-            foreach (Base l in _ReverseConnectedLayers) foreach (Node.Base n in _Nodes) foreach (Node.Base fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Base.ConnectionDirection.REVERSE, 0);
+            foreach (Layer l in _ForwardConnectedLayers) foreach (BaseNode n in _Nodes) foreach (BaseNode fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Weight.ConnectionDirection.FORWARD, 0);
+            foreach (Layer l in _ReverseConnectedLayers) foreach (BaseNode n in _Nodes) foreach (BaseNode fn in l.GetNodes()) n.ConnectToNode(fn, Weight.Weight.ConnectionDirection.REVERSE, 0);
         }
 
         /// <summary>
@@ -146,12 +148,12 @@ namespace Cranium.Lib.Structure.Layer
         /// </summary>
         public virtual void BuildNodeBank()
         {
-            for (Int32 x = 0; x < _NodeCount; x++) _Nodes.Add(new Node.Base(this, _ActivationFunction));
-            foreach (Node.Base node in _Nodes)
+            for (Int32 x = 0; x < _NodeCount; x++) _Nodes.Add(new BaseNode(this, _ActivationFunction));
+            foreach (BaseNode node in _Nodes)
             {
                 Int32 connections = _MinimumConnections;
                 for (Int32 x = 0; x < _MaximumConnections - _MinimumConnections; x++) connections += _Rnd.NextDouble() > _LevelOfConnectivity ? 0 : 1;
-                for (Int32 i = 0; i < connections; i++) node.ConnectToNode(_Nodes[_Rnd.Next(0, _Nodes.Count)], Weight.Base.ConnectionDirection.FORWARD, 0);
+                for (Int32 i = 0; i < connections; i++) node.ConnectToNode(_Nodes[_Rnd.Next(0, _Nodes.Count)], Weight.Weight.ConnectionDirection.FORWARD, 0);
             }
         }
 
