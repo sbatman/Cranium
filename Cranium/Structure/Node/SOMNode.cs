@@ -16,7 +16,6 @@
 #region Usings
 
 using System;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.ActivationFunction;
@@ -78,11 +77,11 @@ namespace Cranium.Lib.Structure.Node
             _TargetValue = targetValue;
         }
 
-        public override void AdjustWeights(double learningRate)
+        public override void AdjustWeights(Double learningRate)
         {
             
         }
-        public override void UpdateWeights(double momentum)
+        public override void UpdateWeights(Double momentum)
         {
             foreach (Weight.Weight w in _ReverseWeights)
             {

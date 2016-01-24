@@ -8,9 +8,9 @@ namespace Cranium.Lib.Structure.Layer
 {
     public class SOMLayer : Layer
     {
-        private double _MaxmimumLearningDistance;
-        private double _MinimumLearningDistance;
-        private double _CurrentDistanceSupression;
+        private Double _MaxmimumLearningDistance;
+        private Double _MinimumLearningDistance;
+        private Double _CurrentDistanceSupression;
 
         SOMLayer()
         { }
@@ -53,7 +53,7 @@ namespace Cranium.Lib.Structure.Layer
         ///     Recurse downward, if set to false this well not call ReversePass on any layers below this one.
         /// </param>
         /// <param name="delayWeightUpdate">If this is passed as true then weight updating will need to be perfomed manually</param>
-        public override void ReversePass(double learningRate, double momentum, bool recurseDownward = true, Boolean delayWeightUpdate = false)
+        public override void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true, Boolean delayWeightUpdate = false)
         {
             Int32 totalNodes = _Nodes.Count;
             Int32 widthHeight = (Int32)Math.Sqrt(totalNodes);

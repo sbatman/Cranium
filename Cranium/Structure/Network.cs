@@ -153,7 +153,7 @@ namespace Cranium.Lib.Structure
         /// <param name='varianceFromZero'>
         ///     Variance from zero.
         /// </param>
-        public virtual void RandomiseWeights(Double varianceFromZero, bool positiveOnly = false)
+        public virtual void RandomiseWeights(Double varianceFromZero, Boolean positiveOnly = false)
         {
             Random rnd = new Random();
 
