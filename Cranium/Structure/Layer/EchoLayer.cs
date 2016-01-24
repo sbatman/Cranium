@@ -128,8 +128,8 @@ namespace Cranium.Lib.Structure.Layer
             _LevelOfConnectivity = info.GetDouble("_LevelOfConnectivity");
             _MinimumConnections = info.GetInt32("_MinimumConnections");
             _MaximumConnections = info.GetInt32("_MaximumConnections");
-            _ActivationFunction = (AF) info.GetValue("_ActivationFunction", typeof (AF));
-            _Rnd = (Random) info.GetValue("_Rnd", typeof (Random));
+            _ActivationFunction = (AF)info.GetValue("_ActivationFunction", typeof(AF));
+            _Rnd = (Random)info.GetValue("_Rnd", typeof(Random));
         }
 
         /// <summary>
@@ -170,7 +170,8 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='recurseDownward'>
         ///     Recurse downward.
         /// </param>
-        public override void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true) { base.ReversePass(learningRate, momentum, false); }
+        /// <param name="delayWeightUpdate">If this is passed as true then weight updating will need to be perfomed manually</param>
+        public override void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true, Boolean delayWeightUpdate = false) { base.ReversePass(learningRate, momentum, false, delayWeightUpdate); }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -180,7 +181,7 @@ namespace Cranium.Lib.Structure.Layer
             info.AddValue("_MinimumConnections", _MinimumConnections);
             info.AddValue("_MaximumConnections", _MaximumConnections);
             info.AddValue("_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType());
-            info.AddValue("_Rnd", _Rnd, typeof (Random));
+            info.AddValue("_Rnd", _Rnd, typeof(Random));
         }
     }
 }

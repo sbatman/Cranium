@@ -53,7 +53,9 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Structure\Layer\Layer.cs" />
     <Compile Include="Structure\Layer\RContextLayer.cs" />
+    <Compile Include="Structure\Layer\SOMLayer.cs" />
     <Compile Include="Structure\Node\BaseNode.cs" />
+    <Compile Include="Structure\Node\SOMNode.cs" />
     <Compile Include="Structure\Weight\Weight.cs" />
     <Compile Include="Structure\Network.cs" />
     <Compile Include="Structure\ActivationFunction\AF.cs" />

@@ -153,10 +153,17 @@ namespace Cranium.Lib.Structure
         /// <param name='varianceFromZero'>
         ///     Variance from zero.
         /// </param>
-        public virtual void RandomiseWeights(Double varianceFromZero)
+        public virtual void RandomiseWeights(Double varianceFromZero, bool positiveOnly = false)
         {
             Random rnd = new Random();
-            foreach (Weight.Weight w in from l in _CurrentLayers from n in l.GetNodes() from w in n.GetFowardWeights() select w) w.SetWeight(((rnd.NextDouble() * 2) - 1) * varianceFromZero);
+
+            foreach (
+                Weight.Weight w in
+                    from l in _CurrentLayers from n in l.GetNodes() from w in n.GetFowardWeights() select w)
+            {
+                Double val = positiveOnly ? rnd.NextDouble() : ((rnd.NextDouble() * 2) - 1);
+                w.SetWeight(val * varianceFromZero);
+            }
         }
 
         public virtual Int32 GetWeightCount()
@@ -173,7 +180,7 @@ namespace Cranium.Lib.Structure
         /// <summary>
         ///     Performs a recursive foward pass across the network
         /// </summary>
-        public virtual void ReversePass() { foreach (Layer.Layer l in _DetectedTopLayers) l.ReversePass(_LearningRate, _Momenum); }
+        public virtual void ReversePass(Boolean delayWeightUpdate = false) { foreach (Layer.Layer l in _DetectedTopLayers) l.ReversePass(_LearningRate, _Momenum, delayWeightUpdate: delayWeightUpdate); }
 
         /// <summary>
         ///     Gets the current learning rate.

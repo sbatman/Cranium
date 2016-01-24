@@ -189,11 +189,12 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='recurseDownward'>
         ///     Recurse downward, if set to false this well not call ReversePass on any layers below this one.
         /// </param>
-        public virtual void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true)
+        /// <param name="delayWeightUpdate">If this is passed as true then weight updating will need to be perfomed manually</param>
+        public virtual void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true, Boolean delayWeightUpdate = false)
         {
             foreach (BaseNode n in _Nodes) n.CalculateError();
             foreach (BaseNode n in _Nodes) n.AdjustWeights(learningRate);
-            foreach (BaseNode n in _Nodes) n.UpdateWeights(momentum);
+            if (!delayWeightUpdate) foreach (BaseNode n in _Nodes) n.UpdateWeights(momentum);
             if (recurseDownward) foreach (Layer l in _ReverseConnectedLayers) l.ReversePass(learningRate, momentum);
         }
 
@@ -269,18 +270,18 @@ namespace Cranium.Lib.Structure.Layer
         /// </param>
         public Layer(SerializationInfo info, StreamingContext context)
         {
-            _Nodes = (List<BaseNode>) info.GetValue("_Nodes", typeof (List<BaseNode>));
+            _Nodes = (List<BaseNode>)info.GetValue("_Nodes", typeof(List<BaseNode>));
             _LayerID = info.GetInt32("_LayerID");
             _NextNodeID = info.GetInt32("_NextNodeID");
-            _ForwardConnectedLayers = (List<Layer>) info.GetValue("_ForwardConnectedLayers", typeof (List<Layer>));
-            _ReverseConnectedLayers = (List<Layer>) info.GetValue("_ReverseConnectedLayers", typeof (List<Layer>));
+            _ForwardConnectedLayers = (List<Layer>)info.GetValue("_ForwardConnectedLayers", typeof(List<Layer>));
+            _ReverseConnectedLayers = (List<Layer>)info.GetValue("_ReverseConnectedLayers", typeof(List<Layer>));
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_Nodes", _Nodes, _Nodes.GetType());
-            info.AddValue("_ForwardConnectedLayers", _ForwardConnectedLayers, typeof (List<Layer>));
-            info.AddValue("_ReverseConnectedLayers", _ReverseConnectedLayers, typeof (List<Layer>));
+            info.AddValue("_ForwardConnectedLayers", _ForwardConnectedLayers, typeof(List<Layer>));
+            info.AddValue("_ReverseConnectedLayers", _ReverseConnectedLayers, typeof(List<Layer>));
             info.AddValue("_LayerID", _LayerID);
             info.AddValue("_NextNodeID", _NextNodeID);
         }

@@ -17,7 +17,7 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.ActivationFunction;
 
@@ -106,14 +106,12 @@ namespace Cranium.Lib.Structure.Node
             if (_TFowardWeights == null || _TReverseWeights == null) BakeLists();
             if (_TReverseWeights.Length == 0) return;
             _Value = 0;
-            if (_Value > 1 || _Value < -1) Debugger.Break();
             foreach (Weight.Weight w in _TReverseWeights)
             {
                 _Value += w.NodeA._Value * w.Value;
             }
             Double k = _Value;
             _Value = _ActivationFunction.Compute(_Value);
-            if (_Value > 1 || _Value < -1) Debugger.Break();
 
         }
 
@@ -123,6 +121,7 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The value.
         /// </returns>
+        [Pure]
         public virtual Double GetValue()
         {
             return _Value;
@@ -198,6 +197,7 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The error.
         /// </returns>
+        [Pure]
         public virtual Double GetError()
         {
             return _Error;
@@ -301,6 +301,7 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The I.
         /// </returns>
+        [Pure]
         public virtual Int32 GetID()
         {
             return _NodeID;
