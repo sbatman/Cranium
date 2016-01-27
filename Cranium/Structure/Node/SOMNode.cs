@@ -25,8 +25,7 @@ using Cranium.Lib.Structure.ActivationFunction;
 namespace Cranium.Lib.Structure.Node
 {
     /// <summary>
-    ///     The output node functions differntly from normal nodes as its error is calcuated from the targetvalue rather than
-    ///     the error of foward nodes.
+    ///     The SOM Node offers functionality unique to the unsupervised training techniques used with self organising maps
     /// </summary>
     [Serializable]
     public class SOMNode : BaseNode
@@ -81,6 +80,7 @@ namespace Cranium.Lib.Structure.Node
         {
             
         }
+
         public override void UpdateWeights(Double momentum)
         {
             foreach (Weight.Weight w in _ReverseWeights)

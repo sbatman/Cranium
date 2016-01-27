@@ -16,6 +16,7 @@
 #region Usings
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.Node;
 
@@ -104,6 +105,7 @@ namespace Cranium.Lib.Structure.Weight
         /// <returns>
         ///     The total change.
         /// </returns>
+        [Pure]
         public virtual Double GetTotalChange()
         {
             return Value - _InitialValue;
@@ -138,6 +140,7 @@ namespace Cranium.Lib.Structure.Weight
         /// <returns>
         ///     The past Value change.
         /// </returns>
+        [Pure]
         public virtual Double GetPastWeightChange()
         {
             return _PastWeightChange;
@@ -150,7 +153,7 @@ namespace Cranium.Lib.Structure.Weight
         {
             if (_PendingWeightChangeCount >= 1)
             {
-                _PastWeightChange = (_PendingWeightChange/_PendingWeightChangeCount);
+                _PastWeightChange = (_PendingWeightChange / _PendingWeightChangeCount);
                 Value += _PastWeightChange;
             }
             else
@@ -193,8 +196,8 @@ namespace Cranium.Lib.Structure.Weight
         /// </param>
         public Weight(SerializationInfo info, StreamingContext context)
         {
-            NodeA = (BaseNode) info.GetValue("NodeA", typeof (BaseNode));
-            NodeB = (BaseNode) info.GetValue("NodeB", typeof (BaseNode));
+            NodeA = (BaseNode)info.GetValue("NodeA", typeof(BaseNode));
+            NodeB = (BaseNode)info.GetValue("NodeB", typeof(BaseNode));
             Value = info.GetDouble("Value");
             _InitialValue = info.GetDouble("_InitialValue");
             _PendingWeightChange = info.GetDouble("_PendingWeightChange");

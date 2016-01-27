@@ -16,6 +16,7 @@
 #region Usings
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 
 #endregion
@@ -52,6 +53,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
 
         public Double Scale
         {
+            [Pure]
             get { return _Scale; }
             set { _Scale = value; }
         }

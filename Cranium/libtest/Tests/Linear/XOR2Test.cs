@@ -85,9 +85,9 @@ namespace Cranium.Lib.Test.Tests.Linear
                     ForwardPass();
                     ReversePass(x);
 
-                    if (x == 0 && _OutputLayer.GetNodes()[0].GetValue() > 0.02f) Continue = true;
-                    if ((x == 1 || x == 2) && _OutputLayer.GetNodes()[0].GetValue() < 0.98f) Continue = true;
-                    if (x == 3 && _OutputLayer.GetNodes()[0].GetValue() > 0.02f) Continue = true;
+                    if (x == 0 && _OutputLayer.GetNodes()[0].GetValue() > 0.02d) Continue = true;
+                    if ((x == 1 || x == 2) && _OutputLayer.GetNodes()[0].GetValue() < 0.98d) Continue = true;
+                    if (x == 3 && _OutputLayer.GetNodes()[0].GetValue() > 0.02d) Continue = true;
                     Console.WriteLine(_InputLayer.GetNodes()[0].GetValue() + "-" + _InputLayer.GetNodes()[1].GetValue() + "  -  " + Math.Round(_OutputLayer.GetNodes()[0].GetValue(), 3));
                 }
             }

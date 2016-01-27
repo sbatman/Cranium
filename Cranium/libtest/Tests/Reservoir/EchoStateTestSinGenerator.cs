@@ -105,7 +105,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                             }
                         }
                         _RecurrentLayer.UpdateExtra();
-                        //    Console.WriteLine(" " + _Recurrentlayers[0].GetNodes()[0].GetValue());
+                        //    Console.WriteLine(" " + _UpdatingLayers[0].GetNodes()[0].GetValue());
                     }
 
 

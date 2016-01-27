@@ -16,6 +16,7 @@
 #region Usings
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 
 #endregion
@@ -54,6 +55,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
 
         #region implemented abstract members of Cranium.Structure.ActivationFunction.Base
 
+        [Pure]
         public override Double Compute(Double input) { return Math.Exp(-Math.Pow(_Steepness*input, 2.0d)); }
 
         /// <summary>
@@ -65,6 +67,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     Input.
         /// </param>
+        [Pure]
         public override Double ComputeDerivative(Double input) { return -2*input*_Steepness*Compute(input)*input; }
 
         public override void Dispose() { }

@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.ActivationFunction;
 
@@ -110,7 +111,6 @@ namespace Cranium.Lib.Structure.Node
             {
                 _Value += w.NodeA._Value * w.Value;
             }
-            Double k = _Value;
             _Value = _ActivationFunction.Compute(_Value);
 
         }

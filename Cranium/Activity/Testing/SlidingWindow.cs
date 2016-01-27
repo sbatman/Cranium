@@ -142,7 +142,7 @@ namespace Cranium.Lib.Activity.Testing
                 {
                     for (Int32 x = 0; x < _InputNodes.Count; x++) _InputNodes[x].SetValue(_InputSequences[s][i][x]);
                     _TargetNetwork.FowardPass();
-                    if (_Recurrentlayers != null) foreach (RecurrentContext layer in _Recurrentlayers) layer.UpdateExtra();
+                    if (_UpdatingLayers != null) foreach (RecurrentContext layer in _UpdatingLayers) layer.UpdateExtra();
                 }
                 for (Int32 x = 0; x < _OutputNodes.Count; x++)
                 {

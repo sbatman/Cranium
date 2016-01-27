@@ -16,6 +16,8 @@
 #region Usings
 
 using System;
+using System.Diagnostics.Contracts;
+using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 
 #endregion
@@ -51,12 +53,13 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     The value to pass to the activation function
         /// </param>
+        [Pure]
         public override Double Compute(Double input)
         {
             Double temp = Math.Exp(input*2.0);
             return (temp - 1.0)/(temp + 1.0);
         }
-
+        
         /// <summary>
         ///     Computes the derivative using the activation function.
         /// </summary>
@@ -66,6 +69,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     Input.
         /// </param>
+        [Pure]
         public override Double ComputeDerivative(Double input) { return 1 - Math.Pow((input), 2); }
 
         public override void Dispose() { }

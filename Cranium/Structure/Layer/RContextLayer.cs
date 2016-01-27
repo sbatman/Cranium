@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.ActivationFunction;
 using Cranium.Lib.Structure.Node;
@@ -42,7 +43,7 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     How many context nodes should be created per source node
         /// </summary>
-        protected Int32 _LevelOfContext = 1;
+        protected Int32 _LevelOfContext;
 
         /// <summary>
         ///     The source ndoes used when building the recurrent context
@@ -76,9 +77,9 @@ namespace Cranium.Lib.Structure.Layer
         /// </param>
         public RecurrentContext(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _SourceNodes = (List<BaseNode>) info.GetValue("_SourceNodes", typeof (List<BaseNode>));
+            _SourceNodes = (List<BaseNode>)info.GetValue("_SourceNodes", typeof(List<BaseNode>));
             _LevelOfContext = info.GetInt32("_LevelOfContext");
-            _ActivationFunction = (AF) info.GetValue("_ActivationFunction", typeof (AF));
+            _ActivationFunction = (AF)info.GetValue("_ActivationFunction", typeof(AF));
         }
 
         /// <summary>
@@ -96,8 +97,8 @@ namespace Cranium.Lib.Structure.Layer
         /// </summary>
         public virtual void BuildNodeBank()
         {
-            Double step = 1d/_LevelOfContext;
-            for (Int32 x = 0; x < _LevelOfContext; x++) foreach (BaseNode n in _SourceNodes) _Nodes.Add(new RecurrentContextNode(n, step*x, this, _ActivationFunction));
+            Double step = 1d / _LevelOfContext;
+            for (Int32 x = 0; x < _LevelOfContext; x++) foreach (BaseNode n in _SourceNodes) _Nodes.Add(new RecurrentContextNode(n, step * x, this, _ActivationFunction));
         }
 
         /// <summary>
@@ -111,7 +112,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     Performs any extra update required on child nodes
         /// </summary>
-        public override void UpdateExtra() { foreach (RecurrentContextNode n in _Nodes) n.Update(); }
+        public override void UpdateExtra()
+        {
+            foreach (RecurrentContextNode n in _Nodes.Cast<RecurrentContextNode>()) n.Update();
+        }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

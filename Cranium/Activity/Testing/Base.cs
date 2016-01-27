@@ -28,7 +28,7 @@ namespace Cranium.Lib.Activity.Testing
         /// <summary>
         ///     The current Recurrent layers that has been assigned for use during this test
         /// </summary>
-        protected List<Layer> _Recurrentlayers;
+        protected List<Layer> _UpdatingLayers;
 
         /// <summary>
         ///     The network that requires testing
@@ -48,7 +48,7 @@ namespace Cranium.Lib.Activity.Testing
         {
             _InputNodes = (List<BaseNode>)info.GetValue("_InputNodes", typeof(List<BaseNode>));
             _OutputNodes = (List<BaseNode>)info.GetValue("_OutputNodes", typeof(List<BaseNode>));
-            _Recurrentlayers = (List<Layer>)info.GetValue("_Recurrentlayers", typeof(List<Layer>));
+            _UpdatingLayers = (List<Layer>)info.GetValue("_UpdatingLayers", typeof(List<Layer>));
             _TargetNetwork = (Network)info.GetValue("_TargetNetwork", typeof(Network));
         }
 
@@ -72,7 +72,7 @@ namespace Cranium.Lib.Activity.Testing
         ///     Sets the current layers that require additional update logic during testing
         /// </summary>
         /// <param name="layers"></param>
-        public virtual void SetRecurrentConextLayers(List<Layer> layers) { _Recurrentlayers = layers; }
+        public virtual void SetUpdatingLayers(List<Layer> layers) { _UpdatingLayers = layers; }
 
         /// <summary>
         ///     Sets the current target network for the testing activity, this must be set before testNetwork is called
@@ -102,7 +102,7 @@ namespace Cranium.Lib.Activity.Testing
             base.GetObjectData(info, context);
             info.AddValue("_InputNodes", _InputNodes, _InputNodes.GetType());
             info.AddValue("_OutputNodes", _OutputNodes, _OutputNodes.GetType());
-            info.AddValue("_Recurrentlayers", _Recurrentlayers, _Recurrentlayers.GetType());
+            info.AddValue("_UpdatingLayers", _UpdatingLayers, _UpdatingLayers.GetType());
             info.AddValue("_TargetNetwork", _TargetNetwork, typeof(Network));
         }
 
@@ -137,10 +137,10 @@ namespace Cranium.Lib.Activity.Testing
 
         public override void Dispose()
         {
-            if (_InputNodes != null) _InputNodes.Clear();
-            if (_OutputNodes != null) _OutputNodes.Clear();
-            if (_Recurrentlayers != null) _Recurrentlayers.Clear();
-            if (_TargetNetwork != null) _TargetNetwork.Dispose();
+            _InputNodes?.Clear();
+            _OutputNodes?.Clear();
+            _UpdatingLayers?.Clear();
+            _TargetNetwork?.Dispose();
 
             base.Dispose();
         }

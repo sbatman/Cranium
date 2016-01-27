@@ -17,6 +17,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using Cranium.Lib.Activity.Training;
 using Cranium.Lib.Data;
@@ -103,7 +104,7 @@ namespace Cranium.LibTest.Tests.Recursive
             // How far beyond the window should be be trying to predict
             _SlidingWindowTraining.SetWindowWidth(12);
             // The window of elements that should be presented before the backward pass is performed
-            _SlidingWindowTraining.SetMaximumEpochs(300); // The maximum number of epochs the network can train for
+            _SlidingWindowTraining.SetMaximumEpochs(20); // The maximum number of epochs the network can train for
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes); // Setting the nodes that are used for input
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes); // Setting the nodes that are generating output
             _SlidingWindowTraining.SetWorkingDataset(dataSet); // Setting the working dataset for the training phase
@@ -117,9 +118,13 @@ namespace Cranium.LibTest.Tests.Recursive
             ////////////////////////////////////////////////
 
             Console.WriteLine("Starting Training");
+            Stopwatch s = Stopwatch.StartNew();
             _SlidingWindowTraining.Start();
-            Thread.Sleep(1000);
-            while (_SlidingWindowTraining.Running) Thread.Sleep(20);
+            Thread.Sleep(100);
+            
+            while (_SlidingWindowTraining.Running) Thread.Sleep(1);
+
+            Console.WriteLine($"Training complete in {s.Elapsed.TotalMilliseconds}ms");
 
             ////////////////////////////////////////////////
             ////////////////////////////////////////////////
@@ -130,7 +135,7 @@ namespace Cranium.LibTest.Tests.Recursive
             slidingWindowTesting.SetDatasetReservedLength(0);
             slidingWindowTesting.SetInputNodes(_InputLayerNodes);
             slidingWindowTesting.SetOutputNodes(_OuputLayerNodes);
-            slidingWindowTesting.SetRecurrentConextLayers(contextLayers);
+            slidingWindowTesting.SetUpdatingLayers(contextLayers);
             slidingWindowTesting.SetWorkingDataset(dataSet);
             slidingWindowTesting.SetWindowWidth(12);
             slidingWindowTesting.SetDistanceToForcastHorrison(3);

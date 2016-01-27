@@ -114,7 +114,7 @@ namespace Cranium.Lib.Activity.Training
             _OutputNodes = (List<BaseNode>)info.GetValue("_OutputNodes", typeof(List<BaseNode>));
             _PortionOfDatasetReserved = info.GetInt32("_PortionOfDatasetReserved");
             _Rnd = (Random)info.GetValue("_RND", typeof(Random));
-            _Recurrentlayers = (List<Layer>)info.GetValue("_Recurrentlayers", typeof(List<Layer>));
+            _Recurrentlayers = (List<Layer>)info.GetValue("_UpdatingLayers", typeof(List<Layer>));
             _WindowWidth = info.GetInt32("_WindowWidth");
         }
 
@@ -348,7 +348,7 @@ namespace Cranium.Lib.Activity.Training
             info.AddValue("_OutputNodes", _OutputNodes, typeof(List<BaseNode>));
             info.AddValue("_PortionOfDatasetReserved", _PortionOfDatasetReserved);
             info.AddValue("_RND", _Rnd, typeof(Random));
-            info.AddValue("_Recurrentlayers", _Recurrentlayers, typeof(List<Layer>));
+            info.AddValue("_UpdatingLayers", _Recurrentlayers, typeof(List<Layer>));
             info.AddValue("_WindowWidth", _WindowWidth);
         }
 

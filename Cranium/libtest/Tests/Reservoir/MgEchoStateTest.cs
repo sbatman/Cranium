@@ -89,7 +89,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             slidingWindowTesting.SetDatasetReservedLength(0);
             slidingWindowTesting.SetInputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedBottomLayers()[0].GetNodes().ToList());
             slidingWindowTesting.SetOutputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedTopLayers()[0].GetNodes().ToList());
-            slidingWindowTesting.SetRecurrentConextLayers(new List<Layer>());
+            slidingWindowTesting.SetUpdatingLayers(new List<Layer>());
             slidingWindowTesting.SetWorkingDataset(dataSet);
             slidingWindowTesting.SetWindowWidth(6);
             slidingWindowTesting.SetDistanceToForcastHorrison(3);

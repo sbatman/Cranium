@@ -19,6 +19,7 @@ using System;
 using Cranium.Lib.Test.Tests.Linear;
 using Cranium.Lib.Test.Tests.Recursive;
 using Cranium.Lib.Test.Tests.Reservoir;
+using Cranium.Lib.Test.Tests.SOM;
 using Cranium.LibTest.Tests.Recursive;
 
 #endregion
@@ -45,6 +46,7 @@ namespace Cranium.Lib.Test
             Console.WriteLine("6 -  MG Echo State Test");
             Console.WriteLine("7 -  MG Echo State Test on Lobe");
             Console.WriteLine("8 -  Echo State Sin Generator Test");
+            Console.WriteLine("9 -  SOM Didgit recognition Test");
 
             ConsoleKey pressedKey = Console.ReadKey().Key;
             Console.Clear();
@@ -73,6 +75,9 @@ namespace Cranium.Lib.Test
                     break;
                 case ConsoleKey.D8:
                     EchoStateTestSinGenerator.Run();
+                    break;
+                case ConsoleKey.D9:
+                    SOMCharRecTets.Run();
                     break;
             }
         }

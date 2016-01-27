@@ -49,16 +49,13 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             lobeConnection.ConnectToManager("localhost", 17432);
             for (Int32 x = 0; x < 20; x++)
             {
-                Network testNetworkStructure;
-                SlidingWindow slidingWindowTraining;
                 Layer inputLayer = new Layer();
-                ;
                 Layer outputLayer = new Layer();
-                ;
+
                 List<BaseNode> inputLayerNodes = new List<BaseNode>();
                 List<BaseNode> ouputLayerNodes = new List<BaseNode>();
                 //Build Network
-                testNetworkStructure = new Network();
+                Network testNetworkStructure = new Network();
                 BuildStructure(inputLayer, outputLayer, inputLayerNodes, ouputLayerNodes, testNetworkStructure);
                 testNetworkStructure.SaveToFile("test.dat");
                 testNetworkStructure.RandomiseWeights(1.1d);
@@ -66,7 +63,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
 
                 //Prepare training activity
-                slidingWindowTraining = new SlidingWindow();
+                SlidingWindow slidingWindowTraining = new SlidingWindow();
                 slidingWindowTraining.SetTargetNetwork(testNetworkStructure);
                 slidingWindowTraining.SetMomentum(0.5f);
                 slidingWindowTraining.SetLearningRate(0.004f);
@@ -97,7 +94,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                     slidingWindowTesting.SetDatasetReservedLength(0);
                     slidingWindowTesting.SetInputNodes(work.GetTargetNetwork().GetDetectedBottomLayers()[0].GetNodes().ToList());
                     slidingWindowTesting.SetOutputNodes(work.GetTargetNetwork().GetDetectedTopLayers()[0].GetNodes().ToList());
-                    slidingWindowTesting.SetRecurrentConextLayers(new List<Layer>());
+                    slidingWindowTesting.SetUpdatingLayers(new List<Layer>());
                     slidingWindowTesting.SetWorkingDataset(dataSet);
                     slidingWindowTesting.SetWindowWidth(12);
                     slidingWindowTesting.SetDistanceToForcastHorrison(3);

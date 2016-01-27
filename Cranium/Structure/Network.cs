@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.Contracts;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
@@ -129,6 +130,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The current layers.
         /// </returns>
+        [Pure]
         public virtual ReadOnlyCollection<Layer.Layer> GetCurrentLayers() { return _CurrentLayers.AsReadOnly(); }
 
         /// <summary>
@@ -137,6 +139,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The detected top layers.
         /// </returns>
+        [Pure]
         public virtual ReadOnlyCollection<Layer.Layer> GetDetectedTopLayers() { return _DetectedTopLayers.AsReadOnly(); }
 
         /// <summary>
@@ -145,6 +148,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The detected bottom layers.
         /// </returns>
+        [Pure]
         public virtual ReadOnlyCollection<Layer.Layer> GetDetectedBottomLayers() { return _DetectedBottomLayers.AsReadOnly(); }
 
         /// <summary>
@@ -166,6 +170,7 @@ namespace Cranium.Lib.Structure
             }
         }
 
+        [Pure]
         public virtual Int32 GetWeightCount()
         {
             return _CurrentLayers.Sum(a => a.GetNodes().Sum(b => b.GetFowardWeights().Length));
@@ -188,6 +193,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The learning rate.
         /// </returns>
+        [Pure]
         public virtual Double GetLearningRate() { return _LearningRate; }
 
         /// <summary>
@@ -196,6 +202,7 @@ namespace Cranium.Lib.Structure
         /// <returns>
         ///     The momentum.
         /// </returns>
+        [Pure]
         public virtual Double GetMomentum() { return _Momenum; }
 
         /// <summary>

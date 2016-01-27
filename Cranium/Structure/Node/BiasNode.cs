@@ -16,6 +16,7 @@
 #region Usings
 
 using System;
+using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.ActivationFunction;
 
@@ -59,6 +60,7 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The value.
         /// </returns>
+        [Pure]
         public override Double GetValue() { return _BiasValue; }
 
         /// <summary>
@@ -67,6 +69,7 @@ namespace Cranium.Lib.Structure.Node
         /// <returns>
         ///     The error.
         /// </returns>
+        [Pure]
         public override Double GetError() { return 0; }
 
         /// <summary>

@@ -2,18 +2,31 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Runtime.Serialization;
+using Cranium.Lib.Structure.ActivationFunction;
 using Cranium.Lib.Structure.Node;
 
 namespace Cranium.Lib.Structure.Layer
 {
+    /// <summary>
+    /// The SOM layer offers self organising map functionalty, the layer contains a square 2 dimentional collection of
+    /// nodes which can be used for topological feature recognition further information about this netowrk type can
+    /// be sourced here : https://en.wikipedia.org/wiki/Self-organizing_map
+    /// </summary>
     public class SOMLayer : Layer
     {
         private Double _MaxmimumLearningDistance;
         private Double _MinimumLearningDistance;
         private Double _CurrentDistanceSupression;
+        private readonly Int32 _NodeGridSize;
 
-        SOMLayer()
-        { }
+        public SOMLayer(Int32 gridSize)
+        {
+            _NodeGridSize = gridSize;
+            for (int i = 0; i < gridSize* gridSize; i++)
+            {
+                _Nodes.Add(new SOMNode(this, new LinearAF()));
+            }
+        }
 
         public Double MaxmimumLearningDistance
         {
@@ -31,6 +44,11 @@ namespace Cranium.Lib.Structure.Layer
         {
             get { return _CurrentDistanceSupression; }
             set { _CurrentDistanceSupression = value; }
+        }
+
+        public Int32 NodeGridSize
+        {
+            get { return _NodeGridSize; }
         }
 
         [Pure]
@@ -58,8 +76,6 @@ namespace Cranium.Lib.Structure.Layer
             Int32 totalNodes = _Nodes.Count;
             Int32 widthHeight = (Int32)Math.Sqrt(totalNodes);
 
-            Double weightDiff = 0;
-
             Double lowestDiff = Double.MaxValue;
             Int32 lowestDiffX = 0;
             Int32 lowestDiffY = 0;
@@ -71,13 +87,11 @@ namespace Cranium.Lib.Structure.Layer
 
                     node.CalculateError();
 
-                    if (node.GetError() < lowestDiff)
-                    {
+                    if (!(node.GetError() < lowestDiff)) continue;
 
-                        lowestDiff = node.GetError();
-                        lowestDiffX = x;
-                        lowestDiffY = y;
-                    }
+                    lowestDiff = node.GetError();
+                    lowestDiffX = x;
+                    lowestDiffY = y;
                 }
             }
 
@@ -88,7 +102,7 @@ namespace Cranium.Lib.Structure.Layer
                 for (Int32 x = -range; x < range + 1; x++)
                 {
 
-                    Double distanceFromCentre = (Double)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2)) + 1;
+                    Double distanceFromCentre = Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2)) + 1;
 
                     Double acceptedDistance = ((_MaxmimumLearningDistance - _MinimumLearningDistance) * _CurrentDistanceSupression) + _MinimumLearningDistance;
 
@@ -101,7 +115,6 @@ namespace Cranium.Lib.Structure.Layer
                     {
                         Double diff = ((w.NodeA.GetValue() - w.Value));
                         w.AddWeightChange((diff * learningRate) / distanceFromCentre);
-                        weightDiff += diff;
                     }
                 }
             }
@@ -127,18 +140,28 @@ namespace Cranium.Lib.Structure.Layer
             _ForwardConnectedLayers = (List<Layer>)info.GetValue("_ForwardConnectedLayers", typeof(List<Layer>));
             _ReverseConnectedLayers = (List<Layer>)info.GetValue("_ReverseConnectedLayers", typeof(List<Layer>));
 
+
             _MaxmimumLearningDistance = info.GetDouble("_MaxmimumLearningDistance");
             _MinimumLearningDistance = info.GetDouble("_MinimumLearningDistance");
             _CurrentDistanceSupression = info.GetDouble("_CurrentDistanceSupression");
+            _NodeGridSize = info.GetInt32("_NodeGridSize");
         }
 
-        public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
 
             info.AddValue("_MaxmimumLearningDistance", _MaxmimumLearningDistance);
             info.AddValue("_MinimumLearningDistance", _MinimumLearningDistance);
             info.AddValue("_CurrentDistanceSupression", _CurrentDistanceSupression);
+            info.AddValue("_NodeGridSize", _NodeGridSize);
+        }
+
+        [Pure]
+        public SOMNode GetNodeAtLocation(Int32 x, Int32 y)
+        {
+            if (x < 0 || y < 0 || x >= _NodeGridSize || y >= _NodeGridSize) return null;
+            return (SOMNode)_Nodes[(y * _NodeGridSize) + x];
         }
 
     }
