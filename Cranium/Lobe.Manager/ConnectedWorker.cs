@@ -1,4 +1,15 @@
-﻿using System;
+﻿// //////////////////////
+//  
+// Cranium - A neural network framework for C#
+// https://github.com/sbatman/Cranium.git
+// 
+// This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
+// More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
+// If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
+// 
+// //////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
@@ -13,14 +24,17 @@ namespace Cranium.Lobe.Manager
     internal class ConnectedWorker : ClientConnection
     {
         /// <summary>
-        /// How often a ping packet should be sent to ensure the worker is still there
+        ///     How often a ping packet should be sent to ensure the worker is still there
         /// </summary>
-        private readonly TimeSpan _PingInterval = new TimeSpan(0,0,0,5);
+        private readonly TimeSpan _PingInterval = new TimeSpan(0, 0, 0, 5);
         /// <summary>
-        /// The last time a ping packet was sent
+        ///     The last time a ping packet was sent
         /// </summary>
         private DateTime _LastPing = DateTime.Now;
-        public ConnectedWorker(TcpClient incomingSocket) : base(incomingSocket, 20480) { }
+
+        public ConnectedWorker(TcpClient incomingSocket) : base(incomingSocket, 204800)
+        {
+        }
 
         protected override void ClientUpdateLogic()
         {
@@ -50,7 +64,7 @@ namespace Cranium.Lobe.Manager
 
         protected override void OnConnect()
         {
-            Console.WriteLine("New Worker Connected from " + ((IPEndPoint)(_AttachedSocket.Client.RemoteEndPoint)).Address);
+            Console.WriteLine("New Worker Connected from " + ((IPEndPoint) _AttachedSocket.Client.RemoteEndPoint).Address);
             SendPacket(new Packet(200)); //Lets say hello
         }
 
@@ -66,7 +80,6 @@ namespace Cranium.Lobe.Manager
         /// <param name="p"></param>
         protected void HandelA201(Packet p)
         {
-            Object[] data = p.GetObjects();
         }
 
         /// <summary>
@@ -86,7 +99,7 @@ namespace Cranium.Lobe.Manager
                 binaryFormatter.Serialize(datapackage, work);
 
                 Packet responsePacket = new Packet(302);
-                responsePacket.Add(datapackage.ToArray(),true);
+                responsePacket.Add(datapackage.ToArray(), true);
                 SendPacket(responsePacket);
             }
         }
@@ -103,7 +116,6 @@ namespace Cranium.Lobe.Manager
 
         protected override void HandelException(Exception e)
         {
-           
         }
     }
 }

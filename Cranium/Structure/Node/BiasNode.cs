@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -41,7 +37,9 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='activationFunction'>
         ///     Activation function.
         /// </param>
-        public BiasNode(Layer.Layer parentLayer, AF activationFunction) : base(parentLayer, activationFunction) { }
+        public BiasNode(Layer.Layer parentLayer, AF activationFunction) : base(parentLayer, activationFunction)
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="BiasNode" /> class. Used by the Serializer.
@@ -52,7 +50,10 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public BiasNode(SerializationInfo info, StreamingContext context) : base(info, context) { _BiasValue = info.GetDouble("_BiasValue"); }
+        public BiasNode(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _BiasValue = info.GetDouble("_BiasValue");
+        }
 
         /// <summary>
         ///     Returns the static value of the node
@@ -61,7 +62,10 @@ namespace Cranium.Lib.Structure.Node
         ///     The value.
         /// </returns>
         [Pure]
-        public override Double GetValue() { return _BiasValue; }
+        public override Double GetValue()
+        {
+            return _BiasValue;
+        }
 
         /// <summary>
         ///     Returns the error of the node, which in the case of the bias node is always 0
@@ -70,7 +74,10 @@ namespace Cranium.Lib.Structure.Node
         ///     The error.
         /// </returns>
         [Pure]
-        public override Double GetError() { return 0; }
+        public override Double GetError()
+        {
+            return 0;
+        }
 
         /// <summary>
         ///     Sets the new static value of this node
@@ -78,7 +85,10 @@ namespace Cranium.Lib.Structure.Node
         /// <param name='newValue'>
         ///     New value.
         /// </param>
-        public override void SetValue(Double newValue) { _BiasValue = newValue; }
+        public override void SetValue(Double newValue)
+        {
+            _BiasValue = newValue;
+        }
 
         /// <summary>
         ///     Connects a second node to this one, building the correct weight and adding it to the list of weights that are

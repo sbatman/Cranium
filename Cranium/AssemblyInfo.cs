@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 

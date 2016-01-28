@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -28,31 +24,18 @@ namespace Cranium.Lib.Activity.Training
     [Serializable]
     public abstract class Base : Activity.Base
     {
-        public delegate Double DynamicVariable(Int32 epoch, Double currentRmse);
-
         private Int32 _CurrentEpoch;
         protected DynamicVariable _DynamicLearningRate;
         protected DynamicVariable _DynamicMomentum;
+        protected ReaderWriterLockSlim _Lock = new ReaderWriterLockSlim();
         private Thread _LoopThread;
         protected Int32 _MaxEpochs;
         private Boolean _Running;
         private Boolean _Stopping;
         protected Network _TargetNetwork;
         protected Double[][] _WorkingDataset;
-        protected ReaderWriterLockSlim _Lock = new ReaderWriterLockSlim();
 
-
-        protected Base() { }
-
-        protected Base(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-            _CurrentEpoch = info.GetInt32("_CurrentEpoch");
-            _DynamicLearningRate = (DynamicVariable) info.GetValue("_DynamicLearningRate", typeof (DynamicVariable));
-            _DynamicMomentum = (DynamicVariable) info.GetValue("_DynamicMomentum", typeof (DynamicVariable));
-            _MaxEpochs = info.GetInt32("_MaxEpochs");
-            _TargetNetwork = (Network) info.GetValue("_TargetNetwork", typeof (Network));
-            _WorkingDataset = (Double[][]) info.GetValue("_WorkingDataset", typeof (Double[][]));
-        }
+        public delegate Double DynamicVariable(Int32 epoch, Double currentRmse);
 
         public Int32 CurrentEpoch
         {
@@ -86,6 +69,20 @@ namespace Cranium.Lib.Activity.Training
                 _Running = value;
                 _Lock.ExitWriteLock();
             }
+        }
+
+        protected Base()
+        {
+        }
+
+        protected Base(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _CurrentEpoch = info.GetInt32("_CurrentEpoch");
+            _DynamicLearningRate = (DynamicVariable) info.GetValue("_DynamicLearningRate", typeof (DynamicVariable));
+            _DynamicMomentum = (DynamicVariable) info.GetValue("_DynamicMomentum", typeof (DynamicVariable));
+            _MaxEpochs = info.GetInt32("_MaxEpochs");
+            _TargetNetwork = (Network) info.GetValue("_TargetNetwork", typeof (Network));
+            _WorkingDataset = (Double[][]) info.GetValue("_WorkingDataset", typeof (Double[][]));
         }
 
         /// <summary>
@@ -128,13 +125,19 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='targetNetwork'>
         ///     Target network.
         /// </param>
-        public virtual void SetTargetNetwork(Network targetNetwork) { _TargetNetwork = targetNetwork; }
+        public virtual void SetTargetNetwork(Network targetNetwork)
+        {
+            _TargetNetwork = targetNetwork;
+        }
 
         /// <summary>
         ///     Returns the current target network
         /// </summary>
         /// <returns></returns>
-        public virtual Network GetTargetNetwork() { return _TargetNetwork; }
+        public virtual Network GetTargetNetwork()
+        {
+            return _TargetNetwork;
+        }
 
         /// <summary>
         ///     Sets the working dataset.
@@ -142,15 +145,21 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='workingDataset'>
         ///     Working dataset.
         /// </param>
-        public virtual void SetWorkingDataset(Double[][] workingDataset) { _WorkingDataset = workingDataset; }
+        public virtual void SetWorkingDataset(Double[][] workingDataset)
+        {
+            _WorkingDataset = workingDataset;
+        }
 
-     /// <summary>
+        /// <summary>
         ///     Sets the maximum epochs.
         /// </summary>
         /// <param name='epochs'>
         ///     Epochs.
         /// </param>
-        public virtual void SetMaximumEpochs(Int32 epochs) { _MaxEpochs = epochs; }
+        public virtual void SetMaximumEpochs(Int32 epochs)
+        {
+            _MaxEpochs = epochs;
+        }
 
         public virtual Int32 GetMaximumEpcohs()
         {
@@ -160,7 +169,10 @@ namespace Cranium.Lib.Activity.Training
         /// <summary>
         ///     Stop this training activity.
         /// </summary>
-        public void Stop() { _Stopping = true; }
+        public void Stop()
+        {
+            _Stopping = true;
+        }
 
         /// <summary>
         ///     This function is called repeatedly untill trainingas been instructed to stop or untill the stopping criteria has
@@ -199,7 +211,10 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='function'>
         ///     Function.
         /// </param>
-        public virtual void SetDynamicLearningRateDelegate(DynamicVariable function) { _DynamicLearningRate = function; }
+        public virtual void SetDynamicLearningRateDelegate(DynamicVariable function)
+        {
+            _DynamicLearningRate = function;
+        }
 
         /// <summary>
         ///     Sets the dynamic momenum delegate passing null will switch back to static momentum.
@@ -207,7 +222,10 @@ namespace Cranium.Lib.Activity.Training
         /// <param name='function'>
         ///     Function.
         /// </param>
-        public virtual void SetDynamicMomenumDelegate(DynamicVariable function) { _DynamicMomentum = function; }
+        public virtual void SetDynamicMomenumDelegate(DynamicVariable function)
+        {
+            _DynamicMomentum = function;
+        }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {

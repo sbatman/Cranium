@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -34,7 +30,9 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <summary>
         ///     Initializes a new instance of the <see cref="LinearAF" /> class.
         /// </summary>
-        public LinearAF() { }
+        public LinearAF()
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="LinearAF" /> class. Used by the Serializer.
@@ -45,7 +43,9 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public LinearAF(SerializationInfo info, StreamingContext context) : base(info, context) { }
+        public LinearAF(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+        }
 
         /// <summary>
         ///     Returns the input after running through the activation function.
@@ -54,7 +54,10 @@ namespace Cranium.Lib.Structure.ActivationFunction
         ///     The value to pass to the activation function
         /// </param>
         [Pure]
-        public override Double Compute(Double input) { return input; }
+        public override Double Compute(Double input)
+        {
+            return input;
+        }
 
         /// <summary>
         ///     Computes the derivative using the activation function.
@@ -66,10 +69,17 @@ namespace Cranium.Lib.Structure.ActivationFunction
         ///     Input.
         /// </param>
         [Pure]
-        public override Double ComputeDerivative(Double input) { return 1; }
+        public override Double ComputeDerivative(Double input)
+        {
+            return 1;
+        }
 
-        public override void Dispose() { }
+        public override void Dispose()
+        {
+        }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context) { }
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+        }
     }
 }

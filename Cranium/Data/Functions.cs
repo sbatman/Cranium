@@ -1,17 +1,13 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -40,7 +36,10 @@ namespace Cranium.Lib.Data
         /// <param name='fileName'>
         ///     File name.
         /// </param>
-        public static void PrintArrayToFile(IEnumerable<Double> data, String fileName) { using (StreamWriter stream = File.CreateText(fileName)) foreach (Double t in data) stream.WriteLine(t); }
+        public static void PrintArrayToFile(IEnumerable<Double> data, String fileName)
+        {
+            using (StreamWriter stream = File.CreateText(fileName)) foreach (Double t in data) stream.WriteLine(t);
+        }
 
         /// <summary>
         ///     Prints the provided multi-dimentional array to a csv file with the given filename

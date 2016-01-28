@@ -1,17 +1,13 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -42,21 +38,6 @@ namespace Cranium.Lib.Structure.Weight
         }
 
         /// <summary>
-        ///     Node a, this should be the reverse node
-        /// </summary>
-        public BaseNode NodeA;
-
-        /// <summary>
-        ///     Node b, this should be the forward node
-        /// </summary>
-        public BaseNode NodeB;
-
-        /// <summary>
-        ///     The current Value
-        /// </summary>
-        public Double Value;
-
-        /// <summary>
         ///     The initial value of the Value
         /// </summary>
         protected Double _InitialValue;
@@ -75,6 +56,21 @@ namespace Cranium.Lib.Structure.Weight
         ///     The number of pending Value changes
         /// </summary>
         protected Double _PendingWeightChangeCount;
+
+        /// <summary>
+        ///     Node a, this should be the reverse node
+        /// </summary>
+        public BaseNode NodeA;
+
+        /// <summary>
+        ///     Node b, this should be the forward node
+        /// </summary>
+        public BaseNode NodeB;
+
+        /// <summary>
+        ///     The current Value
+        /// </summary>
+        public Double Value;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Structure.Weight.Weight" /> class.
@@ -98,6 +94,16 @@ namespace Cranium.Lib.Structure.Weight
             _PendingWeightChangeCount = 0;
             _PastWeightChange = 0;
         }
+
+        #region IDisposable implementation
+
+        public virtual void Dispose()
+        {
+            NodeA = null;
+            NodeB = null;
+        }
+
+        #endregion
 
         /// <summary>
         ///     Gets the total change from the initial value the Value was set with.
@@ -153,7 +159,7 @@ namespace Cranium.Lib.Structure.Weight
         {
             if (_PendingWeightChangeCount >= 1)
             {
-                _PastWeightChange = (_PendingWeightChange / _PendingWeightChangeCount);
+                _PastWeightChange = _PendingWeightChange / _PendingWeightChangeCount;
                 Value += _PastWeightChange;
             }
             else
@@ -173,16 +179,6 @@ namespace Cranium.Lib.Structure.Weight
             _PendingWeightChangeCount = 0;
         }
 
-        #region IDisposable implementation
-
-        public virtual void Dispose()
-        {
-            NodeA = null;
-            NodeB = null;
-        }
-
-        #endregion
-
         #region ISerializable implementation
 
         /// <summary>
@@ -196,8 +192,8 @@ namespace Cranium.Lib.Structure.Weight
         /// </param>
         public Weight(SerializationInfo info, StreamingContext context)
         {
-            NodeA = (BaseNode)info.GetValue("NodeA", typeof(BaseNode));
-            NodeB = (BaseNode)info.GetValue("NodeB", typeof(BaseNode));
+            NodeA = (BaseNode) info.GetValue("NodeA", typeof (BaseNode));
+            NodeB = (BaseNode) info.GetValue("NodeB", typeof (BaseNode));
             Value = info.GetDouble("Value");
             _InitialValue = info.GetDouble("_InitialValue");
             _PendingWeightChange = info.GetDouble("_PendingWeightChange");

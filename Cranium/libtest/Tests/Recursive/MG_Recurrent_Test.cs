@@ -1,17 +1,13 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -121,7 +117,7 @@ namespace Cranium.LibTest.Tests.Recursive
             Stopwatch s = Stopwatch.StartNew();
             _SlidingWindowTraining.Start();
             Thread.Sleep(100);
-            
+
             while (_SlidingWindowTraining.Running) Thread.Sleep(1);
 
             Console.WriteLine($"Training complete in {s.Elapsed.TotalMilliseconds}ms");
@@ -146,11 +142,11 @@ namespace Cranium.LibTest.Tests.Recursive
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
             Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
             Console.WriteLine("Comparing Against Random Walk 3 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)[0]*100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)[0] * 100, 3));
             Console.WriteLine("Comparing Against Random Walk 2 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0]*100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0] * 100, 3));
             Console.WriteLine("Comparing Against Random Walk 1 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0]*100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0] * 100, 3));
 
             Console.ReadKey();
         }
@@ -165,7 +161,6 @@ namespace Cranium.LibTest.Tests.Recursive
             _InputLayerNodes = new List<BaseNode>();
             for (Int32 i = 0; i < 1; i++) _InputLayerNodes.Add(new BaseNode(_InputLayer, new TanhAF()));
 
-
             _InputLayer.SetNodes(_InputLayerNodes);
 
             // Hidden layer construction
@@ -176,7 +171,6 @@ namespace Cranium.LibTest.Tests.Recursive
             b.SetValue(1);
             hiddenLayerNodes.Add(b);
             _HiddenLayer.SetNodes(hiddenLayerNodes);
-
 
             // Conext layer construction
             _ContextLayer = new RecurrentContext(6, new TanhAF());

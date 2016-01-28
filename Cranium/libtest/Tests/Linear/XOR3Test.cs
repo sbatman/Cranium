@@ -1,17 +1,13 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -78,7 +74,7 @@ namespace Cranium.Lib.Test.Tests.Linear
                 epoch++;
 
                 // No need to fully clear the screen constantly
-                if (epoch%200 == 0) Console.Clear();
+                if (epoch % 200 == 0) Console.Clear();
                 Console.SetCursorPosition(0, 0);
                 Console.WriteLine("XOR3Test");
                 for (Int32 x = 0; x < 8; x++)
@@ -187,9 +183,9 @@ namespace Cranium.Lib.Test.Tests.Linear
         /// </param>
         private static void PresentData(Int32 row)
         {
-            _InputLayer.GetNodes()[0].SetValue(_InputData[(row*3)]);
-            _InputLayer.GetNodes()[1].SetValue(_InputData[(row*3) + 1]);
-            _InputLayer.GetNodes()[2].SetValue(_InputData[(row*3) + 2]);
+            _InputLayer.GetNodes()[0].SetValue(_InputData[row * 3]);
+            _InputLayer.GetNodes()[1].SetValue(_InputData[row * 3 + 1]);
+            _InputLayer.GetNodes()[2].SetValue(_InputData[row * 3 + 2]);
         }
 
         /// <summary>

@@ -1,17 +1,13 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -84,7 +80,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
                 epoch++;
 
                 // No need to update the screen constantly
-                if (epoch%100 == 0)
+                if (epoch % 100 == 0)
                 {
                     Console.Clear();
                     Console.WriteLine("RNNTest - Stopping conditions are in the code");
@@ -94,7 +90,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
                     foreach (BaseNode n in _ContextLayer.GetNodes()) n.SetValue(0);
                     for (Int32 i = 0; i < 2; i++)
                     {
-                        _InputLayer.GetNodes()[0].SetValue(_InputData[(x*2) + i]);
+                        _InputLayer.GetNodes()[0].SetValue(_InputData[x * 2 + i]);
                         ForwardPass();
                         _ContextLayer.UpdateExtra();
                     }
@@ -106,7 +102,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
                     if (x == 3 && _OutputLayer.GetNodes()[0].GetValue() > 0.01f) Continue = true;
                     //
 
-                    if (epoch%100 == 0) Console.WriteLine(_InputData[x*2] + "-" + _InputData[(x*2) + 1] + "  -  " + Math.Round(_OutputLayer.GetNodes()[0].GetValue(), 3));
+                    if (epoch % 100 == 0) Console.WriteLine(_InputData[x * 2] + "-" + _InputData[x * 2 + 1] + "  -  " + Math.Round(_OutputLayer.GetNodes()[0].GetValue(), 3));
                 }
             }
             Console.WriteLine("Training complete in " + epoch + " epochs");
@@ -181,7 +177,10 @@ namespace Cranium.Lib.Test.Tests.Recursive
         /// <summary>
         ///     Performs the foward pass on the neural network
         /// </summary>
-        public static void ForwardPass() { _TestNetworkStructure.FowardPass(); }
+        public static void ForwardPass()
+        {
+            _TestNetworkStructure.FowardPass();
+        }
 
         /// <summary>
         ///     Performs the reverse pass on the neural network with the row of prepared training data provided and the given
@@ -192,7 +191,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
         /// </param>
         public static void ReversePass(Int32 row)
         {
-            OutputNode outputNode = (OutputNode) (_OutputLayer.GetNodes()[0]);
+            OutputNode outputNode = (OutputNode) _OutputLayer.GetNodes()[0];
             outputNode.SetTargetValue(_OutputData[row]);
             _OutputLayer.ReversePass(0.3, 0.95);
         }

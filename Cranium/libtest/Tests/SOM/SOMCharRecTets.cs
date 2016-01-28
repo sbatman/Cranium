@@ -1,4 +1,15 @@
-﻿using System;
+﻿// //////////////////////
+//  
+// Cranium - A neural network framework for C#
+// https://github.com/sbatman/Cranium.git
+// 
+// This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
+// More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
+// If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
+// 
+// //////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cranium.Lib.Data.Preprocessing;
@@ -14,15 +25,14 @@ namespace Cranium.Lib.Test.Tests.SOM
     {
         class NetworkConfiguration
         {
-            public Network NetworkInstance;
-            public Layer InputLayer;
-            public SOMLayer SOMMemoryLayer;
-            public List<BaseNode> InputLayerNodes;
+            public readonly Layer InputLayer;
+            public readonly List<BaseNode> InputLayerNodes;
+            public readonly Network NetworkInstance;
+            public readonly SOMLayer SOMMemoryLayer;
             public List<BaseNode> OuputLayerNodes;
 
             public NetworkConfiguration(Int32 inputNodeCount, Int32 somGridSize)
             {
-
                 NetworkInstance = new Network();
 
                 InputLayer = new Layer();
@@ -68,8 +78,6 @@ namespace Cranium.Lib.Test.Tests.SOM
             for (Int32 i = 0; i < OUTPUTCOUNT; i++) NodeData[i] = new Byte[IMAGESIZE * IMAGESIZE];
 
             PresentImagesToNetwork(network, processedImages, 450);
-
-
         }
 
         private static void TestNetwork(IEnumerable<ImageNormalizer.PreProcessedImage> processedImages, NetworkConfiguration network, Int32 epoch)
@@ -107,12 +115,12 @@ namespace Cranium.Lib.Test.Tests.SOM
                     {
                         for (Int32 y = 0; y < IMAGESIZE; y++)
                         {
-                            Int32 targetX = (nx * IMAGESIZE) + x;
-                            Int32 targetY = (ny * IMAGESIZE) + y;
+                            Int32 targetX = nx * IMAGESIZE + x;
+                            Int32 targetY = ny * IMAGESIZE + y;
 
-                            Int32 target = targetX + (targetY * IMAGESIZE * OUTPUTNODE_GRID_WIDTH);
+                            Int32 target = targetX + targetY * IMAGESIZE * OUTPUTNODE_GRID_WIDTH;
 
-                            outputImage[target] = (Byte)outputChunk[nx + (ny * OUTPUTNODE_GRID_WIDTH), x + (y * IMAGESIZE)];
+                            outputImage[target] = (Byte) outputChunk[nx + ny * OUTPUTNODE_GRID_WIDTH, x + y * IMAGESIZE];
                         }
                     }
                 }
@@ -135,11 +143,10 @@ namespace Cranium.Lib.Test.Tests.SOM
                 Console.Title = $"{epoch}/{epochs}";
                 images.Shuffle();
 
-                network.SOMMemoryLayer.CurrentDistanceSupression = 1 - ((epoch / (Double)epochs));
+                network.SOMMemoryLayer.CurrentDistanceSupression = 1 - epoch / (Double) epochs;
 
                 foreach (ImageNormalizer.PreProcessedImage image in images)
                 {
-
                     //FowardPass
                     Byte[] mapToPresent = image.BWMap;
 
@@ -152,7 +159,6 @@ namespace Cranium.Lib.Test.Tests.SOM
                     network.NetworkInstance.FowardPass();
 
                     network.NetworkInstance.ReversePass();
-
                 }
 
                 network.NetworkInstance.SetLearningRate(Math.Max(0.1f, network.NetworkInstance.GetLearningRate() * 0.95));
@@ -170,12 +176,10 @@ namespace Cranium.Lib.Test.Tests.SOM
                 nodes[i].SetValue(mapToPresent[i] / 255.0);
             }
 
-
-
             network.InputLayer.ForwardPass();
 
             Int32 totalNodes = network.SOMMemoryLayer.GetNodes().Count;
-            Int32 widthHeight = (Int32)Math.Sqrt(totalNodes);
+            Int32 widthHeight = (Int32) Math.Sqrt(totalNodes);
 
             Double lowestDiff = Double.MaxValue;
             Int32 lowestDiffX = 0;
@@ -194,10 +198,7 @@ namespace Cranium.Lib.Test.Tests.SOM
                     lowestDiffY = y;
                 }
             }
-            return (lowestDiffY * widthHeight) + lowestDiffX;
-
+            return lowestDiffY * widthHeight + lowestDiffX;
         }
-
-
     }
 }

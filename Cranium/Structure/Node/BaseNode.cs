@@ -1,24 +1,19 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
-using System.Runtime.CompilerServices;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.ActivationFunction;
 
@@ -98,6 +93,21 @@ namespace Cranium.Lib.Structure.Node
             _ActivationFunction = activationFunction;
         }
 
+        #region IDisposable implementation
+
+        public virtual void Dispose()
+        {
+            _ParentLayer = null;
+            _ForwardWeights.Clear();
+            _ForwardWeights = null;
+            _ReverseWeights.Clear();
+            _ReverseWeights = null;
+            _ActivationFunction.Dispose();
+            _ActivationFunction = null;
+        }
+
+        #endregion
+
         /// <summary>
         ///     Causes the node to calucate its new value as a sum of the weights by values of reverse connected nodes and then
         ///     passes this value by the Activation function assigned
@@ -112,7 +122,6 @@ namespace Cranium.Lib.Structure.Node
                 _Value += w.NodeA._Value * w.Value;
             }
             _Value = _ActivationFunction.Compute(_Value);
-
         }
 
         /// <summary>
@@ -186,7 +195,7 @@ namespace Cranium.Lib.Structure.Node
         {
             foreach (Weight.Weight w in _ForwardWeights)
             {
-                w.SetWeight(w.Value + (w.GetPastWeightChange() * momentum));
+                w.SetWeight(w.Value + w.GetPastWeightChange() * momentum);
                 w.ApplyPendingWeightChanges();
             }
         }
@@ -282,7 +291,6 @@ namespace Cranium.Lib.Structure.Node
             {
                 foreach (Weight.Weight w in _TReverseWeights)
                 {
-
                     if (w.NodeB != null)
                     {
                         w.NodeB._TFowardWeights = null;
@@ -318,21 +326,6 @@ namespace Cranium.Lib.Structure.Node
             _NodeID = newID;
         }
 
-        #region IDisposable implementation
-
-        public virtual void Dispose()
-        {
-            _ParentLayer = null;
-            _ForwardWeights.Clear();
-            _ForwardWeights = null;
-            _ReverseWeights.Clear();
-            _ReverseWeights = null;
-            _ActivationFunction.Dispose();
-            _ActivationFunction = null;
-        }
-
-        #endregion
-
         #region ISerializable implementation
 
         /// <summary>
@@ -352,10 +345,10 @@ namespace Cranium.Lib.Structure.Node
         {
             _Value = info.GetDouble("_Value");
             _Error = info.GetDouble("_Error");
-            _ParentLayer = (Layer.Layer)info.GetValue("_ParentLayer", typeof(Layer.Layer));
-            _ForwardWeights = (List<Weight.Weight>)info.GetValue("_ForwardWeights", typeof(List<Weight.Weight>));
-            _ReverseWeights = (List<Weight.Weight>)info.GetValue("_ReverseWeights", typeof(List<Weight.Weight>));
-            _ActivationFunction = (AF)info.GetValue("_ActivationFunction", typeof(AF));
+            _ParentLayer = (Layer.Layer) info.GetValue("_ParentLayer", typeof (Layer.Layer));
+            _ForwardWeights = (List<Weight.Weight>) info.GetValue("_ForwardWeights", typeof (List<Weight.Weight>));
+            _ReverseWeights = (List<Weight.Weight>) info.GetValue("_ReverseWeights", typeof (List<Weight.Weight>));
+            _ActivationFunction = (AF) info.GetValue("_ActivationFunction", typeof (AF));
             _NodeID = info.GetInt32("_NodeID");
         }
 
@@ -363,9 +356,9 @@ namespace Cranium.Lib.Structure.Node
         {
             info.AddValue("_Value", _Value);
             info.AddValue("_Error", _Error);
-            info.AddValue("_ParentLayer", _ParentLayer, typeof(Layer.Layer));
-            info.AddValue("_ForwardWeights", _ForwardWeights, typeof(List<Weight.Weight>));
-            info.AddValue("_ReverseWeights", _ReverseWeights, typeof(List<Weight.Weight>));
+            info.AddValue("_ParentLayer", _ParentLayer, typeof (Layer.Layer));
+            info.AddValue("_ForwardWeights", _ForwardWeights, typeof (List<Weight.Weight>));
+            info.AddValue("_ReverseWeights", _ReverseWeights, typeof (List<Weight.Weight>));
             info.AddValue("_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType());
             info.AddValue("_NodeID", _NodeID);
         }

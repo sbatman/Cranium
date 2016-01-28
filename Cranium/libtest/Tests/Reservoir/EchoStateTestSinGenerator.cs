@@ -1,17 +1,13 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -35,13 +31,13 @@ namespace Cranium.Lib.Test.Tests.Reservoir
     /// </summary>
     public static class EchoStateTestSinGenerator
     {
-
         public class AdaptedSlidingWindowTraining : SlidingWindow
         {
             public Double[,,] ExpectedOutputs;
+
             public override void PrepareData()
             {
-                _SequenceCount = ((_WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved) / _WindowWidth);
+                _SequenceCount = (_WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved) / _WindowWidth;
                 Int32 inputCount = _InputNodes.Count;
                 Int32 outputCount = _OutputNodes.Count;
                 _InputSequences = new Double[_SequenceCount, _WindowWidth, inputCount];
@@ -50,11 +46,12 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 {
                     for (Int32 j = 0; j < _WindowWidth; j++)
                     {
-                        _InputSequences[i, j, 0] = _WorkingDataset[0][(i * _WindowWidth) + j];
-                        ExpectedOutputs[i, j, 0] = _WorkingDataset[1][(i * _WindowWidth) + j];
+                        _InputSequences[i, j, 0] = _WorkingDataset[0][i * _WindowWidth + j];
+                        ExpectedOutputs[i, j, 0] = _WorkingDataset[1][i * _WindowWidth + j];
                     }
                 }
             }
+
             protected override Boolean _Tick()
             {
                 if (CurrentEpoch >= _MaxEpochs) return false;
@@ -69,14 +66,11 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
                 for (Int32 s = 0; s < _SequenceCount; s++) sequencyList.Add(s);
 
-
-
                 while (sequencyList.Count > 0)
                 {
                     //This needs to be booled so it can be turned off
                     Int32 s = sequencyList[_Rnd.Next(0, sequencyList.Count)];
                     sequencyList.Remove(s);
-
 
                     foreach (BaseNode node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
@@ -108,8 +102,6 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                         //    Console.WriteLine(" " + _UpdatingLayers[0].GetNodes()[0].GetValue());
                     }
 
-
-
                     //Calculate the current error
                     Double passError = _OutputNodes.OfType<OutputNode>().Sum(output => output.GetError());
                     passError /= _OutputNodes.Count;
@@ -122,7 +114,6 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 return true;
             }
         }
-
 
         private static Network _TestNetworkStructure;
         private static AdaptedSlidingWindowTraining _SlidingWindowTraining;
@@ -162,14 +153,12 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 _RecurrentLayer
             });
 
-
             Console.WriteLine("Starting Training");
             _SlidingWindowTraining.Start();
             Thread.Sleep(1000);
             while (_SlidingWindowTraining.Running) Thread.Sleep(20);
 
             Console.WriteLine("Complete Training");
-
 
             Console.WriteLine("Starting Testing");
             foreach (BaseNode node in _TestNetworkStructure.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
@@ -187,11 +176,9 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 output[x] = _OuputLayerNodes[0].GetValue();
             }
 
-
             Functions.PrintArrayToFile(input, "intput.csv");
             Functions.PrintArrayToFile(output, "output.csv");
             Console.WriteLine("Complete Testing");
-
 
             Console.ReadKey();
         }
@@ -226,20 +213,17 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _TestNetworkStructure.AddLayer(echoLayer);
             _TestNetworkStructure.AddLayer(_OutputLayer);
 
-
             foreach (Layer layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
-            ((RecurrentContextNode)_RecurrentLayer.GetNodes()[0]).OverrideRateOfUpdate(1);
-
+            ((RecurrentContextNode) _RecurrentLayer.GetNodes()[0]).OverrideRateOfUpdate(1);
         }
 
         public static Double[][] BuildDataSet(Int32 sets)
         {
-
             Double[][] data = new Double[2][];
             for (Int32 i = 0; i < 2; i++) data[i] = new Double[sets];
             for (Int32 x = 0; x < sets; x++)
             {
-                Double output = Math.Sin((x * 0.05f)) * 0.5f;
+                Double output = Math.Sin(x * 0.05f) * 0.5f;
                 data[0][x] = 0;
                 data[1][x] = output;
             }

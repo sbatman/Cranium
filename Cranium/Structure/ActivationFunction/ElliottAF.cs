@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -35,10 +31,18 @@ namespace Cranium.Lib.Structure.ActivationFunction
     {
         private Double _Scale = 1;
 
+        public Double Scale
+        {
+            [Pure] get { return _Scale; }
+            set { _Scale = value; }
+        }
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="ElliottAF" /> class.
         /// </summary>
-        public ElliottAF() { }
+        public ElliottAF()
+        {
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ElliottAF" /> class. Used by the serializer.
@@ -49,13 +53,9 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public ElliottAF(SerializationInfo info, StreamingContext context) : base(info, context) { _Scale = info.GetDouble("_Scale"); }
-
-        public Double Scale
+        public ElliottAF(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            [Pure]
-            get { return _Scale; }
-            set { _Scale = value; }
+            _Scale = info.GetDouble("_Scale");
         }
 
         #region implemented abstract members of Cranium.Structure.ActivationFunction.Base
@@ -66,7 +66,10 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     The value to pass to the activation function
         /// </param>
-        public override Double Compute(Double input) { return (input*_Scale)/(1 + Math.Abs(input*_Scale)); }
+        public override Double Compute(Double input)
+        {
+            return input * _Scale / (1 + Math.Abs(input * _Scale));
+        }
 
         /// <summary>
         ///     Computes the derivative using the activation function.
@@ -77,11 +80,19 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='input'>
         ///     Input.
         /// </param>
-        public override Double ComputeDerivative(Double input) { return _Scale/(Math.Pow((1.0d + Math.Abs(input*_Scale)), 2)); }
+        public override Double ComputeDerivative(Double input)
+        {
+            return _Scale / Math.Pow(1.0d + Math.Abs(input * _Scale), 2);
+        }
 
-        public override void Dispose() { }
+        public override void Dispose()
+        {
+        }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context) { info.AddValue("_Scale", _Scale); }
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_Scale", _Scale);
+        }
 
         #endregion
     }

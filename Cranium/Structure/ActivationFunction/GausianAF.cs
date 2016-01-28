@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -40,7 +36,10 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='steepness'>
         ///     Steepness.
         /// </param>
-        public Gaussian(Double steepness) { _Steepness = steepness; }
+        public Gaussian(Double steepness)
+        {
+            _Steepness = steepness;
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Gaussian" /> class. Used by the serializer.
@@ -51,12 +50,18 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public Gaussian(SerializationInfo info, StreamingContext context) : base(info, context) { _Steepness = info.GetDouble("_Steepness"); }
+        public Gaussian(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _Steepness = info.GetDouble("_Steepness");
+        }
 
         #region implemented abstract members of Cranium.Structure.ActivationFunction.Base
 
         [Pure]
-        public override Double Compute(Double input) { return Math.Exp(-Math.Pow(_Steepness*input, 2.0d)); }
+        public override Double Compute(Double input)
+        {
+            return Math.Exp(-Math.Pow(_Steepness * input, 2.0d));
+        }
 
         /// <summary>
         ///     Computes the derivative using the activation function.
@@ -68,11 +73,19 @@ namespace Cranium.Lib.Structure.ActivationFunction
         ///     Input.
         /// </param>
         [Pure]
-        public override Double ComputeDerivative(Double input) { return -2*input*_Steepness*Compute(input)*input; }
+        public override Double ComputeDerivative(Double input)
+        {
+            return -2 * input * _Steepness * Compute(input) * input;
+        }
 
-        public override void Dispose() { }
+        public override void Dispose()
+        {
+        }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context) { info.AddValue("_Steepness", _Steepness); }
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_Steepness", _Steepness);
+        }
 
         #endregion
     }

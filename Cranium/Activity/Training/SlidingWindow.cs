@@ -1,17 +1,13 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -55,7 +51,7 @@ namespace Cranium.Lib.Activity.Training
         /// <summary>
         ///     Thre sequences of inputs to be presented during training
         /// </summary>
-        protected Double[, ,] _InputSequences;
+        protected Double[,,] _InputSequences;
 
         /// <summary>
         ///     The average error experianced during the last pass
@@ -79,26 +75,26 @@ namespace Cranium.Lib.Activity.Training
         protected Int32 _PortionOfDatasetReserved;
 
         /// <summary>
-        ///     The RND used during the netowrk setup when required
-        /// </summary>
-        protected Random _Rnd;
-
-        /// <summary>
         ///     Any recurrent layers that are present in the network structure
         /// </summary>
         protected List<Layer> _Recurrentlayers;
+
+        /// <summary>
+        ///     The RND used during the netowrk setup when required
+        /// </summary>
+        protected Random _Rnd;
 
         /// <summary>
         ///     The number of sequences that weill be tested
         /// </summary>
         protected Int32 _SequenceCount;
 
+        protected Boolean _SetOuputToTarget;
+
         /// <summary>
         ///     The width of the presented window
         /// </summary>
         protected Int32 _WindowWidth;
-
-        protected Boolean _SetOuputToTarget;
 
         public SlidingWindow()
         {
@@ -109,12 +105,12 @@ namespace Cranium.Lib.Activity.Training
             : base(info, context)
         {
             _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
-            _InputNodes = (List<BaseNode>)info.GetValue("_InputNodes", typeof(List<BaseNode>));
+            _InputNodes = (List<BaseNode>) info.GetValue("_InputNodes", typeof (List<BaseNode>));
             _LastPassAverageError = info.GetDouble("_LastPassAverageError");
-            _OutputNodes = (List<BaseNode>)info.GetValue("_OutputNodes", typeof(List<BaseNode>));
+            _OutputNodes = (List<BaseNode>) info.GetValue("_OutputNodes", typeof (List<BaseNode>));
             _PortionOfDatasetReserved = info.GetInt32("_PortionOfDatasetReserved");
-            _Rnd = (Random)info.GetValue("_RND", typeof(Random));
-            _Recurrentlayers = (List<Layer>)info.GetValue("_UpdatingLayers", typeof(List<Layer>));
+            _Rnd = (Random) info.GetValue("_RND", typeof (Random));
+            _Recurrentlayers = (List<Layer>) info.GetValue("_UpdatingLayers", typeof (List<Layer>));
             _WindowWidth = info.GetInt32("_WindowWidth");
         }
 
@@ -207,7 +203,7 @@ namespace Cranium.Lib.Activity.Training
         /// </param>
         public virtual void SetLearningRate(Double rate)
         {
-            if (_TargetNetwork == null) throw (new Exception("Target Network must be defined first"));
+            if (_TargetNetwork == null) throw new Exception("Target Network must be defined first");
             _TargetNetwork.SetLearningRate(rate);
         }
 
@@ -219,7 +215,7 @@ namespace Cranium.Lib.Activity.Training
         /// </param>
         public virtual void SetMomentum(Double momentum)
         {
-            if (_TargetNetwork == null) throw (new Exception("Target Network must be defined first"));
+            if (_TargetNetwork == null) throw new Exception("Target Network must be defined first");
             _TargetNetwork.SetMomentum(momentum);
         }
 
@@ -228,7 +224,7 @@ namespace Cranium.Lib.Activity.Training
         /// </summary>
         public virtual void PrepareData()
         {
-            _SequenceCount = ((_WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved) - _WindowWidth) - _DistanceToForcastHorrison;
+            _SequenceCount = _WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved - _WindowWidth - _DistanceToForcastHorrison;
             Int32 inputCount = _InputNodes.Count;
             Int32 outputCount = _OutputNodes.Count;
             _InputSequences = new Double[_SequenceCount, _WindowWidth, inputCount];
@@ -314,7 +310,7 @@ namespace Cranium.Lib.Activity.Training
                 error += passError * passError;
             }
             _LastPassAverageError = error / _SequenceCount;
-           // Console.WriteLine(_LastPassAverageError);
+            // Console.WriteLine(_LastPassAverageError);
             _LogStream?.WriteLine(_LastPassAverageError);
             _LogStream?.Flush();
             return true;
@@ -328,7 +324,6 @@ namespace Cranium.Lib.Activity.Training
             //todo: some real logging would be nice
             PrepareData();
             _LastPassAverageError = 0;
-
         }
 
         /// <summary>
@@ -343,12 +338,12 @@ namespace Cranium.Lib.Activity.Training
         {
             base.GetObjectData(info, context);
             info.AddValue("_DistanceToForcastHorrison", _DistanceToForcastHorrison);
-            info.AddValue("_InputNodes", _InputNodes, typeof(List<BaseNode>));
+            info.AddValue("_InputNodes", _InputNodes, typeof (List<BaseNode>));
             info.AddValue("_LastPassAverageError", _LastPassAverageError);
-            info.AddValue("_OutputNodes", _OutputNodes, typeof(List<BaseNode>));
+            info.AddValue("_OutputNodes", _OutputNodes, typeof (List<BaseNode>));
             info.AddValue("_PortionOfDatasetReserved", _PortionOfDatasetReserved);
-            info.AddValue("_RND", _Rnd, typeof(Random));
-            info.AddValue("_UpdatingLayers", _Recurrentlayers, typeof(List<Layer>));
+            info.AddValue("_RND", _Rnd, typeof (Random));
+            info.AddValue("_UpdatingLayers", _Recurrentlayers, typeof (List<Layer>));
             info.AddValue("_WindowWidth", _WindowWidth);
         }
 

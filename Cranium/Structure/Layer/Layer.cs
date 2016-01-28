@@ -1,17 +1,13 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -62,7 +58,25 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     Initializes a new instance of the <see cref="Layer" /> class.
         /// </summary>
-        public Layer() { }
+        public Layer()
+        {
+        }
+
+        #region IDisposable implementation
+
+        public void Dispose()
+        {
+            PurgeNodeConnections();
+            _ReverseConnectedLayers.Clear();
+            _ReverseConnectedLayers = null;
+            _ForwardConnectedLayers.Clear();
+            _ForwardConnectedLayers = null;
+            foreach (BaseNode n in _Nodes) n.Dispose();
+            _Nodes.Clear();
+            _Nodes = null;
+        }
+
+        #endregion
 
         /// <summary>
         ///     Sets the nodes that are present in this layer, the previous list of nodes is purged.
@@ -223,7 +237,9 @@ namespace Cranium.Lib.Structure.Layer
         /// <summary>
         ///     Updates any extra logic required, This is used when pre/post epoc logic needs to run on the layer
         /// </summary>
-        public virtual void UpdateExtra() { }
+        public virtual void UpdateExtra()
+        {
+        }
 
         /// <summary>
         ///     Gets a node within the layer by ID
@@ -241,22 +257,6 @@ namespace Cranium.Lib.Structure.Layer
             return null;
         }
 
-        #region IDisposable implementation
-
-        public void Dispose()
-        {
-            PurgeNodeConnections();
-            _ReverseConnectedLayers.Clear();
-            _ReverseConnectedLayers = null;
-            _ForwardConnectedLayers.Clear();
-            _ForwardConnectedLayers = null;
-            foreach (BaseNode n in _Nodes) n.Dispose();
-            _Nodes.Clear();
-            _Nodes = null;
-        }
-
-        #endregion
-
         #region ISerializable implementation
 
         /// <summary>
@@ -270,18 +270,18 @@ namespace Cranium.Lib.Structure.Layer
         /// </param>
         public Layer(SerializationInfo info, StreamingContext context)
         {
-            _Nodes = (List<BaseNode>)info.GetValue("_Nodes", typeof(List<BaseNode>));
+            _Nodes = (List<BaseNode>) info.GetValue("_Nodes", typeof (List<BaseNode>));
             _LayerID = info.GetInt32("_LayerID");
             _NextNodeID = info.GetInt32("_NextNodeID");
-            _ForwardConnectedLayers = (List<Layer>)info.GetValue("_ForwardConnectedLayers", typeof(List<Layer>));
-            _ReverseConnectedLayers = (List<Layer>)info.GetValue("_ReverseConnectedLayers", typeof(List<Layer>));
+            _ForwardConnectedLayers = (List<Layer>) info.GetValue("_ForwardConnectedLayers", typeof (List<Layer>));
+            _ReverseConnectedLayers = (List<Layer>) info.GetValue("_ReverseConnectedLayers", typeof (List<Layer>));
         }
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             info.AddValue("_Nodes", _Nodes, _Nodes.GetType());
-            info.AddValue("_ForwardConnectedLayers", _ForwardConnectedLayers, typeof(List<Layer>));
-            info.AddValue("_ReverseConnectedLayers", _ReverseConnectedLayers, typeof(List<Layer>));
+            info.AddValue("_ForwardConnectedLayers", _ForwardConnectedLayers, typeof (List<Layer>));
+            info.AddValue("_ReverseConnectedLayers", _ReverseConnectedLayers, typeof (List<Layer>));
             info.AddValue("_LayerID", _LayerID);
             info.AddValue("_NextNodeID", _NextNodeID);
         }

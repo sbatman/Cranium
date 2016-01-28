@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -32,7 +28,15 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <summary>
         ///     Initializes a new instance of the <see cref="AF" /> class.
         /// </summary>
-        protected AF() { }
+        protected AF()
+        {
+        }
+
+        #region IDisposable implementation
+
+        public abstract void Dispose();
+
+        #endregion
 
         /// <summary>
         ///     Returns the input after running through the activation function.
@@ -55,15 +59,11 @@ namespace Cranium.Lib.Structure.ActivationFunction
         [Pure]
         public abstract Double ComputeDerivative(Double input);
 
-        #region IDisposable implementation
-
-        public abstract void Dispose();
-
-        #endregion
-
         #region ISerializable implementation
 
-        public AF(SerializationInfo info, StreamingContext context) { }
+        public AF(SerializationInfo info, StreamingContext context)
+        {
+        }
 
         public abstract void GetObjectData(SerializationInfo info, StreamingContext context);
 

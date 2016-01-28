@@ -1,17 +1,13 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -61,7 +57,6 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 testNetworkStructure.RandomiseWeights(1.1d);
                 //PrepData
 
-
                 //Prepare training activity
                 SlidingWindow slidingWindowTraining = new SlidingWindow();
                 slidingWindowTraining.SetTargetNetwork(testNetworkStructure);
@@ -75,7 +70,6 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 slidingWindowTraining.SetOutputNodes(ouputLayerNodes);
                 slidingWindowTraining.SetWorkingDataset(dataSet);
                 slidingWindowTraining.SetRecurrentConextLayers(new List<Layer>());
-
 
                 outstandingWork.Add(lobeConnection.SendJob(slidingWindowTraining));
             }
@@ -107,11 +101,11 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                     Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
                     Console.WriteLine("Complete Testing");
                     Console.WriteLine("Comparing Against Random Walk 3 Step");
-                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)[0]*100, 3));
+                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)[0] * 100, 3));
                     Console.WriteLine("Comparing Against Random Walk 2 Step");
-                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0]*100, 3));
+                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0] * 100, 3));
                     Console.WriteLine("Comparing Against Random Walk 1 Step");
-                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0]*100, 3));
+                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0] * 100, 3));
                 }
             }
 
@@ -131,7 +125,6 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             inputLayer.SetNodes(inputLayerNodes);
 
             EchoReservoir echoLayer = new EchoReservoir(130, 0.4f, 0, 5, new ElliottAF());
-
 
             for (Int32 i = 0; i < 1; i++) ouputLayerNodes.Add(new OutputNode(outputLayer, new ElliottAF()));
             outputLayer.SetNodes(ouputLayerNodes);

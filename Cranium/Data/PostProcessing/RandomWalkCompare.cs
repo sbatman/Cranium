@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -66,10 +62,10 @@ namespace Cranium.Lib.Data.PostProcessing
                 totalActualError += actualErrors[x - distanceOffsetOfRandomWalk];
             }
 
-            Double avgRandomWalkError = totalRandomWalkError/(expectedValues.Length - distanceOffsetOfRandomWalk);
-            Double avgActualError = totalActualError/(expectedValues.Length - distanceOffsetOfRandomWalk);
+            Double avgRandomWalkError = totalRandomWalkError / (expectedValues.Length - distanceOffsetOfRandomWalk);
+            Double avgActualError = totalActualError / (expectedValues.Length - distanceOffsetOfRandomWalk);
 
-            return (avgActualError - avgRandomWalkError)/avgRandomWalkError;
+            return (avgActualError - avgRandomWalkError) / avgRandomWalkError;
         }
 
         public static Double[] CalculateError(Double[][] expectedValues, Double[][] actualValues, Int32 distanceOffsetOfRandomWalk)

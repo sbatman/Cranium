@@ -1,4 +1,15 @@
-﻿using System;
+﻿// //////////////////////
+//  
+// Cranium - A neural network framework for C#
+// https://github.com/sbatman/Cranium.git
+// 
+// This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
+// More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
+// If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
+// 
+// //////////////////////
+
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -41,17 +52,17 @@ namespace Cranium.Lib.Test.SupportClasses
                     graph.DrawImage(bmp, new Rectangle(0, 0, newWidth, newHeight));
                     graph.Save();
 
-                    Int32 bytes = bmp2.Width*bmp2.Height*3;
+                    Int32 bytes = bmp2.Width * bmp2.Height * 3;
                     img.Width = bmp2.Width;
                     img.Height = bmp2.Height;
                     img.Data = new Byte[bytes];
                     img.FileName = filename;
-                    BitmapData dat = bmp2.LockBits(new Rectangle(0, 0, bmp2.Width, bmp2.Height), ImageLockMode.ReadOnly,PixelFormat.Format24bppRgb);
+                    BitmapData dat = bmp2.LockBits(new Rectangle(0, 0, bmp2.Width, bmp2.Height), ImageLockMode.ReadOnly, PixelFormat.Format24bppRgb);
                     IntPtr ptr = dat.Scan0;
-                    Byte[] byteArray = new Byte[dat.Stride*img.Height];
+                    Byte[] byteArray = new Byte[dat.Stride * img.Height];
                     Marshal.Copy(ptr, byteArray, 0, byteArray.Length);
 
-                    for (Int32 y = 0; y < img.Height; y++)Array.ConstrainedCopy(byteArray, (y*dat.Stride), img.Data, (y*img.Width)*3, img.Width*3);
+                    for (Int32 y = 0; y < img.Height; y++) Array.ConstrainedCopy(byteArray, y * dat.Stride, img.Data, y * img.Width * 3, img.Width * 3);
 
                     bmp2.UnlockBits(dat);
                 }
@@ -64,8 +75,7 @@ namespace Cranium.Lib.Test.SupportClasses
         {
             Byte[] outData = new Byte[width * height * 3];
 
-
-            for (Int32 i = 0; i < (width * height) * 3; i++)
+            for (Int32 i = 0; i < width * height * 3; i++)
             {
                 outData[i] = data[i / 3];
             }

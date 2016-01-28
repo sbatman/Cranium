@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -41,7 +37,10 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='activationPoint'>
         ///     Activation point.
         /// </param>
-        public StepAF(Double activationPoint) { _ActivationPoint = activationPoint; }
+        public StepAF(Double activationPoint)
+        {
+            _ActivationPoint = activationPoint;
+        }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="StepAF" /> class.
@@ -52,7 +51,10 @@ namespace Cranium.Lib.Structure.ActivationFunction
         /// <param name='context'>
         ///     Context.
         /// </param>
-        public StepAF(SerializationInfo info, StreamingContext context) : base(info, context) { _ActivationPoint = info.GetDouble("_ActivationPoint"); }
+        public StepAF(SerializationInfo info, StreamingContext context) : base(info, context)
+        {
+            _ActivationPoint = info.GetDouble("_ActivationPoint");
+        }
 
         /// <summary>
         ///     Returns the input after running through the activation function.
@@ -61,7 +63,10 @@ namespace Cranium.Lib.Structure.ActivationFunction
         ///     The value to pass to the activation function
         /// </param>
         [Pure]
-        public override Double Compute(Double input) { return input >= _ActivationPoint ? 1 : 0; }
+        public override Double Compute(Double input)
+        {
+            return input >= _ActivationPoint ? 1 : 0;
+        }
 
         /// <summary>
         ///     Computes the derivative using the activation function.
@@ -73,10 +78,18 @@ namespace Cranium.Lib.Structure.ActivationFunction
         ///     Input.
         /// </param>
         [Pure]
-        public override Double ComputeDerivative(Double input) { return 1; }
+        public override Double ComputeDerivative(Double input)
+        {
+            return 1;
+        }
 
-        public override void Dispose() { }
+        public override void Dispose()
+        {
+        }
 
-        public override void GetObjectData(SerializationInfo info, StreamingContext context) { info.AddValue("_ActivationPoint", _ActivationPoint); }
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("_ActivationPoint", _ActivationPoint);
+        }
     }
 }

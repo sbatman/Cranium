@@ -1,17 +1,13 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -53,7 +49,7 @@ namespace Cranium.Lib.Data.Preprocessing
         /// </param>
         public static DataPreprocessedStandardDeviationVariance ProduceDataset(String fileName)
         {
-            if (fileName.Length == 0 || !File.Exists(fileName)) throw (new Exception("Bad filename provided"));
+            if (fileName.Length == 0 || !File.Exists(fileName)) throw new Exception("Bad filename provided");
 
             //try
             //{
@@ -99,7 +95,7 @@ namespace Cranium.Lib.Data.Preprocessing
             }
             catch (Exception e)
             {
-                throw (new Exception("Data pre-processing failed :" + e.Message));
+                throw new Exception("Data pre-processing failed :" + e.Message);
             }
         }
 
@@ -127,14 +123,14 @@ namespace Cranium.Lib.Data.Preprocessing
                 //Calculate the StandardDeviation
                 Double stdv = 0;
                 for (Int32 y = 0; y < rowCount; y++) stdv += Math.Pow(inputData.DataSet[x][y] - avg, 2);
-                stdv = Math.Sqrt(stdv/rowCount);
+                stdv = Math.Sqrt(stdv / rowCount);
 
                 Double min = 0;
                 Double max = 0;
                 //Processing The Data
                 for (Int32 y = 0; y < rowCount; y++)
                 {
-                    inputData.DataSet[x][y] = (inputData.DataSet[x][y] - avg)/stdv;
+                    inputData.DataSet[x][y] = (inputData.DataSet[x][y] - avg) / stdv;
                     if (inputData.DataSet[x][y] < min) min = inputData.DataSet[x][y];
                     if (inputData.DataSet[x][y] > max) max = inputData.DataSet[x][y];
                 }

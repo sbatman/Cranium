@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -26,8 +22,10 @@ namespace Cranium.Lib.Structure.Layer
 {
     /// <summary>
     ///     This is an implementation of the echo reservoir found in EchoState networks. It provides a form of recursive memory
-    ///     as each node within the layer is randomly connected to a number of other nodes. When presented with data over a number
-    ///     of iterations this causes a RNN style memory behaviour. However due to the chaotic nature of the revervoirs contrcution,
+    ///     as each node within the layer is randomly connected to a number of other nodes. When presented with data over a
+    ///     number
+    ///     of iterations this causes a RNN style memory behaviour. However due to the chaotic nature of the revervoirs
+    ///     contrcution,
     ///     accuracy and learning limits of this type of network can vary heavily. Further information can be sourced
     ///     here http://www.scholarpedia.org/article/Echo_state_network
     /// </summary>
@@ -94,22 +92,6 @@ namespace Cranium.Lib.Structure.Layer
             _ActivationFunction = activationFunction;
         }
 
-
-        public virtual Int32 GetMimumConnections()
-        {
-            return _MinimumConnections;
-        }
-
-        public virtual Int32 GetMaximumConnections()
-        {
-            return _MaximumConnections;
-        }
-
-        public virtual Double GetLevelOfConnectivity()
-        {
-            return _LevelOfConnectivity;
-        }
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="EchoReservoir" /> class. Used by the Serialiszer
         /// </summary>
@@ -125,8 +107,23 @@ namespace Cranium.Lib.Structure.Layer
             _LevelOfConnectivity = info.GetDouble("_LevelOfConnectivity");
             _MinimumConnections = info.GetInt32("_MinimumConnections");
             _MaximumConnections = info.GetInt32("_MaximumConnections");
-            _ActivationFunction = (AF)info.GetValue("_ActivationFunction", typeof(AF));
-            _Rnd = (Random)info.GetValue("_Rnd", typeof(Random));
+            _ActivationFunction = (AF) info.GetValue("_ActivationFunction", typeof (AF));
+            _Rnd = (Random) info.GetValue("_Rnd", typeof (Random));
+        }
+
+        public virtual Int32 GetMimumConnections()
+        {
+            return _MinimumConnections;
+        }
+
+        public virtual Int32 GetMaximumConnections()
+        {
+            return _MaximumConnections;
+        }
+
+        public virtual Double GetLevelOfConnectivity()
+        {
+            return _LevelOfConnectivity;
         }
 
         /// <summary>
@@ -168,7 +165,10 @@ namespace Cranium.Lib.Structure.Layer
         ///     Recurse downward.
         /// </param>
         /// <param name="delayWeightUpdate">If this is passed as true then weight updating will need to be perfomed manually</param>
-        public override void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true, Boolean delayWeightUpdate = false) { base.ReversePass(learningRate, momentum, false, delayWeightUpdate); }
+        public override void ReversePass(Double learningRate, Double momentum, Boolean recurseDownward = true, Boolean delayWeightUpdate = false)
+        {
+            base.ReversePass(learningRate, momentum, false, delayWeightUpdate);
+        }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
@@ -178,7 +178,7 @@ namespace Cranium.Lib.Structure.Layer
             info.AddValue("_MinimumConnections", _MinimumConnections);
             info.AddValue("_MaximumConnections", _MaximumConnections);
             info.AddValue("_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType());
-            info.AddValue("_Rnd", _Rnd, typeof(Random));
+            info.AddValue("_Rnd", _Rnd, typeof (Random));
         }
     }
 }

@@ -1,17 +1,13 @@
-﻿#region info
-
-// //////////////////////
-//
+﻿// //////////////////////
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -82,7 +78,6 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
             Console.WriteLine("Complete Training");
 
-
             Console.WriteLine("Starting Testing");
 
             Activity.Testing.SlidingWindow slidingWindowTesting = new Activity.Testing.SlidingWindow();
@@ -95,7 +90,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             slidingWindowTesting.SetDistanceToForcastHorrison(3);
             slidingWindowTesting.SetTargetNetwork(_SlidingWindowTraining.GetTargetNetwork());
 
-            Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults)slidingWindowTesting.TestNetwork();
+            Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
 
             Console.WriteLine(result.Rmse);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");

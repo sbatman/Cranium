@@ -1,5 +1,3 @@
-#region info
-
 // //////////////////////
 //  
 // Cranium - A neural network framework for C#
@@ -10,8 +8,6 @@
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
 // 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
@@ -77,9 +73,9 @@ namespace Cranium.Lib.Structure.Layer
         /// </param>
         public RecurrentContext(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _SourceNodes = (List<BaseNode>)info.GetValue("_SourceNodes", typeof(List<BaseNode>));
+            _SourceNodes = (List<BaseNode>) info.GetValue("_SourceNodes", typeof (List<BaseNode>));
             _LevelOfContext = info.GetInt32("_LevelOfContext");
-            _ActivationFunction = (AF)info.GetValue("_ActivationFunction", typeof(AF));
+            _ActivationFunction = (AF) info.GetValue("_ActivationFunction", typeof (AF));
         }
 
         /// <summary>
@@ -107,7 +103,10 @@ namespace Cranium.Lib.Structure.Layer
         /// <param name='nodes'>
         ///     Nodes.
         /// </param>
-        public virtual void AddSourceNodes(List<BaseNode> nodes) { _SourceNodes.AddRange(nodes); }
+        public virtual void AddSourceNodes(List<BaseNode> nodes)
+        {
+            _SourceNodes.AddRange(nodes);
+        }
 
         /// <summary>
         ///     Performs any extra update required on child nodes

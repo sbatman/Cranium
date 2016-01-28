@@ -1,4 +1,15 @@
-﻿using System;
+﻿// //////////////////////
+//  
+// Cranium - A neural network framework for C#
+// https://github.com/sbatman/Cranium.git
+// 
+// This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
+// More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
+// If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
+// 
+// //////////////////////
+
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -21,7 +32,7 @@ namespace Cranium.Lobe.Client
         {
             _IpAddress = ipAddress;
             _Port = port;
-            return _ConnectionToManager.Connect(ipAddress, port, 20480 * 1024);
+            return _ConnectionToManager.Connect(ipAddress, port, 204800 * 1024);
         }
 
         public void DisconnectFromManager()
@@ -37,7 +48,7 @@ namespace Cranium.Lobe.Client
             while (true)
             {
                 Packet p = new Packet(1100);
-                p.Add(jobGuid.ToByteArray(),true);
+                p.Add(jobGuid.ToByteArray(), true);
                 _ConnectionToManager.SendPacket(p);
                 Stopwatch sendTime = new Stopwatch();
                 sendTime.Start();
@@ -60,16 +71,14 @@ namespace Cranium.Lobe.Client
                         Thread.Sleep(100);
                     }
                 }
-                if (_ConnectionToManager.IsConnected())_ConnectionToManager.Disconnect();
-                _ConnectionToManager.Connect(_IpAddress, _Port, 204800);
+                if (_ConnectionToManager.IsConnected()) _ConnectionToManager.Disconnect();
+                _ConnectionToManager.Connect(_IpAddress, _Port, 204800 * 1024);
             }
-            return null;
         }
 
         public Guid SendJob(Base activity)
         {
             if (_ConnectionToManager == null || !_ConnectionToManager.IsConnected()) throw new Exception("Not connected to the manager");
-
 
             while (true)
             {
@@ -77,8 +86,8 @@ namespace Cranium.Lobe.Client
                 MemoryStream datastream = new MemoryStream();
                 binaryFormatter.Serialize(datastream, activity);
                 Packet p = new Packet(1000);
-                Byte[] data= datastream.ToArray();
-                p.Add(data,true);
+                Byte[] data = datastream.ToArray();
+                p.Add(data, true);
                 _ConnectionToManager.SendPacket(p);
                 Stopwatch sendTime = new Stopwatch();
                 sendTime.Start();
@@ -88,16 +97,14 @@ namespace Cranium.Lobe.Client
                     {
                         foreach (Guid jobGuid in from packet in _ConnectionToManager.GetPacketsToProcess() where packet.Type == 1001 select new Guid((Byte[]) packet.GetObjects()[0]))
                         {
-
                             return jobGuid;
                         }
                     }
                     Thread.Sleep(1);
                 }
                 if (_ConnectionToManager.IsConnected()) _ConnectionToManager.Disconnect();
-                _ConnectionToManager.Connect(_IpAddress, _Port, 20480 * 1024);
+                _ConnectionToManager.Connect(_IpAddress, _Port, 204800 * 1024);
             }
-            throw new Exception("Mananger unavailable or busy");
         }
     }
 }

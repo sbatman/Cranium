@@ -1,21 +1,18 @@
-#region info
-
 // //////////////////////
-//
+//  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
-//
+// 
 // This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
 // More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
 // If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-//
+// 
 // //////////////////////
-
-#endregion
 
 #region Usings
 
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.Layer;
 using Cranium.Lib.Structure.Node;
@@ -27,6 +24,42 @@ namespace Cranium.Lib.Activity.Testing
     [Serializable]
     public class SlidingWindow : Base
     {
+        /// <summary>
+        ///     Returned results class for the SlidingWindow testing activity
+        /// </summary>
+        public class SlidingWindowTestResults : TestResults
+        {
+            public Double[][] ActualOutputs;
+            public Double[][] ExpectedOutputs;
+            public Double[][] OutputErrors;
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class.
+            /// </summary>
+            public SlidingWindowTestResults()
+            {
+            }
+
+            /// <summary>
+            ///     Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class,
+            ///     used by the serializer.
+            /// </summary>
+            public SlidingWindowTestResults(SerializationInfo info, StreamingContext context) : base(info, context)
+            {
+                ActualOutputs = (Double[][]) info.GetValue("ActualOutputs", ActualOutputs.GetType());
+                ExpectedOutputs = (Double[][]) info.GetValue("ActualOutputs", ExpectedOutputs.GetType());
+                OutputErrors = (Double[][]) info.GetValue("ActualOutputs", OutputErrors.GetType());
+            }
+
+            public override void GetObjectData(SerializationInfo info, StreamingContext context)
+            {
+                base.GetObjectData(info, context);
+                info.AddValue("ActualOutputs", ActualOutputs, ActualOutputs.GetType());
+                info.AddValue("ExpectedOutputs", ExpectedOutputs, ExpectedOutputs.GetType());
+                info.AddValue("OutputErrors", OutputErrors, OutputErrors.GetType());
+            }
+        }
+
         protected Double[][] _ActualOutputs;
         protected Int32 _DistanceToForcastHorrison;
         protected Double[][] _ExpectedOutputs;
@@ -37,8 +70,9 @@ namespace Cranium.Lib.Activity.Testing
         protected Int32 _WindowWidth;
         protected Double[][] _WorkingDataset;
 
-
-        public SlidingWindow() { }
+        public SlidingWindow()
+        {
+        }
 
         public SlidingWindow(SerializationInfo info, StreamingContext context) : base(info, context)
         {
@@ -94,7 +128,7 @@ namespace Cranium.Lib.Activity.Testing
         /// </summary>
         public override void PrepareData()
         {
-            _SequenceCount = ((_WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved) - _WindowWidth) - _DistanceToForcastHorrison;
+            _SequenceCount = _WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved - _WindowWidth - _DistanceToForcastHorrison;
             Int32 inputCount = _InputNodes.Count;
             Int32 outputCount = _OutputNodes.Count;
 
@@ -137,23 +171,23 @@ namespace Cranium.Lib.Activity.Testing
             Double rmse = 0;
             for (Int32 s = 0; s < _SequenceCount; s++)
             {
-                foreach (Layer layer in _TargetNetwork.GetCurrentLayers()) foreach (BaseNode node in layer.GetNodes()) node.SetValue(0);
+                foreach (BaseNode node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
                 for (Int32 i = 0; i < _WindowWidth; i++)
                 {
                     for (Int32 x = 0; x < _InputNodes.Count; x++) _InputNodes[x].SetValue(_InputSequences[s][i][x]);
                     _TargetNetwork.FowardPass();
-                    if (_UpdatingLayers != null) foreach (RecurrentContext layer in _UpdatingLayers) layer.UpdateExtra();
+                    if (_UpdatingLayers != null) foreach (RecurrentContext layer in _UpdatingLayers.Cast<RecurrentContext>()) layer.UpdateExtra();
                 }
                 for (Int32 x = 0; x < _OutputNodes.Count; x++)
                 {
                     _ActualOutputs[s][x] = _OutputNodes[x].GetValue();
                     _OutputErrors[s][x] = _ExpectedOutputs[s][x] - _ActualOutputs[s][x];
                     errorCount++;
-                    rmse += _OutputErrors[s][x]*_OutputErrors[s][x];
+                    rmse += _OutputErrors[s][x] * _OutputErrors[s][x];
                 }
             }
             //All the sequewnces have been run through and the outputs and their erros collected
-            SlidingWindowTestResults result = new SlidingWindowTestResults {ExpectedOutputs = _ExpectedOutputs, ActualOutputs = _ActualOutputs, OutputErrors = _OutputErrors, Rmse = rmse/errorCount};
+            SlidingWindowTestResults result = new SlidingWindowTestResults {ExpectedOutputs = _ExpectedOutputs, ActualOutputs = _ActualOutputs, OutputErrors = _OutputErrors, Rmse = rmse / errorCount};
             return result;
         }
 
@@ -169,40 +203,6 @@ namespace Cranium.Lib.Activity.Testing
             info.AddValue("_SequenceCount", _SequenceCount);
             info.AddValue("_WindowWidth", _WindowWidth);
             info.AddValue("_WorkingDataset", _WorkingDataset, typeof (Double[][]));
-        }
-
-        /// <summary>
-        ///     Returned results class for the SlidingWindow testing activity
-        /// </summary>
-        public class SlidingWindowTestResults : TestResults
-        {
-            public Double[][] ActualOutputs;
-            public Double[][] ExpectedOutputs;
-            public Double[][] OutputErrors;
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class.
-            /// </summary>
-            public SlidingWindowTestResults() { }
-
-            /// <summary>
-            ///     Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class,
-            ///     used by the serializer.
-            /// </summary>
-            public SlidingWindowTestResults(SerializationInfo info, StreamingContext context) : base(info, context)
-            {
-                ActualOutputs = (Double[][]) info.GetValue("ActualOutputs", ActualOutputs.GetType());
-                ExpectedOutputs = (Double[][]) info.GetValue("ActualOutputs", ExpectedOutputs.GetType());
-                OutputErrors = (Double[][]) info.GetValue("ActualOutputs", OutputErrors.GetType());
-            }
-
-            public override void GetObjectData(SerializationInfo info, StreamingContext context)
-            {
-                base.GetObjectData(info, context);
-                info.AddValue("ActualOutputs", ActualOutputs, ActualOutputs.GetType());
-                info.AddValue("ExpectedOutputs", ExpectedOutputs, ExpectedOutputs.GetType());
-                info.AddValue("OutputErrors", OutputErrors, OutputErrors.GetType());
-            }
         }
     }
 }
