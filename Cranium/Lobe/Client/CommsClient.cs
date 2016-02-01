@@ -32,7 +32,7 @@ namespace Cranium.Lobe.Client
         {
             _IpAddress = ipAddress;
             _Port = port;
-            return _ConnectionToManager.Connect(ipAddress, port, 204800 * 1024);
+            return _ConnectionToManager.Connect(ipAddress, port, 204800 );
         }
 
         public void DisconnectFromManager()
@@ -72,7 +72,7 @@ namespace Cranium.Lobe.Client
                     }
                 }
                 if (_ConnectionToManager.IsConnected()) _ConnectionToManager.Disconnect();
-                _ConnectionToManager.Connect(_IpAddress, _Port, 204800 * 1024);
+                _ConnectionToManager.Connect(_IpAddress, _Port, 204800 );
             }
         }
 
@@ -103,7 +103,7 @@ namespace Cranium.Lobe.Client
                     Thread.Sleep(1);
                 }
                 if (_ConnectionToManager.IsConnected()) _ConnectionToManager.Disconnect();
-                _ConnectionToManager.Connect(_IpAddress, _Port, 204800 * 1024);
+                _ConnectionToManager.Connect(_IpAddress, _Port, 204800 );
             }
         }
     }
