@@ -25,7 +25,7 @@ namespace Cranium.Lobe.Manager
         public ConnectedClient(TcpClient incomingSocket)
             : base(incomingSocket, 204800)
         {
-            _ClientUpdateInterval = new TimeSpan(0, 0, 0, 0, 1);
+            _ClientUpdateInterval = TimeSpan.FromMilliseconds(1);
         }
 
         protected override void ClientUpdateLogic()
@@ -58,7 +58,7 @@ namespace Cranium.Lobe.Manager
         }
 
         /// <summary>
-        ///     Handels a packet of type 1000, this packet should be used to sent a work request
+        ///     Handels a packet of type 1000, this packet should be used to send a work request
         /// </summary>
         /// <param name="p"></param>
         protected void HandelA1000(Packet p)
@@ -67,11 +67,10 @@ namespace Cranium.Lobe.Manager
             Guid jobGuid = Guid.NewGuid();
             Byte[] jobData = (Byte[]) packetObjects[0];
 
-            Base activity;
             try
             {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
-                activity = (Base) binaryFormatter.Deserialize(new MemoryStream(jobData));
+                Base activity = (Base) binaryFormatter.Deserialize(new MemoryStream(jobData));
                 activity.SetGuid(jobGuid);
 
                 Packet returnPacket = new Packet(1001);

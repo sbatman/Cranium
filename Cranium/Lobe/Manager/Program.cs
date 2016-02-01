@@ -44,13 +44,13 @@ namespace Cranium.Lobe.Manager
             Console.WriteLine("Starting Comms Server for workers");
             _CommsServerWorker = new BaseServer();
             _CommsServerWorker.Init(SettingsLoader.CommsWorkerLocalIp.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsWorkerPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsWorkerLocalIp), SettingsLoader.CommsWorkerPort), typeof (ConnectedWorker));
-            Console.WriteLine("Comms Server for workers Online at " + SettingsLoader.CommsWorkerLocalIp + ":" + SettingsLoader.CommsWorkerPort);
+            Console.WriteLine("Comms Server for workers Online at {0}:{1}", SettingsLoader.CommsWorkerLocalIp, SettingsLoader.CommsWorkerPort);
 
             Console.WriteLine("Loading Pending Work");
             if (Directory.Exists("Pending"))
             {
                 String[] files = Directory.GetFiles("Pending");
-                Console.WriteLine("Possible " + files.Length + " jobs found, loading ..");
+                Console.WriteLine("Possible {0} jobs found, loading ..", files.Length);
                 foreach (String file in files)
                 {
                     try

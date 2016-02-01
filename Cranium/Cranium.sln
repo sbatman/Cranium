@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cranium", "Cranium.csproj", "{9553B26D-5D2D-4013-82E1-4D7A24D526D8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibTest", "libtest\LibTest.csproj", "{509EEFCA-0006-4685-B217-A255BA989BD5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Libs", "Libs", "{753A0852-4155-42E3-B28B-93F9BB83FA4C}"
@@ -15,12 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{08652AB1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lobe", "Lobe", "{609D120C-9AD4-43AB-B100-DD134ABD91F1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Client", "Lobe.Client\Lobe.Client.csproj", "{DB8195A8-0085-4866-BE7A-065CED69CE4C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Worker", "Lobe.Worker\Lobe.Worker.csproj", "{F26E3FEE-F29B-4027-9187-A0983763A3D8}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Manager", "Lobe.Manager\Lobe.Manager.csproj", "{A1601401-0896-4016-B519-1A83FD31D337}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3DC415D9-7742-40BC-95D0-8BAEC9A5C775}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
@@ -28,16 +20,20 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{3DC415
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Client", "Lobe\Client\Lobe.Client.csproj", "{DB8195A8-0085-4866-BE7A-065CED69CE4C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Manager", "Lobe\Manager\Lobe.Manager.csproj", "{A1601401-0896-4016-B519-1A83FD31D337}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Worker", "Lobe\Worker\Lobe.Worker.csproj", "{F26E3FEE-F29B-4027-9187-A0983763A3D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cranium", "Lib\Cranium.csproj", "{9553B26D-5D2D-4013-82E1-4D7A24D526D8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{509EEFCA-0006-4685-B217-A255BA989BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{509EEFCA-0006-4685-B217-A255BA989BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{509EEFCA-0006-4685-B217-A255BA989BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -46,25 +42,29 @@ Global
 		{DB8195A8-0085-4866-BE7A-065CED69CE4C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DB8195A8-0085-4866-BE7A-065CED69CE4C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DB8195A8-0085-4866-BE7A-065CED69CE4C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A1601401-0896-4016-B519-1A83FD31D337}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A1601401-0896-4016-B519-1A83FD31D337}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1601401-0896-4016-B519-1A83FD31D337}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1601401-0896-4016-B519-1A83FD31D337}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8} = {753A0852-4155-42E3-B28B-93F9BB83FA4C}
 		{509EEFCA-0006-4685-B217-A255BA989BD5} = {EAC19993-FB6C-4682-9FCC-5388032CEDF2}
 		{609D120C-9AD4-43AB-B100-DD134ABD91F1} = {08652AB1-F209-41D0-8A22-11D3B59572E5}
 		{DB8195A8-0085-4866-BE7A-065CED69CE4C} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
-		{F26E3FEE-F29B-4027-9187-A0983763A3D8} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
 		{A1601401-0896-4016-B519-1A83FD31D337} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
+		{F26E3FEE-F29B-4027-9187-A0983763A3D8} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
+		{9553B26D-5D2D-4013-82E1-4D7A24D526D8} = {753A0852-4155-42E3-B28B-93F9BB83FA4C}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = libtest\LibTest.csproj

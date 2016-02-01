@@ -74,7 +74,7 @@ namespace Cranium.Lib.Data
             {
                 for (Int32 y = 0; y < data[x].GetLength(0); y++)
                 {
-                    if (y + 1 < data[x].GetLength(0)) theString.Append(data[x][y] + ",");
+                    if (y + 1 < data[x].GetLength(0)) theString.AppendFormat("{0},", data[x][y]);
                     else theString.Append(data[x][y]);
                 }
                 theString.AppendLine();
