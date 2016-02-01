@@ -46,9 +46,9 @@ namespace Cranium.Lib.Activity.Testing
             /// </summary>
             public SlidingWindowTestResults(SerializationInfo info, StreamingContext context) : base(info, context)
             {
-                ActualOutputs = (Double[][]) info.GetValue("ActualOutputs", ActualOutputs.GetType());
-                ExpectedOutputs = (Double[][]) info.GetValue("ActualOutputs", ExpectedOutputs.GetType());
-                OutputErrors = (Double[][]) info.GetValue("ActualOutputs", OutputErrors.GetType());
+                ActualOutputs = (Double[][])info.GetValue("ActualOutputs", ActualOutputs.GetType());
+                ExpectedOutputs = (Double[][])info.GetValue("ActualOutputs", ExpectedOutputs.GetType());
+                OutputErrors = (Double[][])info.GetValue("ActualOutputs", OutputErrors.GetType());
             }
 
             public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -76,15 +76,15 @@ namespace Cranium.Lib.Activity.Testing
 
         public SlidingWindow(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _ActualOutputs = (Double[][]) info.GetValue("_ActualOutputs", typeof (Double[][]));
+            _ActualOutputs = (Double[][])info.GetValue("_ActualOutputs", typeof(Double[][]));
             _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
-            _ExpectedOutputs = (Double[][]) info.GetValue("_ExpectedOutputs", typeof (Double[][]));
-            _InputSequences = (Double[][][]) info.GetValue("_InputSequences", typeof (Double[][][]));
-            _OutputErrors = (Double[][]) info.GetValue("_OutputErrors", typeof (Double[][]));
+            _ExpectedOutputs = (Double[][])info.GetValue("_ExpectedOutputs", typeof(Double[][]));
+            _InputSequences = (Double[][][])info.GetValue("_InputSequences", typeof(Double[][][]));
+            _OutputErrors = (Double[][])info.GetValue("_OutputErrors", typeof(Double[][]));
             _PortionOfDatasetReserved = info.GetInt32("_PortionOfDatasetReserved");
             _SequenceCount = info.GetInt32("_SequenceCount");
             _WindowWidth = info.GetInt32("_WindowWidth");
-            _WorkingDataset = (Double[][]) info.GetValue("_WorkingDataset", typeof (Double[][]));
+            _WorkingDataset = (Double[][])info.GetValue("_WorkingDataset", typeof(Double[][]));
         }
 
         /// <summary>
@@ -121,6 +121,11 @@ namespace Cranium.Lib.Activity.Testing
         public virtual void SetWorkingDataset(Double[][] dataset)
         {
             _WorkingDataset = dataset;
+        }
+
+        public virtual Double[][] GetWorkingDataset()
+        {
+            return _WorkingDataset;
         }
 
         /// <summary>
@@ -187,22 +192,22 @@ namespace Cranium.Lib.Activity.Testing
                 }
             }
             //All the sequewnces have been run through and the outputs and their erros collected
-            SlidingWindowTestResults result = new SlidingWindowTestResults {ExpectedOutputs = _ExpectedOutputs, ActualOutputs = _ActualOutputs, OutputErrors = _OutputErrors, Rmse = rmse / errorCount};
+            SlidingWindowTestResults result = new SlidingWindowTestResults { ExpectedOutputs = _ExpectedOutputs, ActualOutputs = _ActualOutputs, OutputErrors = _OutputErrors, Rmse = rmse / errorCount };
             return result;
         }
 
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("_ActualOutputs", _ActualOutputs, typeof (Double[][]));
+            info.AddValue("_ActualOutputs", _ActualOutputs, typeof(Double[][]));
             info.AddValue("_DistanceToForcastHorrison", _DistanceToForcastHorrison);
-            info.AddValue("_ExpectedOutputs", _ExpectedOutputs, typeof (Double[][]));
-            info.AddValue("_InputSequences", _InputSequences, typeof (Double[][][]));
-            info.AddValue("_OutputErrors", _OutputErrors, typeof (Double[][]));
+            info.AddValue("_ExpectedOutputs", _ExpectedOutputs, typeof(Double[][]));
+            info.AddValue("_InputSequences", _InputSequences, typeof(Double[][][]));
+            info.AddValue("_OutputErrors", _OutputErrors, typeof(Double[][]));
             info.AddValue("_PortionOfDatasetReserved", _PortionOfDatasetReserved);
             info.AddValue("_SequenceCount", _SequenceCount);
             info.AddValue("_WindowWidth", _WindowWidth);
-            info.AddValue("_WorkingDataset", _WorkingDataset, typeof (Double[][]));
+            info.AddValue("_WorkingDataset", _WorkingDataset, typeof(Double[][]));
         }
     }
 }

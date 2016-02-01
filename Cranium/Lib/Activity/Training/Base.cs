@@ -150,6 +150,11 @@ namespace Cranium.Lib.Activity.Training
             _WorkingDataset = workingDataset;
         }
 
+        public virtual Double[][] GetWorkingDataset()
+        {
+            return _WorkingDataset;
+        }
+
         /// <summary>
         ///     Sets the maximum epochs.
         /// </summary>

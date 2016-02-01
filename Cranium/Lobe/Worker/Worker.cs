@@ -116,7 +116,7 @@ namespace Cranium.Lobe.Worker
             AnnounceStatus("Connecting To Manager");
             lock (PacketsToBeProcessed)
             {
-                if (!ConnectionToLobeManager.Connect(_Settings.CommsManagerIp, _Settings.CommsManagerPort, 204800 * 1024)) AnnounceStatus("Unable to communicate with specified lobe manager, aborting!");
+                if (!ConnectionToLobeManager.Connect(_Settings.CommsManagerIp, _Settings.CommsManagerPort, 204800 )) AnnounceStatus("Unable to communicate with specified lobe manager, aborting!");
             }
 
             AnnounceStatus("Lobe Worker Online");
@@ -134,7 +134,7 @@ namespace Cranium.Lobe.Worker
                         String error = ConnectionToLobeManager.GetError();
                         if (!String.IsNullOrEmpty(error)) Console.WriteLine("Net Error " + error);
                         AnnounceStatus("Unable to communicate with specified lobe manager, Attempting to reconnect");
-                        if (ConnectionToLobeManager.Connect(_Settings.CommsManagerIp, _Settings.CommsManagerPort, 204800 * 1024)) AnnounceStatus("Connection Re-established");
+                        if (ConnectionToLobeManager.Connect(_Settings.CommsManagerIp, _Settings.CommsManagerPort, 204800 )) AnnounceStatus("Connection Re-established");
                         _CanRequestWork = true;
                     }
                     else

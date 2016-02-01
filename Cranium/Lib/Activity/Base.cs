@@ -22,6 +22,7 @@ namespace Cranium.Lib.Activity
     {
         private const UInt16 PACKETIDENTIFIER = 585;
         protected Guid _ActivityInstanceIdentifier;
+        protected String _ActivityNotes;
 
         protected Base()
         {
@@ -30,13 +31,21 @@ namespace Cranium.Lib.Activity
         protected Base(SerializationInfo info, StreamingContext context)
         {
             _ActivityInstanceIdentifier = (Guid) info.GetValue("_ActivityInstanceIdentifier", typeof (Guid));
+            ActivityNotes = info.GetString("_ActivityNotes");
         }
 
         protected Base(Packet p)
         {
             if (p.Type != PACKETIDENTIFIER) throw new Exception("Inforrect packet identifer");
             _ActivityInstanceIdentifier = new Guid((Byte[]) p.GetObjects()[0]);
+            ActivityNotes = (String)p.GetObjects()[1];
             p.Dispose();
+        }
+
+        public String ActivityNotes
+        {
+            get { return _ActivityNotes; }
+            set { _ActivityNotes = value; }
         }
 
         public virtual void Dispose()
@@ -45,7 +54,8 @@ namespace Cranium.Lib.Activity
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("_ActivityInstanceIdentifier", _ActivityInstanceIdentifier, typeof (Guid));
+            info.AddValue("_ActivityInstanceIdentifier", _ActivityInstanceIdentifier, typeof(Guid));
+            info.AddValue("_ActivityNotes", ActivityNotes, typeof(String));
         }
 
         public virtual Packet ToPacket()
