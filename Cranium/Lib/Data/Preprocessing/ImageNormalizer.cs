@@ -26,7 +26,7 @@ namespace Cranium.Lib.Data.Preprocessing
 
         public class PreProcessedImage : Image
         {
-            public Byte[] BWMap;
+            public Byte[] BwMap;
             public Int32 ProcessedHeight;
             public Int32 ProcessedWidth;
         }
@@ -41,7 +41,7 @@ namespace Cranium.Lib.Data.Preprocessing
                 FileName = input.FileName,
                 ProcessedWidth = targetWidth,
                 ProcessedHeight = targetHeight,
-                BWMap = new Byte[targetWidth * targetHeight]
+                BwMap = new Byte[targetWidth * targetHeight]
             };
 
             for (Int32 x = 0; x < targetWidth; x++)
@@ -49,7 +49,7 @@ namespace Cranium.Lib.Data.Preprocessing
                 for (Int32 y = 0; y < targetHeight; y++)
                 {
                     Byte[] target = PickPixel(x, y, returnImage);
-                    returnImage.BWMap[x + y * targetWidth] = (Byte) (255 - target[0]);
+                    returnImage.BwMap[x + y * targetWidth] = (Byte) (255 - target[0]);
                 }
             }
 

@@ -38,12 +38,12 @@ namespace Cranium.Lobe.Manager
             //Online The Comms system
             Console.WriteLine("Starting Comms Server for clients");
             _CommsServerClient = new BaseServer();
-            _CommsServerClient.Init(SettingsLoader.CommsClientLocalIp.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsClientPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsClientLocalIp), SettingsLoader.CommsClientPort), typeof (ConnectedClient));
+            _CommsServerClient.Init(SettingsLoader.CommsClientLocalIp.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsClientPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsClientLocalIp), SettingsLoader.CommsClientPort), typeof(ConnectedClient));
             Console.WriteLine("Comms Server for clients Online at " + SettingsLoader.CommsClientLocalIp + ":" + SettingsLoader.CommsClientPort);
 
             Console.WriteLine("Starting Comms Server for workers");
             _CommsServerWorker = new BaseServer();
-            _CommsServerWorker.Init(SettingsLoader.CommsWorkerLocalIp.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsWorkerPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsWorkerLocalIp), SettingsLoader.CommsWorkerPort), typeof (ConnectedWorker));
+            _CommsServerWorker.Init(SettingsLoader.CommsWorkerLocalIp.Equals("any", StringComparison.InvariantCultureIgnoreCase) ? new IPEndPoint(IPAddress.Any, SettingsLoader.CommsWorkerPort) : new IPEndPoint(IPAddress.Parse(SettingsLoader.CommsWorkerLocalIp), SettingsLoader.CommsWorkerPort), typeof(ConnectedWorker));
             Console.WriteLine("Comms Server for workers Online at {0}:{1}", SettingsLoader.CommsWorkerLocalIp, SettingsLoader.CommsWorkerPort);
 
             Console.WriteLine("Loading Pending Work");
@@ -57,11 +57,11 @@ namespace Cranium.Lobe.Manager
                     {
                         FileStream stream = File.OpenRead(file);
                         BinaryFormatter binaryFormatter = new BinaryFormatter();
-                        Base work = (Base) binaryFormatter.Deserialize(stream);
+                        Base work = (Base)binaryFormatter.Deserialize(stream);
                         stream.Close();
                         lock (_PendingWork)
                         {
-                            _PendingWork.Add(work.GetGuid());
+                            _PendingWork.Add(work.ActivityInstanceIdentifier);
                         }
                     }
                     catch (Exception e)
@@ -86,7 +86,7 @@ namespace Cranium.Lobe.Manager
                     {
                         _WorkBeingProcessed.Remove(tuple);
                         AddJob(tuple.Item1);
-                        Console.WriteLine("Job lost Reschedualing " + tuple.Item1.GetGuid());
+                        Console.WriteLine("Job lost Reschedualing " + tuple.Item1.ActivityInstanceIdentifier);
                     }
                 }
                 Thread.Sleep(500);
@@ -97,10 +97,10 @@ namespace Cranium.Lobe.Manager
         {
             lock (_PendingWork)
             {
-                _PendingWork.Add(work.GetGuid());
+                _PendingWork.Add(work.ActivityInstanceIdentifier);
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
                 if (!Directory.Exists("Pending")) Directory.CreateDirectory("Pending");
-                FileStream stream = File.Create("Pending/" + work.GetGuid() + ".dat");
+                FileStream stream = File.Create("Pending/" + work.ActivityInstanceIdentifier + ".dat");
                 binaryFormatter.Serialize(stream, work);
                 stream.Close();
             }
@@ -118,7 +118,7 @@ namespace Cranium.Lobe.Manager
                 if (!Directory.Exists("Pending")) Directory.CreateDirectory("Pending");
                 FileStream stream = File.OpenRead("Pending/" + _PendingWork[0] + ".dat");
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
-                Base work = (Base) binaryFormatter.Deserialize(stream);
+                Base work = (Base)binaryFormatter.Deserialize(stream);
                 stream.Close();
 
                 _PendingWork.RemoveAt(0);
@@ -133,16 +133,21 @@ namespace Cranium.Lobe.Manager
             {
                 lock (_WorkBeingProcessed)
                 {
-                    if (_WorkBeingProcessed.Count(a => a.Item1.GetGuid() == completedWork.GetGuid()) <= 0) return;
-                    _CompleteWork.Add(completedWork.GetGuid());
+                    if (_WorkBeingProcessed.Count(a => a.Item1.ActivityInstanceIdentifier == completedWork.ActivityInstanceIdentifier) <= 0) return;
+                    _CompleteWork.Add(completedWork.ActivityInstanceIdentifier);
                     BinaryFormatter binaryFormatter = new BinaryFormatter();
+
                     if (!Directory.Exists("Completed")) Directory.CreateDirectory("Completed");
-                    if (File.Exists("Pending/" + completedWork.GetGuid() + ".dat")) File.Delete("Pending/" + completedWork.GetGuid() + ".dat");
-                    FileStream stream = File.Create("Completed/" + completedWork.GetGuid() + ".dat");
+
+                    String filename = completedWork.ActivityInstanceIdentifier + ".dat";
+
+                    if (File.Exists($"Pending/{filename}")) File.Delete($"Pending/{filename}");
+
+                    FileStream stream = File.Create($"Completed/{filename}");
                     binaryFormatter.Serialize(stream, completedWork);
                     stream.Close();
-                    _WorkBeingProcessed.RemoveAll(a => a.Item1.GetGuid() == completedWork.GetGuid());
-                    Console.WriteLine("Completed Job Registered " + completedWork.GetGuid());
+                    _WorkBeingProcessed.RemoveAll(a => a.Item1.ActivityInstanceIdentifier == completedWork.ActivityInstanceIdentifier);
+                    Console.WriteLine("Completed Job Registered " + completedWork.ActivityInstanceIdentifier);
                 }
             }
         }
@@ -151,15 +156,17 @@ namespace Cranium.Lobe.Manager
         {
             lock (_CompleteWork)
             {
+                String filename = $"Completed/{jobGuid}.dat";
+
                 if (!_CompleteWork.Contains(jobGuid))
                 {
-                    if (File.Exists("Completed/" + jobGuid + ".dat")) _CompleteWork.Add(jobGuid);
+                    if (File.Exists(filename)) _CompleteWork.Add(jobGuid);
                 }
                 if (_CompleteWork.Contains(jobGuid))
                 {
-                    FileStream stream = File.OpenRead("Completed/" + jobGuid + ".dat");
+                    FileStream stream = File.OpenRead(filename);
                     BinaryFormatter binaryFormatter = new BinaryFormatter();
-                    Base work = (Base) binaryFormatter.Deserialize(stream);
+                    Base work = (Base)binaryFormatter.Deserialize(stream);
                     stream.Close();
                     return work;
                 }

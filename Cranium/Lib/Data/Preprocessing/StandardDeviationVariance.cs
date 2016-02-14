@@ -57,16 +57,16 @@ namespace Cranium.Lib.Data.Preprocessing
 
             List<String> data = new List<String>();
             while (!fileStream.EndOfStream) data.Add(fileStream.ReadLine());
-            Int32 columnCount = data[0].Split((Char) 44).Length;
+            Int32 columnCount = data[0].Split((Char)44).Length;
             Double[][] workingDataSet = new Double[columnCount][];
             for (Int32 i = 0; i < columnCount; i++) workingDataSet[i] = new Double[data.Count];
             for (Int32 i = 0; i < data.Count; i++)
             {
-                String[] currentLine = data[i].Split((Char) 44);
+                String[] currentLine = data[i].Split((Char)44);
                 for (Int32 x = 0; x < columnCount; x++) workingDataSet[x][i] = Double.Parse(currentLine[x]);
             }
             fileStream.Close();
-            DataPreprocessedStandardDeviationVariance returnResult = new DataPreprocessedStandardDeviationVariance {DataSet = workingDataSet};
+            DataPreprocessedStandardDeviationVariance returnResult = new DataPreprocessedStandardDeviationVariance { DataSet = workingDataSet };
             ProcessData(ref returnResult);
             return returnResult;
             //	}
@@ -89,7 +89,7 @@ namespace Cranium.Lib.Data.Preprocessing
         {
             try
             {
-                DataPreprocessedStandardDeviationVariance returnResult = new DataPreprocessedStandardDeviationVariance {DataSet = inputData};
+                DataPreprocessedStandardDeviationVariance returnResult = new DataPreprocessedStandardDeviationVariance { DataSet = inputData };
                 ProcessData(ref returnResult);
                 return returnResult;
             }
@@ -127,17 +127,18 @@ namespace Cranium.Lib.Data.Preprocessing
 
                 Double min = 0;
                 Double max = 0;
+
                 //Processing The Data
                 for (Int32 y = 0; y < rowCount; y++)
                 {
                     inputData.DataSet[x][y] = (inputData.DataSet[x][y] - avg) / stdv;
-                    if (inputData.DataSet[x][y] < min) min = inputData.DataSet[x][y];
-                    if (inputData.DataSet[x][y] > max) max = inputData.DataSet[x][y];
+                    min = Math.Min(min, inputData.DataSet[x][y]);
+                    max = Math.Max(max, inputData.DataSet[x][y]);
                 }
                 inputData.Average[x] = avg;
                 inputData.StandardDeviation[x] = stdv;
 
-                //Need to bring the data within the -1 to 1 range for maximising the effectiveness of most non-linear activation functions present at this time
+                //Need to bring the data within the -1 to 1 range for maximising the effectiveness of most non-linear activation functions present in the lib
                 Double scale = max;
                 if (0 - min > scale) scale = -min;
                 //  if (1 > scale) scale = 1;

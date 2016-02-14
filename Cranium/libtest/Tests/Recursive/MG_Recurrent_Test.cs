@@ -26,7 +26,7 @@ using Cranium.Lib.Structure.Node;
 
 #endregion
 
-namespace Cranium.LibTest.Tests.Recursive
+namespace Cranium.Lib.Test.Tests.Recursive
 {
     /// <summary>
     ///     This is a test of a neural network that can show successful learning of the Mackey-Glass time series dataset using
@@ -96,9 +96,9 @@ namespace Cranium.LibTest.Tests.Recursive
             // The rate at which the neural entwork learns (the more agressive this is the harded itll be for the network)
             _SlidingWindowTraining.SetDatasetReservedLength(0);
             // How many elements off the end of the dataset should not be used for training
-            _SlidingWindowTraining.SetDistanceToForcastHorrison(3);
+            _SlidingWindowTraining.DistanceToForcastHorrison=(3);
             // How far beyond the window should be be trying to predict
-            _SlidingWindowTraining.SetWindowWidth(12);
+            _SlidingWindowTraining.WindowWidth=(12);
             // The window of elements that should be presented before the backward pass is performed
             _SlidingWindowTraining.SetMaximumEpochs(20); // The maximum number of epochs the network can train for
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes); // Setting the nodes that are used for input
@@ -127,7 +127,7 @@ namespace Cranium.LibTest.Tests.Recursive
 
             Console.WriteLine("Starting Testing");
 
-            Lib.Activity.Testing.SlidingWindow slidingWindowTesting = new Lib.Activity.Testing.SlidingWindow();
+            Activity.Testing.SlidingWindow slidingWindowTesting = new Activity.Testing.SlidingWindow();
             slidingWindowTesting.SetDatasetReservedLength(0);
             slidingWindowTesting.SetInputNodes(_InputLayerNodes);
             slidingWindowTesting.SetOutputNodes(_OuputLayerNodes);
@@ -136,7 +136,7 @@ namespace Cranium.LibTest.Tests.Recursive
             slidingWindowTesting.SetWindowWidth(12);
             slidingWindowTesting.SetDistanceToForcastHorrison(3);
             slidingWindowTesting.SetTargetNetwork(_TestNetworkStructure);
-            Lib.Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Lib.Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
+            Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
 
             Console.WriteLine(result.Rmse);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");

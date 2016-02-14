@@ -280,11 +280,11 @@ namespace Cranium.Lib.Structure.Node
                     if (w.NodeB != null)
                     {
                         w.NodeB._TReverseWeights = null;
-                        if (w.NodeB._ReverseWeights != null) w.NodeB._ReverseWeights.Remove(w);
+                        w.NodeB._ReverseWeights?.Remove(w);
                     }
                     w.Dispose();
                 }
-                if (_ForwardWeights != null) _ForwardWeights.Clear();
+                _ForwardWeights?.Clear();
                 _TFowardWeights = null;
             }
             if (_TReverseWeights != null)
@@ -298,7 +298,7 @@ namespace Cranium.Lib.Structure.Node
                     }
                     w.Dispose();
                 }
-                if (_ReverseWeights != null) _ReverseWeights.Clear();
+                _ReverseWeights?.Clear();
                 _TReverseWeights = null;
             }
         }

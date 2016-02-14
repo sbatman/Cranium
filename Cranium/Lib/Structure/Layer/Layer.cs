@@ -14,6 +14,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.Node;
 
@@ -253,8 +254,7 @@ namespace Cranium.Lib.Structure.Layer
         public virtual BaseNode GetNodeByID(Int32 id)
         {
             //look for a node with matching ID if we can find it return it else return null
-            foreach (BaseNode n in _Nodes) if (n.GetID() == id) return n;
-            return null;
+            return _Nodes.FirstOrDefault(n => n.GetID() == id);
         }
 
         #region ISerializable implementation

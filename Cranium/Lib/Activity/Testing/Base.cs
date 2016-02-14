@@ -81,7 +81,7 @@ namespace Cranium.Lib.Activity.Testing
         /// <summary>
         ///     The current Recurrent layers that has been assigned for use during this test
         /// </summary>
-        protected List<Layer> _UpdatingLayers;
+        protected List<Layer> _UpdatingLayers = new List<Layer>();
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Activity.Testing.Base" /> class.

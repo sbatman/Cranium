@@ -71,7 +71,7 @@ namespace Cranium.Lobe.Manager
             {
                 BinaryFormatter binaryFormatter = new BinaryFormatter();
                 Base activity = (Base) binaryFormatter.Deserialize(new MemoryStream(jobData));
-                activity.SetGuid(jobGuid);
+                activity.ActivityInstanceIdentifier=(jobGuid);
 
                 Packet returnPacket = new Packet(1001);
                 returnPacket.Add(jobGuid.ToByteArray(), true);

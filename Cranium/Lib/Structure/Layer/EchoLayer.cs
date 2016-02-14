@@ -1,4 +1,4 @@
-// //////////////////////
+ // //////////////////////
 //  
 // Cranium - A neural network framework for C#
 // https://github.com/sbatman/Cranium.git
@@ -12,6 +12,7 @@
 #region Usings
 
 using System;
+using System.Linq;
 using System.Runtime.Serialization;
 using Cranium.Lib.Structure.ActivationFunction;
 using Cranium.Lib.Structure.Node;
@@ -105,8 +106,6 @@ namespace Cranium.Lib.Structure.Layer
         {
             _NodeCount = info.GetInt32("_NodeCount");
             _LevelOfConnectivity = info.GetDouble("_LevelOfConnectivity");
-            _MinimumConnections = info.GetInt32("_MinimumConnections");
-            _MaximumConnections = info.GetInt32("_MaximumConnections");
             _ActivationFunction = (AF) info.GetValue("_ActivationFunction", typeof (AF));
             _Rnd = (Random) info.GetValue("_Rnd", typeof (Random));
         }
@@ -145,9 +144,11 @@ namespace Cranium.Lib.Structure.Layer
             for (Int32 x = 0; x < _NodeCount; x++) _Nodes.Add(new BaseNode(this, _ActivationFunction));
             foreach (BaseNode node in _Nodes)
             {
-                Int32 connections = _MinimumConnections;
-                for (Int32 x = 0; x < _MaximumConnections - _MinimumConnections; x++) connections += _Rnd.NextDouble() > _LevelOfConnectivity ? 0 : 1;
-                for (Int32 i = 0; i < connections; i++) node.ConnectToNode(_Nodes[_Rnd.Next(0, _Nodes.Count)], Weight.Weight.ConnectionDirection.FORWARD, 0);
+                foreach (BaseNode node2 in _Nodes.Where(node2 => _Rnd.NextDouble() < _LevelOfConnectivity))
+                {
+                    node.ConnectToNode(node2, Weight.Weight.ConnectionDirection.FORWARD,0 );
+                }
+
             }
         }
 
@@ -175,8 +176,6 @@ namespace Cranium.Lib.Structure.Layer
             base.GetObjectData(info, context);
             info.AddValue("_NodeCount", _NodeCount);
             info.AddValue("_LevelOfConnectivity", _LevelOfConnectivity);
-            info.AddValue("_MinimumConnections", _MinimumConnections);
-            info.AddValue("_MaximumConnections", _MaximumConnections);
             info.AddValue("_ActivationFunction", _ActivationFunction, _ActivationFunction.GetType());
             info.AddValue("_Rnd", _Rnd, typeof (Random));
         }

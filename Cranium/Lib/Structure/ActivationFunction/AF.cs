@@ -61,7 +61,7 @@ namespace Cranium.Lib.Structure.ActivationFunction
 
         #region ISerializable implementation
 
-        public AF(SerializationInfo info, StreamingContext context)
+        protected AF(SerializationInfo info, StreamingContext context)
         {
         }
 

@@ -37,17 +37,17 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
             public override void PrepareData()
             {
-                _SequenceCount = (_WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved) / _WindowWidth;
+                _SequenceCount = (_WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved) / WindowWidth;
                 Int32 inputCount = _InputNodes.Count;
                 Int32 outputCount = _OutputNodes.Count;
-                _InputSequences = new Double[_SequenceCount, _WindowWidth, inputCount];
-                ExpectedOutputs = new Double[_SequenceCount, _WindowWidth, outputCount];
+                _InputSequences = new Double[_SequenceCount, WindowWidth, inputCount];
+                ExpectedOutputs = new Double[_SequenceCount, WindowWidth, outputCount];
                 for (Int32 i = 0; i < _SequenceCount; i++)
                 {
-                    for (Int32 j = 0; j < _WindowWidth; j++)
+                    for (Int32 j = 0; j < WindowWidth; j++)
                     {
-                        _InputSequences[i, j, 0] = _WorkingDataset[0][i * _WindowWidth + j];
-                        ExpectedOutputs[i, j, 0] = _WorkingDataset[1][i * _WindowWidth + j];
+                        _InputSequences[i, j, 0] = _WorkingDataset[0][i * WindowWidth + j];
+                        ExpectedOutputs[i, j, 0] = _WorkingDataset[1][i * WindowWidth + j];
                     }
                 }
             }
@@ -58,9 +58,9 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 Double error = 0;
 
                 // if the Dynamic Learning Rate delegate is set call it
-                if (_DynamicLearningRate != null) _TargetNetwork.SetLearningRate(_DynamicLearningRate(CurrentEpoch, _LastPassAverageError));
+                if (_DynamicLearningRate != null) _TargetNetwork.LearningRate=(_DynamicLearningRate(CurrentEpoch, _LastPassAverageError));
                 // if the Dynamic Momentum delegate is set call it
-                if (_DynamicMomentum != null) _TargetNetwork.SetMomentum(_DynamicMomentum(CurrentEpoch, _LastPassAverageError));
+                if (_DynamicMomentum != null) _TargetNetwork.Momentum=(_DynamicMomentum(CurrentEpoch, _LastPassAverageError));
 
                 List<Int32> sequencyList = new List<Int32>(_SequenceCount);
 
@@ -74,7 +74,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
 
                     foreach (BaseNode node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
-                    for (Int32 i = 0; i < _WindowWidth; i++)
+                    for (Int32 i = 0; i < WindowWidth; i++)
                     {
                         //   Console.Write("present :"+_InputSequences[s, i, 0]);
                         for (Int32 x = 0; x < _InputNodes.Count; x++) _InputNodes[x].SetValue(_InputSequences[s, i, x]);
@@ -141,8 +141,8 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _SlidingWindowTraining.SetMomentum(0.8f);
             _SlidingWindowTraining.SetLearningRate(0.05f);
             _SlidingWindowTraining.SetDatasetReservedLength(0);
-            _SlidingWindowTraining.SetDistanceToForcastHorrison(0);
-            _SlidingWindowTraining.SetWindowWidth(300);
+            _SlidingWindowTraining.DistanceToForcastHorrison=(0);
+            _SlidingWindowTraining.WindowWidth=(300);
             _SlidingWindowTraining.SetMaximumEpochs(1000);
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);

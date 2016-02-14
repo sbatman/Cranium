@@ -50,7 +50,7 @@ namespace Cranium.Lobe.Worker
                     }
                     else
                     {
-                        _ParentWorker.AnnounceStatus("Worker service starting job " + _CurrentWork.GetGuid());
+                        _ParentWorker.AnnounceStatus("Worker service starting job " + _CurrentWork.ActivityInstanceIdentifier);
                         Lib.Activity.Training.Base work = _CurrentWork as Lib.Activity.Training.Base;
                         if (work != null)
                         {
@@ -58,7 +58,7 @@ namespace Cranium.Lobe.Worker
                             trainingWork.StartSynchronous();
                             _ParentWorker.AddToCompletedWork(trainingWork);
                         }
-                        _ParentWorker.AnnounceStatus("Worker service Completed job " + _CurrentWork.GetGuid());
+                        _ParentWorker.AnnounceStatus("Worker service Completed job " + _CurrentWork.ActivityInstanceIdentifier);
                         _CurrentWork = null;
                     }
                     Thread.Sleep(100);

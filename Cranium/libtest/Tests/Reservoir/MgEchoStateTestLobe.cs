@@ -63,8 +63,8 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 slidingWindowTraining.SetMomentum(0.5f);
                 slidingWindowTraining.SetLearningRate(0.004f);
                 slidingWindowTraining.SetDatasetReservedLength(0);
-                slidingWindowTraining.SetDistanceToForcastHorrison(3);
-                slidingWindowTraining.SetWindowWidth(12);
+                slidingWindowTraining.DistanceToForcastHorrison=(3);
+                slidingWindowTraining.WindowWidth=(12);
                 slidingWindowTraining.SetMaximumEpochs(100);
                 slidingWindowTraining.SetInputNodes(inputLayerNodes);
                 slidingWindowTraining.SetOutputNodes(ouputLayerNodes);

@@ -13,14 +13,12 @@ using System;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
-using Sbatman.Serialize;
 
 namespace Cranium.Lib.Activity
 {
     [Serializable]
     public abstract class Base : ISerializable, IDisposable
     {
-        private const UInt16 PACKETIDENTIFIER = 585;
         protected Guid _ActivityInstanceIdentifier;
         protected String _ActivityNotes;
 
@@ -30,22 +28,19 @@ namespace Cranium.Lib.Activity
 
         protected Base(SerializationInfo info, StreamingContext context)
         {
-            _ActivityInstanceIdentifier = (Guid) info.GetValue("_ActivityInstanceIdentifier", typeof (Guid));
-            ActivityNotes = info.GetString("_ActivityNotes");
-        }
-
-        protected Base(Packet p)
-        {
-            if (p.Type != PACKETIDENTIFIER) throw new Exception("Inforrect packet identifer");
-            _ActivityInstanceIdentifier = new Guid((Byte[]) p.GetObjects()[0]);
-            ActivityNotes = (String)p.GetObjects()[1];
-            p.Dispose();
+            ActivityInstanceIdentifier = (Guid) info.GetValue("_ActivityInstanceIdentifier", typeof (Guid));
+            _ActivityNotes = info.GetString("_ActivityNotes");
         }
 
         public String ActivityNotes
         {
             get { return _ActivityNotes; }
             set { _ActivityNotes = value; }
+        }
+        public Guid ActivityInstanceIdentifier
+        {
+            get { return _ActivityInstanceIdentifier; }
+            set { _ActivityInstanceIdentifier = value; }
         }
 
         public virtual void Dispose()
@@ -54,25 +49,8 @@ namespace Cranium.Lib.Activity
 
         public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            info.AddValue("_ActivityInstanceIdentifier", _ActivityInstanceIdentifier, typeof(Guid));
+            info.AddValue("_ActivityInstanceIdentifier", ActivityInstanceIdentifier, typeof(Guid));
             info.AddValue("_ActivityNotes", ActivityNotes, typeof(String));
-        }
-
-        public virtual Packet ToPacket()
-        {
-            Packet p = new Packet(PACKETIDENTIFIER);
-            p.Add(_ActivityInstanceIdentifier.ToByteArray(), true);
-            return p;
-        }
-
-        public Guid GetGuid()
-        {
-            return _ActivityInstanceIdentifier;
-        }
-
-        public virtual void SetGuid(Guid newGuid)
-        {
-            _ActivityInstanceIdentifier = newGuid;
         }
 
         public virtual void SaveToDisk(String filename)

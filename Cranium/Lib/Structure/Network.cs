@@ -38,14 +38,13 @@ namespace Cranium.Lib.Structure
         protected List<Layer.Layer> _DetectedTopLayers = new List<Layer.Layer>();
         protected Int32 _LastIssuedLayerID;
         protected Double _LearningRate;
-        protected Double _Momenum;
+        protected Double _Momentum;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="Network" /> class.
         /// </summary>
         public Network()
         {
-            _LearningRate = 0;
             _CurrentLayers = new List<Layer.Layer>();
         }
 
@@ -60,13 +59,33 @@ namespace Cranium.Lib.Structure
         /// </param>
         public Network(SerializationInfo info, StreamingContext context)
         {
-            _LearningRate = 0;
-            _CurrentLayers = (List<Layer.Layer>) info.GetValue("CurrentLayers", typeof (List<Layer.Layer>));
+            _CurrentLayers = (List<Layer.Layer>)info.GetValue("_CurrentLayers", typeof(List<Layer.Layer>));
             _LearningRate = info.GetDouble("_LearningRate");
-            _Momenum = info.GetDouble("_Momenum");
+            _Momentum = info.GetDouble("_Momenum");
             _LastIssuedLayerID = info.GetInt32("_LastIssuedLayerID");
-            _DetectedBottomLayers = (List<Layer.Layer>) info.GetValue("_DetectedBottomLayers", typeof (List<Layer.Layer>));
-            _DetectedTopLayers = (List<Layer.Layer>) info.GetValue("_DetectedTopLayers", typeof (List<Layer.Layer>));
+            _DetectedBottomLayers = (List<Layer.Layer>)info.GetValue("_DetectedBottomLayers", typeof(List<Layer.Layer>));
+            _DetectedTopLayers = (List<Layer.Layer>)info.GetValue("_DetectedTopLayers", typeof(List<Layer.Layer>));
+        }
+
+        /// <summary>
+        /// The learning rate of the network, This is a mutiplier against the learning change of the network to
+        /// control the learning speed. The smaller the number (0.004f for example) the slower the network learns
+        /// </summary>
+        public Double LearningRate
+        {
+            [Pure]
+            get { return _LearningRate; }
+            set { _LearningRate = value; }
+        }
+
+        /// <summary>
+        /// The percentage of the last learning pass's change to apply to the current learning pass
+        /// </summary>
+        public Double Momentum
+        {
+            [Pure]
+            get { return _Momentum; }
+            set { _Momentum = value; }
         }
 
         #region IDeserializationCallback implementation
@@ -98,12 +117,12 @@ namespace Cranium.Lib.Structure
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             //Right lets serialise this thing
-            info.AddValue("CurrentLayers", _CurrentLayers, typeof (List<Layer.Layer>));
+            info.AddValue("_CurrentLayers", _CurrentLayers, typeof(List<Layer.Layer>));
             info.AddValue("_LearningRate", _LearningRate);
-            info.AddValue("_Momenum", _Momenum);
+            info.AddValue("_Momenum", _Momentum);
             info.AddValue("_LastIssuedLayerID", _LastIssuedLayerID);
-            info.AddValue("_DetectedBottomLayers", _DetectedBottomLayers, typeof (List<Layer.Layer>));
-            info.AddValue("_DetectedTopLayers", _DetectedTopLayers, typeof (List<Layer.Layer>));
+            info.AddValue("_DetectedBottomLayers", _DetectedBottomLayers, typeof(List<Layer.Layer>));
+            info.AddValue("_DetectedTopLayers", _DetectedTopLayers, typeof(List<Layer.Layer>));
         }
 
         #endregion
@@ -145,11 +164,10 @@ namespace Cranium.Lib.Structure
             {
                 if (l.GetForwardConnectedLayers().Count == 0) _DetectedTopLayers.Add(l);
                 if (l.GetReverseConnectedLayers().Count == 0) _DetectedBottomLayers.Add(l);
-                if (l.GetID() == -1)
-                {
-                    _LastIssuedLayerID++;
-                    l.SetID(_LastIssuedLayerID);
-                }
+
+                if (l.GetID() != -1) continue;
+                _LastIssuedLayerID++;
+                l.SetID(_LastIssuedLayerID);
             }
         }
 
@@ -201,9 +219,8 @@ namespace Cranium.Lib.Structure
         /// <summary>
         ///     Randomises the weights for all nodes within the network.
         /// </summary>
-        /// <param name='varianceFromZero'>
-        ///     Variance from zero.
-        /// </param>
+        /// <param name='varianceFromZero'>     Variance from zero. </param>
+        /// <param name="positiveOnly">If true random weights will only be positive else positvite or negative around 0</param>
         public virtual void RandomiseWeights(Double varianceFromZero, Boolean positiveOnly = false)
         {
             Random rnd = new Random();
@@ -237,58 +254,12 @@ namespace Cranium.Lib.Structure
         /// </summary>
         public virtual void ReversePass(Boolean delayWeightUpdate = false)
         {
-            foreach (Layer.Layer l in _DetectedTopLayers) l.ReversePass(_LearningRate, _Momenum, delayWeightUpdate: delayWeightUpdate);
-        }
-
-        /// <summary>
-        ///     Gets the current learning rate.
-        /// </summary>
-        /// <returns>
-        ///     The learning rate.
-        /// </returns>
-        [Pure]
-        public virtual Double GetLearningRate()
-        {
-            return _LearningRate;
-        }
-
-        /// <summary>
-        ///     Gets the current momentum.
-        /// </summary>
-        /// <returns>
-        ///     The momentum.
-        /// </returns>
-        [Pure]
-        public virtual Double GetMomentum()
-        {
-            return _Momenum;
-        }
-
-        /// <summary>
-        ///     Sets the current learning rate.
-        /// </summary>
-        /// <param name='newLearningRate'>
-        ///     New learning rate.
-        /// </param>
-        public virtual void SetLearningRate(Double newLearningRate)
-        {
-            _LearningRate = newLearningRate;
-        }
-
-        /// <summary>
-        ///     Sets the current momentum.
-        /// </summary>
-        /// <param name='newMomentum'>
-        ///     New momentum.
-        /// </param>
-        public virtual void SetMomentum(Double newMomentum)
-        {
-            _Momenum = newMomentum;
+            foreach (Layer.Layer l in _DetectedTopLayers) l.ReversePass(LearningRate, _Momentum, delayWeightUpdate: delayWeightUpdate);
         }
 
         public void SaveToFile(String fileName)
         {
-            BinaryFormatter formatter = new BinaryFormatter {AssemblyFormat = FormatterAssemblyStyle.Simple};
+            BinaryFormatter formatter = new BinaryFormatter { AssemblyFormat = FormatterAssemblyStyle.Simple };
             using (FileStream atextwriter = File.Create(fileName))
             {
                 GZipStream compressionStream = new GZipStream(atextwriter, CompressionMode.Compress);
@@ -304,7 +275,7 @@ namespace Cranium.Lib.Structure
             {
                 GZipStream compressionStream = new GZipStream(loadedFile, CompressionMode.Decompress);
                 BinaryFormatter formatter = new BinaryFormatter();
-                returnNetwork = (Network) formatter.Deserialize(compressionStream);
+                returnNetwork = (Network)formatter.Deserialize(compressionStream);
                 compressionStream.Close();
             }
             return returnNetwork;

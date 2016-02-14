@@ -49,8 +49,8 @@ namespace Cranium.Lib.Test.Tests.SOM
                 NetworkInstance.AddLayer(InputLayer);
                 NetworkInstance.AddLayer(SOMMemoryLayer);
 
-                NetworkInstance.SetMomentum(0.0f);
-                NetworkInstance.SetLearningRate(0.9f);
+                NetworkInstance.Momentum=(0.0f);
+                NetworkInstance.LearningRate=(0.9f);
 
                 foreach (Layer layer in NetworkInstance.GetCurrentLayers()) layer.PopulateNodeConnections();
 
@@ -96,7 +96,7 @@ namespace Cranium.Lib.Test.Tests.SOM
 
                 outputCount[id]++;
 
-                for (Int32 i = 0; i < IMAGESIZE * IMAGESIZE; i++) outputChunk[id, i] += image.BWMap[i];
+                for (Int32 i = 0; i < IMAGESIZE * IMAGESIZE; i++) outputChunk[id, i] += image.BwMap[i];
             }
 
             Byte[] outputImage = new Byte[IMAGESIZE * IMAGESIZE * OUTPUTCOUNT];
@@ -148,7 +148,7 @@ namespace Cranium.Lib.Test.Tests.SOM
                 foreach (ImageNormalizer.PreProcessedImage image in images)
                 {
                     //FowardPass
-                    Byte[] mapToPresent = image.BWMap;
+                    Byte[] mapToPresent = image.BwMap;
 
                     BaseNode[] nodes = network.InputLayerNodes.ToArray();
                     for (Int32 i = 0; i < mapToPresent.Length; i++)
@@ -161,7 +161,7 @@ namespace Cranium.Lib.Test.Tests.SOM
                     network.NetworkInstance.ReversePass();
                 }
 
-                network.NetworkInstance.SetLearningRate(Math.Max(0.1f, network.NetworkInstance.GetLearningRate() * 0.95));
+                network.NetworkInstance.LearningRate=(Math.Max(0.1f, network.NetworkInstance.LearningRate * 0.95));
 
                 if (epoch % 10 == 0) TestNetwork(images, network, epoch);
             }
@@ -169,7 +169,7 @@ namespace Cranium.Lib.Test.Tests.SOM
 
         private static Int32 ClassifyImage(NetworkConfiguration network, ImageNormalizer.PreProcessedImage image)
         {
-            Byte[] mapToPresent = image.BWMap;
+            Byte[] mapToPresent = image.BwMap;
             BaseNode[] nodes = network.InputLayerNodes.ToArray();
             for (Int32 i = 0; i < mapToPresent.Length; i++)
             {

@@ -75,7 +75,7 @@ namespace Cranium.Lib.Structure.Node
         /// </param>
         public RecurrentContextNode(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _SourceNode = (BaseNode) info.GetValue("_SourceNode", typeof (BaseNode));
+            _SourceNode = (BaseNode)info.GetValue("_SourceNode", typeof(BaseNode));
             _RateOfUpdate = info.GetDouble("_RateOfUpdate");
             _StartValue = info.GetDouble("_StartValue");
         }
@@ -85,7 +85,7 @@ namespace Cranium.Lib.Structure.Node
         /// </summary>
         public virtual void Update()
         {
-            _Value = _Value * (1 - _RateOfUpdate) + _SourceNode.GetValue() * _RateOfUpdate;
+            _Value = (_Value * (1 - _RateOfUpdate)) + (_SourceNode.GetValue() * _RateOfUpdate);
         }
 
         /// <summary>

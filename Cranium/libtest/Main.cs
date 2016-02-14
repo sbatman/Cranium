@@ -16,7 +16,6 @@ using Cranium.Lib.Test.Tests.Linear;
 using Cranium.Lib.Test.Tests.Recursive;
 using Cranium.Lib.Test.Tests.Reservoir;
 using Cranium.Lib.Test.Tests.SOM;
-using Cranium.LibTest.Tests.Recursive;
 
 #endregion
 
