@@ -33,6 +33,16 @@ namespace Cranium.Lib.Test.Tests.Reservoir
     /// </summary>
     public static class MgEchoStateTest
     {
+        /// <summary>
+        /// The amount of data presented to the network per window
+        /// </summary>
+        const int WINDOW_WIDTH = 12;
+        /// <summary>
+        /// The distance from the last provided value to the prediction made by the network for any given window
+        /// </summary>
+        const int DISTANCE_TO_FORCAST_HORIZON = 3;
+
+
         private static Network _TestNetworkStructure;
         private static SlidingWindow _SlidingWindowTraining;
         private static Layer _InputLayer;
@@ -45,6 +55,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
         /// </summary>
         public static void Run()
         {
+
             //Build Network
             _TestNetworkStructure = new Network();
             BuildStructure();
@@ -59,9 +70,9 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             _SlidingWindowTraining.SetMomentum(0.5f);
             _SlidingWindowTraining.SetLearningRate(0.004f);
             _SlidingWindowTraining.SetDatasetReservedLength(120);
-            _SlidingWindowTraining.DistanceToForcastHorrison=(3);
-            _SlidingWindowTraining.WindowWidth=(12);
-            _SlidingWindowTraining.SetMaximumEpochs(450);
+            _SlidingWindowTraining.DistanceToForcastHorizon= DISTANCE_TO_FORCAST_HORIZON;
+            _SlidingWindowTraining.WindowWidth= WINDOW_WIDTH;
+            _SlidingWindowTraining.SetMaximumEpochs(2500);
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
             _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
             _SlidingWindowTraining.SetWorkingDataset(dataSet);
@@ -73,7 +84,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             while (_SlidingWindowTraining.Running)
             {
                 Console.WriteLine(_SlidingWindowTraining.CurrentEpoch);
-                Thread.Sleep(20);
+                Thread.Sleep(100);
             }
 
             Console.WriteLine("Complete Training");
@@ -86,22 +97,31 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             slidingWindowTesting.SetOutputNodes(_SlidingWindowTraining.GetTargetNetwork().GetDetectedTopLayers()[0].GetNodes().ToList());
             slidingWindowTesting.SetUpdatingLayers(new List<Layer>());
             slidingWindowTesting.SetWorkingDataset(dataSet);
-            slidingWindowTesting.SetWindowWidth(6);
-            slidingWindowTesting.SetDistanceToForcastHorrison(3);
+            slidingWindowTesting.SetWindowWidth(WINDOW_WIDTH);
+            slidingWindowTesting.SetDistanceToForcastHorizon(DISTANCE_TO_FORCAST_HORIZON);
             slidingWindowTesting.SetTargetNetwork(_SlidingWindowTraining.GetTargetNetwork());
 
             Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
+
+            //The length of the dataset not including the additional predictions
+            int lenBeforePredict = result.ActualOutputs.Length - DISTANCE_TO_FORCAST_HORIZON;
+
+            double[][] actual = new double[lenBeforePredict][];
+            Array.Copy(result.ActualOutputs, actual, lenBeforePredict);
+            double[][] expected = new double[lenBeforePredict][];
+            Array.Copy(result.ExpectedOutputs, expected, lenBeforePredict);
+
 
             Console.WriteLine(result.Rmse);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
             Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
             Console.WriteLine("Complete Testing");
             Console.WriteLine("Comparing Against Random Walk 3 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)[0] * 100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(expected, actual, 3)[0] * 100, 3));
             Console.WriteLine("Comparing Against Random Walk 2 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0] * 100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(expected, actual, 2)[0] * 100, 3));
             Console.WriteLine("Comparing Against Random Walk 1 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0] * 100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(expected, actual, 1)[0] * 100, 3));
 
             Console.ReadKey();
         }
@@ -116,7 +136,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             for (Int32 i = 0; i < 1; i++) _InputLayerNodes.Add(new BaseNode(_InputLayer, new TanhAF()));
             _InputLayer.SetNodes(_InputLayerNodes);
 
-            EchoReservoir echoLayer = new EchoReservoir(130, 0.4f, 0, 5, new TanhAF());
+            EchoReservoir echoLayer = new EchoReservoir(30, 0.1f, 0, 5, new TanhAF());
 
             _OutputLayer = new Layer();
             _OuputLayerNodes = new List<BaseNode>();

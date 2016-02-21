@@ -36,7 +36,7 @@ namespace Cranium.Lib.Activity.Training
         /// <summary>
         ///     How far beyond the last presented value are we attempting to predict
         /// </summary>
-        protected Int32 _DistanceToForcastHorrison;
+        protected Int32 _DistanceToForcastHorizon;
 
         /// <summary>
         ///     The outputs that are expected
@@ -107,7 +107,7 @@ namespace Cranium.Lib.Activity.Training
         public SlidingWindow(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
+            _DistanceToForcastHorizon = info.GetInt32("_DistanceToForcastHorizon");
             _InputNodes = (List<BaseNode>)info.GetValue("_InputNodes", typeof(List<BaseNode>));
             _LastPassAverageError = info.GetDouble("_LastPassAverageError");
             _OutputNodes = (List<BaseNode>)info.GetValue("_OutputNodes", typeof(List<BaseNode>));
@@ -121,10 +121,10 @@ namespace Cranium.Lib.Activity.Training
         /// <summary>
         ///     How far beyond the last presented value are we attempting to predict
         /// </summary>
-        public Int32 DistanceToForcastHorrison
+        public Int32 DistanceToForcastHorizon
         {
-            get { return _DistanceToForcastHorrison; }
-            set { _DistanceToForcastHorrison = value; }
+            get { return _DistanceToForcastHorizon; }
+            set { _DistanceToForcastHorizon = value; }
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Cranium.Lib.Activity.Training
         /// </summary>
         public virtual void PrepareData()
         {
-            _SequenceCount = _WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved - WindowWidth - DistanceToForcastHorrison;
+            _SequenceCount = _WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved - WindowWidth - DistanceToForcastHorizon;
             Int32 inputCount = _InputNodes.Count;
             Int32 outputCount = _OutputNodes.Count;
             _InputSequences = new Double[_SequenceCount, WindowWidth, inputCount];
@@ -224,7 +224,7 @@ namespace Cranium.Lib.Activity.Training
                 for (Int32 j = 0; j < WindowWidth; j++)
                 {
                     for (Int32 k = 0; k < inputCount; k++) _InputSequences[i, j, k] = _WorkingDataset[k][i + j];
-                    for (Int32 l = 0; l < outputCount; l++) _ExpectedOutputs[i, l] = _WorkingDataset[l][i + j + DistanceToForcastHorrison];
+                    for (Int32 l = 0; l < outputCount; l++) _ExpectedOutputs[i, l] = _WorkingDataset[l][i + j + DistanceToForcastHorizon];
                 }
             }
         }
@@ -325,7 +325,7 @@ namespace Cranium.Lib.Activity.Training
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
-            info.AddValue("_DistanceToForcastHorrison", DistanceToForcastHorrison);
+            info.AddValue("_DistanceToForcastHorizon", DistanceToForcastHorizon);
             info.AddValue("_InputNodes", _InputNodes, typeof(List<BaseNode>));
             info.AddValue("_LastPassAverageError", _LastPassAverageError);
             info.AddValue("_OutputNodes", _OutputNodes, typeof(List<BaseNode>));

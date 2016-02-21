@@ -53,15 +53,16 @@
     <WarningLevel>4</WarningLevel>
     <Externalconsole>true</Externalconsole>
     <Prefer32Bit>false</Prefer32Bit>
+    <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="LZ4PCL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\LZ4PCL.1.0.0\lib\portable-net4+netcore45+wpa81+MonoAndroid1+MonoTouch1\LZ4PCL.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Sbatman.Networking, Version=0.13.1.938, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Sbatman.Networking.0.13.1.938\lib\net45\Sbatman.Networking.dll</HintPath>
+    <Reference Include="Sbatman.Networking, Version=0.13.5.2348, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sbatman.Networking.0.13.5.2348\lib\net45\Sbatman.Networking.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Sbatman.Serialize, Version=0.7.9.211, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Sbatman.Serialize.0.7.9.211\lib\portable-net45+win+wpa81\Sbatman.Serialize.dll</HintPath>

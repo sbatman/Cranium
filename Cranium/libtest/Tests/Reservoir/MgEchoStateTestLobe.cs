@@ -63,7 +63,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                 slidingWindowTraining.SetMomentum(0.5f);
                 slidingWindowTraining.SetLearningRate(0.004f);
                 slidingWindowTraining.SetDatasetReservedLength(0);
-                slidingWindowTraining.DistanceToForcastHorrison=(3);
+                slidingWindowTraining.DistanceToForcastHorizon=(3);
                 slidingWindowTraining.WindowWidth=(12);
                 slidingWindowTraining.SetMaximumEpochs(100);
                 slidingWindowTraining.SetInputNodes(inputLayerNodes);
@@ -91,21 +91,30 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                     slidingWindowTesting.SetUpdatingLayers(new List<Layer>());
                     slidingWindowTesting.SetWorkingDataset(dataSet);
                     slidingWindowTesting.SetWindowWidth(12);
-                    slidingWindowTesting.SetDistanceToForcastHorrison(3);
+                    slidingWindowTesting.SetDistanceToForcastHorizon(3);
                     slidingWindowTesting.SetTargetNetwork(work.GetTargetNetwork());
 
                     Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
+
+                    //The length of the dataset not including the additional predictions
+                    int lenBeforePredict = result.ActualOutputs.Length - 3;
+
+                    double[][] actual = new double[lenBeforePredict][];
+                    Array.Copy(result.ActualOutputs, actual, lenBeforePredict);
+                    double[][] expected = new double[lenBeforePredict][];
+                    Array.Copy(result.ExpectedOutputs, expected, lenBeforePredict);
+
 
                     Console.WriteLine(result.Rmse);
                     Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
                     Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
                     Console.WriteLine("Complete Testing");
                     Console.WriteLine("Comparing Against Random Walk 3 Step");
-                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)[0] * 100, 3));
+                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(expected, actual, 3)[0] * 100, 3));
                     Console.WriteLine("Comparing Against Random Walk 2 Step");
-                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0] * 100, 3));
+                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(expected, actual, 2)[0] * 100, 3));
                     Console.WriteLine("Comparing Against Random Walk 1 Step");
-                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0] * 100, 3));
+                    Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(expected, actual, 1)[0] * 100, 3));
                 }
             }
 

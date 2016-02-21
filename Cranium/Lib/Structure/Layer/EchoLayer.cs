@@ -76,10 +76,10 @@ namespace Cranium.Lib.Structure.Layer
         ///     then an additional connection is made ontop of the origional Min
         /// </param>
         /// <param name='minimumConnections'>
-        ///     Minimum connections per node.
+        ///     unused
         /// </param>
         /// <param name='maximumConnections'>
-        ///     Maximum connections per node.
+        ///    unused
         /// </param>
         /// <param name='activationFunction'>
         ///     Activation function.

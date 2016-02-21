@@ -96,7 +96,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
             // The rate at which the neural entwork learns (the more agressive this is the harded itll be for the network)
             _SlidingWindowTraining.SetDatasetReservedLength(0);
             // How many elements off the end of the dataset should not be used for training
-            _SlidingWindowTraining.DistanceToForcastHorrison=(3);
+            _SlidingWindowTraining.DistanceToForcastHorizon=(3);
             // How far beyond the window should be be trying to predict
             _SlidingWindowTraining.WindowWidth=(12);
             // The window of elements that should be presented before the backward pass is performed
@@ -134,19 +134,29 @@ namespace Cranium.Lib.Test.Tests.Recursive
             slidingWindowTesting.SetUpdatingLayers(contextLayers);
             slidingWindowTesting.SetWorkingDataset(dataSet);
             slidingWindowTesting.SetWindowWidth(12);
-            slidingWindowTesting.SetDistanceToForcastHorrison(3);
+            slidingWindowTesting.SetDistanceToForcastHorizon(3);
             slidingWindowTesting.SetTargetNetwork(_TestNetworkStructure);
             Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
+
+            //The length of the dataset not including the additional predictions
+            int lenBeforePredict = result.ActualOutputs.Length - 3;
+
+            double[][] actual = new double[lenBeforePredict][];
+            Array.Copy(result.ActualOutputs, actual, lenBeforePredict);
+            double[][] expected = new double[lenBeforePredict][];
+            Array.Copy(result.ExpectedOutputs, expected, lenBeforePredict);
+
 
             Console.WriteLine(result.Rmse);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
             Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
+            Console.WriteLine("Complete Testing");
             Console.WriteLine("Comparing Against Random Walk 3 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 3)[0] * 100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(expected, actual, 3)[0] * 100, 3));
             Console.WriteLine("Comparing Against Random Walk 2 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 2)[0] * 100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(expected, actual, 2)[0] * 100, 3));
             Console.WriteLine("Comparing Against Random Walk 1 Step");
-            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(result.ExpectedOutputs, result.ActualOutputs, 1)[0] * 100, 3));
+            Console.WriteLine(Math.Round(RandomWalkCompare.CalculateError(expected, actual, 1)[0] * 100, 3));
 
             Console.ReadKey();
         }

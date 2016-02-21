@@ -77,7 +77,7 @@ namespace Cranium.Lib.Activity.Testing
         public SlidingWindow(SerializationInfo info, StreamingContext context) : base(info, context)
         {
             _ActualOutputs = (Double[][])info.GetValue("_ActualOutputs", typeof(Double[][]));
-            _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorrison");
+            _DistanceToForcastHorrison = info.GetInt32("_DistanceToForcastHorizon");
             _ExpectedOutputs = (Double[][])info.GetValue("_ExpectedOutputs", typeof(Double[][]));
             _InputSequences = (Double[][][])info.GetValue("_InputSequences", typeof(Double[][][]));
             _OutputErrors = (Double[][])info.GetValue("_OutputErrors", typeof(Double[][]));
@@ -100,7 +100,7 @@ namespace Cranium.Lib.Activity.Testing
         ///     Sets the distance to prediction from the end of the presented window
         /// </summary>
         /// <param name="distance"></param>
-        public virtual void SetDistanceToForcastHorrison(Int32 distance)
+        public virtual void SetDistanceToForcastHorizon(Int32 distance)
         {
             _DistanceToForcastHorrison = distance;
         }
@@ -133,7 +133,7 @@ namespace Cranium.Lib.Activity.Testing
         /// </summary>
         public override void PrepareData()
         {
-            _SequenceCount = _WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved - _WindowWidth - _DistanceToForcastHorrison;
+            _SequenceCount = _WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved - _WindowWidth+1;
             Int32 inputCount = _InputNodes.Count;
             Int32 outputCount = _OutputNodes.Count;
 
@@ -158,7 +158,12 @@ namespace Cranium.Lib.Activity.Testing
                 for (Int32 j = 0; j < _WindowWidth; j++)
                 {
                     for (Int32 k = 0; k < inputCount; k++) _InputSequences[i][j][k] = _WorkingDataset[k][i + j];
-                    for (Int32 l = 0; l < outputCount; l++) _ExpectedOutputs[i][l] = _WorkingDataset[l][i + j + _DistanceToForcastHorrison];
+
+                    for (Int32 l = 0; l < outputCount; l++)
+                    {
+                        Int32 targetOffset = i + j + _DistanceToForcastHorrison;
+                        _ExpectedOutputs[i][l] = (targetOffset >= _WorkingDataset[l].Length) ? 0 : _WorkingDataset[l][targetOffset];
+                    }
                 }
             }
         }
@@ -200,7 +205,7 @@ namespace Cranium.Lib.Activity.Testing
         {
             base.GetObjectData(info, context);
             info.AddValue("_ActualOutputs", _ActualOutputs, typeof(Double[][]));
-            info.AddValue("_DistanceToForcastHorrison", _DistanceToForcastHorrison);
+            info.AddValue("_DistanceToForcastHorizon", _DistanceToForcastHorrison);
             info.AddValue("_ExpectedOutputs", _ExpectedOutputs, typeof(Double[][]));
             info.AddValue("_InputSequences", _InputSequences, typeof(Double[][][]));
             info.AddValue("_OutputErrors", _OutputErrors, typeof(Double[][]));
