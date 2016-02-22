@@ -21,15 +21,14 @@ using Cranium.Lib.Test.SupportClasses;
 
 namespace Cranium.Lib.Test.Tests.SOM
 {
-    class SOMCharRecTets
+    internal class SOMCharRecTets
     {
-        class NetworkConfiguration
+        private class NetworkConfiguration
         {
             public readonly Layer InputLayer;
             public readonly List<BaseNode> InputLayerNodes;
             public readonly Network NetworkInstance;
             public readonly SOMLayer SOMMemoryLayer;
-            public List<BaseNode> OuputLayerNodes;
 
             public NetworkConfiguration(Int32 inputNodeCount, Int32 somGridSize)
             {
@@ -40,17 +39,19 @@ namespace Cranium.Lib.Test.Tests.SOM
                 for (Int32 i = 0; i < inputNodeCount; i++) InputLayerNodes.Add(new BaseNode(InputLayer, new LinearAF()));
                 InputLayer.SetNodes(InputLayerNodes);
 
-                SOMMemoryLayer = new SOMLayer(somGridSize);
-                SOMMemoryLayer.MaxmimumLearningDistance = 6;
-                SOMMemoryLayer.MinimumLearningDistance = 0.2;
+                SOMMemoryLayer = new SOMLayer(somGridSize)
+                {
+                    MaxmimumLearningDistance = 6,
+                    MinimumLearningDistance = 0.2
+                };
 
                 InputLayer.ConnectFowardLayer(SOMMemoryLayer);
 
                 NetworkInstance.AddLayer(InputLayer);
                 NetworkInstance.AddLayer(SOMMemoryLayer);
 
-                NetworkInstance.Momentum=(0.0f);
-                NetworkInstance.LearningRate=(0.9f);
+                NetworkInstance.Momentum = (0.2f);
+                NetworkInstance.LearningRate = (0.1f);
 
                 foreach (Layer layer in NetworkInstance.GetCurrentLayers()) layer.PopulateNodeConnections();
 
@@ -58,7 +59,7 @@ namespace Cranium.Lib.Test.Tests.SOM
             }
         }
 
-        public const Int32 IMAGESIZE = 16;
+        public const Int32 IMAGESIZE = 24;
         public const Int32 OUTPUTNODE_GRID_WIDTH = 6;
         public const Int32 OUTPUTCOUNT = OUTPUTNODE_GRID_WIDTH * OUTPUTNODE_GRID_WIDTH;
 
@@ -66,6 +67,9 @@ namespace Cranium.Lib.Test.Tests.SOM
 
         public static void Run()
         {
+            Console.WriteLine("This test shows an example of a neural network learning how to categories a series of digits provided along with the test, After a every epochs an image showing the current knowledge of the network is saved in the running directory");
+            Console.WriteLine("Press any key to begin");
+
             List<ImageNormalizer.PreProcessedImage> processedImages = new List<ImageNormalizer.PreProcessedImage>();
 
             for (Int32 i = 0; i < 10; i++)
@@ -78,6 +82,10 @@ namespace Cranium.Lib.Test.Tests.SOM
             for (Int32 i = 0; i < OUTPUTCOUNT; i++) NodeData[i] = new Byte[IMAGESIZE * IMAGESIZE];
 
             PresentImagesToNetwork(network, processedImages, 450);
+
+            Console.WriteLine("Complete");
+            Console.ReadKey();
+
         }
 
         private static void TestNetwork(IEnumerable<ImageNormalizer.PreProcessedImage> processedImages, NetworkConfiguration network, Int32 epoch)
@@ -120,12 +128,12 @@ namespace Cranium.Lib.Test.Tests.SOM
 
                             Int32 target = targetX + targetY * IMAGESIZE * OUTPUTNODE_GRID_WIDTH;
 
-                            outputImage[target] = (Byte) outputChunk[nx + ny * OUTPUTNODE_GRID_WIDTH, x + y * IMAGESIZE];
+                            outputImage[target] = (Byte)outputChunk[nx + ny * OUTPUTNODE_GRID_WIDTH, x + y * IMAGESIZE];
                         }
                     }
                 }
             }
-            ImageLoader.SaveBWImage($"{epoch}.bmp", IMAGESIZE * OUTPUTNODE_GRID_WIDTH, IMAGESIZE * OUTPUTNODE_GRID_WIDTH, outputImage);
+            ImageLoader.SaveBwImage($"{epoch}.bmp", IMAGESIZE * OUTPUTNODE_GRID_WIDTH, IMAGESIZE * OUTPUTNODE_GRID_WIDTH, outputImage);
         }
 
         private static IEnumerable<ImageNormalizer.PreProcessedImage> LoadContent(String folder, String addTag = null)
@@ -143,7 +151,7 @@ namespace Cranium.Lib.Test.Tests.SOM
                 Console.Title = $"{epoch}/{epochs}";
                 images.Shuffle();
 
-                network.SOMMemoryLayer.CurrentDistanceSupression = 1 - epoch / (Double) epochs;
+                network.SOMMemoryLayer.CurrentDistanceSupression = 1 - epoch / (Double)epochs;
 
                 foreach (ImageNormalizer.PreProcessedImage image in images)
                 {
@@ -161,9 +169,9 @@ namespace Cranium.Lib.Test.Tests.SOM
                     network.NetworkInstance.ReversePass();
                 }
 
-                network.NetworkInstance.LearningRate=(Math.Max(0.1f, network.NetworkInstance.LearningRate * 0.95));
+                network.NetworkInstance.LearningRate = (Math.Max(0.1f, network.NetworkInstance.LearningRate * 0.95));
 
-                if (epoch % 10 == 0) TestNetwork(images, network, epoch);
+                if (epoch % 5 == 0) TestNetwork(images, network, epoch);
             }
         }
 
@@ -179,7 +187,7 @@ namespace Cranium.Lib.Test.Tests.SOM
             network.InputLayer.ForwardPass();
 
             Int32 totalNodes = network.SOMMemoryLayer.GetNodes().Count;
-            Int32 widthHeight = (Int32) Math.Sqrt(totalNodes);
+            Int32 widthHeight = (Int32)Math.Sqrt(totalNodes);
 
             Double lowestDiff = Double.MaxValue;
             Int32 lowestDiffX = 0;

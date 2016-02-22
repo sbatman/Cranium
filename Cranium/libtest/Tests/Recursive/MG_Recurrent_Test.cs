@@ -139,11 +139,11 @@ namespace Cranium.Lib.Test.Tests.Recursive
             Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
 
             //The length of the dataset not including the additional predictions
-            int lenBeforePredict = result.ActualOutputs.Length - 3;
+            Int32 lenBeforePredict = result.ActualOutputs.Length - 3;
 
-            double[][] actual = new double[lenBeforePredict][];
+            Double[][] actual = new Double[lenBeforePredict][];
             Array.Copy(result.ActualOutputs, actual, lenBeforePredict);
-            double[][] expected = new double[lenBeforePredict][];
+            Double[][] expected = new Double[lenBeforePredict][];
             Array.Copy(result.ExpectedOutputs, expected, lenBeforePredict);
 
 

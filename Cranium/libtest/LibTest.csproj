@@ -71,6 +71,7 @@
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +82,16 @@
     <Compile Include="Tests\Recursive\RNNTest.cs" />
     <Compile Include="Tests\Recursive\RNNTest2.cs" />
     <Compile Include="Tests\Recursive\MG_Recurrent_Test.cs" />
+    <Compile Include="Tests\Reinforcement\Pong\Arena.cs" />
+    <Compile Include="Tests\Reinforcement\Pong\Ball.cs" />
+    <Compile Include="Tests\Reinforcement\Pong\Paddle.cs" />
+    <Compile Include="Tests\Reinforcement\Pong\Test.cs" />
+    <Compile Include="Tests\Reinforcement\Pong\Visualizer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Tests\Reinforcement\Pong\Visualizer.designer.cs">
+      <DependentUpon>Visualizer.cs</DependentUpon>
+    </Compile>
     <Compile Include="Tests\Reservoir\MgEchoStateTest.cs" />
     <Compile Include="Tests\Reservoir\EchoStateTestSinGenerator.cs" />
     <Compile Include="Tests\Reservoir\MgEchoStateTestLobe.cs" />
@@ -549,6 +560,11 @@
       <Project>{db8195a8-0085-4866-be7a-065ced69ce4c}</Project>
       <Name>Lobe.Client</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Tests\Reinforcement\Pong\Visualizer.resx">
+      <DependentUpon>Visualizer.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

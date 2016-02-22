@@ -36,11 +36,11 @@ namespace Cranium.Lib.Test.Tests.Reservoir
         /// <summary>
         /// The amount of data presented to the network per window
         /// </summary>
-        const int WINDOW_WIDTH = 12;
+        private const Int32 WINDOW_WIDTH = 12;
         /// <summary>
         /// The distance from the last provided value to the prediction made by the network for any given window
         /// </summary>
-        const int DISTANCE_TO_FORCAST_HORIZON = 3;
+        private const Int32 DISTANCE_TO_FORCAST_HORIZON = 3;
 
 
         private static Network _TestNetworkStructure;
@@ -104,11 +104,11 @@ namespace Cranium.Lib.Test.Tests.Reservoir
             Activity.Testing.SlidingWindow.SlidingWindowTestResults result = (Activity.Testing.SlidingWindow.SlidingWindowTestResults) slidingWindowTesting.TestNetwork();
 
             //The length of the dataset not including the additional predictions
-            int lenBeforePredict = result.ActualOutputs.Length - DISTANCE_TO_FORCAST_HORIZON;
+            Int32 lenBeforePredict = result.ActualOutputs.Length - DISTANCE_TO_FORCAST_HORIZON;
 
-            double[][] actual = new double[lenBeforePredict][];
+            Double[][] actual = new Double[lenBeforePredict][];
             Array.Copy(result.ActualOutputs, actual, lenBeforePredict);
-            double[][] expected = new double[lenBeforePredict][];
+            Double[][] expected = new Double[lenBeforePredict][];
             Array.Copy(result.ExpectedOutputs, expected, lenBeforePredict);
 
 

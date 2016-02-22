@@ -71,7 +71,7 @@ namespace Cranium.Lib.Test.SupportClasses
             return img;
         }
 
-        public static void SaveBWImage(String fileName, Int32 width, Int32 height, Byte[] data)
+        public static void SaveBwImage(String fileName, Int32 width, Int32 height, Byte[] data)
         {
             Byte[] outData = new Byte[width * height * 3];
 
