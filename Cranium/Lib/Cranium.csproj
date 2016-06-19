@@ -58,6 +58,11 @@
     <Compile Include="Activity\Testing\Base.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Data\Preprocessing\ImageNormalizer.cs" />
+    <Compile Include="Genetics\DNA.cs" />
+    <Compile Include="Genetics\Genes\Gene.cs" />
+    <Compile Include="Genetics\Genes\BooleanGene.cs" />
+    <Compile Include="Genetics\Genes\Int32Gene.cs" />
+    <Compile Include="Genetics\Genes\SingleGene.cs" />
     <Compile Include="Structure\Layer\Layer.cs" />
     <Compile Include="Structure\Layer\RContextLayer.cs" />
     <Compile Include="Structure\Layer\SOMLayer.cs" />

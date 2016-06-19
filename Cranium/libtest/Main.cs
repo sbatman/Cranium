@@ -43,6 +43,7 @@ namespace Cranium.Lib.Test
             Console.WriteLine("8 -  Echo State Sin Generator Test");
             Console.WriteLine("9 -  SOM Didgit recognition Test");
             Console.WriteLine("0 -  Reinforcement Learning - Pong");
+            Console.WriteLine("A -  Reinforcement Learning - Pong - Genetics");
 
             ConsoleKey pressedKey = Console.ReadKey().Key;
             Console.Clear();
@@ -77,6 +78,9 @@ namespace Cranium.Lib.Test
                     break;
                 case ConsoleKey.D0:
                     Tests.Reinforcement.Pong.Test.Run();
+                    break;
+                case ConsoleKey.A:
+                    Tests.Reinforcement.Pong.TestGenetics.Run();
                     break;
             }
         }

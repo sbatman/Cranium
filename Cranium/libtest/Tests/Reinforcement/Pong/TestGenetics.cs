@@ -1,8 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Windows.Forms;
+using Cranium.Lib.Genetics;
+using Cranium.Lib.Genetics.Genes;
 using Cranium.Lib.Structure;
 using Cranium.Lib.Structure.ActivationFunction;
 using Cranium.Lib.Structure.Layer;
@@ -10,8 +14,13 @@ using Cranium.Lib.Structure.Node;
 
 namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
 {
-    internal class Test
+    internal class TestGenetics
     {
+
+        private static List<DNA> _DNAProfilesToRun = new List<DNA>();
+        private static List<DNA> _DNAScores = new List<DNA>();
+        private static StreamWriter _OutputStream;
+
         private enum PossibleActions
         {
             MOVEUP,
@@ -45,9 +54,12 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
         private Int32 _Streak;
         private Visualizer _Visualizer;
 
-        public Test()
+        public DNA DNAProfile;
+
+        public TestGenetics(DNA dnaProfile)
         {
-            _Arena = new Arena(1200, 600, new []{100.0f,150.0f});
+            DNAProfile = dnaProfile;
+            _Arena = new Arena(1200, 600, new[] { 100.0f, 150.0f });
             _Arena.LeftPaddle.OnHit += OnPaddleHit;
             Reset();
             GenerateNeuralNetwork();
@@ -83,7 +95,7 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
         {
             _NeuralNetwork?.Dispose();
             _NeuralNetwork = new Network();
-            _NeuralNetwork.LearningRate = 0.08f;
+            _NeuralNetwork.LearningRate = ((SingleGene)DNAProfile.GetGene("LearningRate")).CurrentValue;
             _NeuralNetwork.Momentum = 0.0;
             _InputNodeCount = GetEnvironmentState().Count + Enum.GetValues(typeof(PossibleActions)).Length;
 
@@ -94,10 +106,17 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
 
             Layer hiddenLayer = new Layer();
             List<BaseNode> hiddenLayerNodes = new List<BaseNode>();
-            for (Int32 i = 0; i < 15; i++) hiddenLayerNodes.Add(new BaseNode(hiddenLayer, new TanhAF()));
+
+            AF hlActivationFunction = null;
+            AF conActivationFunction = null;
+
+            if (((BooleanGene)DNAProfile.GetGene("AFHLTan")).CurrentValue) hlActivationFunction = new TanhAF(); else hlActivationFunction = new LinearAF();
+            if (((BooleanGene)DNAProfile.GetGene("AFCONTan")).CurrentValue) conActivationFunction = new TanhAF(); else conActivationFunction = new LinearAF();
+
+            for (Int32 i = 0; i < ((Int32Gene)DNAProfile.GetGene("HiddenNodeCount")).CurrentValue; i++) hiddenLayerNodes.Add(new BaseNode(hiddenLayer, hlActivationFunction));
             hiddenLayer.SetNodes(hiddenLayerNodes);
 
-            _ContextLayer = new RecurrentContext(1, new TanhAF());
+            _ContextLayer = new RecurrentContext(((Int32Gene)DNAProfile.GetGene("Recurrency")).CurrentValue, conActivationFunction);
 
             Layer outputLayer = new Layer();
             _OuputLayerNodes = new List<BaseNode>();
@@ -105,13 +124,13 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
             outputLayer.SetNodes(_OuputLayerNodes);
 
             _ContextLayer.AddSourceNodes(_InputLayerNodes);
-            _ContextLayer.AddSourceNodes(_OuputLayerNodes);
-           //  _ContextLayer.AddSourceNodes(hiddenLayerNodes);
+            if (((BooleanGene)DNAProfile.GetGene("ContextConnectOutputLayers")).CurrentValue) _ContextLayer.AddSourceNodes(_OuputLayerNodes);
+            if (((BooleanGene)DNAProfile.GetGene("ContextConnectHiddenLayers")).CurrentValue) _ContextLayer.AddSourceNodes(hiddenLayerNodes);
 
             inputLayer.ConnectFowardLayer(hiddenLayer);
             hiddenLayer.ConnectFowardLayer(outputLayer);
             _ContextLayer.ConnectFowardLayer(hiddenLayer);
-            
+
 
             _NeuralNetwork.AddLayer(inputLayer);
             _NeuralNetwork.AddLayer(hiddenLayer);
@@ -119,7 +138,7 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
             _NeuralNetwork.AddLayer(outputLayer);
 
             foreach (Layer layer in _NeuralNetwork.GetCurrentLayers()) layer.PopulateNodeConnections();
-            _NeuralNetwork.RandomiseWeights(0.57f);
+            _NeuralNetwork.RandomiseWeights(((SingleGene)DNAProfile.GetGene("RandomWeight")).CurrentValue);
         }
 
         private List<ActionInstance> TestActionOptions()
@@ -157,16 +176,18 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
                 Console.Clear();
                 Console.WriteLine($"Hit :\t\t{_TimesHit}");
                 Console.WriteLine($"Missed :\t{_TimesMissed}");
-                Console.WriteLine($"Performance :\t{Math.Round(_RollingAveragePerformance,3)}");
+                Console.WriteLine($"Performance :\t{Math.Round(_RollingAveragePerformance, 3)}");
                 Console.WriteLine($"Streak :\t{ _Streak}");
                 Console.WriteLine("------");
                 Console.WriteLine("Left \t{0},\t{1}", _Arena.LeftPaddle.X, _Arena.LeftPaddle.Y);
                 Console.WriteLine("Right \t{0},\t{1}", _Arena.RightPaddle.X, _Arena.RightPaddle.Y);
                 Console.WriteLine("Ball \t{0},\t{1}", _Arena.Ball.X, _Arena.Ball.Y);
                 Console.WriteLine("-------");
+
                 _Visualizer?.SetBallPosition(_Arena.Ball.X, _Arena.Ball.Y);
                 _Visualizer?.SetLPaddlePosition(_Arena.LeftPaddle.X, _Arena.LeftPaddle.Y);
                 _Visualizer?.SetRPaddlePosition(_Arena.RightPaddle.X, _Arena.RightPaddle.Y);
+
             }
 
             List<ActionInstance> weightedOptions = TestActionOptions();
@@ -191,10 +212,10 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
             else
             {
                 actionToPerform = weightedOptions.OrderByDescending(a => a.Value).ToList()[0];
-            }
+               }
 
 
-            switch (actionToPerform.Action)
+                switch (actionToPerform.Action)
             {
                 case PossibleActions.MOVEUP:
                     _Arena.LeftPaddle.Y -= 20;
@@ -203,7 +224,7 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
                     _Arena.LeftPaddle.Y += 20;
                     break;
                     case PossibleActions.HOLD:
-                     break;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -224,31 +245,27 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
                 _TimesMissed++;
                 _Streak = 0;
             }
-            if(_Visualizer!=null)Application.DoEvents();
+            if (_Visualizer != null) Application.DoEvents();
             if (!_TeachingEnabled) Thread.Sleep(33);
         }
 
         public void Teach(Double value)
         {
-            if (_TeachingEnabled)
-            {
 
-                if (_RollingAveragePerformance > 0.95f)
-                {
-                    _TeachingEnabled = false;
-                    _Visualizer = new Visualizer(_Arena);
-                    _Visualizer.Show();
-                    _Visualizer.ResetEvent += Reset;
-                }
-                (_OuputLayerNodes[0] as OutputNode).SetTargetValue(value);
-                _NeuralNetwork.ReversePass();
-                foreach (BaseNode node in _ContextLayer.GetNodes()) node.SetValue(0);
-
-            }
+            (_OuputLayerNodes[0] as OutputNode).SetTargetValue(value);
+            _NeuralNetwork.ReversePass();
+            foreach (BaseNode node in _ContextLayer.GetNodes()) node.SetValue(0);
 
 
             _RollingAveragePerformance = (_RollingAveragePerformance * 0.98) + (value * 0.02);
             Reset();
+        }
+
+        public void ShowVisualizer()
+        {
+            _Visualizer = new Visualizer(_Arena);
+            _Visualizer.Show();
+            _Visualizer.ResetEvent += Reset;
         }
 
         public void Reset()
@@ -258,10 +275,10 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
             _Arena.LeftPaddle.Y = (Single)_RND.NextDouble() * _Arena.Height;
             if (_TeachingEnabled)
             {
-                Console.Clear();
-                Console.WriteLine($"Hit :\t\t{_TimesHit}");
-                Console.WriteLine($"Missed :\t{_TimesMissed}");
-                Console.WriteLine($"Performance :\t{Math.Round(_RollingAveragePerformance,3)}");
+                //  Console.Clear();
+                //   Console.WriteLine($"Hit :\t\t{_TimesHit}");
+                //   Console.WriteLine($"Missed :\t{_TimesMissed}");
+                //   Console.WriteLine($"Performance :\t{Math.Round(_RollingAveragePerformance, 3)}");
             }
         }
 
@@ -276,14 +293,107 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
         public static void Run()
         {
             Console.Clear();
+            _OutputStream = File.CreateText("Output.txt");
 
-            Console.WriteLine("The network will now proceed to use reinforcement learning to teach itsself how to play pong, once complete further information will be available");
-            Console.WriteLine("Press anykey to begin");
-            Console.ReadKey();
-            Test t = new Test();
-            while (true)
+            DNA baseDNAProfile = new DNA(new List<Gene>()
             {
-                t.Update();
+                new SingleGene("RandomWeight",0.2f,0.01f,1f),
+                new SingleGene("LearningRate",0.02f,0.02f,0.8f),
+                 new Int32Gene("HiddenNodeCount",5,1,30),
+                  new Int32Gene("Recurrency",3,1,10),
+                  new BooleanGene("ContextConnectOutputLayers",false),
+                        new BooleanGene("ContextConnectHiddenLayers",false),
+                        new BooleanGene("AFHLTan",true),
+                        new BooleanGene("AFCONTan",true)
+            });
+
+            for (Int32 i = 0; i < 60; i++)
+            {
+                DNA profile = baseDNAProfile.Copy();
+                profile.Mutate(1.0f);
+                _DNAProfilesToRun.Add(profile);
+            }
+
+            for (int generation = 0; generation < 10; generation++)
+            {
+                Console.WriteLine($"Starting generation {generation}");
+                List<Thread> activeThreads = new List<Thread>();
+                for (Int32 i = 0; i < Environment.ProcessorCount; i++)
+                {
+                    Thread t = new Thread(DNARunnerThread);
+                    activeThreads.Add(t);
+                    t.Start();
+                }
+
+                while (activeThreads.Any(a => a.ThreadState != ThreadState.Stopped))
+                {
+                    Thread.Sleep(10);
+                }
+
+                _DNAScores = _DNAScores.OrderByDescending(a => a.Score).ToList();
+                List<DNA> chosenDNA = _DNAScores.Take(10).Select(a => a.Copy()).ToList();
+
+                foreach (DNA dna in _DNAScores.Take(10).Select(a => a.Copy()))
+                {
+                    dna.Mutate(0.5f);
+                    chosenDNA.Add(dna);
+                }
+
+                foreach (DNA dna in _DNAScores.Take(8).Select(a => a.Copy()))
+                {
+                    for (int i = 0; i < 8; i++)
+                    {
+                        DNA t = dna.Copy();
+                        t.Cross(_DNAScores[i]);
+                        chosenDNA.Add(t);
+                    }
+                }
+                _DNAProfilesToRun.AddRange(chosenDNA);
+                Console.WriteLine($"Generation {generation} complete");
+                Console.WriteLine("Top 5 Performers");
+                foreach (DNA dna in _DNAScores.OrderByDescending(a => a.Score).Take(5))
+                {
+                    Console.WriteLine($"{dna.ToString()} Score : {dna.Score}");
+                }
+            }
+            _OutputStream.Flush();
+            _OutputStream.Dispose();
+            _OutputStream = null;
+            Console.WriteLine("Completed");
+
+
+            Console.ReadKey();
+            Console.ReadKey();
+
+        }
+
+        private static void DNARunnerThread()
+        {
+            while (_DNAProfilesToRun.Count > 0)
+            {
+                Monitor.Enter(_DNAProfilesToRun);
+                DNA currentProfile = _DNAProfilesToRun[0];
+                _DNAProfilesToRun.RemoveAt(0);
+                Monitor.Exit(_DNAProfilesToRun);
+
+                List<Single> scores = new List<Single>();
+                for (Int32 i = 0; i < 4; i++)
+                {
+                    TestGenetics t = new TestGenetics(currentProfile);
+                    while (t.Epoch < 10000)
+                    {
+                        t.Update();
+                    }
+                    scores.Add((Single)t._RollingAveragePerformance);
+                }
+                Monitor.Enter(_DNAScores);
+                currentProfile.Score = scores.Average();
+                _DNAScores.Add(currentProfile);
+                String output = $"{currentProfile.ToString()} Score : {scores.Average()}";
+                Console.WriteLine(output);
+                _OutputStream.WriteLine(output);
+
+                Monitor.Exit(_DNAScores);
             }
         }
     }
