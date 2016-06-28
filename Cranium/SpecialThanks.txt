@@ -1,0 +1,3 @@
+Special Thanks
+
+https://github.com/jjaskulowski - For reporting bugs :)

@@ -12,6 +12,8 @@
 #region Usings
 
 using System;
+using System.Globalization;
+using System.Threading;
 using Cranium.Lib.Test.Tests.Linear;
 using Cranium.Lib.Test.Tests.Recursive;
 using Cranium.Lib.Test.Tests.Reservoir;
@@ -31,6 +33,9 @@ namespace Cranium.Lib.Test
         /// </param>
         public static void Main(String[] args)
         {
+            //Fix at the request of Github:jjaskulowski 
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+
             Console.WriteLine("Which test would you like to run");
             Console.WriteLine("-------------------------------------------------");
             Console.WriteLine("1 -  XOR2Test");

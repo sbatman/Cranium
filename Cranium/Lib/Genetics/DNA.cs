@@ -28,7 +28,7 @@ namespace Cranium.Lib.Genetics
             return _Genes[name];
         }
 
-        public T GetGene<T>(String name)
+        public T GetGene<T>(String name) where T : Gene
         {
             return (T)_Genes[name];
         }
