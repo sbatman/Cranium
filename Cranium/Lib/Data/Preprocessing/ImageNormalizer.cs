@@ -49,7 +49,7 @@ namespace Cranium.Lib.Data.Preprocessing
                 for (Int32 y = 0; y < targetHeight; y++)
                 {
                     Byte[] target = PickPixel(x, y, returnImage);
-                    returnImage.BwMap[x + y * targetWidth] = (Byte) (255 - target[0]);
+                    returnImage.BwMap[x + y * targetWidth] = (Byte)(((255 - target[0]) + (255 - target[1])+ (255 - target[2]))/3);
                 }
             }
 
