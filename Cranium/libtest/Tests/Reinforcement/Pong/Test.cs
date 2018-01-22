@@ -84,7 +84,7 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
             _NeuralNetwork?.Dispose();
             _NeuralNetwork = new Network();
             _NeuralNetwork.LearningRate = 0.08f;
-            _NeuralNetwork.Momentum = 0.0;
+            _NeuralNetwork.Momentum = 0.3f;
             _InputNodeCount = GetEnvironmentState().Count + Enum.GetValues(typeof(PossibleActions)).Length;
 
             Layer inputLayer = new Layer();
@@ -94,10 +94,10 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
 
             Layer hiddenLayer = new Layer();
             List<BaseNode> hiddenLayerNodes = new List<BaseNode>();
-            for (Int32 i = 0; i < 15; i++) hiddenLayerNodes.Add(new BaseNode(hiddenLayer, new TanhAF()));
+            for (Int32 i = 0; i < 5; i++) hiddenLayerNodes.Add(new BaseNode(hiddenLayer, new TanhAF()));
             hiddenLayer.SetNodes(hiddenLayerNodes);
 
-            _ContextLayer = new RecurrentContext(1, new TanhAF());
+            _ContextLayer = new RecurrentContext(4, new TanhAF());
 
             Layer outputLayer = new Layer();
             _OuputLayerNodes = new List<BaseNode>();
@@ -119,7 +119,7 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
             _NeuralNetwork.AddLayer(outputLayer);
 
             foreach (Layer layer in _NeuralNetwork.GetCurrentLayers()) layer.PopulateNodeConnections();
-            _NeuralNetwork.RandomiseWeights(0.57f);
+            _NeuralNetwork.RandomiseWeights(0.8f);
         }
 
         private List<ActionInstance> TestActionOptions()
@@ -232,8 +232,15 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
         {
             if (_TeachingEnabled)
             {
-
-                if (_RollingAveragePerformance > 0.95f)
+                if (_RollingAveragePerformance > 0.5f)
+                { _NeuralNetwork.LearningRate = 0.04f; }
+                if (_RollingAveragePerformance > 0.7f)
+                { _NeuralNetwork.LearningRate = 0.02f; }
+                if (_RollingAveragePerformance > 0.9f)
+                { _NeuralNetwork.LearningRate = 0.01f; }
+                if (_RollingAveragePerformance <= 0.5f)
+                { _NeuralNetwork.LearningRate = 0.08f; }
+                if (_RollingAveragePerformance > 0.85f)
                 {
                     _TeachingEnabled = false;
                     _Visualizer = new Visualizer(_Arena);
@@ -254,7 +261,7 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
         public void Reset()
         {
             _InitialPass = true;
-            _Arena.SpawnBall(-25f, ((Single)_RND.NextDouble() - 0.5f) * 35);
+            _Arena.SpawnBall(-25f, ((Single)_RND.NextDouble() - 0.5f) * 40);
             _Arena.LeftPaddle.Y = (Single)_RND.NextDouble() * _Arena.Height;
             if (_TeachingEnabled)
             {

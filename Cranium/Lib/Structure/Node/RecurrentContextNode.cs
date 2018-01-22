@@ -88,6 +88,16 @@ namespace Cranium.Lib.Structure.Node
             _Value = (_Value * (1 - _RateOfUpdate)) + (_SourceNode.GetValue() * _RateOfUpdate);
         }
 
+        public override void CalculateValue()
+        {
+            //Not use doing the base node calc value as it will be overriden by the manual update
+        }
+
+        public override void AdjustWeights(Double learningRate)
+        {
+            base.AdjustWeights(learningRate);
+        }
+
         /// <summary>
         ///     Sets the start value of this node.
         /// </summary>

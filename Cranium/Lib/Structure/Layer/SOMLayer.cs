@@ -53,12 +53,6 @@ namespace Cranium.Lib.Structure.Layer
         /// </param>
         public SOMLayer(SerializationInfo info, StreamingContext context) : base(info, context)
         {
-            _Nodes = (List<BaseNode>) info.GetValue("_Nodes", typeof (List<BaseNode>));
-            _LayerID = info.GetInt32("_LayerID");
-            _NextNodeID = info.GetInt32("_NextNodeID");
-            _ForwardConnectedLayers = (List<Layer>) info.GetValue("_ForwardConnectedLayers", typeof (List<Layer>));
-            _ReverseConnectedLayers = (List<Layer>) info.GetValue("_ReverseConnectedLayers", typeof (List<Layer>));
-
             MaxmimumLearningDistance = info.GetDouble("_MaxmimumLearningDistance");
             MinimumLearningDistance = info.GetDouble("_MinimumLearningDistance");
             CurrentDistanceSupression = info.GetDouble("_CurrentDistanceSupression");

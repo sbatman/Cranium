@@ -271,7 +271,7 @@ namespace Cranium.Lib.Test.Tests.Reinforcement.Pong
         public void Reset()
         {
             _InitialPass = true;
-            _Arena.SpawnBall(-25f, ((Single)_RND.NextDouble() - 0.5f) * 35);
+            _Arena.SpawnBall(-25f, ((Single)_RND.NextDouble() - 0.5f) * 40);
             _Arena.LeftPaddle.Y = (Single)_RND.NextDouble() * _Arena.Height;
             if (_TeachingEnabled)
             {
