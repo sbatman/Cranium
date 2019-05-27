@@ -96,9 +96,9 @@ namespace Cranium.Lib.Test.Tests.Recursive
             // The rate at which the neural entwork learns (the more agressive this is the harded itll be for the network)
             _SlidingWindowTraining.SetDatasetReservedLength(0);
             // How many elements off the end of the dataset should not be used for training
-            _SlidingWindowTraining.DistanceToForcastHorizon=(3);
+            _SlidingWindowTraining.DistanceToForcastHorizon=3;
             // How far beyond the window should be be trying to predict
-            _SlidingWindowTraining.WindowWidth=(12);
+            _SlidingWindowTraining.WindowWidth=12;
             // The window of elements that should be presented before the backward pass is performed
             _SlidingWindowTraining.SetMaximumEpochs(20); // The maximum number of epochs the network can train for
             _SlidingWindowTraining.SetInputNodes(_InputLayerNodes); // Setting the nodes that are used for input
@@ -147,7 +147,7 @@ namespace Cranium.Lib.Test.Tests.Recursive
             Array.Copy(result.ExpectedOutputs, expected, lenBeforePredict);
 
 
-            Console.WriteLine(result.Rmse);
+            Console.WriteLine(result.RMSE);
             Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
             Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
             Console.WriteLine("Complete Testing");
@@ -213,12 +213,8 @@ namespace Cranium.Lib.Test.Tests.Recursive
         /// <summary>
         ///     Function that is passed as a delate that dynamiclay calculates the learning rate
         /// </summary>
-        /// <returns>
-        ///     The learning rate.
-        /// </returns>
-        /// <param name='x'>
-        ///     X.
-        /// </param>
+        /// <returns> The learning rate. </returns>
+        /// <param name='x'>X.</param>
         /// <param name='y'>
         ///     Y.
         /// </param>

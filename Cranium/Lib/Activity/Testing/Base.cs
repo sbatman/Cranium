@@ -32,7 +32,7 @@ namespace Cranium.Lib.Activity.Testing
         [Serializable]
         public class TestResults : ISerializable
         {
-            public Double Rmse;
+            private Double _RMSE;
 
             /// <summary>
             ///     Initializes a new instance of the
@@ -54,12 +54,14 @@ namespace Cranium.Lib.Activity.Testing
             /// </summary>
             public TestResults(SerializationInfo info, StreamingContext context)
             {
-                Rmse = info.GetDouble("RMSE");
+                _RMSE = info.GetDouble("RMSE");
             }
+
+            public double RMSE { get => _RMSE; set => _RMSE = value; }
 
             public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
             {
-                info.AddValue("RMSE", Rmse);
+                info.AddValue("RMSE", _RMSE);
             }
         }
 

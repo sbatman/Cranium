@@ -105,7 +105,7 @@ namespace Cranium.Lib.Test.Tests.Reservoir
                     Array.Copy(result.ExpectedOutputs, expected, lenBeforePredict);
 
 
-                    Console.WriteLine(result.Rmse);
+                    Console.WriteLine(result.RMSE);
                     Functions.PrintArrayToFile(result.ActualOutputs, "ActualOutputs.csv");
                     Functions.PrintArrayToFile(result.ExpectedOutputs, "ExpectedOutputs.csv");
                     Console.WriteLine("Complete Testing");

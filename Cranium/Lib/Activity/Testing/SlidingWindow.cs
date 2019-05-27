@@ -29,9 +29,22 @@ namespace Cranium.Lib.Activity.Testing
         /// </summary>
         public class SlidingWindowTestResults : TestResults
         {
-            public Double[][] ActualOutputs;
-            public Double[][] ExpectedOutputs;
-            public Double[][] OutputErrors;
+            private Double[][] _ActualOutputs;
+            private Double[][] _ExpectedOutputs;
+            private Double[][] _OutputErrors;
+
+            /// <summary>
+            /// The generated outputs of the new neural network
+            /// </summary>
+            public double[][] ActualOutputs { get => _ActualOutputs; set => _ActualOutputs = value; }
+            /// <summary>
+            /// The target outputs of the neural network
+            /// </summary>
+            public double[][] ExpectedOutputs { get => _ExpectedOutputs; set => _ExpectedOutputs = value; }
+            /// <summary>
+            /// The errors experianced by the network during testing
+            /// </summary>
+            public double[][] OutputErrors { get => _OutputErrors; set => _OutputErrors = value; }
 
             /// <summary>
             ///     Initializes a new instance of the <see cref="Activity.Testing.SlidingWindow.SlidingWindowTestResults" /> class.
@@ -197,7 +210,7 @@ namespace Cranium.Lib.Activity.Testing
                 }
             }
             //All the sequewnces have been run through and the outputs and their erros collected
-            SlidingWindowTestResults result = new SlidingWindowTestResults { ExpectedOutputs = _ExpectedOutputs, ActualOutputs = _ActualOutputs, OutputErrors = _OutputErrors, Rmse = rmse / errorCount };
+            SlidingWindowTestResults result = new SlidingWindowTestResults { ExpectedOutputs = _ExpectedOutputs, ActualOutputs = _ActualOutputs, OutputErrors = _OutputErrors, RMSE = rmse / errorCount };
             return result;
         }
 

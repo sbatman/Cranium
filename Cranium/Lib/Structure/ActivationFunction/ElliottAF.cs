@@ -19,6 +19,7 @@ using System.Runtime.Serialization;
 
 namespace Cranium.Lib.Structure.ActivationFunction
 {
+    /// <inheritdoc />
     /// <summary>
     ///     The Elliott activations functions acts as a computationaly cheaper version of tanH although with known problems
     ///     with reaching the lowest
@@ -31,17 +32,22 @@ namespace Cranium.Lib.Structure.ActivationFunction
     {
         private Double _Scale = 1;
 
+        /// <summary>
+        /// A uniform scale applied to all values passing through the activation function
+        /// </summary>
         public Double Scale
         {
-            [Pure] get { return _Scale; }
+            [Pure]
+            get { return _Scale; }
             set { _Scale = value; }
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ElliottAF" /> class.
         /// </summary>
-        public ElliottAF()
+        public ElliottAF(Double scale = 1)
         {
+            Scale = scale;
         }
 
         /// <summary>
@@ -60,31 +66,24 @@ namespace Cranium.Lib.Structure.ActivationFunction
 
         #region implemented abstract members of Cranium.Structure.ActivationFunction.Base
 
-        /// <summary>
-        ///     Returns the input after running through the activation function.
-        /// </summary>
-        /// <param name='input'>
-        ///     The value to pass to the activation function
-        /// </param>
+        /// <summary>Returns the input after running through the activation function. </summary>
+        /// <param name='input'>The value to pass to the activation function </param>
         public override Double Compute(Double input)
         {
             return input * _Scale / (1 + Math.Abs(input * _Scale));
         }
 
-        /// <summary>
-        ///     Computes the derivative using the activation function.
-        /// </summary>
-        /// <returns>
-        ///     The derivative.
-        /// </returns>
-        /// <param name='input'>
-        ///     Input.
-        /// </param>
+        /// <summary>     Computes the derivative using the activation function. </summary>
+        /// <returns>     The derivative. </returns>
+        /// <param name='input'>     Input. </param>
         public override Double ComputeDerivative(Double input)
         {
             return _Scale / Math.Pow(1.0d + Math.Abs(input * _Scale), 2);
         }
 
+        /// <summary>
+        /// Disposes of the activation function and any disposable objects owned
+        /// </summary>
         public override void Dispose()
         {
         }

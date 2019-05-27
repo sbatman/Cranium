@@ -136,6 +136,14 @@ namespace Cranium.Lib.Activity.Training
             set { _WindowWidth = value; }
         }
 
+        /// <summary>
+        ///     The average error experianced during the last pass
+        /// </summary>
+        public double LastPassAverageError
+        {
+            get { return _LastPassAverageError; }
+        }
+
         public virtual void SetOutputToTarget(Boolean state)
         {
             _SetOuputToTarget = state;
