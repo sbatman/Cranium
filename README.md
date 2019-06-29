@@ -3,7 +3,11 @@ Cranium
 
 Description
 --------
-Cranium is a lightweight Neural Network framework for c#
+Cranium is a lightweight Neural Network framework for c#. Designed and built with customisation in mind Cranium
+assists with the creation training and testing of flat, recurrent and echo state neural networks. Alongside Cranium
+Lobe can also be found in the repository, Lobe allows the creation of massively distributed neural network configuration
+training and testing to further expand the capabilities of the Cranium tool kit. Development is currently ongoing
+supporting a number of current applications.
 
 Team
 --------

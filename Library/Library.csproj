@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <PackageId>Cranium.Library</PackageId>
+    <Authors>Sbatman</Authors>
+    <Copyright>Sbatman 2019</Copyright>
+    <Product>Cranium.Library</Product>
+    <Description>A lightweight .netstandard 2.0 neural networking library</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://gitlab.com/sbatman/Cranium</PackageProjectUrl>
+    <RepositoryUrl>https://gitlab.com/sbatman/Cranium</RepositoryUrl>
+    <PackageTags>Neural Network, Echo State, Sbatman, .net standard, standard 2.0, Cranium, feed forward,</PackageTags>
+    <PackageReleaseNotes>Initial Release to Nuget</PackageReleaseNotes>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Sbatman.Serialize" Version="1.0.1" />
+  </ItemGroup>
+
+</Project>

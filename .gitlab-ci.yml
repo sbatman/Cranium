@@ -1,0 +1,32 @@
+variables:
+  DOCKER_DRIVER: overlay2
+
+stages:
+  - build
+  - publish
+
+build:
+  image: microsoft/dotnet:latest
+  stage: build
+  script:
+  - cd Library
+  - "dotnet build -c release"
+  artifacts:
+    paths:
+    - Library/bin/Release
+    - Library/bin/Debug
+
+nuget:
+  image: microsoft/dotnet:latest
+  stage: publish
+  script:
+  - cd Library
+  - "dotnet pack -c release"
+  - cd bin/Release
+  - "dotnet nuget push *.nupkg -k $NUGETKEY -s https://api.nuget.org/v3/index.json"
+  artifacts:
+    paths:
+    - Library/bin/Release
+    - Library/bin/Debug
+  only:
+  - master
