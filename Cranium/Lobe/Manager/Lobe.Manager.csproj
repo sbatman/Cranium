@@ -68,9 +68,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Lib\Cranium.csproj">
-      <Project>{9553b26d-5d2d-4013-82e1-4d7a24d526d8}</Project>
-      <Name>Cranium</Name>
+    <ProjectReference Include="..\..\..\Library\Library.csproj">
+      <Project>{b00cb1bf-b813-45f6-a4f6-fb9580cbc445}</Project>
+      <Name>Library</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

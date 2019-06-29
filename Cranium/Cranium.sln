@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28729.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LibTest", "libtest\LibTest.csproj", "{509EEFCA-0006-4685-B217-A255BA989BD5}"
 EndProject
@@ -26,12 +26,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Manager", "Lobe\Manage
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lobe.Worker", "Lobe\Worker\Lobe.Worker.csproj", "{F26E3FEE-F29B-4027-9187-A0983763A3D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cranium", "Lib\Cranium.csproj", "{9553B26D-5D2D-4013-82E1-4D7A24D526D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library", "..\Library\Library.csproj", "{B00CB1BF-B813-45F6-A4F6-FB9580CBC445}"
 EndProject
 Global
-	GlobalSection(Performance) = preSolution
-		HasPerformanceSessions = true
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -53,10 +50,10 @@ Global
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B00CB1BF-B813-45F6-A4F6-FB9580CBC445}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B00CB1BF-B813-45F6-A4F6-FB9580CBC445}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B00CB1BF-B813-45F6-A4F6-FB9580CBC445}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B00CB1BF-B813-45F6-A4F6-FB9580CBC445}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -67,7 +64,13 @@ Global
 		{DB8195A8-0085-4866-BE7A-065CED69CE4C} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
 		{A1601401-0896-4016-B519-1A83FD31D337} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
 		{F26E3FEE-F29B-4027-9187-A0983763A3D8} = {609D120C-9AD4-43AB-B100-DD134ABD91F1}
-		{9553B26D-5D2D-4013-82E1-4D7A24D526D8} = {753A0852-4155-42E3-B28B-93F9BB83FA4C}
+		{B00CB1BF-B813-45F6-A4F6-FB9580CBC445} = {753A0852-4155-42E3-B28B-93F9BB83FA4C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {51B625F9-D1F8-43C2-86F5-010BF7ACAA52}
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = libtest\LibTest.csproj
