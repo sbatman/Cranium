@@ -11,7 +11,7 @@
     <AssemblyName>Cranium.Lib</AssemblyName>
     <Description>A Lightweight Neural Network Famework for C#</Description>
     <ReleaseVersion>0.3</ReleaseVersion>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
     <RestorePackages>true</RestorePackages>
@@ -41,13 +41,8 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LZ4PCL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LZ4PCL.1.0.0\lib\portable-net4+netcore45+wpa81+MonoAndroid1+MonoTouch1\LZ4PCL.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Sbatman.Serialize, Version=0.7.9.211, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Sbatman.Serialize.0.7.9.211\lib\portable-net45+win+wpa81\Sbatman.Serialize.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Sbatman.Serialize, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sbatman.Serialize.1.0.1\lib\netstandard2.0\Sbatman.Serialize.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.EnterpriseServices" />

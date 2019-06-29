@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Cranium.Lobe.Manager</RootNamespace>
     <AssemblyName>Cranium.Lobe.Manager</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
@@ -38,17 +38,11 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LZ4PCL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\LZ4PCL.1.0.0\lib\portable-net4+netcore45+wpa81+MonoAndroid1+MonoTouch1\LZ4PCL.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Sbatman.Networking, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Sbatman.Networking.1.0.0\lib\netstandard2.0\Sbatman.Networking.dll</HintPath>
     </Reference>
-    <Reference Include="Sbatman.Networking, Version=0.13.5.2348, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Sbatman.Networking.0.13.5.2348\lib\net45\Sbatman.Networking.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Sbatman.Serialize, Version=0.7.9.211, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Sbatman.Serialize.0.7.9.211\lib\portable-net45+win+wpa81\Sbatman.Serialize.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Sbatman.Serialize, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Sbatman.Serialize.1.0.1\lib\netstandard2.0\Sbatman.Serialize.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

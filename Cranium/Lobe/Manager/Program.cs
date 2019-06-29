@@ -1,13 +1,8 @@
-﻿// //////////////////////
-//  
-// Cranium - A neural network framework for C#
-// https://github.com/sbatman/Cranium.git
-// 
-// This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
-// More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
-// If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
-// //////////////////////
+﻿// // --------------------------------
+// // -- File Created 	: 10:12 28/06/2019
+// // -- File Part of the Cranium Solution, project Lobe.Manager
+// // -- Edited By : Steven Batchelor-Manning
+// // --------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -59,10 +54,9 @@ namespace Cranium.Lobe.Manager
                         BinaryFormatter binaryFormatter = new BinaryFormatter();
                         Base work = (Base)binaryFormatter.Deserialize(stream);
                         stream.Close();
-                        lock (_PendingWork)
-                        {
-                            _PendingWork.Add(work.ActivityInstanceIdentifier);
-                        }
+
+                        lock (_PendingWork) _PendingWork.Add(work.ActivityInstanceIdentifier);
+
                     }
                     catch (Exception e)
                     {
@@ -81,14 +75,15 @@ namespace Cranium.Lobe.Manager
                 Console.Title = "Pending:" + _PendingWork.Count + " Processing:" + _WorkBeingProcessed.Count + " Complete:" + _CompleteWork.Count;
                 lock (_WorkBeingProcessed)
                 {
-                    List<Tuple<Base, DateTime>> lostwork = _WorkBeingProcessed.Where(a => DateTime.Now - a.Item2 > SettingsLoader.WorkLostAfterTime).ToList();
-                    foreach (Tuple<Base, DateTime> tuple in lostwork)
+                    List<Tuple<Base, DateTime>> lostWork = _WorkBeingProcessed.Where(a => DateTime.Now - a.Item2 > SettingsLoader.WorkLostAfterTime).ToList();
+                    foreach (Tuple<Base, DateTime> tuple in lostWork)
                     {
                         _WorkBeingProcessed.Remove(tuple);
                         AddJob(tuple.Item1);
-                        Console.WriteLine("Job lost Reschedualing " + tuple.Item1.ActivityInstanceIdentifier);
+                        Console.WriteLine("Job lost Rescheduling " + tuple.Item1.ActivityInstanceIdentifier);
                     }
                 }
+
                 Thread.Sleep(500);
             }
         }
@@ -107,7 +102,7 @@ namespace Cranium.Lobe.Manager
         }
 
         /// <summary>
-        ///     Gets a single piece of pending work, if the there is none this will return null
+        ///    Gets a single piece of pending work, if the there is none this will return null
         /// </summary>
         /// <returns>A piece of pending work or null</returns>
         public static Base GetPendingJob()
@@ -162,6 +157,7 @@ namespace Cranium.Lobe.Manager
                 {
                     if (File.Exists(filename)) _CompleteWork.Add(jobGuid);
                 }
+
                 if (_CompleteWork.Contains(jobGuid))
                 {
                     FileStream stream = File.OpenRead(filename);
@@ -170,6 +166,7 @@ namespace Cranium.Lobe.Manager
                     stream.Close();
                     return work;
                 }
+
                 return null;
             }
         }

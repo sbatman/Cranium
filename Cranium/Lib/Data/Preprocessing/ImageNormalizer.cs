@@ -1,69 +1,64 @@
-﻿// //////////////////////
-//  
-// Cranium - A neural network framework for C#
-// https://github.com/sbatman/Cranium.git
-// 
-// This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
-// More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
-// If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
-// //////////////////////
+﻿// // --------------------------------
+// // -- File Created 	: 10:12 28/06/2019
+// // -- File Part of the Cranium Solution, project Cranium
+// // -- Edited By : Steven Batchelor-Manning
+// // --------------------------------
 
 using System;
 
 namespace Cranium.Lib.Data.Preprocessing
 {
-    public static class ImageNormalizer
-    {
-        public class Image
-        {
-            public Byte[] Data;
-            public String FileName;
-            public Int32 Height;
-            public String Tag;
-            public Int32 Width;
-        }
+	public static class ImageNormalizer
+	{
+		public static PreProcessedImage ProcessImage(Image input, Int32 targetWidth, Int32 targetHeight)
+		{
+			PreProcessedImage returnImage = new PreProcessedImage
+			{
+				Width = input.Width,
+				Height = input.Height,
+				Data = input.Data,
+				FileName = input.FileName,
+				ProcessedWidth = targetWidth,
+				ProcessedHeight = targetHeight,
+				BwMap = new Byte[targetWidth * targetHeight]
+			};
 
-        public class PreProcessedImage : Image
-        {
-            public Byte[] BwMap;
-            public Int32 ProcessedHeight;
-            public Int32 ProcessedWidth;
-        }
+			for (Int32 x = 0; x < targetWidth; x++)
+			{
+				for (Int32 y = 0; y < targetHeight; y++)
+				{
+					Byte[] target = PickPixel(x, y, returnImage);
+					returnImage.BwMap[x + y * targetWidth] = (Byte) ((255 - target[0] + (255 - target[1]) + (255 - target[2])) / 3);
+				}
+			}
 
-        public static PreProcessedImage ProcessImage(Image input, Int32 targetWidth, Int32 targetHeight)
-        {
-            PreProcessedImage returnImage = new PreProcessedImage
-            {
-                Width = input.Width,
-                Height = input.Height,
-                Data = input.Data,
-                FileName = input.FileName,
-                ProcessedWidth = targetWidth,
-                ProcessedHeight = targetHeight,
-                BwMap = new Byte[targetWidth * targetHeight]
-            };
+			return returnImage;
+		}
 
-            for (Int32 x = 0; x < targetWidth; x++)
-            {
-                for (Int32 y = 0; y < targetHeight; y++)
-                {
-                    Byte[] target = PickPixel(x, y, returnImage);
-                    returnImage.BwMap[x + y * targetWidth] = (Byte)(((255 - target[0]) + (255 - target[1])+ (255 - target[2]))/3);
-                }
-            }
+		public static Byte[] PickPixel(Int32 x, Int32 y, Image image)
+		{
+			if (x >= image.Width || y >= image.Height || x < 0 || y < 0) return null;
+			Byte[] returnArray = new Byte[3];
+			Int32 offset = (image.Width * y + x) * 3;
 
-            return returnImage;
-        }
+			Array.Copy(image.Data, offset, returnArray, 0, 3);
+			return returnArray;
+		}
 
-        public static Byte[] PickPixel(Int32 x, Int32 y, Image image)
-        {
-            if (x >= image.Width || y >= image.Height || x < 0 || y < 0) return null;
-            Byte[] returnArray = new Byte[3];
-            Int32 offset = (image.Width * y + x) * 3;
+		public class Image
+		{
+			public Byte[] Data;
+			public String FileName;
+			public Int32 Height;
+			public String Tag;
+			public Int32 Width;
+		}
 
-            Array.Copy(image.Data, offset, returnArray, 0, 3);
-            return returnArray;
-        }
-    }
+		public class PreProcessedImage : Image
+		{
+			public Byte[] BwMap;
+			public Int32 ProcessedHeight;
+			public Int32 ProcessedWidth;
+		}
+	}
 }

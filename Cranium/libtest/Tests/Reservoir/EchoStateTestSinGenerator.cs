@@ -1,13 +1,8 @@
-// //////////////////////
-//  
-// Cranium - A neural network framework for C#
-// https://github.com/sbatman/Cranium.git
-// 
-// This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
-// More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
-// If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
-// //////////////////////
+// // --------------------------------
+// // -- File Created 	: 10:12 28/06/2019
+// // -- File Part of the Cranium Solution, project LibTest
+// // -- Edited By : Steven Batchelor-Manning
+// // --------------------------------
 
 #region Usings
 
@@ -26,208 +21,211 @@ using Cranium.Lib.Structure.Node;
 
 namespace Cranium.Lib.Test.Tests.Reservoir
 {
-    /// <summary>
-    ///     This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
-    /// </summary>
-    public static class EchoStateTestSinGenerator
-    {
-        public class AdaptedSlidingWindowTraining : SlidingWindow
-        {
-            public Double[,,] ExpectedOutputs;
+	/// <summary>
+	///    This test shows an example of an echo state neural network learning the Makey-Glass time series dataset
+	/// </summary>
+	public static class EchoStateTestSinGenerator
+	{
+		private static Network _TestNetworkStructure;
+		private static AdaptedSlidingWindowTraining _SlidingWindowTraining;
+		private static Layer _InputLayer;
+		private static Layer _OutputLayer;
+		private static RecurrentContext _RecurrentLayer;
+		private static List<BaseNode> _InputLayerNodes;
+		private static List<BaseNode> _OuputLayerNodes;
 
-            public override void PrepareData()
-            {
-                _SequenceCount = (_WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved) / WindowWidth;
-                Int32 inputCount = _InputNodes.Count;
-                Int32 outputCount = _OutputNodes.Count;
-                _InputSequences = new Double[_SequenceCount, WindowWidth, inputCount];
-                ExpectedOutputs = new Double[_SequenceCount, WindowWidth, outputCount];
-                for (Int32 i = 0; i < _SequenceCount; i++)
-                {
-                    for (Int32 j = 0; j < WindowWidth; j++)
-                    {
-                        _InputSequences[i, j, 0] = _WorkingDataset[0][i * WindowWidth + j];
-                        ExpectedOutputs[i, j, 0] = _WorkingDataset[1][i * WindowWidth + j];
-                    }
-                }
-            }
+		/// <summary>
+		///    Run this instance.
+		/// </summary>
+		public static void Run()
+		{
+			//Build Network
+			_TestNetworkStructure = new Network();
+			BuildStructure();
+			_TestNetworkStructure.RandomiseWeights(0.5f);
+			//PrepData
+			Double[][] dataSet = BuildDataSet(3000);
 
-            protected override Boolean _Tick()
-            {
-                if (CurrentEpoch >= _MaxEpochs) return false;
-                Double error = 0;
+			//Prepare training activity
+			_SlidingWindowTraining = new AdaptedSlidingWindowTraining();
+			_SlidingWindowTraining.SetTargetNetwork(_TestNetworkStructure);
+			_SlidingWindowTraining.SetMomentum(0.8f);
+			_SlidingWindowTraining.SetLearningRate(0.05f);
+			_SlidingWindowTraining.SetDatasetReservedLength(0);
+			_SlidingWindowTraining.DistanceToForcastHorizon = 0;
+			_SlidingWindowTraining.WindowWidth = 300;
+			_SlidingWindowTraining.SetMaximumEpochs(1000);
+			_SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
+			_SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
+			_SlidingWindowTraining.SetWorkingDataSet(dataSet);
+			_SlidingWindowTraining.SetOutputToTarget(false);
+			_SlidingWindowTraining.SetRecurrentConextLayers(new List<Layer>
+			{
+				_RecurrentLayer
+			});
 
-                // if the Dynamic Learning Rate delegate is set call it
-                if (_DynamicLearningRate != null) _TargetNetwork.LearningRate=(_DynamicLearningRate(CurrentEpoch, _LastPassAverageError));
-                // if the Dynamic Momentum delegate is set call it
-                if (_DynamicMomentum != null) _TargetNetwork.Momentum=(_DynamicMomentum(CurrentEpoch, _LastPassAverageError));
+			Console.WriteLine("Starting Training");
+			_SlidingWindowTraining.Start();
+			Thread.Sleep(1000);
+			while (_SlidingWindowTraining.Running) Thread.Sleep(20);
 
-                List<Int32> sequencyList = new List<Int32>(_SequenceCount);
+			Console.WriteLine("Complete Training");
 
-                for (Int32 s = 0; s < _SequenceCount; s++) sequencyList.Add(s);
+			Console.WriteLine("Starting Testing");
+			foreach (BaseNode node in _TestNetworkStructure.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
-                while (sequencyList.Count > 0)
-                {
-                    //This needs to be booled so it can be turned off
-                    Int32 s = sequencyList[_Rnd.Next(0, sequencyList.Count)];
-                    sequencyList.Remove(s);
+			Double[] input = new Double[1000];
+			Double[] output = new Double[1000];
+			Single frequency = 0.5f;
+			for (Int32 x = 0; x < 1000; x++)
+			{
+				if (x % 100 == 0) frequency = 0.5f;
+				//    input[x] = frequency;
+				_InputLayerNodes[0].SetValue(frequency);
+				_TestNetworkStructure.FowardPass();
+				_RecurrentLayer.UpdateExtra();
+				output[x] = _OuputLayerNodes[0].GetValue();
+			}
 
-                    foreach (BaseNode node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
+			Functions.PrintArrayToFile(input, "intput.csv");
+			Functions.PrintArrayToFile(output, "output.csv");
+			Console.WriteLine("Complete Testing");
 
-                    for (Int32 i = 0; i < WindowWidth; i++)
-                    {
-                        //   Console.Write("present :"+_InputSequences[s, i, 0]);
-                        for (Int32 x = 0; x < _InputNodes.Count; x++) _InputNodes[x].SetValue(_InputSequences[s, i, x]);
-                        _TargetNetwork.FowardPass();
+			Console.ReadKey();
+		}
 
-                        for (Int32 x = 0; x < _OutputNodes.Count; x++)
-                        {
-                            OutputNode output = _OutputNodes[x] as OutputNode;
-                            output?.SetTargetValue(ExpectedOutputs[s, i, x]);
-                            //       Console.Write(" --- :" + _ExpectedOutputs[s, i, 0]);
-                        }
+		/// <summary>
+		///    Builds the structure of the neural network ready for training and testing
+		/// </summary>
+		public static void BuildStructure()
+		{
+			_InputLayer = new Layer();
+			_InputLayerNodes = new List<BaseNode>();
+			for (Int32 i = 0; i < 1; i++) _InputLayerNodes.Add(new BaseNode(_InputLayer, new TanhAF()));
+			_InputLayer.SetNodes(_InputLayerNodes);
 
-                        if (i >= 75) _TargetNetwork.ReversePass();
+			EchoReservoir echoLayer = new EchoReservoir(50, 0.4f, 0, 30, new TanhAF());
 
-                        if (CurrentEpoch < 250)
-                        {
-                            for (Int32 x = 0; x < _OutputNodes.Count; x++)
-                            {
-                                OutputNode output = _OutputNodes[x] as OutputNode;
-                                output?.SetValue(ExpectedOutputs[s, i, x]);
-                                //       Console.Write(" --- :" + _ExpectedOutputs[s, i, 0]);
-                            }
-                        }
-                        _RecurrentLayer.UpdateExtra();
-                        //    Console.WriteLine(" " + _UpdatingLayers[0].GetNodes()[0].GetValue());
-                    }
+			_OutputLayer = new Layer();
+			_OuputLayerNodes = new List<BaseNode>();
+			for (Int32 i = 0; i < 1; i++) _OuputLayerNodes.Add(new OutputNode(_OutputLayer, new TanhAF()));
+			_OutputLayer.SetNodes(_OuputLayerNodes);
 
-                    //Calculate the current error
-                    Double passError = _OutputNodes.OfType<OutputNode>().Sum(output => output.GetError());
-                    passError /= _OutputNodes.Count;
-                    error += passError * passError;
-                }
-                _LastPassAverageError = error / _SequenceCount;
-                Console.WriteLine(_LastPassAverageError);
-                _LogStream?.WriteLine(_LastPassAverageError);
-                _LogStream?.Flush();
-                return true;
-            }
-        }
+			_RecurrentLayer = new RecurrentContext(2, new TanhAF());
+			_RecurrentLayer.AddSourceNodes(_OuputLayerNodes);
 
-        private static Network _TestNetworkStructure;
-        private static AdaptedSlidingWindowTraining _SlidingWindowTraining;
-        private static Layer _InputLayer;
-        private static Layer _OutputLayer;
-        private static RecurrentContext _RecurrentLayer;
-        private static List<BaseNode> _InputLayerNodes;
-        private static List<BaseNode> _OuputLayerNodes;
+			_InputLayer.ConnectForwardLayer(echoLayer);
+			_RecurrentLayer.ConnectForwardLayer(echoLayer);
 
-        /// <summary>
-        ///     Run this instance.
-        /// </summary>
-        public static void Run()
-        {
-            //Build Network
-            _TestNetworkStructure = new Network();
-            BuildStructure();
-            _TestNetworkStructure.RandomiseWeights(0.5f);
-            //PrepData
-            Double[][] dataSet = BuildDataSet(3000);
+			echoLayer.ConnectForwardLayer(_OutputLayer);
 
-            //Prepare training activity
-            _SlidingWindowTraining = new AdaptedSlidingWindowTraining();
-            _SlidingWindowTraining.SetTargetNetwork(_TestNetworkStructure);
-            _SlidingWindowTraining.SetMomentum(0.8f);
-            _SlidingWindowTraining.SetLearningRate(0.05f);
-            _SlidingWindowTraining.SetDatasetReservedLength(0);
-            _SlidingWindowTraining.DistanceToForcastHorizon=(0);
-            _SlidingWindowTraining.WindowWidth=(300);
-            _SlidingWindowTraining.SetMaximumEpochs(1000);
-            _SlidingWindowTraining.SetInputNodes(_InputLayerNodes);
-            _SlidingWindowTraining.SetOutputNodes(_OuputLayerNodes);
-            _SlidingWindowTraining.SetWorkingDataset(dataSet);
-            _SlidingWindowTraining.SetOutputToTarget(false);
-            _SlidingWindowTraining.SetRecurrentConextLayers(new List<Layer>
-            {
-                _RecurrentLayer
-            });
+			_TestNetworkStructure.AddLayer(_InputLayer);
+			_TestNetworkStructure.AddLayer(_RecurrentLayer);
+			_TestNetworkStructure.AddLayer(echoLayer);
+			_TestNetworkStructure.AddLayer(_OutputLayer);
 
-            Console.WriteLine("Starting Training");
-            _SlidingWindowTraining.Start();
-            Thread.Sleep(1000);
-            while (_SlidingWindowTraining.Running) Thread.Sleep(20);
+			foreach (Layer layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
+			((RecurrentContextNode) _RecurrentLayer.GetNodes()[0]).OverrideRateOfUpdate(1);
+		}
 
-            Console.WriteLine("Complete Training");
+		public static Double[][] BuildDataSet(Int32 sets)
+		{
+			Double[][] data = new Double[2][];
+			for (Int32 i = 0; i < 2; i++) data[i] = new Double[sets];
+			for (Int32 x = 0; x < sets; x++)
+			{
+				Double output = Math.Sin(x * 0.05f) * 0.5f;
+				data[0][x] = 0;
+				data[1][x] = output;
+			}
 
-            Console.WriteLine("Starting Testing");
-            foreach (BaseNode node in _TestNetworkStructure.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
+			return data;
+		}
 
-            Double[] input = new Double[1000];
-            Double[] output = new Double[1000];
-            Single frequency = 0.5f;
-            for (Int32 x = 0; x < 1000; x++)
-            {
-                if (x % 100 == 0) frequency = 0.5f;
-                //    input[x] = frequency;
-                _InputLayerNodes[0].SetValue(frequency);
-                _TestNetworkStructure.FowardPass();
-                _RecurrentLayer.UpdateExtra();
-                output[x] = _OuputLayerNodes[0].GetValue();
-            }
+		public class AdaptedSlidingWindowTraining : SlidingWindow
+		{
+			public Double[,,] ExpectedOutputs;
 
-            Functions.PrintArrayToFile(input, "intput.csv");
-            Functions.PrintArrayToFile(output, "output.csv");
-            Console.WriteLine("Complete Testing");
+			public override void PrepareData()
+			{
+				_SequenceCount = (_WorkingDataset[0].GetLength(0) - _PortionOfDatasetReserved) / WindowWidth;
+				Int32 inputCount = _InputNodes.Count;
+				Int32 outputCount = _OutputNodes.Count;
+				_InputSequences = new Double[_SequenceCount, WindowWidth, inputCount];
+				ExpectedOutputs = new Double[_SequenceCount, WindowWidth, outputCount];
+				for (Int32 i = 0; i < _SequenceCount; i++)
+				{
+					for (Int32 j = 0; j < WindowWidth; j++)
+					{
+						_InputSequences[i, j, 0] = _WorkingDataset[0][i * WindowWidth + j];
+						ExpectedOutputs[i, j, 0] = _WorkingDataset[1][i * WindowWidth + j];
+					}
+				}
+			}
 
-            Console.ReadKey();
-        }
+			protected override Boolean _Tick()
+			{
+				if (CurrentEpoch >= _MaxEpochs) return false;
+				Double error = 0;
 
-        /// <summary>
-        ///     Builds the structure of the neural network ready for training and testing
-        /// </summary>
-        public static void BuildStructure()
-        {
-            _InputLayer = new Layer();
-            _InputLayerNodes = new List<BaseNode>();
-            for (Int32 i = 0; i < 1; i++) _InputLayerNodes.Add(new BaseNode(_InputLayer, new TanhAF()));
-            _InputLayer.SetNodes(_InputLayerNodes);
+				// if the Dynamic Learning Rate delegate is set call it
+				if (_DynamicLearningRate != null) _TargetNetwork.LearningRate = _DynamicLearningRate(CurrentEpoch, _LastPassAverageError);
+				// if the Dynamic Momentum delegate is set call it
+				if (_DynamicMomentum != null) _TargetNetwork.Momentum = _DynamicMomentum(CurrentEpoch, _LastPassAverageError);
 
-            EchoReservoir echoLayer = new EchoReservoir(50, 0.4f, 0, 30, new TanhAF());
+				List<Int32> sequencyList = new List<Int32>(_SequenceCount);
 
-            _OutputLayer = new Layer();
-            _OuputLayerNodes = new List<BaseNode>();
-            for (Int32 i = 0; i < 1; i++) _OuputLayerNodes.Add(new OutputNode(_OutputLayer, new TanhAF()));
-            _OutputLayer.SetNodes(_OuputLayerNodes);
+				for (Int32 s = 0; s < _SequenceCount; s++) sequencyList.Add(s);
 
-            _RecurrentLayer = new RecurrentContext(2, new TanhAF());
-            _RecurrentLayer.AddSourceNodes(_OuputLayerNodes);
+				while (sequencyList.Count > 0)
+				{
+					//This needs to be booled so it can be turned off
+					Int32 s = sequencyList[_Rnd.Next(0, sequencyList.Count)];
+					sequencyList.Remove(s);
 
-            _InputLayer.ConnectFowardLayer(echoLayer);
-            _RecurrentLayer.ConnectFowardLayer(echoLayer);
+					foreach (BaseNode node in _TargetNetwork.GetCurrentLayers().SelectMany(layer => layer.GetNodes())) node.SetValue(0);
 
-            echoLayer.ConnectFowardLayer(_OutputLayer);
+					for (Int32 i = 0; i < WindowWidth; i++)
+					{
+						//   Console.Write("present :"+_InputSequences[s, i, 0]);
+						for (Int32 x = 0; x < _InputNodes.Count; x++) _InputNodes[x].SetValue(_InputSequences[s, i, x]);
+						_TargetNetwork.FowardPass();
 
-            _TestNetworkStructure.AddLayer(_InputLayer);
-            _TestNetworkStructure.AddLayer(_RecurrentLayer);
-            _TestNetworkStructure.AddLayer(echoLayer);
-            _TestNetworkStructure.AddLayer(_OutputLayer);
+						for (Int32 x = 0; x < _OutputNodes.Count; x++)
+						{
+							OutputNode output = _OutputNodes[x] as OutputNode;
+							output?.SetTargetValue(ExpectedOutputs[s, i, x]);
+							//       Console.Write(" --- :" + _ExpectedOutputs[s, i, 0]);
+						}
 
-            foreach (Layer layer in _TestNetworkStructure.GetCurrentLayers()) layer.PopulateNodeConnections();
-            ((RecurrentContextNode) _RecurrentLayer.GetNodes()[0]).OverrideRateOfUpdate(1);
-        }
+						if (i >= 75) _TargetNetwork.ReversePass();
 
-        public static Double[][] BuildDataSet(Int32 sets)
-        {
-            Double[][] data = new Double[2][];
-            for (Int32 i = 0; i < 2; i++) data[i] = new Double[sets];
-            for (Int32 x = 0; x < sets; x++)
-            {
-                Double output = Math.Sin(x * 0.05f) * 0.5f;
-                data[0][x] = 0;
-                data[1][x] = output;
-            }
-            return data;
-        }
-    }
+						if (CurrentEpoch < 250)
+						{
+							for (Int32 x = 0; x < _OutputNodes.Count; x++)
+							{
+								OutputNode output = _OutputNodes[x] as OutputNode;
+								output?.SetValue(ExpectedOutputs[s, i, x]);
+								//       Console.Write(" --- :" + _ExpectedOutputs[s, i, 0]);
+							}
+						}
+
+						_RecurrentLayer.UpdateExtra();
+						//    Console.WriteLine(" " + _UpdatingLayers[0].GetNodes()[0].GetValue());
+					}
+
+					//Calculate the current error
+					Double passError = _OutputNodes.OfType<OutputNode>().Sum(output => output.GetError());
+					passError /= _OutputNodes.Count;
+					error += passError * passError;
+				}
+
+				_LastPassAverageError = error / _SequenceCount;
+				Console.WriteLine(_LastPassAverageError);
+				_LogStream?.WriteLine(_LastPassAverageError);
+				_LogStream?.Flush();
+				return true;
+			}
+		}
+	}
 }

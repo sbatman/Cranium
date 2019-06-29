@@ -1,13 +1,8 @@
-﻿// //////////////////////
-//  
-// Cranium - A neural network framework for C#
-// https://github.com/sbatman/Cranium.git
-// 
-// This work is covered under the Creative Commons Attribution-ShareAlike 3.0 Unported (CC BY-SA 3.0) licence.
-// More information can be found about the liecence here http://creativecommons.org/licenses/by-sa/3.0/
-// If you wish to discuss the licencing terms please contact Steven Batchelor-Manning
-// 
-// //////////////////////
+﻿// // --------------------------------
+// // -- File Created 	: 10:12 28/06/2019
+// // -- File Part of the Cranium Solution, project LibTest
+// // -- Edited By : Steven Batchelor-Manning
+// // --------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -21,192 +16,193 @@ using Cranium.Lib.Test.SupportClasses;
 
 namespace Cranium.Lib.Test.Tests.SOM
 {
-    internal class SOMCharRecTets
-    {
-        private class NetworkConfiguration
-        {
-            public readonly Layer InputLayer;
-            public readonly List<BaseNode> InputLayerNodes;
-            public readonly Network NetworkInstance;
-            public readonly SOMLayer SOMMemoryLayer;
+	internal class SOMCharRecTets
+	{
+		public const Int32 IMAGE_SIZE = 24;
+		public const Int32 OUTPUT_NODE_GRID_WIDTH = 6;
+		public const Int32 OUTPUT_COUNT = OUTPUT_NODE_GRID_WIDTH * OUTPUT_NODE_GRID_WIDTH;
 
-            public NetworkConfiguration(Int32 inputNodeCount, Int32 somGridSize)
-            {
-                NetworkInstance = new Network();
+		public static Byte[][] NodeData = new Byte[OUTPUT_COUNT][];
 
-                InputLayer = new Layer();
-                InputLayerNodes = new List<BaseNode>();
-                for (Int32 i = 0; i < inputNodeCount; i++) InputLayerNodes.Add(new BaseNode(InputLayer, new LinearAF()));
-                InputLayer.SetNodes(InputLayerNodes);
+		public static void Run()
+		{
+			Console.WriteLine("This test shows an example of a neural network learning how to categories a series of digits provided along with the test, After a every epochs an image showing the current knowledge of the network is saved in the running directory");
+			Console.WriteLine("Press any key to begin");
 
-                SOMMemoryLayer = new SOMLayer(somGridSize)
-                {
-                    MaxmimumLearningDistance = 6,
-                    MinimumLearningDistance = 0.2
-                };
+			List<ImageNormalizer.PreProcessedImage> processedImages = new List<ImageNormalizer.PreProcessedImage>();
 
-                InputLayer.ConnectFowardLayer(SOMMemoryLayer);
+			for (Int32 i = 0; i < 10; i++)
+			{
+				processedImages.AddRange(LoadContent($"Content/Images/{i}/", i.ToString()));
+			}
 
-                NetworkInstance.AddLayer(InputLayer);
-                NetworkInstance.AddLayer(SOMMemoryLayer);
+			NetworkConfiguration network = new NetworkConfiguration(IMAGE_SIZE * IMAGE_SIZE, OUTPUT_NODE_GRID_WIDTH);
 
-                NetworkInstance.Momentum = (0.2f);
-                NetworkInstance.LearningRate = (0.1f);
+			for (Int32 i = 0; i < OUTPUT_COUNT; i++) NodeData[i] = new Byte[IMAGE_SIZE * IMAGE_SIZE];
 
-                foreach (Layer layer in NetworkInstance.GetCurrentLayers()) layer.PopulateNodeConnections();
+			PresentImagesToNetwork(network, processedImages, 450);
 
-                NetworkInstance.RandomiseWeights(1.0f, true);
-            }
-        }
+			Console.WriteLine("Complete");
+			Console.ReadKey();
+		}
 
-        public const Int32 IMAGESIZE = 24;
-        public const Int32 OUTPUTNODE_GRID_WIDTH = 6;
-        public const Int32 OUTPUTCOUNT = OUTPUTNODE_GRID_WIDTH * OUTPUTNODE_GRID_WIDTH;
+		private static void TestNetwork(IEnumerable<ImageNormalizer.PreProcessedImage> processedImages, NetworkConfiguration network, Int32 epoch)
+		{
+			Dictionary<String, List<Int32>> outcomes = new Dictionary<String, List<Int32>>();
 
-        public static Byte[][] NodeData = new Byte[OUTPUTCOUNT][];
+			Int32[,] outputChunk = new Int32[OUTPUT_COUNT, IMAGE_SIZE * IMAGE_SIZE];
+			Int32[] outputCount = new Int32[OUTPUT_COUNT];
 
-        public static void Run()
-        {
-            Console.WriteLine("This test shows an example of a neural network learning how to categories a series of digits provided along with the test, After a every epochs an image showing the current knowledge of the network is saved in the running directory");
-            Console.WriteLine("Press any key to begin");
+			foreach (ImageNormalizer.PreProcessedImage image in processedImages)
+			{
+				if (!outcomes.ContainsKey(image.Tag)) outcomes.Add(image.Tag, new List<Int32>());
 
-            List<ImageNormalizer.PreProcessedImage> processedImages = new List<ImageNormalizer.PreProcessedImage>();
+				Int32 id = ClassifyImage(network, image);
+				outcomes[image.Tag].Add(id);
 
-            for (Int32 i = 0; i < 10; i++)
-            {
-                processedImages.AddRange(LoadContent($"Content/Images/{i}/", i.ToString()));
-            }
+				outputCount[id]++;
 
-            NetworkConfiguration network = new NetworkConfiguration(IMAGESIZE * IMAGESIZE, OUTPUTNODE_GRID_WIDTH);
+				for (Int32 i = 0; i < IMAGE_SIZE * IMAGE_SIZE; i++) outputChunk[id, i] += image.BwMap[i];
+			}
 
-            for (Int32 i = 0; i < OUTPUTCOUNT; i++) NodeData[i] = new Byte[IMAGESIZE * IMAGESIZE];
+			Byte[] outputImage = new Byte[IMAGE_SIZE * IMAGE_SIZE * OUTPUT_COUNT];
 
-            PresentImagesToNetwork(network, processedImages, 450);
+			for (Int32 n = 0; n < OUTPUT_COUNT; n++)
+			{
+				if (outputCount[n] == 0) continue;
+				for (Int32 i = 0; i < IMAGE_SIZE * IMAGE_SIZE; i++) outputChunk[n, i] /= outputCount[n];
+			}
 
-            Console.WriteLine("Complete");
-            Console.ReadKey();
+			for (Int32 nx = 0; nx < OUTPUT_NODE_GRID_WIDTH; nx++)
+			{
+				for (Int32 ny = 0; ny < OUTPUT_NODE_GRID_WIDTH; ny++)
+				{
+					for (Int32 x = 0; x < IMAGE_SIZE; x++)
+					{
+						for (Int32 y = 0; y < IMAGE_SIZE; y++)
+						{
+							Int32 targetX = nx * IMAGE_SIZE + x;
+							Int32 targetY = ny * IMAGE_SIZE + y;
 
-        }
+							Int32 target = targetX + targetY * IMAGE_SIZE * OUTPUT_NODE_GRID_WIDTH;
 
-        private static void TestNetwork(IEnumerable<ImageNormalizer.PreProcessedImage> processedImages, NetworkConfiguration network, Int32 epoch)
-        {
-            Dictionary<String, List<Int32>> outcomes = new Dictionary<String, List<Int32>>();
+							outputImage[target] = (Byte) outputChunk[nx + ny * OUTPUT_NODE_GRID_WIDTH, x + y * IMAGE_SIZE];
+						}
+					}
+				}
+			}
 
-            Int32[,] outputChunk = new Int32[OUTPUTCOUNT, IMAGESIZE * IMAGESIZE];
-            Int32[] outputCount = new Int32[OUTPUTCOUNT];
+			ImageLoader.SaveBwImage($"{epoch}.bmp", IMAGE_SIZE * OUTPUT_NODE_GRID_WIDTH, IMAGE_SIZE * OUTPUT_NODE_GRID_WIDTH, outputImage);
+		}
 
-            foreach (ImageNormalizer.PreProcessedImage image in processedImages)
-            {
-                if (!outcomes.ContainsKey(image.Tag)) outcomes.Add(image.Tag, new List<Int32>());
+		private static IEnumerable<ImageNormalizer.PreProcessedImage> LoadContent(String folder, String addTag = null)
+		{
+			List<ImageNormalizer.Image> rawImages = new List<ImageNormalizer.Image>(ImageLoader.GetImagesInFolder(folder, IMAGE_SIZE, IMAGE_SIZE));
+			List<ImageNormalizer.PreProcessedImage> processedImages = rawImages.Select(img => ImageNormalizer.ProcessImage(img, IMAGE_SIZE, IMAGE_SIZE)).ToList();
+			processedImages.ForEach(a => a.Tag = addTag);
+			return processedImages;
+		}
 
-                Int32 id = ClassifyImage(network, image);
-                outcomes[image.Tag].Add(id);
+		private static void PresentImagesToNetwork(NetworkConfiguration network, List<ImageNormalizer.PreProcessedImage> images, Int32 epochs)
+		{
+			for (Int32 epoch = 0; epoch <= epochs; epoch++)
+			{
+				Console.Title = $"{epoch}/{epochs}";
+				images.Shuffle();
 
-                outputCount[id]++;
+				network.SOMMemoryLayer.CurrentDistanceSupression = 1 - epoch / (Double) epochs;
 
-                for (Int32 i = 0; i < IMAGESIZE * IMAGESIZE; i++) outputChunk[id, i] += image.BwMap[i];
-            }
+				foreach (ImageNormalizer.PreProcessedImage image in images)
+				{
+					//ForwardPass
+					Byte[] mapToPresent = image.BwMap;
 
-            Byte[] outputImage = new Byte[IMAGESIZE * IMAGESIZE * OUTPUTCOUNT];
+					BaseNode[] nodes = network.InputLayerNodes.ToArray();
+					for (Int32 i = 0; i < mapToPresent.Length; i++)
+					{
+						nodes[i].SetValue(mapToPresent[i] / 255.0);
+					}
 
-            for (Int32 n = 0; n < OUTPUTCOUNT; n++)
-            {
-                if (outputCount[n] == 0) continue;
-                for (Int32 i = 0; i < IMAGESIZE * IMAGESIZE; i++) outputChunk[n, i] /= outputCount[n];
-            }
+					network.NetworkInstance.FowardPass();
 
-            for (Int32 nx = 0; nx < OUTPUTNODE_GRID_WIDTH; nx++)
-            {
-                for (Int32 ny = 0; ny < OUTPUTNODE_GRID_WIDTH; ny++)
-                {
-                    for (Int32 x = 0; x < IMAGESIZE; x++)
-                    {
-                        for (Int32 y = 0; y < IMAGESIZE; y++)
-                        {
-                            Int32 targetX = nx * IMAGESIZE + x;
-                            Int32 targetY = ny * IMAGESIZE + y;
+					network.NetworkInstance.ReversePass();
+				}
 
-                            Int32 target = targetX + targetY * IMAGESIZE * OUTPUTNODE_GRID_WIDTH;
+				network.NetworkInstance.LearningRate = Math.Max(0.1f, network.NetworkInstance.LearningRate * 0.95);
 
-                            outputImage[target] = (Byte)outputChunk[nx + ny * OUTPUTNODE_GRID_WIDTH, x + y * IMAGESIZE];
-                        }
-                    }
-                }
-            }
-            ImageLoader.SaveBwImage($"{epoch}.bmp", IMAGESIZE * OUTPUTNODE_GRID_WIDTH, IMAGESIZE * OUTPUTNODE_GRID_WIDTH, outputImage);
-        }
+				if (epoch % 5 == 0) TestNetwork(images, network, epoch);
+			}
+		}
 
-        private static IEnumerable<ImageNormalizer.PreProcessedImage> LoadContent(String folder, String addTag = null)
-        {
-            List<ImageNormalizer.Image> rawimages = new List<ImageNormalizer.Image>(ImageLoader.GetImagesInFolder(folder, IMAGESIZE, IMAGESIZE));
-            List<ImageNormalizer.PreProcessedImage> processedImages = rawimages.Select(img => ImageNormalizer.ProcessImage(img, IMAGESIZE, IMAGESIZE)).ToList();
-            processedImages.ForEach(a => a.Tag = addTag);
-            return processedImages;
-        }
+		private static Int32 ClassifyImage(NetworkConfiguration network, ImageNormalizer.PreProcessedImage image)
+		{
+			Byte[] mapToPresent = image.BwMap;
+			BaseNode[] nodes = network.InputLayerNodes.ToArray();
+			for (Int32 i = 0; i < mapToPresent.Length; i++)
+			{
+				nodes[i].SetValue(mapToPresent[i] / 255.0);
+			}
 
-        private static void PresentImagesToNetwork(NetworkConfiguration network, List<ImageNormalizer.PreProcessedImage> images, Int32 epochs)
-        {
-            for (Int32 epoch = 0; epoch <= epochs; epoch++)
-            {
-                Console.Title = $"{epoch}/{epochs}";
-                images.Shuffle();
+			network.InputLayer.ForwardPass();
 
-                network.SOMMemoryLayer.CurrentDistanceSupression = 1 - epoch / (Double)epochs;
+			Int32 totalNodes = network.SOMMemoryLayer.GetNodes().Count;
+			Int32 widthHeight = (Int32) Math.Sqrt(totalNodes);
 
-                foreach (ImageNormalizer.PreProcessedImage image in images)
-                {
-                    //FowardPass
-                    Byte[] mapToPresent = image.BwMap;
+			Double lowestDiff = Double.MaxValue;
+			Int32 lowestDiffX = 0;
+			Int32 lowestDiffY = 0;
+			for (Int32 y = 0; y < widthHeight; y++)
+			{
+				for (Int32 x = 0; x < widthHeight; x++)
+				{
+					network.SOMMemoryLayer.GetNodeAtLocation(x, y).CalculateError();
+					Double diff = network.SOMMemoryLayer.GetNodeAtLocation(x, y).GetError();
 
-                    BaseNode[] nodes = network.InputLayerNodes.ToArray();
-                    for (Int32 i = 0; i < mapToPresent.Length; i++)
-                    {
-                        nodes[i].SetValue(mapToPresent[i] / 255.0);
-                    }
+					if (!(diff < lowestDiff)) continue;
 
-                    network.NetworkInstance.FowardPass();
+					lowestDiff = diff;
+					lowestDiffX = x;
+					lowestDiffY = y;
+				}
+			}
 
-                    network.NetworkInstance.ReversePass();
-                }
+			return lowestDiffY * widthHeight + lowestDiffX;
+		}
 
-                network.NetworkInstance.LearningRate = (Math.Max(0.1f, network.NetworkInstance.LearningRate * 0.95));
+		private class NetworkConfiguration
+		{
+			public readonly Layer InputLayer;
+			public readonly List<BaseNode> InputLayerNodes;
+			public readonly Network NetworkInstance;
+			public readonly SOMLayer SOMMemoryLayer;
 
-                if (epoch % 5 == 0) TestNetwork(images, network, epoch);
-            }
-        }
+			public NetworkConfiguration(Int32 inputNodeCount, Int32 somGridSize)
+			{
+				NetworkInstance = new Network();
 
-        private static Int32 ClassifyImage(NetworkConfiguration network, ImageNormalizer.PreProcessedImage image)
-        {
-            Byte[] mapToPresent = image.BwMap;
-            BaseNode[] nodes = network.InputLayerNodes.ToArray();
-            for (Int32 i = 0; i < mapToPresent.Length; i++)
-            {
-                nodes[i].SetValue(mapToPresent[i] / 255.0);
-            }
+				InputLayer = new Layer();
+				InputLayerNodes = new List<BaseNode>();
+				for (Int32 i = 0; i < inputNodeCount; i++) InputLayerNodes.Add(new BaseNode(InputLayer, new LinearAF()));
+				InputLayer.SetNodes(InputLayerNodes);
 
-            network.InputLayer.ForwardPass();
+				SOMMemoryLayer = new SOMLayer(somGridSize)
+				{
+					MaxmimumLearningDistance = 6,
+					MinimumLearningDistance = 0.2
+				};
 
-            Int32 totalNodes = network.SOMMemoryLayer.GetNodes().Count;
-            Int32 widthHeight = (Int32)Math.Sqrt(totalNodes);
+				InputLayer.ConnectForwardLayer(SOMMemoryLayer);
 
-            Double lowestDiff = Double.MaxValue;
-            Int32 lowestDiffX = 0;
-            Int32 lowestDiffY = 0;
-            for (Int32 y = 0; y < widthHeight; y++)
-            {
-                for (Int32 x = 0; x < widthHeight; x++)
-                {
-                    network.SOMMemoryLayer.GetNodeAtLocation(x, y).CalculateError();
-                    Double diff = network.SOMMemoryLayer.GetNodeAtLocation(x, y).GetError();
+				NetworkInstance.AddLayer(InputLayer);
+				NetworkInstance.AddLayer(SOMMemoryLayer);
 
-                    if (!(diff < lowestDiff)) continue;
+				NetworkInstance.Momentum = 0.2f;
+				NetworkInstance.LearningRate = 0.1f;
 
-                    lowestDiff = diff;
-                    lowestDiffX = x;
-                    lowestDiffY = y;
-                }
-            }
-            return lowestDiffY * widthHeight + lowestDiffX;
-        }
-    }
+				foreach (Layer layer in NetworkInstance.GetCurrentLayers()) layer.PopulateNodeConnections();
+
+				NetworkInstance.RandomiseWeights(1.0f, true);
+			}
+		}
+	}
 }
